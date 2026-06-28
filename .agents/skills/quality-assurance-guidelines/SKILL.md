@@ -1,0 +1,59 @@
+---
+name: quality-assurance-guidelines
+description: Use this skill when reviewing whether a change has adequate verification evidence. Covers format/lint proof, e2e coverage for new routes/features/surfaces, required test-id hooks, intentional snapshot updates, flaky-test investigation, manual checks for non-default content and not-found states, skipped checks, and residual risk. This is the reviewer's QA lens on top of development verification and e2e testing rules. Use for "are tests good", "did this break anything", or "should I bump snapshots".
+---
+
+# Quality Assurance Guidelines
+
+Apply these rules when reviewing whether a change has been adequately verified before merge. This is the reviewer's lens — flag missing evidence and link to the developer-facing rule.
+
+## Verification Evidence
+
+See [verification-evidence.md](./references/verification-evidence.md) for:
+
+- Commands run, exit status, and relevant output
+- Manual checks matched to changed output surfaces
+- Skipped required checks and residual risk
+- Second-pass verification after fixing Critical or Major findings
+
+## Lint and Format Gate
+
+See [lint-and-format-gate.md](./references/lint-and-format-gate.md) for:
+
+- The author ran the format and lint commands per [development-guidelines › code-quality](../development-guidelines/references/code-quality.md)
+- No new inline linter suppressions without an inline justification
+- No new lint warnings introduced into modified files
+
+## E2E Coverage
+
+See [e2e-coverage.md](./references/e2e-coverage.md) for:
+
+- Every new route, feature, or visually distinct surface has co-located test coverage in the test directory
+- New visually distinct UI elements expose a stable test id per the project's testable-component conventions, if defined
+- Test files use the project's required locator and structure conventions per [e2e-testing-guidelines](../e2e-testing-guidelines/SKILL.md)
+- Shared test helpers are reused (not duplicated inline in the test file)
+
+## Snapshot Handling
+
+See [snapshot-handling.md](./references/snapshot-handling.md) for:
+
+- A regenerated snapshot is paired with an explanation of the visual change in the diff
+- The author understands that a local snapshot update only updates the local platform's snapshot (the platform-specific segment in the snapshot path)
+- CI snapshot automation, if any, is reviewed for visual intent, not auto-merged
+- Removed snapshots are accompanied by removed or restructured tests, not silent deletion
+
+## Flakiness Tolerance
+
+See [flakiness-tolerance.md](./references/flakiness-tolerance.md) for:
+
+- A test that intermittently passes was investigated, not "fixed" by retry, polling, or a fixed sleep
+- Anti-flake config (repeat-each, fail-on-flaky) is not weakened
+- Committed focus/skip markers are flagged
+
+## Manual Verification Evidence
+
+See [manual-verification.md](./references/manual-verification.md) for:
+
+- The author exercised non-default content states when the change touches a data-driven surface
+- The not-found UI was verified for routing changes
+- The dev-server output was checked for new warnings or errors

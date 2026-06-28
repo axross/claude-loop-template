@@ -1,0 +1,7 @@
+# Local agent harness state materialized by .claude/hooks/session-start.sh.
+# These hold machine-local settings and secrets and MUST stay out of version
+# control. The application-security skill assumes these entries exist; keep them
+# (and extend this file with the project's own ignores) during INIT.
+/.claude/settings.local.json
+.env.local
+.env.*.local

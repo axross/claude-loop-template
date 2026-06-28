@@ -1,0 +1,56 @@
+# E2E Coverage
+
+Apply these rules to verify the change has the right e2e coverage. The project relies on {{E2E_TEST_FRAMEWORK}} e2e tests as the **primary** verification mechanism per [development-guidelines › verification](../../development-guidelines/references/verification.md).
+
+## Coverage Floor
+
+Coverage Floor review focuses on critical-severity cases where the diff adds a new route, feature, or visually distinct surface without co-located test coverage in the test directory ({{TEST_DIR}}).
+
+**Guidelines:**
+
+- MUST flag a Critical when the diff adds a new route or top-level entry point without a co-located test file in the test directory ({{TEST_DIR}}).
+- MUST flag a Major when the diff adds a new visually distinct surface to an existing route without a new test case (or sub-step) covering it.
+- MUST flag a Major when the diff adds a new user-facing feature (a new interactive element, a new server action, a new endpoint) without an e2e assertion that exercises the user-observable outcome.
+- SHOULD NOT demand unit tests for pure logic unless the logic is complex enough that e2e would not adequately exercise edge cases — the project explicitly de-prioritizes unit tests per [development-guidelines › verification](../../development-guidelines/references/verification.md).
+
+## Test-ID Hooks
+
+Test-ID Hooks review focuses on major-severity cases where the diff introduces a new visually distinct element (a new section, a new button, a new image, a new list) without a stable test id attribute. The e2e suite cannot target it otherwise, per the project's testable-component conventions, if defined.
+
+**Guidelines:**
+
+- MUST flag a Major when the diff introduces a new visually distinct element (a new section, a new button, a new image, a new list) without a stable test id attribute. The e2e suite cannot target it otherwise.
+- MUST flag a Critical when the diff **removes** a test id that an existing e2e test references. Cross-check by searching the test directory.
+- MUST flag any use of text-content matching in a new or modified test where the project rule is stable-test-id locators only, per [e2e-testing-guidelines › conventions](../../e2e-testing-guidelines/references/conventions.md).
+- MUST flag a test id value that does not follow the project's required casing convention.
+- SHOULD flag a test id value chosen to be globally unique (e.g., `"record-header-title"`) instead of scope-relative (`"title"`) when the project chains locators by nesting, per the project's testable-component conventions, if defined.
+
+## Loading State Coverage
+
+Loading State Coverage describes the preferred project default: flag a new component using a loading/loaded split pattern that lacks a corresponding loading-state test id propagation in its orchestrator — without it, e2e cannot assert the placeholder is visible.
+
+**Guidelines:**
+
+- SHOULD flag a new component using a loading/loaded split pattern that lacks a corresponding loading-state test id propagation in its orchestrator — without it, e2e cannot assert the placeholder is visible.
+- MAY suggest adding a sub-step that asserts the loading placeholder is visible before the loaded state appears, when the loading state is user-visible.
+
+## Test File Conventions
+
+Test File Conventions sets the required project default: flag a new test file that does not follow the project's test-file naming convention.
+
+**Guidelines:**
+
+- MUST flag a new test file that does not follow the project's test-file naming convention.
+- MUST flag a new route-specific test file placed outside the test directory ({{TEST_DIR}}) layout the project uses for route tests.
+- MUST flag a test body that does not group each action into discrete steps per [e2e-testing-guidelines › structure](../../e2e-testing-guidelines/references/structure.md).
+- MUST flag a chained-locator chain that re-roots at the page level mid-test instead of narrowing from a previously captured locator — defeats the readability of the nesting pattern.
+
+## Test Helpers
+
+Test Helpers sets the required project default: flag a setup or API call made inline in a test body when an existing shared helper exists for that resource. Use the helper.
+
+**Guidelines:**
+
+- MUST flag a setup or API call made inline in a test body when an existing shared helper exists for that resource. Use the helper.
+- MUST flag a new helper that does not live in the project's shared test-helper location or does not follow the helper signature/conventions per [e2e-testing-guidelines › conventions](../../e2e-testing-guidelines/references/conventions.md).
+- MUST flag a test that calls auth-requiring helpers without the project's authenticated session/storage-state setup when the resource requires authentication (anything that hits authenticated or non-default-state endpoints).
