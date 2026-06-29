@@ -12,6 +12,9 @@ library, or service — and any agent — Claude Code, Cursor, Copilot, and othe
 ```
 .
 ├── INIT.md                  # how to adapt this template (start here)
+├── init.sh                  # metacharacter-safe {{TOKEN}} substitution + gates
+├── tokens.json              # machine-readable manifest of every {{TOKEN}}
+├── tools/check-links.py     # relative-link integrity (descends .agents/ dot-dirs)
 ├── .gitignore               # ignores settings.local.json + .env.local (see INIT Step 6)
 ├── AGENTS.md                # master routing index + working agreement (universal)
 ├── CLAUDE.md                # @AGENTS.md — Claude Code's binding to AGENTS.md
@@ -48,9 +51,12 @@ you add them during adaptation.
 
 1. Copy this template into a new (or existing) repository.
 2. Open **[INIT.md](./INIT.md)** and follow it — or hand the repo to an AI agent
-   and ask it to "run INIT". INIT interviews you about the project kind,
-   frameworks, and goal, then fills the `{{TOKENS}}`, prunes unused skills, and
-   adds project-specific ones.
+   and ask it to "run INIT". INIT reconciles any files a scaffold already
+   generated (e.g. an existing `AGENTS.md`), interviews you about the project
+   kind, frameworks, and goal, then fills the `{{TOKENS}}` (via `./init.sh`).
+   For each optional capability — unit tests, e2e, observability — it asks
+   whether to **add** it (and with which tool) or skip it, rather than assuming
+   it should be deleted, and adds project-specific skills.
 3. Delete `INIT.md` and this `README.md` (or rewrite it for your project) when
    adaptation is complete.
 

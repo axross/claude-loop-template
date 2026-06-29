@@ -3,9 +3,10 @@
 > **Template note.** This file is a reusable, framework-agnostic and
 > agent-agnostic starting point. Before using it in a real project, run the
 > adaptation pass described in [INIT.md](./INIT.md): fill in the `{{TOKENS}}`,
-> complete the Project Overview, prune skills the project does not need, and add
-> project-specific skills (structure, components, routing, UI, domain). Delete
-> this note when the template has been adapted.
+> complete the Project Overview, resolve each optional capability (add the tool
+> or remove its skill — don't assume deletion), and add project-specific skills
+> (structure, components, routing, UI, domain). Delete this note when the
+> template has been adapted.
 
 ## Requirement Level Keywords
 

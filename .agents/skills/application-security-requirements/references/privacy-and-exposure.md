@@ -26,6 +26,7 @@ Values sent to the browser/client are public. The framework's public/client-expo
 
 ## Analytics and Error Reporting Exposure
 
+<!-- INIT:OPTIONAL key=ERROR_TRACKER_OR_ANALYTICS — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project has no analytics service or no {{ERROR_TRACKER}}, delete the corresponding guidelines below during INIT.*
 
 Analytics and error-reporting services are third-party data processors. Event context should be useful for debugging or analytics without carrying raw private content.

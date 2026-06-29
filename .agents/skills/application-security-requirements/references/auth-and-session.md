@@ -2,6 +2,7 @@
 
 Apply these rules to verify the project's authentication is not weakened and the error tracker's PII exposure is bounded.
 
+<!-- INIT:OPTIONAL key=ERROR_TRACKER_OR_ANALYTICS — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *This lens assumes the project has an authentication system (often provided by the data/content layer) and, optionally, an {{ERROR_TRACKER}} and analytics service. Delete the subsections for tools the project does not use during INIT.*
 
 ## Authentication Lockout Settings
@@ -37,6 +38,7 @@ This review focuses on critical-severity cases where the diff makes a privileged
 
 ## Error-Tracker PII Exposure
 
+<!-- INIT:OPTIONAL key=ERROR_TRACKER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project has no {{ERROR_TRACKER}}, delete this section during INIT.*
 
 If the {{ERROR_TRACKER}} is configured with a "send default PII" option, and/or session replay, it already captures IP addresses, request bodies, user-agent, and DOM mutations including form input.
@@ -50,6 +52,7 @@ If the {{ERROR_TRACKER}} is configured with a "send default PII" option, and/or 
 
 ## Analytics PII Exposure
 
+<!-- INIT:OPTIONAL key=ANALYTICS — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project has no analytics service, delete this section during INIT.*
 
 If the analytics client is configured with autocapture (capturing visible text and/or session recordings), it captures content rendered into the DOM.

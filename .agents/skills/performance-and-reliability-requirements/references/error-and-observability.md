@@ -2,6 +2,7 @@
 
 Apply these rules to verify the change keeps the project's error-propagation model and structured-logging discipline intact. Defer the developer-facing rules to [observability-guidelines](../../observability-guidelines/SKILL.md) — this file is the **reviewer's** flagging checklist. Throughout, `reportError(...)` denotes the project's error-reporting call (it maps to {{ERROR_TRACKER}}'s capture function if the project has one), and `logger` denotes the project's structured logger ({{LOGGER}}).
 
+<!-- INIT:OPTIONAL key=ERROR_TRACKER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project has no {{ERROR_TRACKER}}, treat `reportError(...)` as the project's equivalent failure-reporting mechanism (or delete the error-reporting clauses during INIT).*
 
 ## `try`/`catch` Placement
@@ -61,6 +62,7 @@ This review focuses on critical-severity cases where the diff modifies the proje
 
 ## Replay and Trace Sampling
 
+<!-- INIT:OPTIONAL key=ERROR_TRACKER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project's {{ERROR_TRACKER}} has no session replay or trace sampling, delete this section during INIT.*
 
 This review focuses on critical-severity cases where the diff lowers error-time session-replay capture below full sampling. Error-time replay is the most diagnostic signal.

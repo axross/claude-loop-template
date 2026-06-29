@@ -1,5 +1,6 @@
 # Error Tracking
 
+<!-- INIT:OPTIONAL key=ERROR_TRACKER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project has no {{ERROR_TRACKER}} (error-reporting service), delete or adapt this section during INIT.*
 
 Apply these rules when writing, reviewing, or modifying {{ERROR_TRACKER}} setup, error event capture, instrumentation files, or error context.

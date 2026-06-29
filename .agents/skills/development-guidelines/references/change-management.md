@@ -46,6 +46,7 @@ Adding Dependencies marks a discouraged project pattern: add a new dependency wh
 
 ## Modifying the Data Layer / Generated Code
 
+<!-- INIT:OPTIONAL key=DATA_LAYER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project has no {{CMS_OR_DATA_LAYER}} or other schema-bound generated code, delete this section during INIT.*
 
 Modifying the Data Layer sets the required project default: when a change alters the data/content layer's schema, regenerate or create the corresponding migration immediately, then apply it locally before testing.

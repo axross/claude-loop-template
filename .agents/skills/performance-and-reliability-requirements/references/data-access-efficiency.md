@@ -59,6 +59,7 @@ This review focuses on critical-severity cases where a new data-layer schema mig
 
 ## Locale / Variant Handling
 
+<!-- INIT:OPTIONAL key=LOCALE — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project has no per-locale or per-variant content, delete this section during INIT.*
 
 This review focuses on major-severity cases where a new data-access call omits the locale/variant parameter that content reads require. When the project has a default locale with fallback behavior, diverging from the pattern returns the wrong variant silently.

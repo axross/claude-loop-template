@@ -1,5 +1,6 @@
 # Logging
 
+<!-- INIT:OPTIONAL key=LOGGER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project has no {{LOGGER}} (structured logger), delete or adapt this section during INIT.*
 
 Apply these rules when writing, reviewing, or modifying any code that emits log output.

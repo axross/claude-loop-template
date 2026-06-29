@@ -14,9 +14,46 @@ neutral prose. This file tells an AI agent how to turn the template into a
 working setup for one concrete project.
 
 > **You are the agent running INIT.** Follow the steps in order. Do not skip
-> Step 1 — the rest depends on its answers. Make changes only inside this
-> template's files. When done, INIT.md and every `<!-- INIT: ... -->` /
+> Step 0 or Step 1 — the rest depends on their answers. Make changes only inside
+> this template's files. When done, INIT.md and every `<!-- INIT: ... -->` /
 > "TEMPLATE NOTE" / "_template note_" scaffold should be gone.
+
+> **Tooling.** Two helpers automate the mechanical parts; both are optional but
+> recommended:
+> - `./init.sh` — metacharacter-safe `{{TOKEN}}` substitution driven by
+>   `tokens.json` (`./init.sh init` to scaffold a values file, `apply` to
+>   substitute, `check` to run the gates). Use it instead of a hand-written
+>   `sed` sweep — two tokens contain `| * ( ) \ $` and break `sed`.
+> - `python3 tools/check-links.py` — relative-link integrity across the whole
+>   tree, **including** the `.agents/` and `.claude/` dot-directories that a
+>   `glob('**/*.md')` sweep silently skips.
+
+---
+
+## Step 0 — Reconcile pre-existing files (do this before copying anything)
+
+You are often dropping this template into a repository that **already has** some
+of these files — modern scaffolds (`create-next-app`, `create-vite`, many
+others) now generate their own `AGENTS.md` and `CLAUDE.md`. Overwriting them
+silently loses real project guidance.
+
+Before copying the template over an existing tree, check for collisions and
+merge rather than clobber:
+
+- **Existing `AGENTS.md`** — do **not** overwrite. Copy the template's
+  `AGENTS.md` in as `AGENTS.template.md`, then fold any project-specific rules
+  the existing file already contains (framework gotchas, "read these docs first"
+  notes, house style) into the template's **Project Overview** (Step 2) or a
+  project-specific skill (Step 5). Replace `AGENTS.md` only once its content is
+  preserved.
+- **Existing `CLAUDE.md`** — if it is already just `@AGENTS.md`, keep it. If it
+  holds other instructions, append `@AGENTS.md` rather than replacing them.
+- **Existing `.gitignore`** — keep the project's file; merge in the template's
+  `settings.local.json` / `.env.local` entries (Step 6) instead of overwriting.
+- **Existing `.agents/` or `.claude/`** — merge directory-by-directory; never
+  replace wholesale.
+
+If the repository is empty/new, there is nothing to reconcile — continue.
 
 ---
 
@@ -29,24 +66,40 @@ user leaves unspecified — but never invent the project's goal or kind.
 1. **Project kind.** What kind of project is this — a web app, mobile app, CLI,
    library, backend service, desktop app, something else? Does it have a
    user-facing UI surface?
-2. **Frameworks & tooling.** Which does the project use for each of:
+2. **Always-present tooling.** Which does the project use for each of:
    - **App framework / runtime** (e.g. Next.js, React Native, Express, none)
-   - **Unit test framework** (e.g. Jest, Vitest, pytest, none)
-   - **E2E test framework** (e.g. Playwright, Cypress, none)
    - **Linter** (e.g. Biome, ESLint, Ruff)
-   - **Formatter** (e.g. Biome, Prettier, gofmt)
+   - **Formatter** (e.g. Biome, Prettier, gofmt). If the project has **no
+     dedicated formatter** (a default `create-next-app`, for example, ships
+     ESLint but no Prettier), say so — see Step 3 for how to handle it.
    - **Package manager** (e.g. npm, pnpm, yarn, bun, pip)
    - **Primary language** (e.g. TypeScript, Python, Go)
-   - Optional: **error tracker** (e.g. Sentry), **structured logger** (e.g.
-     Pino), **data/content layer** (e.g. Payload CMS, Prisma, a REST API),
-     **hosting platform** (e.g. Vercel).
-3. **Rough picture.** In one or two sentences, what is the project's goal /
+3. **Optional capabilities — for each, decide _have / add / skip_.** Do **not**
+   assume these exist. A freshly scaffolded app usually has none of them, so the
+   honest default is often "add" or "skip", not "delete". For each one ask: does
+   the project already have it, do you want to **add** it now (and with which
+   tool), or skip it?
+   - **Unit tests** (e.g. Vitest, Jest, pytest)
+   - **E2E tests** (e.g. Playwright, Cypress, Detox)
+   - **Error tracker** (e.g. Sentry, Rollbar)
+   - **Structured logger** (e.g. Pino, Winston)
+   - **Data / content layer** (e.g. Prisma, Drizzle, Payload CMS, a REST API)
+   - **Hosting platform** (e.g. Vercel, AWS, Fly.io)
+
+   Record each as **have**, **add → _tool_**, or **skip**. This single answer
+   drives both the token fill (Step 3) and the keep-or-delete decision for every
+   `<!-- INIT:OPTIONAL -->` section (Step 4): **have** and **add** keep the
+   section (fill the token; **add** also scaffolds the tool in Step 5); **skip**
+   deletes it.
+4. **Rough picture.** In one or two sentences, what is the project's goal /
    overview? (This becomes the Project Overview in `AGENTS.md`.)
-4. **Which agents** will use this repo (Claude Code, Cursor, Copilot, others)?
+5. **Which agents** will use this repo (Claude Code, Cursor, Copilot, others)?
    This decides which harness bindings to keep (see Step 6).
 
 If the project already has a manifest/lockfile/config, you SHOULD read it to
-confirm the answers instead of relying solely on the user.
+confirm the answers instead of relying solely on the user. **Prefer adding a
+missing capability over silently dropping it** — deleting a whole testing or
+observability skill should be a deliberate choice the user made, not a default.
 
 ---
 
@@ -63,9 +116,25 @@ here. Remove the top-of-file "Template note" blockquote.
 
 Every `{{TOKEN}}` maps to a Step 1 answer. Replace ALL occurrences across
 `AGENTS.md`, `.agents/skills/**`, and `.claude/**`. The table below is the
-complete set used by the template. Each row gives several example values across
-different stacks so the substitution is unambiguous — pick the one matching the
-project, or follow the same shape for a stack not listed.
+complete set used by the template (also machine-readable in `tokens.json`). Each
+row gives several example values across different stacks so the substitution is
+unambiguous — pick the one matching the project, or follow the same shape for a
+stack not listed.
+
+> **Use `./init.sh`, not a `sed` sweep.** Two tokens — `{{CODE_FILE_GLOB}}`
+> (`*.ts | *.tsx | *.css`) and `{{CODE_FILE_REGEX}}` (`\.(ts|tsx|css)$`) —
+> contain shell/regex metacharacters (`| * ( ) \ $`) that break a naive
+> `sed s|...|...|` replacement. Run `./init.sh init`, fill `init.values.json`,
+> then `./init.sh apply`; it substitutes literally and then runs the gates. If
+> you must replace by hand, do these two literally and verify with
+> `./init.sh check`.
+
+> **No dedicated formatter?** If the project lints but has no separate formatter
+> (common for a default `create-next-app`: ESLint, no Prettier), set
+> `{{FORMATTER}}` to the linter's autofix (e.g. `ESLint (eslint --fix)`) and
+> `{{FORMAT_CMD}}` to that command (e.g. `npx eslint --fix`). Alternatively,
+> **add** a formatter (Prettier/Biome) during Step 5, or delete `format.sh` and
+> the format-on-edit binding (Step 6) so the project is lint-only.
 
 > Rule of thumb for command tokens: if the project exposes run-scripts through
 > its package manager, prefer those (`npm run build`, `pnpm test`); otherwise use
@@ -127,10 +196,28 @@ for `{{` to confirm none remain (the completion checklist does this).
 
 ---
 
-## Step 4 — Prune what the project does not need
+## Step 4 — Resolve optional capabilities (add or remove)
 
-The skill core is intentionally broad. Remove what does not apply so the agent
-isn't told to follow rules for tools the project lacks.
+The skill core is intentionally broad. Every capability-specific block is wrapped
+with a greppable marker so you can find them all:
+
+```bash
+grep -rn 'INIT:OPTIONAL' .agents AGENTS.md   # every optional section, with a key
+```
+
+For **each** marked section, apply the Step 1 decision for that capability:
+
+- **have** / **add** → keep the section and fill its token. For **add**, also
+  scaffold the tool in Step 5 (install it, add the run-script, wire the command
+  token) so the kept rules describe something real. Then delete the
+  `<!-- INIT:OPTIONAL ... -->` comment and the italic "_delete during INIT_"
+  note, leaving the content.
+- **skip** → delete the whole marked section (and, for a whole skill, follow the
+  removal list below). Remove the marker, the note, and every inbound link.
+
+Do not leave a section half-resolved: a kept section MUST have its token filled;
+a skipped section MUST be gone along with its links. The detailed removal lists
+below apply to the **skip** path.
 
 - **No error tracker / structured logger** → delete
   `.agents/skills/observability-guidelines/` (or trim the sections marked with
@@ -155,11 +242,11 @@ isn't told to follow rules for tools the project lacks.
 - **No client bundle / not a UI project** → remove the "User-Facing Work"
   subsection from `AGENTS.md` and the bundling/asset sections (marked optional)
   in `performance-and-reliability-requirements`.
-- Walk every file for sections flagged `_optional / delete during INIT_` and
-  decide each one.
+- Walk every `<!-- INIT:OPTIONAL ... -->` marker (the grep above) and resolve
+  each one as **have/add/skip** per Step 1.
 
 Whenever you remove a skill, also remove every relative link pointing to it so
-no dangling links remain.
+no dangling links remain. Verify with `python3 tools/check-links.py`.
 
 ---
 
@@ -182,6 +269,24 @@ For each new skill: add a directory under `.agents/skills/<name>/` with a
 `SKILL.md`, then add a row to the `AGENTS.md` skill index (there is a commented
 example block there) and to the review-lens lists in
 `code-review-guideline` / `development-guidelines` where relevant.
+
+**Scaffolding capabilities chosen as "add" in Step 1.** When the user opted to
+add a capability rather than skip it, set it up for real here so the kept rules
+are not aspirational:
+
+- **Unit tests** → install the runner (e.g. `vitest`), add a `test:unit`
+  run-script, fill `{{UNIT_TEST_FRAMEWORK}}` / `{{UNIT_TEST_CMD}}`, and create a
+  first example test. Keep `unit-test-guidelines`.
+- **E2E tests** → install the runner (e.g. `@playwright/test`), add a
+  `test:e2e` script, fill `{{E2E_TEST_FRAMEWORK}}` / `{{E2E_TEST_CMD}}` /
+  `{{TEST_DIR}}`. Keep `e2e-testing-guidelines`.
+- **Error tracker / logger** → add the dependency and its init, fill
+  `{{ERROR_TRACKER}}` / `{{LOGGER}}`. Keep `observability-guidelines`.
+- **Formatter** → add it (e.g. Prettier/Biome), add a `format` script, fill
+  `{{FORMATTER}}` / `{{FORMAT_CMD}}`.
+
+Confirm each added command actually runs before relying on the `check.sh` /
+`format.sh` hooks that call it.
 
 ---
 
@@ -214,19 +319,28 @@ Keep only the bindings for the agents named in Step 1.
 
 ## Step 7 — Finalize
 
-- Delete this `INIT.md`.
-- Remove the "Template note" blockquote at the top of `AGENTS.md` and every
-  `<!-- INIT: ... -->` comment and "TEMPLATE NOTE" / "_delete during INIT_" line
-  you decided to keep content for.
+- Run `./init.sh check` and resolve everything it reports.
+- Delete the INIT tooling once adaptation is done: `INIT.md`, `init.sh`,
+  `tokens.json`, `init.values.json`, and (optionally) `tools/check-links.py` if
+  you don't want to keep it as a CI check.
+- Remove the "Template note" blockquote at the top of `AGENTS.md`, every
+  `<!-- INIT:OPTIONAL ... -->` marker, and every "TEMPLATE NOTE" /
+  "_delete during INIT_" line for sections you decided to keep.
 - Update `README.md` to describe the actual project (or replace it).
 
 ### Completion checklist
 
-- [ ] No `{{` tokens remain: `grep -rn '{{' . | grep -v node_modules`
-- [ ] No dangling relative skill links (every `](../...)` / `](./...)` resolves).
+- [ ] No `{{` tokens remain in authored files (build/VCS dirs excluded):
+      `./init.sh check` (or `grep -rn '{{' . --exclude-dir=node_modules
+      --exclude-dir=.next --exclude-dir=.git`).
+- [ ] No `<!-- INIT:OPTIONAL -->` markers remain: `grep -rn 'INIT:OPTIONAL' .`
+- [ ] No dangling relative skill links: `python3 tools/check-links.py` (checks
+      the `.agents/` tree a `glob('**/*.md')` sweep would skip).
 - [ ] `AGENTS.md` skill index matches the directories under `.agents/skills/`.
 - [ ] Removed skills have no remaining inbound links.
+- [ ] Added capabilities have a working command (the `check.sh` / `format.sh`
+      hooks actually run).
 - [ ] Harness binding for each Step-1 agent is filled in and runnable.
 - [ ] A `.gitignore` excludes `settings.local.json` and `.env.local` (or the
       project's equivalent local-state/secret files).
-- [ ] `INIT.md` and template scaffolding notes are deleted.
+- [ ] `INIT.md` and template scaffolding notes/tooling are deleted.

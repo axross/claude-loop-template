@@ -41,6 +41,7 @@ This review focuses on critical-severity cases where a new barrel file (an index
 
 ## Server-External Package Configuration
 
+<!-- INIT:OPTIONAL key=BUNDLER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project's bundler has no "external server packages" escape hatch, delete this section during INIT.*
 
 Some bundlers let you mark packages that the server runtime should NOT bundle (they stay loaded from the dependency tree at runtime). This list should stay minimal.

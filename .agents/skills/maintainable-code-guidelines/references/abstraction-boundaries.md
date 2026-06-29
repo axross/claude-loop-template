@@ -35,6 +35,7 @@ Domain Pipeline Boundary sets the required project default: flag any new module 
 
 ## Data-Layer Hooks / UI Boundary
 
+<!-- INIT:OPTIONAL key=DATA_LAYER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project has no `{{CMS_OR_DATA_LAYER}}` with lifecycle hooks, delete this section during INIT.*
 
 Data-Layer Hooks / UI Boundary sets the required project default: flag a data-layer lifecycle hook (before/after an operation) that imports UI modules — such hooks run server-side, outside the UI runtime.

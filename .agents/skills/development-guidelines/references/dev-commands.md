@@ -38,6 +38,7 @@ These commands enforce formatting, linting, and end-to-end behavior.
 
 ## Data-Layer Commands
 
+<!-- INIT:OPTIONAL key=DATA_LAYER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project has no {{CMS_OR_DATA_LAYER}} or no migration workflow, delete this section during INIT.*
 
 Data-layer commands alter or inspect the schema migration state. The target store is selected by environment variables. Replace the command names below with the project's actual migration commands during INIT.

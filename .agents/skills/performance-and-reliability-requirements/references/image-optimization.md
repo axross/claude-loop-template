@@ -33,6 +33,7 @@ This review focuses on major-severity cases where a new above-the-fold image is 
 
 ## Upload / Ingest Configuration
 
+<!-- INIT:OPTIONAL key=IMAGES — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project does not ingest user-uploaded images, delete this section during INIT.*
 
 This review focuses on major-severity cases where a new image-upload path is added without a configured output format (e.g., a modern compressed format) or without bounded resizing. Match the project's shared upload-processing helpers.
@@ -54,6 +55,7 @@ This review focuses on critical-severity cases where a new permitted external im
 
 ## Image-Processing Backend
 
+<!-- INIT:OPTIONAL key=IMAGES — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project does not run a server-side image-processing backend, delete this section during INIT.*
 
 This review focuses on critical-severity cases where the diff removes the image-processing backend the upload pipeline depends on — uploads would fall back to copying files unprocessed, breaking the format-conversion and resize pipeline.

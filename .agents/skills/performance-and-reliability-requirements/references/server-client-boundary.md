@@ -14,6 +14,7 @@ This review focuses on major-severity cases where server-side code does `await g
 
 ## Streaming / Lazy Load Granularity
 
+<!-- INIT:OPTIONAL key=REVIEW — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project's framework cannot stream or progressively render independent units, adapt this section to its lazy-loading mechanism during INIT.*
 
 This review focuses on major-severity cases where a single loading boundary wraps two independently-slow async units. Split into one boundary per slow unit so each can render/stream as it resolves.
@@ -46,6 +47,7 @@ This review focuses on major-severity cases where the diff promotes a whole unit
 
 ## Compiler / Memoization Implications
 
+<!-- INIT:OPTIONAL key=COMPILER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project's toolchain has no auto-memoizing compiler, delete this entire subsection during INIT — heading, prose, and the **Guidelines:** block below (through the end of this section, before "Static / Dynamic Rendering Implications").*
 
 When the framework's compiler auto-memoizes client components, the reviewer SHOULD be aware:
@@ -59,6 +61,7 @@ When the framework's compiler auto-memoizes client components, the reviewer SHOU
 
 ## Static / Dynamic Rendering Implications
 
+<!-- INIT:OPTIONAL key=RENDERING — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project's framework does not distinguish static from dynamic rendering, delete this subsection during INIT.*
 
 When the framework can statically prerender server-tier units, reading per-request state (cookies, headers, request-specific parameters) typically forces the enclosing unit into dynamic rendering. The reviewer SHOULD be aware:

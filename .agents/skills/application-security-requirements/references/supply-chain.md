@@ -57,6 +57,7 @@ Platform Specificity review focuses on major-severity cases where a new dependen
 
 ## Bundling Implications
 
+<!-- INIT:OPTIONAL key=CLIENT_BUNDLE — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *This section applies only when the project bundles code for a client/browser. Delete it during INIT for projects that ship no client bundle (e.g., a CLI or backend service).*
 
 Bundling Implications review focuses on major-severity cases where the new dependency lacks tree-shaking support (no ESM, no `sideEffects: false`) and is imported into client-bundled code. Cross-reference with [performance-and-reliability-requirements › bundle-weight](../../performance-and-reliability-requirements/references/bundle-weight.md).
