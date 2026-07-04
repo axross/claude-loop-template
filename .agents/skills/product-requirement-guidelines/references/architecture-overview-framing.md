@@ -4,7 +4,7 @@ Apply this reference when drafting or reviewing the "System design / architectur
 
 ## When to Include an Architecture Overview
 
-Not every change earns an architecture section. arc42 treats every one of its architecture sections as optional by design, included only when the project's scale warrants it ([arc42, Template Overview](https://arc42.org/overview)), and GitLab's documentation ladder makes the same point operationally: a single-team, low-blast-radius change is fully documented by a good commit message, and only work that crosses team or module boundaries escalates to a design doc ([GitLab Docs, Decision Making](https://docs.gitlab.com/charts/architecture/decision-making/)). Shape Up generalizes this into "appetite" — the amount of process, and by extension documentation, a piece of work deserves is set by its size and reversibility up front, not discovered by filling out a fixed template ([Shape Up, "Adjust to Your Size"](https://basecamp.com/shapeup/4.1-appendix-02)).
+Not every change earns an architecture section. arc42 treats every one of its architecture sections as optional by design, included only when the project's scale warrants it, and GitLab's documentation ladder makes the same point operationally: a single-team, low-blast-radius change is fully documented by a good commit message, and only work that crosses team or module boundaries escalates to a design doc. Shape Up generalizes this into "appetite" — the amount of process, and by extension documentation, a piece of work deserves is set by its size and reversibility up front, not discovered by filling out a fixed template.
 
 **Guidelines:**
 
@@ -14,7 +14,7 @@ Not every change earns an architecture section. arc42 treats every one of its ar
 
 ## Data Flow and Module Boundaries at Spec Level
 
-An architecture section answers "what talks to what, and who owns which piece of state" — it does not pre-write the code. Google's design-doc guidance is explicit that these documents should rarely contain code or pseudocode except for a genuinely novel algorithm ([Design Docs at Google](https://www.industrialempathy.com/posts/design-docs-at-google/)), and the C4 model formalizes the same instinct by stopping most spec audiences at the context/container/component levels, reserving the "code" level for the codebase itself ([C4 Model](https://c4model.com/)). arc42's building-block view offers the right unit of description: name each module or service, state its responsibility, and describe its interface at the level of what it accepts and returns, not literal signatures ([arc42, Building Block View](https://docs.arc42.org/section-5/)).
+An architecture section answers "what talks to what, and who owns which piece of state" — it does not pre-write the code. Google's design-doc guidance is explicit that these documents should rarely contain code or pseudocode except for a genuinely novel algorithm, and the C4 model formalizes the same instinct by stopping most spec audiences at the context/container/component levels, reserving the "code" level for the codebase itself. arc42's building-block view offers the right unit of description: name each module or service, state its responsibility, and describe its interface at the level of what it accepts and returns, not literal signatures.
 
 **Guidelines:**
 
@@ -24,7 +24,7 @@ An architecture section answers "what talks to what, and who owns which piece of
 
 ## Alternatives Considered
 
-Mature spec-writing traditions treat the alternatives you rejected as being as valuable as the one you chose. The Rust RFC template devotes a dedicated "Rationale and alternatives" section to justifying the chosen design against the road not taken, including the impact of doing nothing ([Rust RFC Template](https://github.com/rust-lang/rfcs/blob/master/0000-template.md)). Michael Nygard's ADR format builds the same expectation into "Consequences" — a decision record is incomplete if it doesn't make clear what became harder, not just what became easier ([Nygard ADR template](https://github.com/joelparkerhenderson/architecture-decision-record/blob/main/locales/en/templates/decision-record-template-by-michael-nygard/index.md)). The practical reason is institutional memory: a record of a rejected alternative stops a future engineer from re-litigating a path already closed off ([arc42, Tip 9-6](https://docs.arc42.org/tips/9-6/)).
+Mature spec-writing traditions treat the alternatives you rejected as being as valuable as the one you chose. The Rust RFC template devotes a dedicated "Rationale and alternatives" section to justifying the chosen design against the road not taken, including the impact of doing nothing. Michael Nygard's ADR format builds the same expectation into "Consequences" — a decision record is incomplete if it doesn't make clear what became harder, not just what became easier. The practical reason is institutional memory: a record of a rejected alternative stops a future engineer from re-litigating a path already closed off.
 
 **Guidelines:**
 
@@ -34,7 +34,7 @@ Mature spec-writing traditions treat the alternatives you rejected as being as v
 
 ## Constraints and Non-Functional Requirements
 
-Non-functional requirements belong in a spec as short, measurable targets, not as a rehearsal of the implementation that will satisfy them. AWS's ADR guidance treats performance, availability, and security requirements as consequences of a decision, not decisions in themselves ([AWS Architecture Blog, Master ADRs](https://aws.amazon.com/blogs/architecture/master-architecture-decision-records-adrs-best-practices-for-effective-decision-making/)), and standard NFR-writing practice replaces vague adjectives like "fast" or "scalable" with a stated number and scope, e.g., "95th percentile under 200ms" ([Khalil Stemmler, Non-Functional Requirements](https://khalilstemmler.com/articles/object-oriented/analysis/non-functional-requirements/)).
+Non-functional requirements belong in a spec as short, measurable targets, not as a rehearsal of the implementation that will satisfy them. AWS's ADR guidance treats performance, availability, and security requirements as consequences of a decision, not decisions in themselves, and standard NFR-writing practice replaces vague adjectives like "fast" or "scalable" with a stated number and scope, e.g., "95th percentile under 200ms".
 
 **Guidelines:**
 

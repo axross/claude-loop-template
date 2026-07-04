@@ -4,7 +4,7 @@ Apply this reference when drafting or reviewing the "UI design" section of a spe
 
 ## When to Include a UI Design Section
 
-Not every change earns a UI design section, and forcing one onto a non-view-affected change is its own form of waste. Google's design-doc guidance ties documentation weight to a change's actual complexity and risk rather than applying it uniformly ([Design Docs at Google](https://www.industrialempathy.com/posts/design-docs-at-google/)), and Basecamp's "Don't Do Dead Documents" argues a document only earns its keep when it will actually shape a decision ([Getting Real](https://basecamp.com/gettingreal/11.2-dont-do-dead-documents)). When a section is warranted, keep it at breadboard fidelity — Shape Up's "fat marker sketch" technique is deliberately coarse because too much early detail forecloses design and engineering judgment that belongs later ([Shape Up, "Find the Elements"](https://basecamp.com/shapeup/1.3-chapter-04)).
+Not every change earns a UI design section, and forcing one onto a non-view-affected change is its own form of waste. Google's design-doc guidance ties documentation weight to a change's actual complexity and risk rather than applying it uniformly, and Basecamp's "Don't Do Dead Documents" argues a document only earns its keep when it will actually shape a decision. When a section is warranted, keep it at breadboard fidelity — Shape Up's "fat marker sketch" technique is deliberately coarse because too much early detail forecloses design and engineering judgment that belongs later.
 
 **Guidelines:**
 
@@ -24,7 +24,7 @@ A UI design section describes hierarchy, layout intent, and content priority in 
 
 ## Interaction States
 
-Real interfaces spend most of their life outside the default state. Design systems converge on a shared minimum taxonomy — Shopify Polaris ties each state to a "signifier" that sets expectations before an action happens, and requires that whatever happens on hover also happens on focus ([Polaris, Interaction States](https://polaris-react.shopify.com/design/interaction-states)); Material Design defines hover, focus, pressed, and disabled as combinable primitives, with disabled explicitly excluded from hover/focus response ([Material Design 3, States](https://m3.material.io/foundations/interaction/states/applying-states)). NN/g's research grounds two of these in evidence: users tolerate waits far better with visible feedback, so any action that can plausibly exceed about a second needs a specified loading state ([NN/g, Progress Indicators](https://www.nngroup.com/articles/progress-indicators/)), and a well-designed empty state explains the absence and offers a next action rather than rendering nothing ([NN/g, Designing Empty States](https://www.nngroup.com/articles/empty-state-interface-design/)). Error-state content needs to be visible, precise, and constructive without blaming the user ([NN/g, Error-Message Guidelines](https://www.nngroup.com/articles/error-message-guidelines/)).
+Real interfaces spend most of their life outside the default state. Design systems converge on a shared minimum taxonomy — Shopify Polaris ties each state to a "signifier" that sets expectations before an action happens, and requires that whatever happens on hover also happens on focus; Material Design defines hover, focus, pressed, and disabled as combinable primitives, with disabled explicitly excluded from hover/focus response. NN/g's research grounds two of these in evidence: users tolerate waits far better with visible feedback, so any action that can plausibly exceed about a second needs a specified loading state, and a well-designed empty state explains the absence and offers a next action rather than rendering nothing. Error-state content needs to be visible, precise, and constructive without blaming the user.
 
 **Guidelines:**
 
@@ -35,7 +35,7 @@ Real interfaces spend most of their life outside the default state. Design syste
 
 ## Accessibility Intent
 
-Accessibility intent belongs in the spec as testable outcomes, not a compliance footnote or implementation instructions. GOV.UK's accessibility-acceptance-criteria practice exists because generic "must meet WCAG" language gets skipped, while criteria that extract the specific rule relevant to the change and link back to WCAG for context actually get used and tested against ([Inside GOV.UK blog](https://insidegovuk.blog.gov.uk/2018/01/24/improving-accessibility-with-accessibility-acceptance-criteria/)). WCAG's own success-criterion language is precise enough to cite directly — "keyboard focus indicator is visible" (SC 2.4.7) and "no loss of content or functionality without requiring two-dimensional scrolling" (SC 1.4.10) are both spec-ready sentences on their own ([W3C, Understanding Focus Visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html); [W3C, Understanding Reflow](https://www.w3.org/WAI/WCAG21/Understanding/reflow.html)).
+Accessibility intent belongs in the spec as testable outcomes, not a compliance footnote or implementation instructions. GOV.UK's accessibility-acceptance-criteria practice exists because generic "must meet WCAG" language gets skipped, while criteria that extract the specific rule relevant to the change and link back to WCAG for context actually get used and tested against. WCAG's own success-criterion language is precise enough to cite directly — "keyboard focus indicator is visible" (SC 2.4.7) and "no loss of content or functionality without requiring two-dimensional scrolling" (SC 1.4.10) are both spec-ready sentences on their own.
 
 **Guidelines:**
 
@@ -45,7 +45,7 @@ Accessibility intent belongs in the spec as testable outcomes, not a compliance 
 
 ## Responsive Behavior Intent
 
-Responsive intent belongs in the spec as content/layout behavior at defined viewport ranges, not fixed device names or pixel breakpoints — breakpoints belong where content or layout breaks, not at arbitrary device widths ([A List Apart, Designing for Breakpoints](https://alistapart.com/article/designing-for-breakpoints/)). WCAG's reflow criterion gives a concrete, citable floor: no layout requires two-dimensional scrolling at narrow viewports or high zoom ([W3C, Understanding Reflow](https://www.w3.org/WAI/WCAG21/Understanding/reflow.html)).
+Responsive intent belongs in the spec as content/layout behavior at defined viewport ranges, not fixed device names or pixel breakpoints — breakpoints belong where content or layout breaks, not at arbitrary device widths. WCAG's reflow criterion gives a concrete, citable floor: no layout requires two-dimensional scrolling at narrow viewports or high zoom.
 
 **Guidelines:**
 
@@ -54,7 +54,7 @@ Responsive intent belongs in the spec as content/layout behavior at defined view
 
 ## Copy and Microcopy Constraints
 
-A spec includes enough copy detail to size and review the surface, without becoming the final content-design pass. "Intent text" — realistic-length, purpose-accurate draft copy — communicates length and tone without the risk that a reviewer mistakes polished placeholder copy for the final string ([UX Collective, "Intent text"](https://uxdesign.cc/creating-more-effective-placeholder-copy-for-ux-design-7ae781c8f461)). Durable voice/tone rules belong in a standalone style guide the spec can point to, not be re-authored per spec ([Mailchimp Content Style Guide](https://styleguide.mailchimp.com/voice-and-tone/)).
+A spec includes enough copy detail to size and review the surface, without becoming the final content-design pass. "Intent text" — realistic-length, purpose-accurate draft copy — communicates length and tone without the risk that a reviewer mistakes polished placeholder copy for the final string. Durable voice/tone rules belong in a standalone style guide the spec can point to, not be re-authored per spec.
 
 **Guidelines:**
 

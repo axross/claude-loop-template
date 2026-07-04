@@ -4,7 +4,7 @@ Apply this reference when drafting or reviewing the checklist a reviewer uses to
 
 ## Independent Verifiability
 
-A criterion earns its place only if a reviewer can judge it from the diff or the running UI without reading implementation code to know whether it passed. INVEST's "Testable" dimension exists for exactly this reason — a story without explicit conditions of satisfaction cannot be confirmed done ([LogRocket](https://blog.logrocket.com/product-management/writing-meaningful-user-stories-invest-principle/), [Agile Alliance](https://agilealliance.org/glossary/invest/)). Given/When/Then framing keeps each criterion phrased as observable behavior rather than implementation, and independent of other criteria so a single failure is easy to isolate ([Cucumber's Gherkin guide](https://cucumber.io/docs/bdd/better-gherkin/), [TestQuality on Gherkin acceptance criteria](https://testquality.com/how-to-write-effective-gherkin-acceptance-criteria/)).
+A criterion earns its place only if a reviewer can judge it from the diff or the running UI without reading implementation code to know whether it passed. INVEST's "Testable" dimension exists for exactly this reason — a story without explicit conditions of satisfaction cannot be confirmed done. Given/When/Then framing keeps each criterion phrased as observable behavior rather than implementation, and independent of other criteria so a single failure is easy to isolate.
 
 **Guidelines:**
 
@@ -14,7 +14,7 @@ A criterion earns its place only if a reviewer can judge it from the diff or the
 
 ## Concrete Over Adjectival
 
-"Works correctly" and "looks good" are not verifiable; a stated copy string, attribute, threshold, or state transition is. This mirrors the same requirements-smell finding that governs problem-statement language (see [problem-and-scope.md](./problem-and-scope.md)) applied to the checklist itself ([AltexSoft](https://www.altexsoft.com/blog/acceptance-criteria-purposes-formats-and-best-practices/), [TechTarget on acceptance-criteria fundamentals](https://www.techtarget.com/searchsoftwarequality/tip/The-fundamentals-of-writing-effective-acceptance-criteria)).
+"Works correctly" and "looks good" are not verifiable; a stated copy string, attribute, threshold, or state transition is. This mirrors the same requirements-smell finding that governs problem-statement language (see [problem-and-scope.md](./problem-and-scope.md)) applied to the checklist itself.
 
 **Guidelines:**
 
@@ -23,7 +23,7 @@ A criterion earns its place only if a reviewer can judge it from the diff or the
 
 ## Coverage: Happy Path, Edge Cases, Non-Effects
 
-Most defects live outside the primary flow, so a criteria set that only covers the happy path leaves the riskiest behavior unverified. Boundary-value analysis — testing at and just past a limit — is the standard technique for surfacing these cases ([Boundary-value analysis, Wikipedia](https://en.wikipedia.org/wiki/Boundary-value_analysis), [Software Testing Help](https://www.softwaretestinghelp.com/what-is-boundary-value-analysis-and-equivalence-partitioning/)). When a change sits next to something that must stay untouched, an explicit "X is unaffected" criterion closes the gap a happy-path-only checklist would leave open.
+Most defects live outside the primary flow, so a criteria set that only covers the happy path leaves the riskiest behavior unverified. Boundary-value analysis — testing at and just past a limit — is the standard technique for surfacing these cases. When a change sits next to something that must stay untouched, an explicit "X is unaffected" criterion closes the gap a happy-path-only checklist would leave open.
 
 **Guidelines:**
 
@@ -33,18 +33,18 @@ Most defects live outside the primary flow, so a criteria set that only covers t
 
 ## Right-Sized Checklists
 
-A checklist that needs far more than a handful of criteria is usually a sign the underlying story should split; too few leaves testable gaps that surface as bugs later. Practitioner guidance converges on roughly three to seven or eight criteria as a starting rubric, not a hard ceiling ([Scrum.org forum discussion](https://www.scrum.org/forum/scrum-forum/94804/what-best-practices-writing-user-stories-how-many-acceptance-criteria-should-normally-maximal-user-story-have), [TestQuality's Gherkin guide](https://testquality.com/gherkin-user-stories-acceptance-criteria-guide/)). Verification gates belong in the same checklist as trailing items, since "done" includes passing the project's own format/lint/test/build commands, not only the feature behavior.
+A checklist that needs far more than a handful of criteria is usually a sign the underlying story should split; too few leaves testable gaps that surface as bugs later. Practitioner guidance converges on roughly three to seven or eight criteria as a starting rubric, not a hard ceiling. Verification gates belong in the same checklist as trailing items, since "done" includes passing the project's own format/lint/test/build commands, not only the feature behavior.
 
 **Guidelines:**
 
 - SHOULD right-size the checklist to roughly three to seven criteria; treat materially more as a signal to reconsider the change's scope rather than padding restatements of the same behavior.
-- MUST include the verification gates the change requires (format/lint, unit/e2e suites, build) as trailing checklist items.
+- MUST include the verification gates the change requires (format/lint, unit/e2e suites, build) as trailing checklist items, per the project's [verification rules](../../development-guidelines/references/verification.md).
 - MUST NOT restate the same observable behavior across multiple bullets.
 - MUST write each criterion as a plain bullet (`-`), not a GitHub task-list checkbox (`- [ ]`) — unless the project actually checks the boxes as part of its process, an unchecked box reads as perpetually incomplete.
 
 ## Traceability
 
-An acceptance criterion that names a behavior the rest of the spec never mentioned is either a hidden scope addition or a sign the spec is incomplete. Definition of Done and acceptance criteria are complementary, not interchangeable — DoD is the fixed, cross-cutting bar every change must clear, while acceptance criteria are the criteria specific to this change's stated requirement ([Scrum.org: DoD vs. acceptance criteria](https://www.scrum.org/resources/blog/what-difference-between-definition-done-and-acceptance-criteria), [Mountain Goat Software](https://www.mountaingoatsoftware.com/blog/clarifying-the-relationship-between-definition-of-done-and-conditions-of-sa)).
+An acceptance criterion that names a behavior the rest of the spec never mentioned is either a hidden scope addition or a sign the spec is incomplete. Definition of Done and acceptance criteria are complementary, not interchangeable — DoD is the fixed, cross-cutting bar every change must clear, while acceptance criteria are the criteria specific to this change's stated requirement.
 
 **Guidelines:**
 
