@@ -223,6 +223,12 @@ below apply to the **skip** path.
   `.agents/skills/observability-guidelines/` (or trim the sections marked with
   an italic "_delete this section during INIT_" note). Remove its row from the
   `AGENTS.md` skill index and any cross-links to it.
+- **Agents do not operate the code-hosting platform through a proxied operator
+  identity** → delete `.agents/skills/github-operations/` and its `AGENTS.md`
+  skill-index row. If they do operate it (as the shipped `.claude/` Claude Code
+  binding does), keep the skill, delete its top `TEMPLATE NOTE`, and replace the
+  example tool-channel, marker, and branch-prefix names with your harness's real
+  ones.
 - **No e2e framework** → delete `.agents/skills/e2e-testing-guidelines/` and
   its index row, then remove every inbound link to it:
   - `quality-assurance-guidelines/references/e2e-coverage.md` (delete the file)

@@ -18,6 +18,16 @@ Apply these rules whenever you author a Git commit or amend an existing one in t
 - MUST keep the first line (the header: `type(scope)!: description`) a single line with no trailing period.
 - MUST separate the header, body, and footers with exactly one blank line each when they are present.
 
+## Pull Request Titles
+
+The header format is not commit-only: a pull request title MUST follow the same `<type>[scope][!]: <description>` shape as a commit header. When the project's merge strategy is squash merge, the pull request title becomes the resulting commit's subject on the default branch, so a title without a type prefix silently lands a non-conforming commit — this is the failure the rule prevents. The title carries only the header; the body/footer live in the pull request description, not the title.
+
+**Guidelines:**
+
+- MUST title every pull request with a Conventional Commits header (`<type>[scope][!]: <description>`), applying the Type, Scope, Description, and Breaking-Change rules below exactly as for a commit header.
+- SHOULD pick the type from the primary change the pull request delivers when it spans more than one type (e.g., a change that is mostly CI config with an incidental docs tweak is `ci`).
+- MUST NOT apply this rule to issue titles: an issue states a problem or deliverable in plain descriptive prose, and is never a commit subject.
+
 ## Type
 
 Type sets the required project default: use `feat` when the commit adds a user-facing feature — correlates to a SemVer **MINOR** bump.
