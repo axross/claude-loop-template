@@ -14,8 +14,8 @@ Apply this reference as a starting skeleton for the "Product requirement" and "A
 ## Product requirement
 
 <One to three sentences: who is affected, what is broken or missing for them, and why it
-matters. State the outcome sought, not the feature being built.
-_(See problem-and-scope.md → Outcome Before Solution.)_>
+matters. State the outcome sought, not the feature being built.>
+_(See problem-and-scope.md → Outcome Before Solution.)_
 
 **Non-goals** (omit only if nothing plausible is being excluded):
 - <A thing that could reasonably have been in scope, deliberately excluded, and why.>

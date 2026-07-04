@@ -6,7 +6,7 @@ template** for an `AGENTS.md`-driven skill system. It ships:
 - `AGENTS.md` — the master routing index + working agreement (the universal,
   agent-agnostic entry point).
 - `CLAUDE.md` — a one-line binding (`@AGENTS.md`) so Claude Code loads `AGENTS.md`.
-- `.agents/skills/**` — a generic, cross-project **skill core** (10 skills).
+- `.agents/skills/**` — a generic, cross-project **skill core** (12 skills).
 - `.claude/**` — an **example** Claude Code harness binding (hooks + settings).
 
 Everything project-specific has been replaced with `{{TOKEN}}` placeholders or
@@ -85,6 +85,9 @@ user leaves unspecified — but never invent the project's goal or kind.
    - **Structured logger** (e.g. Pino, Winston)
    - **Data / content layer** (e.g. Prisma, Drizzle, Payload CMS, a REST API)
    - **Hosting platform** (e.g. Vercel, AWS, Fly.io)
+   - **GitHub operations** — does an agent read/write GitHub (issues, PRs,
+     comments) through a proxied single-operator identity, as a Claude Code +
+     GitHub MCP harness does? (keeps or deletes `github-operations`)
 
    Record each as **have**, **add → _tool_**, or **skip**. This single answer
    drives both the token fill (Step 3) and the keep-or-delete decision for every
@@ -223,12 +226,12 @@ below apply to the **skip** path.
   `.agents/skills/observability-guidelines/` (or trim the sections marked with
   an italic "_delete this section during INIT_" note). Remove its row from the
   `AGENTS.md` skill index and any cross-links to it.
-- **Agents do not operate the code-hosting platform through a proxied operator
-  identity** → delete `.agents/skills/github-operations/` and its `AGENTS.md`
-  skill-index row. If they do operate it (as the shipped `.claude/` Claude Code
-  binding does), keep the skill, delete its top `TEMPLATE NOTE`, and replace the
-  example tool-channel, marker, and branch-prefix names with your harness's real
-  ones.
+- **Agents do not operate GitHub through a proxied single-operator identity**
+  → delete `.agents/skills/github-operations/` and its `AGENTS.md` skill-index
+  row. If they do (e.g. a Claude Code session using the GitHub MCP server),
+  keep the skill, delete its `<!-- INIT:OPTIONAL -->` marker and the italic
+  "_delete or adapt_" note, and replace the example tool-channel, marker, and
+  branch-prefix names with your harness's real ones.
 - **No e2e framework** → delete `.agents/skills/e2e-testing-guidelines/` and
   its index row, then remove every inbound link to it:
   - `quality-assurance-guidelines/references/e2e-coverage.md` (delete the file)
@@ -237,11 +240,22 @@ below apply to the **skip** path.
     `quality-assurance-guidelines/SKILL.md`;
   - the `../../e2e-testing-guidelines/SKILL.md` link in
     `unit-test-guidelines/references/testing-scope.md`;
+  - the `../e2e-testing-guidelines/SKILL.md` link in
+    `product-requirement-guidelines/SKILL.md`;
+  - the e2e row of the topic table in `development-guidelines/SKILL.md`;
+  - the e2e row of the developer-facing-skills table in
+    `code-review-guideline/SKILL.md`;
+  - the `../../e2e-testing-guidelines/SKILL.md` link in
+    `performance-and-reliability-requirements/references/server-client-boundary.md`;
   - the e2e-authoring pointer in
     `development-guidelines/references/verification.md`;
   - the `{{E2E_TEST_CMD}}` bullet in the `AGENTS.md` Verification section.
 - **No unit test framework** → delete `.agents/skills/unit-test-guidelines/`
-  and its index row.
+  and its index row, then remove every inbound link to it:
+  - the `../unit-test-guidelines/SKILL.md` link in
+    `product-requirement-guidelines/SKILL.md`;
+  - the unit-test row of the developer-facing-skills table in
+    `code-review-guideline/SKILL.md`.
 - **No data/content layer** → remove the data-layer sections (each is marked
   optional) from `development-guidelines`, `application-security-requirements`,
   and `performance-and-reliability-requirements`.

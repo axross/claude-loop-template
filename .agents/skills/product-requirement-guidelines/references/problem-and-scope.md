@@ -30,7 +30,7 @@ Assumptions and open questions are easy to conflate but serve different readers.
 **Guidelines:**
 
 - MUST state assumptions and constraints the plan relies on, distinct from open questions.
-- MUST NOT embed an unresolved product, scope, or platform decision silently as an assumption; ask it instead (per the owning workflow's ask-and-yield step, e.g. a delivery workflow's plan phase).
+- MUST NOT embed an unresolved product, scope, or platform decision silently as an assumption; ask it instead, per AGENTS.md's rule to ask a concrete question when progress depends on a product, platform, privacy, compatibility, or scope decision.
 - SHOULD flag an assumption the reader is likely to disagree with rather than build around it unstated.
 
 ## Right-Sizing Scope

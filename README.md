@@ -18,23 +18,26 @@ library, or service — and any agent — Claude Code, Cursor, Copilot, and othe
 ├── .gitignore               # ignores settings.local.json + .env.local (see INIT Step 6)
 ├── AGENTS.md                # master routing index + working agreement (universal)
 ├── CLAUDE.md                # @AGENTS.md — Claude Code's binding to AGENTS.md
-├── .agents/skills/          # the generic, cross-project skill core (10 skills)
+├── .agents/skills/          # the generic, cross-project skill core (12 skills)
 │   ├── agent-skills-best-practices/
 │   ├── application-security-requirements/
 │   ├── code-review-guideline/
 │   ├── development-guidelines/
 │   ├── e2e-testing-guidelines/
+│   ├── github-operations/
 │   ├── maintainable-code-guidelines/
 │   ├── observability-guidelines/
 │   ├── performance-and-reliability-requirements/
+│   ├── product-requirement-guidelines/
 │   ├── quality-assurance-guidelines/
 │   └── unit-test-guidelines/
 └── .claude/                 # example Claude Code harness binding (hooks + settings)
 ```
 
-The skill core covers cross-project workflow: how to author skills, develop and
-review changes, test (unit + e2e), and review for maintainability, security,
-performance/reliability, observability, and QA evidence. Project-specific skills
+The skill core covers cross-project workflow: how to author skills, frame
+product requirements, develop and review changes, test (unit + e2e), operate
+GitHub, and review for maintainability, security, performance/reliability,
+observability, and QA evidence. Project-specific skills
 (structure, components, routing, UI, domain) are intentionally **not** shipped —
 you add them during adaptation.
 

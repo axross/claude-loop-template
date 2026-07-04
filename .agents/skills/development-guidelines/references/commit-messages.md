@@ -1,6 +1,6 @@
 # Commit Messages
 
-Apply these rules whenever you author a Git commit or amend an existing one in this project. The project follows [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) — the normative rules below are summarized so no network fetch is required.
+Apply these rules whenever you author a Git commit, amend an existing one, or title a pull request in this project. The project follows [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) — the normative rules below are summarized so no network fetch is required.
 
 ## Overall Format
 
@@ -20,7 +20,7 @@ Apply these rules whenever you author a Git commit or amend an existing one in t
 
 ## Pull Request Titles
 
-The header format is not commit-only: a pull request title MUST follow the same `<type>[scope][!]: <description>` shape as a commit header. When the project's merge strategy is squash merge, the pull request title becomes the resulting commit's subject on the default branch, so a title without a type prefix silently lands a non-conforming commit — this is the failure the rule prevents. The title carries only the header; the body/footer live in the pull request description, not the title.
+The header format is not commit-only: a pull request title MUST follow the same `<type>[scope][!]: <description>` shape as a commit header, so titles stay consistent and scannable across the pull-request list and merged history regardless of merge strategy — that consistency is the base rationale for the unconditional rule. It also matters at merge time: when a squash merge takes the pull request title as the squashed commit's subject (GitHub's behavior when "Default to pull request title" is enabled, or for a title the maintainer types at merge), a title without a type prefix lands a non-conforming commit on the default branch. The title carries only the header; the body/footer live in the pull request description, not the title.
 
 **Guidelines:**
 
