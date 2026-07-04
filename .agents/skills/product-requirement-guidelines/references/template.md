@@ -33,9 +33,8 @@ _(See problem-and-scope.md → Assumptions vs. Open Questions.)_
 - <One relevant edge/disabled/empty/error-state behavior.>
 - <An explicit "X is unaffected" criterion, when this change sits next to something
   that must stay untouched.>
-- <Additional criteria only for behavior the sections above actually specify — no
-  net-new scope introduced here. Right-size to roughly 3-7 criteria total; more is a
-  signal to reconsider scope rather than pad restatements.>
+- <Additional criteria only for behavior the sections above actually specify —
+  right-size the checklist per the pointer below.>
 _(See acceptance-criteria.md → Coverage and Right-Sized Checklists.)_
 - <The verification gates this change requires — e.g. format/lint, unit tests, e2e
   tests, build — as trailing items.>

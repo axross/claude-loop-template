@@ -18,7 +18,7 @@ A criterion earns its place only if a reviewer can judge it from the diff or the
 
 **Guidelines:**
 
-- MUST name the exact copy, attribute, state transition, or stored value expected instead of an adjective like "works correctly" or "looks good".
+- MUST make each criterion verifiable from the diff or running UI — not adjectival ("works correctly", "looks good") — applying [problem-and-scope.md › Concrete, Checkable Language](./problem-and-scope.md#concrete-checkable-language) to the checklist rather than restating its rule here.
 - SHOULD prefer a concrete number or threshold over a relative claim ("under 3 seconds" rather than "fast").
 
 ## Coverage: Happy Path, Edge Cases, Non-Effects
