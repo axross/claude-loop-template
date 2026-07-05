@@ -29,6 +29,7 @@ External links from untrusted input can become clickable UI, so validation is a 
 **Guidelines:**
 
 - MUST make every substantive rule section demonstrate its topic before listing requirements, regardless of heading depth.
+- SHOULD write each section intro as rationale — why the rule exists — rather than a restatement of its first guideline bullet.
 - MUST put RFC-2119 guideline bullets after the description, usually under a `**Guidelines:**` label.
 - MUST NOT apply the `**Guidelines:**` requirement to parent `SKILL.md` reference-routing sections; those sections use `See [file.md](./references/file.md) for:` with descriptive bullets.
 - MAY use H3, H4, or deeper headings when hierarchy improves readability.

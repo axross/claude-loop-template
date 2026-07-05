@@ -22,7 +22,7 @@ The reviewer MUST ask the author to confirm (in the PR description or the review
 
 ## Dev-Server Output Inspection
 
-Dev-Server Output Inspection review focuses on major-severity cases where the diff introduces new warning-level log lines that were not in the `{{DEV_CMD}}` output before the change (or removes existing warnings without explanation).
+New warnings in the dev log are the app's earliest signal that something regressed or is misconfigured, well before it becomes a visible failure.
 
 **Guidelines:**
 
@@ -32,7 +32,7 @@ Dev-Server Output Inspection review focuses on major-severity cases where the di
 
 ## Local Production Build
 
-Local Production Build describes the preferred project default: ask the author to run `{{BUILD_CMD}}` then `{{START_CMD}}` and reload the affected surface when the diff touches:
+Dev and production diverge on transforms, caching, and asset handling, so a surface that works under `{{DEV_CMD}}` can still break once built.
 
 **Guidelines:**
 
@@ -44,7 +44,7 @@ Local Production Build describes the preferred project default: ask the author t
 
 ## What Manual Verification Cannot Replace
 
-What Manual Verification Cannot Replace is a project prohibition: do not accept "I tested it manually" as a substitute for the e2e coverage required by [e2e-coverage.md](./e2e-coverage.md). Manual is the first line; e2e is the second and the one that runs in CI.
+A manual pass confirms the change worked once, on one machine; only the e2e suite re-runs that check on every future change in CI.
 
 **Guidelines:**
 

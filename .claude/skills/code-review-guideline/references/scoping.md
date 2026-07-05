@@ -16,7 +16,7 @@ For self-review, the same agent that implemented the change must deliberately sw
 
 ## Default Scope
 
-Default Scope sets the required project default: default to **only the changed code** — the diff between the working tree (or a PR branch) and `main`. Do not review pre-existing code unless the user explicitly asks for an audit.
+A review that wanders into pre-existing code loses track of what the current change is accountable for and dilutes the author's attention across problems they did not introduce.
 
 **Guidelines:**
 
@@ -26,7 +26,7 @@ Default Scope sets the required project default: default to **only the changed c
 
 ## Reading Surrounding Context
 
-Reading Surrounding Context sets the required project default: read the full file containing each changed hunk, not just the diff hunk itself. A line that looks safe in isolation can be unsafe in its surrounding control flow.
+Correctness lives in context: a hunk that reads correctly on its own can still break the control flow, boundaries, or callers that surround it.
 
 **Guidelines:**
 
@@ -37,7 +37,7 @@ Reading Surrounding Context sets the required project default: read the full fil
 
 ## Out-of-Scope Findings
 
-Out-of-Scope Findings marks a discouraged project pattern: report pre-existing issues outside the diff as Critical or Major. They MAY appear as Minor or Nit observations only when they directly affect the safety of the current change (e.g., a pre-existing missing `await` that the new code now depends on).
+Charging the current change with blocking severity for problems it did not introduce holds it hostage to unrelated work.
 
 **Guidelines:**
 
@@ -46,7 +46,7 @@ Out-of-Scope Findings marks a discouraged project pattern: report pre-existing i
 
 ## When the Diff Is Empty or Unclear
 
-When the Diff Is Empty or Unclear sets the required project default: ask the user which files or branch to review when `git diff main..HEAD` returns nothing and no PR number was supplied.
+With nothing to diff, there is no defined change to review, and any files the reviewer picks on its own would be a guess at the wrong target.
 
 **Guidelines:**
 
@@ -55,7 +55,7 @@ When the Diff Is Empty or Unclear sets the required project default: ask the use
 
 ## Repository-Specific Boundaries
 
-Repository-Specific Boundaries is a project prohibition: do not review generated or tool-managed files for code style — they are produced or maintained by the project's tooling, not hand-authored. See [Development Guidelines › change-management](../../development-guidelines/references/change-management.md) for which paths the project treats as generated/managed.
+Style feedback on files the tooling produces is noise the author cannot act on, since the fix would mean changing the generator rather than the file. See [Development Guidelines › change-management](../../development-guidelines/references/change-management.md) for which paths the project treats as generated/managed.
 
 **Guidelines:**
 

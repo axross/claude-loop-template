@@ -4,7 +4,7 @@ Apply these rules to decide what stays inside the review report versus what must
 
 ## The Reviewer Reports, It Does Not Act
 
-The Reviewer Reports, It Does Not Act is a project prohibition: do not mutate the codebase during the review phase. Apply fixes only after the review report is complete and the workflow has switched back into implementation mode.
+The review phase produces a report, not a patch — mixing edits into it destroys the separation between finding problems and fixing them.
 
 **Guidelines:**
 
@@ -14,7 +14,7 @@ The Reviewer Reports, It Does Not Act is a project prohibition: do not mutate th
 
 ## Make Fixes Trivially Applicable by the Caller
 
-Make Fixes Trivially Applicable by the Caller sets the required project default: list, under **Recommended Actions**, the verification step ({{LINT_CMD}}, {{E2E_TEST_CMD}}, a manual check of the affected surface per [development-guidelines › verification](../../development-guidelines/references/verification.md)) needed after each Critical or Major fix.
+A Critical or Major fix that lands without its verification step can silently trade the original defect for a new one.
 
 **Guidelines:**
 
@@ -23,7 +23,7 @@ Make Fixes Trivially Applicable by the Caller sets the required project default:
 
 ## Surface Recurring Guideline Gaps to the Caller
 
-Surface Recurring Guideline Gaps to the Caller describes the preferred project default: note in the report when the same defect class has appeared multiple times in the diff and no current guideline rule cleanly covers it. Use a **Guideline gap:** bullet under Recommended Actions and propose a concrete location, such as "Consider adding a rule under `application-security-requirements/secret-handling.md` covering …".
+A defect class that recurs with no rule to cite will keep reappearing in future changes until the guidance catches up.
 
 **Guidelines:**
 

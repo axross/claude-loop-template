@@ -15,7 +15,7 @@ The project's {{E2E_TEST_FRAMEWORK}} config typically writes snapshots to a path
 
 ## When Snapshots Are Regenerated
 
-When Snapshots Are Regenerated sets the required project default: flag a snapshot file change that lacks an accompanying explanation in the PR description, commit message, or review thread. The author MUST justify what visually changed and why.
+A raw snapshot diff can't tell a reviewer whether the pixels changed on purpose; the written justification is the only thing separating an intended restyle from a regression.
 
 **Guidelines:**
 

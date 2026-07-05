@@ -49,7 +49,7 @@ Two of these are invariants of the shared-operator model and stay MUST; the rest
 **Guidelines:**
 
 - MUST NOT push to the default branch; work on the harness's push-allowed branch prefix (e.g. an agent-namespaced `agent/`- or `claude/`-prefixed branch).
-- MUST post any pull-request review as a **COMMENT**-type review — never APPROVE or REQUEST_CHANGES: GitHub rejects APPROVE / REQUEST_CHANGES whenever the reviewing identity is the pull request's own author, which the shared-operator agent always is, so COMMENT is the only event that works.
+- MUST post any pull-request review as a **COMMENT**-type review — never APPROVE or REQUEST_CHANGES: GitHub rejects (422) APPROVE / REQUEST_CHANGES whenever the reviewing identity is the pull request's own author, which the shared-operator agent always is, so COMMENT is the only event that works.
 - MUST title every pull request per [commit-messages.md › Pull Request Titles](../development-guidelines/references/commit-messages.md#pull-request-titles) — a PR title follows the same Conventional Commits header format as a commit.
 - SHOULD open a pull request in **draft** while work is in progress and leave merging to a human; a project whose agent is trusted to merge routine work MAY relax this.
 - SHOULD, when a pull request resolves an issue, include `Closes #<n>` to link it; a pull request not tied to an issue omits it.

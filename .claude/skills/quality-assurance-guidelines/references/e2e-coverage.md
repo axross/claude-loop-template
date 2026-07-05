@@ -4,7 +4,7 @@ Apply these rules to verify the change has the right e2e coverage. The project r
 
 ## Coverage Floor
 
-Coverage Floor review focuses on critical-severity cases where the diff adds a new route, feature, or visually distinct surface without co-located test coverage in the test directory ({{TEST_DIR}}).
+A new route or surface with no test is a hole in the project's primary verification mechanism — nothing re-checks it after the next change.
 
 **Guidelines:**
 
@@ -15,7 +15,7 @@ Coverage Floor review focuses on critical-severity cases where the diff adds a n
 
 ## Test-ID Hooks
 
-Test-ID Hooks review focuses on major-severity cases where the diff introduces a new visually distinct element (a new section, a new button, a new image, a new list) without a stable test id attribute. The e2e suite cannot target it otherwise, per the project's testable-component conventions, if defined.
+Because the suite locates elements only by stable test id — never by text — an element that ships without one is invisible to every future test.
 
 **Guidelines:**
 
@@ -27,7 +27,7 @@ Test-ID Hooks review focuses on major-severity cases where the diff introduces a
 
 ## Loading State Coverage
 
-Loading State Coverage describes the preferred project default: flag a new component using a loading/loaded split pattern that lacks a corresponding loading-state test id propagation in its orchestrator — without it, e2e cannot assert the placeholder is visible.
+The loading half of a split component is a distinct user-visible state; without a way to target its placeholder, that state ships unverified.
 
 **Guidelines:**
 
@@ -36,7 +36,7 @@ Loading State Coverage describes the preferred project default: flag a new compo
 
 ## Test File Conventions
 
-Test File Conventions sets the required project default: flag a new test file that does not follow the project's test-file naming convention.
+Consistent names and locations are what let the runner discover route tests and what let the next reader find them.
 
 **Guidelines:**
 
@@ -47,7 +47,7 @@ Test File Conventions sets the required project default: flag a new test file th
 
 ## Test Helpers
 
-Test Helpers sets the required project default: flag a setup or API call made inline in a test body when an existing shared helper exists for that resource. Use the helper.
+Inline setup duplicated across tests drifts out of sync as the resource changes; a shared helper keeps every test on the same, current path.
 
 **Guidelines:**
 

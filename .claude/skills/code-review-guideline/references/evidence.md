@@ -55,7 +55,7 @@ The reviewer MUST emit findings in this exact section order so downstream agents
 
 ## What Counts as Evidence
 
-What Counts as Evidence captures the project-specific context for the checklist below: A failing or missing-but-required check (e.g., {{LINT_CMD}} would error on the changed file) is evidence — the reviewer SHOULD state explicitly that the check was reasoned about and the expected outcome.
+Evidence is what lets a reader confirm a finding without taking the reviewer's word for it, which is what separates the items below from mere assertion.
 
 - A guideline rule citation is evidence. A vague appeal to "best practices" is not — replace it with a specific rule or remove the finding.
 - A reproduced failure path (e.g., "if `params.id` is an array then line 22 returns `true` and …") is evidence. A "smells wrong" hunch is not.
@@ -68,7 +68,7 @@ What Counts as Evidence captures the project-specific context for the checklist 
 
 ## When the Reviewer Cannot Verify
 
-When the Reviewer Cannot Verify sets the required project default: mark findings as "needs verification" and lower severity by one step when the reviewer cannot confirm the issue without running code (e.g., a perf claim without measurement).
+An issue the reviewer could not actually confirm can send the author chasing a non-bug if it is presented with full confidence.
 
 **Guidelines:**
 
