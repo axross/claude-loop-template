@@ -45,6 +45,21 @@ Consistent names and locations are what let the runner discover route tests and 
 - MUST flag a test body that does not group each action into discrete steps per [e2e-testing-guidelines › structure](../../e2e-testing-guidelines/references/structure.md).
 - MUST flag a chained-locator chain that re-roots at the page level mid-test instead of narrowing from a previously captured locator — defeats the readability of the nesting pattern.
 
+## Scenario Coverage
+
+<!-- INIT:OPTIONAL key=SCENARIO_COVERAGE — keep if the project adopts journey-catalog e2e coverage OR delete this section (with the marked sites in e2e-testing-guidelines and this skill's SKILL.md); see the INIT.md Step-4 bullet. -->
+*If this project does not adopt scenario coverage, delete this section during INIT.*
+
+Scenario coverage tracks which real user journeys the e2e suite **asserts**, via a human-authored journey catalog and per-test scenario tags — not e2e line coverage. Its denominator is the catalog itself, so review guards the catalog's completeness as much as the tests. See [e2e-testing-guidelines › scenario-coverage](../../e2e-testing-guidelines/references/scenario-coverage.md) for the mechanism.
+
+**Guidelines:**
+
+- MUST require scenario-coverage evidence when a change adds or alters a user-facing journey: the overall and per-priority `covered/total` from the project's coverage command, plus any newly surfaced gaps.
+- MUST flag a Major when a change adds a new user-facing journey without a corresponding catalog row — an incomplete catalog inflates the percentage.
+- MUST treat a new `must`-priority scenario as a blocker until a passing tagged test asserts it; `should` / `may` gaps are reported, not blocking.
+- MUST flag a stale or mistyped scenario tag, a facet tag that disagrees with the catalog, and a scenario tag on a test that merely passes *through* the journey without asserting its outcome — the tag belongs on the asserting test.
+- SHOULD note surfaced `should` / `may` gaps as follow-up work rather than silently expanding the change's scope to close them.
+
 ## Test Helpers
 
 Inline setup duplicated across tests drifts out of sync as the resource changes; a shared helper keeps every test on the same, current path.

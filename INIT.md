@@ -81,6 +81,7 @@ user leaves unspecified — but never invent the project's goal or kind.
    tool), or skip it?
    - **Unit tests** (e.g. Vitest, Jest, pytest)
    - **E2E tests** (e.g. Playwright, Cypress, Detox)
+   - **E2E scenario coverage** (a journey-catalog coverage metric over the e2e suite — which user journeys the tests assert; requires E2E tests)
    - **Error tracker** (e.g. Sentry, Rollbar)
    - **Structured logger** (e.g. Pino, Winston)
    - **Data / content layer** (e.g. Prisma, Drizzle, Payload CMS, a REST API)
@@ -92,9 +93,10 @@ user leaves unspecified — but never invent the project's goal or kind.
    drives both the token fill (Step 3) and the keep-or-delete decision for every
    `<!-- INIT:OPTIONAL -->` section (Step 4): **have** and **add** keep the
    section (fill the token; **add** also scaffolds the tool in Step 5); **skip**
-   deletes it. (GitHub operations and the independent review channel are the two
-   capabilities with no token — their keep paths are their Step-4 bullets' name
-   and phrase replacements, not a token fill.)
+   deletes it — or, for infrastructure the project will plausibly add later,
+   marks it **dormant** (see Step 4). (GitHub operations, the independent review
+   channel, and E2E scenario coverage are the capabilities with no token — their
+   keep paths are described in their Step-4 bullets, not a token fill.)
 4. **Rough picture.** In one or two sentences, what is the project's goal /
    overview? (This becomes the Project Overview in `AGENTS.md`.)
 5. **Which agents** will use this repo (Claude Code, Cursor, Copilot, others)?
@@ -218,15 +220,60 @@ For **each** marked section, apply the Step 1 decision for that capability:
   note, leaving the content.
 - **skip** → delete the whole marked section (and, for a whole skill, follow the
   removal list below). Remove the marker, the note, and every inbound link.
+- **dormant** (a middle path) → keep the section, but replace its
+  `<!-- INIT:OPTIONAL ... -->` marker and italic note with a **visible**
+  one-line banner, so the rule self-restores instead of vanishing:
+
+  ```markdown
+  > **Dormant until <infrastructure> exists** — remove this banner when it
+  > lands, making the lens unconditional.
+  ```
+
+  Replace any unfilled `{{TOKEN}}` inside a dormant section with neutral prose
+  (e.g. "the project's error tracker") so the token gate stays clean. Prefer
+  **dormant** over **skip** for service-shaped capabilities the project is
+  likely to acquire (an error tracker, server-side caching, a data layer): the
+  rules are already correct and only their infrastructure is missing. Prefer
+  **skip** for capability-shaped sections that would be re-authored anyway when
+  adopted (a whole test framework, the review channel) — a dormant copy of
+  those only rots.
 
 Do not leave a section half-resolved: a kept section MUST have its token filled;
-a skipped section MUST be gone along with its links. The detailed removal lists
-below apply to the **skip** path.
+a skipped section MUST be gone along with its links; a dormant section MUST
+carry its banner and no unfilled token. The detailed removal lists below apply
+to the **skip** path.
 
-- **No error tracker / structured logger** → delete
-  `.claude/skills/observability-guidelines/` (or trim the sections marked with
-  an italic "_delete this section during INIT_" note). Remove its row from the
-  `AGENTS.md` skill index and any cross-links to it.
+- **No error tracker AND no structured logger** → the
+  `.claude/skills/observability-guidelines/` skill MAY be deleted (or
+  dormant-marked per the dormant path above, when the project will plausibly
+  add either tool). If only one of the two is missing, instead trim the
+  sections marked `key=ERROR_TRACKER` / `key=LOGGER` inside the skill. On the
+  delete path, resolve every inbound link:
+  - the Observability Guidelines row of the `AGENTS.md` skill index, and the
+    word "observability" in the review-lenses MUST bullet of `AGENTS.md`'s
+    Review Independence Gates;
+  - the "Error handling and structured logging" row of the
+    developer-facing-skills table in `code-review-guideline/SKILL.md`;
+  - the "Error handling, error-reporting, and logging" row of the topic table
+    in `development-guidelines/SKILL.md`;
+  - the `{{ERROR_TRACKER}} config and {{LOGGER}} setup` row of the
+    output-surface table in `development-guidelines/references/verification.md`;
+  - in `performance-and-reliability-requirements/SKILL.md` and its
+    `references/error-and-observability.md`, the rules survive as the
+    reviewer's checklist: drop each `per [observability-guidelines › …]` /
+    "Defer the developer-facing rules to …" citation and fold the cited rule
+    inline (e.g. "…not in nested helpers, so errors propagate to the root call
+    site"; "the project routes errors through `reportError(...)`");
+  - the start/complete log-pair SHOULD bullet in
+    `performance-and-reliability-requirements/references/caching-correctness.md`
+    (delete the bullet);
+  - the logging-module label sub-bullet in
+    `maintainable-code-guidelines/references/naming-and-organization.md`
+    (delete it);
+  - the empty-`try`/`catch` bullet in
+    `maintainable-code-guidelines/references/complexity-and-readability.md`:
+    keep the bullet but fold the rule inline — "errors are rethrown or
+    reported, never swallowed" — instead of linking the rethrow rule.
 - **Agents do not operate GitHub through a proxied single-operator identity**
   → delete `.claude/skills/github-operations/` and its `AGENTS.md` skill-index
   row. If they do (e.g. a Claude Code session using the GitHub MCP server),
@@ -280,6 +327,24 @@ below apply to the **skip** path.
   - the e2e-authoring pointer in
     `development-guidelines/references/verification.md`;
   - the `{{E2E_TEST_CMD}}` bullet in the `AGENTS.md` Verification section.
+
+  Deleting the e2e skill also removes every `key=SCENARIO_COVERAGE` site (next
+  bullet) — the two that live outside `e2e-testing-guidelines/` are inside
+  `quality-assurance-guidelines` files deleted or trimmed above.
+- **E2E suite kept, but no scenario-coverage catalog** → delete every
+  `INIT:OPTIONAL key=SCENARIO_COVERAGE` site:
+  - `e2e-testing-guidelines/references/scenario-coverage.md` (delete the file)
+    and its "E2E Scenario Coverage" routing section in
+    `e2e-testing-guidelines/SKILL.md`;
+  - the "Scenario Coverage" section in
+    `quality-assurance-guidelines/references/e2e-coverage.md` and the marked
+    scenario-coverage bullet in `quality-assurance-guidelines/SKILL.md`.
+
+  If the project **adopts** it, keep all four sites, delete the markers and
+  italic notes, and then in Step 5 author the journey catalog (e.g.
+  `scenarios.md` in `{{TEST_DIR}}`), pick the tag syntax
+  `{{E2E_TEST_FRAMEWORK}}` supports, and build the coverage reporter and gate
+  script — the template ships the convention only, no implementation.
 - **No unit test framework** → delete `.claude/skills/unit-test-guidelines/`
   and its index row, then remove every inbound link to it:
   - the `../unit-test-guidelines/SKILL.md` link in
@@ -304,8 +369,11 @@ no dangling links remain. Verify with `python3 tools/check-links.py`.
 
 The template deliberately ships only the cross-project core. Recreate the
 project's own skills as needed, following
-[Agent Skills Best Practices](.claude/skills/agent-skills-best-practices/SKILL.md).
-Common ones to add:
+[Agent Skills Best Practices](.claude/skills/agent-skills-best-practices/SKILL.md)
+and its
+[project-skill archetypes](.claude/skills/agent-skills-best-practices/references/project-skill-archetypes.md)
+reference — section-by-section skeletons for the skills below. Common ones to
+add:
 
 - **Project Structure** — repository layout, stack, services, file placement.
   Create this first; `AGENTS.md` already points at it.
@@ -330,6 +398,10 @@ are not aspirational:
 - **E2E tests** → install the runner (e.g. `@playwright/test`), add a
   `test:e2e` script, fill `{{E2E_TEST_FRAMEWORK}}` / `{{E2E_TEST_CMD}}` /
   `{{TEST_DIR}}`. Keep `e2e-testing-guidelines`.
+- **E2E scenario coverage** → author the journey catalog (e.g. `scenarios.md`
+  in `{{TEST_DIR}}`), tag the asserting tests, and build the coverage
+  reporter/gate wired into the e2e run. Keep the marked `SCENARIO_COVERAGE`
+  sections.
 - **Error tracker / logger** → add the dependency and its init, fill
   `{{ERROR_TRACKER}}` / `{{LOGGER}}`. Keep `observability-guidelines`.
 - **Formatter** → add it (e.g. Prettier/Biome), add a `format` script, fill
@@ -395,6 +467,14 @@ Keep only the bindings for the agents named in Step 1.
       the `.claude/` tree a `glob('**/*.md')` sweep would skip).
 - [ ] `AGENTS.md` skill index matches the directories under `.claude/skills/`.
 - [ ] Removed skills have no remaining inbound links.
+- [ ] The conditional hedges in `AGENTS.md`'s Verification section are
+      resolved: in the `{{E2E_TEST_CMD}}` and `{{BUILD_CMD}}` bullets, delete
+      the "when the project has an e2e suite" / "when the project has a build
+      step" clause when the capability was kept, and delete the whole bullet
+      when it was skipped.
+- [ ] Every skill removed in Step 4 is also gone from the review-lenses MUST
+      bullet in `AGENTS.md`'s Review Independence Gates (e.g. drop
+      "observability" when `observability-guidelines` was deleted).
 - [ ] Added capabilities have a working command (the `check.sh` / `format.sh`
       hooks actually run).
 - [ ] Harness binding for each Step-1 agent is filled in and runnable.
