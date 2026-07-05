@@ -498,9 +498,18 @@ Keep only the bindings for the agents named in Step 1.
 ## Step 7 — Finalize
 
 - Run `./init.sh check` and resolve everything it reports.
-- Delete the INIT tooling once adaptation is done: `INIT.md`, `init.sh`,
-  `tokens.json`, `init.values.json`, and (optionally) `tools/check-links.py` if
-  you don't want to keep it as a CI check.
+- Walk the completion checklist below **while the INIT tooling still exists** —
+  several items run `./init.sh check` or `python3 tools/check-links.py`, and
+  checking them after the deletion step would leave those items with no
+  runnable command.
+- Then delete the INIT tooling — all of it, unconditionally: `INIT.md`,
+  `init.sh`, `tokens.json`, `init.values.json`, `tools/check-links.py` (the
+  whole `tools/` directory when nothing else lives there), and
+  `.github/workflows/template-checks.yaml` (the template repository's own CI,
+  which runs that script). None of these are meant to survive adaptation; a
+  leftover copy is dead weight that only rots. If the project wants an ongoing
+  docs-link gate, add its own job to its own CI as ordinary project work — do
+  not keep the template's tooling for it.
 - Remove the "Template note" blockquote at the top of `AGENTS.md`, every
   `<!-- INIT:OPTIONAL ... -->` marker and `<!-- INIT: ... -->` fill-in comment,
   and every "TEMPLATE NOTE" / "_delete during INIT_" line for sections you
@@ -547,4 +556,6 @@ Keep only the bindings for the agents named in Step 1.
 - [ ] Harness binding for each Step-1 agent is filled in and runnable.
 - [ ] A `.gitignore` excludes `settings.local.json` and `.env.local` (or the
       project's equivalent local-state/secret files).
-- [ ] `INIT.md` and template scaffolding notes/tooling are deleted.
+- [ ] `INIT.md` and template scaffolding notes/tooling are deleted — including
+      `init.sh`, `tokens.json`, `init.values.json`, `tools/check-links.py`,
+      and `.github/workflows/template-checks.yaml`.
