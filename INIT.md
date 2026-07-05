@@ -6,7 +6,7 @@ template** for an `AGENTS.md`-driven skill system. It ships:
 - `AGENTS.md` — the master routing index + working agreement (the universal,
   agent-agnostic entry point).
 - `CLAUDE.md` — a one-line binding (`@AGENTS.md`) so Claude Code loads `AGENTS.md`.
-- `.agents/skills/**` — a generic, cross-project **skill core** (10 skills).
+- `.claude/skills/**` — a generic, cross-project **skill core** (12 skills).
 - `.claude/**` — an **example** Claude Code harness binding (hooks + settings).
 
 Everything project-specific has been replaced with `{{TOKEN}}` placeholders or
@@ -25,7 +25,7 @@ working setup for one concrete project.
 >   substitute, `check` to run the gates). Use it instead of a hand-written
 >   `sed` sweep — two tokens contain `| * ( ) \ $` and break `sed`.
 > - `python3 tools/check-links.py` — relative-link integrity across the whole
->   tree, **including** the `.agents/` and `.claude/` dot-directories that a
+>   tree, **including** the `.claude/` dot-directory that a
 >   `glob('**/*.md')` sweep silently skips.
 
 ---
@@ -50,7 +50,7 @@ merge rather than clobber:
   holds other instructions, append `@AGENTS.md` rather than replacing them.
 - **Existing `.gitignore`** — keep the project's file; merge in the template's
   `settings.local.json` / `.env.local` entries (Step 6) instead of overwriting.
-- **Existing `.agents/` or `.claude/`** — merge directory-by-directory; never
+- **Existing `.claude/`** — merge directory-by-directory; never
   replace wholesale.
 
 If the repository is empty/new, there is nothing to reconcile — continue.
@@ -85,12 +85,14 @@ user leaves unspecified — but never invent the project's goal or kind.
    - **Structured logger** (e.g. Pino, Winston)
    - **Data / content layer** (e.g. Prisma, Drizzle, Payload CMS, a REST API)
    - **Hosting platform** (e.g. Vercel, AWS, Fly.io)
+   - **GitHub operations** (agents read/write GitHub through a proxied operator identity, e.g. Claude Code + GitHub MCP)
 
    Record each as **have**, **add → _tool_**, or **skip**. This single answer
    drives both the token fill (Step 3) and the keep-or-delete decision for every
    `<!-- INIT:OPTIONAL -->` section (Step 4): **have** and **add** keep the
    section (fill the token; **add** also scaffolds the tool in Step 5); **skip**
-   deletes it.
+   deletes it. (GitHub operations is the one capability with no token — its keep
+   path is the Step-4 bullet's name replacements, not a token fill.)
 4. **Rough picture.** In one or two sentences, what is the project's goal /
    overview? (This becomes the Project Overview in `AGENTS.md`.)
 5. **Which agents** will use this repo (Claude Code, Cursor, Copilot, others)?
@@ -115,7 +117,7 @@ here. Remove the top-of-file "Template note" blockquote.
 ## Step 3 — Replace the placeholder tokens
 
 Every `{{TOKEN}}` maps to a Step 1 answer. Replace ALL occurrences across
-`AGENTS.md`, `.agents/skills/**`, and `.claude/**`. The table below is the
+`AGENTS.md` and `.claude/**`. The table below is the
 complete set used by the template (also machine-readable in `tokens.json`). Each
 row gives several example values across different stacks so the substitution is
 unambiguous — pick the one matching the project, or follow the same shape for a
@@ -202,7 +204,7 @@ The skill core is intentionally broad. Every capability-specific block is wrappe
 with a greppable marker so you can find them all:
 
 ```bash
-grep -rn 'INIT:OPTIONAL' .agents AGENTS.md   # every optional section, with a key
+grep -rn 'INIT:OPTIONAL' .claude AGENTS.md   # every optional section, with a key
 ```
 
 For **each** marked section, apply the Step 1 decision for that capability:
@@ -220,10 +222,18 @@ a skipped section MUST be gone along with its links. The detailed removal lists
 below apply to the **skip** path.
 
 - **No error tracker / structured logger** → delete
-  `.agents/skills/observability-guidelines/` (or trim the sections marked with
+  `.claude/skills/observability-guidelines/` (or trim the sections marked with
   an italic "_delete this section during INIT_" note). Remove its row from the
   `AGENTS.md` skill index and any cross-links to it.
-- **No e2e framework** → delete `.agents/skills/e2e-testing-guidelines/` and
+- **Agents do not operate GitHub through a proxied single-operator identity**
+  → delete `.claude/skills/github-operations/` and its `AGENTS.md` skill-index
+  row. If they do (e.g. a Claude Code session using the GitHub MCP server),
+  keep the skill, delete its `<!-- INIT:OPTIONAL -->` marker and the italic
+  "_delete or adapt_" note, replace the example tool-channel, marker, and
+  branch-prefix names with your harness's real ones, and review its Conventions
+  section's delivery-policy SHOULDs (draft, `Closes #<n>`, leave-merging) against
+  your project's policy.
+- **No e2e framework** → delete `.claude/skills/e2e-testing-guidelines/` and
   its index row, then remove every inbound link to it:
   - `quality-assurance-guidelines/references/e2e-coverage.md` (delete the file)
     and its pointer in `quality-assurance-guidelines/SKILL.md`;
@@ -231,11 +241,22 @@ below apply to the **skip** path.
     `quality-assurance-guidelines/SKILL.md`;
   - the `../../e2e-testing-guidelines/SKILL.md` link in
     `unit-test-guidelines/references/testing-scope.md`;
+  - the `../e2e-testing-guidelines/SKILL.md` link in
+    `product-requirement-guidelines/SKILL.md`;
+  - the e2e row of the topic table in `development-guidelines/SKILL.md`;
+  - the e2e row of the developer-facing-skills table in
+    `code-review-guideline/SKILL.md`;
+  - the `../../e2e-testing-guidelines/SKILL.md` link in
+    `performance-and-reliability-requirements/references/server-client-boundary.md`;
   - the e2e-authoring pointer in
     `development-guidelines/references/verification.md`;
   - the `{{E2E_TEST_CMD}}` bullet in the `AGENTS.md` Verification section.
-- **No unit test framework** → delete `.agents/skills/unit-test-guidelines/`
-  and its index row.
+- **No unit test framework** → delete `.claude/skills/unit-test-guidelines/`
+  and its index row, then remove every inbound link to it:
+  - the `../unit-test-guidelines/SKILL.md` link in
+    `product-requirement-guidelines/SKILL.md`;
+  - the unit-test row of the developer-facing-skills table in
+    `code-review-guideline/SKILL.md`.
 - **No data/content layer** → remove the data-layer sections (each is marked
   optional) from `development-guidelines`, `application-security-requirements`,
   and `performance-and-reliability-requirements`.
@@ -254,7 +275,7 @@ no dangling links remain. Verify with `python3 tools/check-links.py`.
 
 The template deliberately ships only the cross-project core. Recreate the
 project's own skills as needed, following
-[Agent Skills Best Practices](.agents/skills/agent-skills-best-practices/SKILL.md).
+[Agent Skills Best Practices](.claude/skills/agent-skills-best-practices/SKILL.md).
 Common ones to add:
 
 - **Project Structure** — repository layout, stack, services, file placement.
@@ -265,7 +286,7 @@ Common ones to add:
 - **Domain skills** — content authoring, data-model/CMS operations, or any
   domain workflow specific to this project.
 
-For each new skill: add a directory under `.agents/skills/<name>/` with a
+For each new skill: add a directory under `.claude/skills/<name>/` with a
 `SKILL.md`, then add a row to the `AGENTS.md` skill index (there is a commented
 example block there) and to the review-lens lists in
 `code-review-guideline` / `development-guidelines` where relevant.
@@ -292,10 +313,12 @@ Confirm each added command actually runs before relying on the `check.sh` /
 
 ## Step 6 — Set up the agent harness binding(s)
 
-`AGENTS.md` + `.agents/skills/**` are the agent-agnostic substance. Each agent
+`AGENTS.md` + `.claude/skills/**` are the agent-agnostic substance. Each agent
 reads them through its own binding:
 
 - **Claude Code** — `CLAUDE.md` (`@AGENTS.md`) plus the `.claude/` directory:
+  - `.claude/skills/**` is also discovered natively by Claude Code, so each
+    skill is directly invocable in addition to being routed via `AGENTS.md`.
   - `.claude/settings.json` wires the `SessionStart` hook.
   - `.claude/settings.local-example.json` is the opt-in quality binding
     (format-on-edit + lint/test-before-stop); the session-start hook copies it
@@ -311,7 +334,9 @@ reads them through its own binding:
     own `.gitignore` elsewhere, move these entries there instead.
 - **Other agents** (Cursor, Copilot, Aider, etc.) — point them at `AGENTS.md`
   via their own mechanism (e.g. a rules file that imports/links `AGENTS.md`).
-  Add that binding file and, if the agent has no hook system, drop `.claude/`.
+  Add that binding file and, if the agent has no hook system, drop
+  `.claude/hooks/` and the `settings*.json` files — but keep `.claude/skills/`,
+  which `AGENTS.md` links into.
 
 Keep only the bindings for the agents named in Step 1.
 
@@ -335,8 +360,8 @@ Keep only the bindings for the agents named in Step 1.
       --exclude-dir=.next --exclude-dir=.git`).
 - [ ] No `<!-- INIT:OPTIONAL -->` markers remain: `grep -rn 'INIT:OPTIONAL' .`
 - [ ] No dangling relative skill links: `python3 tools/check-links.py` (checks
-      the `.agents/` tree a `glob('**/*.md')` sweep would skip).
-- [ ] `AGENTS.md` skill index matches the directories under `.agents/skills/`.
+      the `.claude/` tree a `glob('**/*.md')` sweep would skip).
+- [ ] `AGENTS.md` skill index matches the directories under `.claude/skills/`.
 - [ ] Removed skills have no remaining inbound links.
 - [ ] Added capabilities have a working command (the `check.sh` / `format.sh`
       hooks actually run).

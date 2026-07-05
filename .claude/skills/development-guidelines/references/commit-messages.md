@@ -1,6 +1,6 @@
 # Commit Messages
 
-Apply these rules whenever you author a Git commit or amend an existing one in this project. The project follows [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) — the normative rules below are summarized so no network fetch is required.
+Apply these rules whenever you author a Git commit, amend an existing one, or title a pull request in this project. The project follows [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) — the normative rules below are summarized so no network fetch is required.
 
 ## Overall Format
 
@@ -18,6 +18,16 @@ Apply these rules whenever you author a Git commit or amend an existing one in t
 - MUST keep the first line (the header: `type(scope)!: description`) a single line with no trailing period.
 - MUST separate the header, body, and footers with exactly one blank line each when they are present.
 
+## Pull Request Titles
+
+The header format is not commit-only: a pull request title MUST follow the same `<type>[scope][!]: <description>` shape as a commit header, so titles stay consistent and scannable regardless of merge strategy. It also matters at merge time: a squash merge commonly takes the pull request title as the squashed commit's subject (on GitHub, by default for multi-commit PRs, and for all PRs when "Default to pull request title" is enabled), so a title without a type prefix lands a non-conforming commit on the default branch. The title carries only the header; the body/footer live in the pull request description, not the title.
+
+**Guidelines:**
+
+- MUST title every pull request with a Conventional Commits header (`<type>[scope][!]: <description>`), applying the Type, Scope, Description, and Breaking-Change rules below exactly as for a commit header.
+- SHOULD pick the type from the primary change the pull request delivers when it spans more than one type (e.g., a change that is mostly CI config with an incidental docs tweak is `ci`).
+- MUST NOT apply this rule to issue titles: an issue states a problem or deliverable in plain descriptive prose, and is never a commit subject.
+
 ## Type
 
 Type sets the required project default: use `feat` when the commit adds a user-facing feature — correlates to a SemVer **MINOR** bump.
@@ -30,7 +40,7 @@ Type sets the required project default: use `feat` when the commit adds a user-f
   - `build` — build system or external dependencies (e.g., the dependency manifest or build config).
   - `chore` — housekeeping that does not fit another type (e.g., skill edits, config tweaks, repo metadata).
   - `ci` — CI/CD configuration (e.g., pipeline definitions or hosting/project settings).
-  - `docs` — documentation only (`AGENTS.md`, `.agents/skills/**`, `README.md`).
+  - `docs` — documentation only (`AGENTS.md`, `.claude/skills/**`, `README.md`).
   - `style` — formatting / whitespace only, no behavior change (formatter-driven, typically).
   - `refactor` — code change that neither fixes a bug nor adds a feature.
   - `perf` — performance improvement.

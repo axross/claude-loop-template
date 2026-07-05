@@ -58,6 +58,7 @@ See [commit-messages.md](./references/commit-messages.md) for:
 - Required types (`feat`, `fix`) and allowed additional types (`build`, `chore`, `ci`, `docs`, `style`, `refactor`, `perf`, `test`, `revert`)
 - Scope, description, body, and footer conventions
 - Breaking-change markers (`!` and `BREAKING CHANGE:` footer) and their SemVer correlation
+- Pull request titles (the same header format applies to PR titles, not just commits)
 
 ## Topic-Specific Guidelines
 
