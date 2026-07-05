@@ -40,7 +40,7 @@ Type sets the required project default: use `feat` when the commit adds a user-f
   - `build` — build system or external dependencies (e.g., the dependency manifest or build config).
   - `chore` — housekeeping that does not fit another type (e.g., skill edits, config tweaks, repo metadata).
   - `ci` — CI/CD configuration (e.g., pipeline definitions or hosting/project settings).
-  - `docs` — documentation only (`AGENTS.md`, `.agents/skills/**`, `README.md`).
+  - `docs` — documentation only (`AGENTS.md`, `.claude/skills/**`, `README.md`).
   - `style` — formatting / whitespace only, no behavior change (formatter-driven, typically).
   - `refactor` — code change that neither fixes a bug nor adds a feature.
   - `perf` — performance improvement.

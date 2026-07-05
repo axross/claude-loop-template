@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Relative-link integrity check for the AGENTS.md skill template.
 
-Walks every Markdown file in the tree — including dot-directories such as
-`.agents/` and `.claude/`, which `glob.glob('**/*.md')` silently skips — and
+Walks every Markdown file in the tree — including
+the `.claude/` dot-directory, which `glob.glob('**/*.md')` silently skips — and
 reports relative links whose target file does not exist.
 
 Why this exists: a naive `glob('**/*.md', recursive=True)` does NOT descend into
 directories whose name starts with a dot, so it never sees the skill files where
 nearly all of this template's cross-links live. This checker uses `os.walk` so
-the `.agents/` and `.claude/` trees are actually examined.
+the `.claude/` tree is actually examined.
 
 Usage:
     python3 tools/check-links.py          # check the whole tree

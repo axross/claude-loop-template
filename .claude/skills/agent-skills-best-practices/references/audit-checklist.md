@@ -28,7 +28,7 @@ Structural checks should be repeatable. They should ignore fenced code blocks so
 **Example:**
 
 ```sh
-find .agents/skills -name '*.md' -print | sort
+find .claude/skills -name '*.md' -print | sort
 ```
 
 **Guidelines:**

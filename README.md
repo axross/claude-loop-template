@@ -14,24 +14,26 @@ library, or service — and any agent — Claude Code, Cursor, Copilot, and othe
 ├── INIT.md                  # how to adapt this template (start here)
 ├── init.sh                  # metacharacter-safe {{TOKEN}} substitution + gates
 ├── tokens.json              # machine-readable manifest of every {{TOKEN}}
-├── tools/check-links.py     # relative-link integrity (descends .agents/ dot-dirs)
+├── tools/check-links.py     # relative-link integrity (descends the .claude/ dot-dir)
 ├── .gitignore               # ignores settings.local.json + .env.local (see INIT Step 6)
 ├── AGENTS.md                # master routing index + working agreement (universal)
 ├── CLAUDE.md                # @AGENTS.md — Claude Code's binding to AGENTS.md
-├── .agents/skills/          # the generic, cross-project skill core (12 skills)
-│   ├── agent-skills-best-practices/
-│   ├── application-security-requirements/
-│   ├── code-review-guideline/
-│   ├── development-guidelines/
-│   ├── e2e-testing-guidelines/
-│   ├── github-operations/
-│   ├── maintainable-code-guidelines/
-│   ├── observability-guidelines/
-│   ├── performance-and-reliability-requirements/
-│   ├── product-requirement-guidelines/
-│   ├── quality-assurance-guidelines/
-│   └── unit-test-guidelines/
-└── .claude/                 # example Claude Code harness binding (hooks + settings)
+└── .claude/
+    ├── skills/              # the generic, cross-project skill core (12 skills)
+    │   ├── agent-skills-best-practices/
+    │   ├── application-security-requirements/
+    │   ├── code-review-guideline/
+    │   ├── development-guidelines/
+    │   ├── e2e-testing-guidelines/
+    │   ├── github-operations/
+    │   ├── maintainable-code-guidelines/
+    │   ├── observability-guidelines/
+    │   ├── performance-and-reliability-requirements/
+    │   ├── product-requirement-guidelines/
+    │   ├── quality-assurance-guidelines/
+    │   └── unit-test-guidelines/
+    ├── hooks/               # example Claude Code harness binding (session-start, format, check)
+    └── settings.json        # wires the SessionStart hook
 ```
 
 The skill core covers cross-project workflow: how to author skills, frame
@@ -45,7 +47,7 @@ you add them during adaptation.
 
 - **`AGENTS.md`** is the agent-agnostic source of truth: a skill index plus a
   working agreement (plan → implement → self-review → verify → report).
-- **`.agents/skills/**`** hold the detailed, progressively-disclosed rules each
+- **`.claude/skills/**`** hold the detailed, progressively-disclosed rules each
   index entry routes to.
 - **Bindings** connect a specific agent to `AGENTS.md`: `CLAUDE.md` + `.claude/`
   for Claude Code; an equivalent rules file for other agents.
