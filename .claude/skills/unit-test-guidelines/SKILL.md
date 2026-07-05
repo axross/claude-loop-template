@@ -1,6 +1,6 @@
 ---
 name: unit-test-guidelines
-description: Apply this skill when writing, refactoring, reviewing, or running {{UNIT_TEST_FRAMEWORK}} unit tests in this project. Covers test framework configuration, explicit test-API imports, colocated test files, describe/case naming and grouping conventions, behavior-focused test design, fixture quality, AHA test abstraction, mocks and fakes, async assertions, snapshot discipline, schema/codec tests, type-only modules, and when unit tests should yield to integration or e2e coverage.
+description: Apply this skill when writing, refactoring, reviewing, or running {{UNIT_TEST_FRAMEWORK}} unit tests in this project. Covers test framework configuration, explicit test-API imports, colocated test files, describe/case naming and grouping conventions, behavior-focused test design, fixture quality, AHA test abstraction, mocks and fakes, async assertions, snapshot discipline, schema/codec tests, type-only modules, the optional coverage gate (thresholds and ignore pragmas), and when unit tests should yield to integration or e2e coverage.
 ---
 
 # Unit Test Guidelines
@@ -20,6 +20,7 @@ See [testing-scope.md](./references/testing-scope.md) for:
 See [spec-structure-and-naming.md](./references/spec-structure-and-naming.md) for:
 
 - adding, renaming, regrouping, or reviewing `describe(...)` and test-case blocks
+- naming subjects by kind: callables with `()`, UI components in angle brackets, non-callable contracts with no suffix
 - writing scenario names that read as clear verification sentences
 - grouping repeated conditions or situations without duplicating function names
 
@@ -44,6 +45,7 @@ See [fixtures-fakes-and-aha.md](./references/fixtures-fakes-and-aha.md) for:
 See [assertions-snapshots-and-side-effects.md](./references/assertions-snapshots-and-side-effects.md) for:
 
 - choosing assertions for values, async errors, side effects, and mock calls
+- asserting a branch's distinguishing observable output plus a negative case, not merely that something renders
 - deciding when snapshots are appropriate and how to keep them focused
 - verifying observable outcomes without relying on incidental implementation details
 
@@ -61,6 +63,7 @@ See [review-checklist.md](./references/review-checklist.md) for:
 
 - implementation self-review or code review for {{UNIT_TEST_FRAMEWORK}} unit tests
 - checking structure, naming, fixtures, mocks, assertions, and scope
+- the optional coverage gate: the project's coverage command, INIT-recorded thresholds, and ignore-pragma discipline
 - reporting residual risk when unit tests cannot cover the behavior with enough confidence
 
 ## Project Defaults

@@ -4,7 +4,7 @@ Apply these rules to verify that new code respects the project's separation of c
 
 ## Data-Access / UI Split
 
-Data-Access / UI Split sets the required project default: flag a UI module or request handler that talks to the data/content layer directly (e.g., opening a client/connection and querying it inline). Data access MUST go through a dedicated data-access module so caching, schema validation, and logging are centralized.
+When a UI module or request handler reaches into the data layer directly, caching, schema validation, and logging scatter across every call site instead of living in one place.
 
 **Guidelines:**
 
@@ -14,7 +14,7 @@ Data-Access / UI Split sets the required project default: flag a UI module or re
 
 ## Server / Client Boundary
 
-Server / Client Boundary sets the required project default: flag a client-side component that performs data fetching (calling the data/content layer or a network request directly) — see the project's own component skill, if defined. Lift the fetch into the parent server-side component or its data-access module.
+Fetching from the client ships data-access code into the browser bundle and adds a network round-trip the server could have avoided.
 
 **Guidelines:**
 
@@ -25,7 +25,7 @@ Server / Client Boundary sets the required project default: flag a client-side c
 
 ## Domain Pipeline Boundary
 
-Domain Pipeline Boundary sets the required project default: flag any new module that re-implements a shared domain pipeline (for example, a content-transformation or rendering chain) outside its single owning module. The pipeline is a single chain owned in one place, per the project's own domain skill, if defined.
+A shared pipeline copied into a second place drifts out of sync, so a fix applied to one copy silently skips the rest.
 
 **Guidelines:**
 
@@ -38,7 +38,7 @@ Domain Pipeline Boundary sets the required project default: flag any new module 
 <!-- INIT:OPTIONAL key=DATA_LAYER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project has no `{{CMS_OR_DATA_LAYER}}` with lifecycle hooks, delete this section during INIT.*
 
-Data-Layer Hooks / UI Boundary sets the required project default: flag a data-layer lifecycle hook (before/after an operation) that imports UI modules — such hooks run server-side, outside the UI runtime.
+Data-layer lifecycle hooks run server-side, outside the UI runtime, so a UI import there either breaks at runtime or drags view code into a realm that must stay UI-free.
 
 **Guidelines:**
 
@@ -47,7 +47,7 @@ Data-Layer Hooks / UI Boundary sets the required project default: flag a data-la
 
 ## Cross-Tier Imports
 
-Cross-Tier Imports sets the required project default: flag any import path that crosses tiers in the wrong direction:
+An import that runs against the tier hierarchy couples layers meant to stay independent, eroding the boundaries the tiers exist to enforce.
 
 **Guidelines:**
 

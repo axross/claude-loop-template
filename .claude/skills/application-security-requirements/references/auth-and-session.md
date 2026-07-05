@@ -7,7 +7,7 @@ Apply these rules to verify the project's authentication is not weakened and the
 
 ## Authentication Lockout Settings
 
-This review focuses on critical-severity cases where the diff weakens the authentication system's lockout / rate-limit settings.
+Lockout and rate-limit settings are the only cost imposed on password guessing, so a relaxed threshold quietly turns the login form into a brute-force oracle.
 
 **Guidelines:**
 
@@ -20,7 +20,7 @@ This review focuses on critical-severity cases where the diff weakens the authen
 
 ## Session Cookies
 
-This review focuses on critical-severity cases where a new component or request handler reads or writes session cookies directly instead of going through the project's auth system. The auth system owns cookie management — bypassing it desyncs the auth state.
+Cookie names, flags, and rotation are internal details of the authentication system, so a second reader or writer breaks silently whenever that system changes them.
 
 **Guidelines:**
 
@@ -29,7 +29,7 @@ This review focuses on critical-severity cases where a new component or request 
 
 ## Privileged / Preview Auth Path
 
-This review focuses on critical-severity cases where the diff makes a privileged or preview state (e.g., `?preview=true` or `?draft=true`) reachable without a valid authenticated session. A preview flag should only switch rendering mode; the underlying data fetch for non-public content MUST still rely on the auth system's gating.
+URLs leak by design — into history, logs, referrers, and shared links — so a query flag that unlocks non-public data is a password published in plain sight.
 
 **Guidelines:**
 
@@ -64,7 +64,7 @@ If the analytics client is configured with autocapture (capturing visible text a
 
 ## Localhost / Production Divergence
 
-This review focuses on major-severity cases where the diff causes a code path to execute only in a local/development environment but has no equivalent for production — a localhost-only auth bypass that ships to production via a deployed branch is a recurring class of bug.
+Code gated to the local environment escapes every production test and review scenario, so its divergence from the production path surfaces only after deployment.
 
 **Guidelines:**
 

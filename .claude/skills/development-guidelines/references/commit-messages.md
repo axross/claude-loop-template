@@ -1,6 +1,6 @@
 # Commit Messages
 
-Apply these rules whenever you author a Git commit, amend an existing one, or title a pull request in this project. The project follows [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) — the normative rules below are summarized so no network fetch is required.
+Apply these rules whenever you author a Git commit, amend an existing one, or title a pull request in this project. The same header format also governs **pull request titles** — see [Pull Request Titles](#pull-request-titles). The project follows [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) — the normative rules below are summarized so no network fetch is required.
 
 ## Overall Format
 
@@ -30,7 +30,7 @@ The header format is not commit-only: a pull request title MUST follow the same 
 
 ## Type
 
-Type sets the required project default: use `feat` when the commit adds a user-facing feature — correlates to a SemVer **MINOR** bump.
+The type prefix is what tooling reads to derive the release bump, so it must name the change's true nature.
 
 **Guidelines:**
 
@@ -50,7 +50,7 @@ Type sets the required project default: use `feat` when the commit adds a user-f
 
 ## Scope
 
-Scope describes an optional project path: include a scope in parentheses immediately after the type, e.g., `fix(parser): ...`.
+A scope tells a reader which part of the codebase moved without opening the diff — useful, but only when one section is clearly primary.
 
 **Guidelines:**
 
@@ -60,7 +60,7 @@ Scope describes an optional project path: include a scope in parentheses immedia
 
 ## Description
 
-Description sets the required project default: place the description immediately after `: ` and keep it a short imperative summary of the change (e.g., "add Polish language", not "added" or "adds").
+The description is the one line that shows in `git log --oneline`, and the imperative mood reads as the command the commit carries out.
 
 **Guidelines:**
 
@@ -70,7 +70,7 @@ Description sets the required project default: place the description immediately
 
 ## Body
 
-Body describes an optional project path: provide a body one blank line after the description to add context, rationale, or migration notes — use it whenever the "why" is not obvious from the diff.
+The diff already shows what changed; the body is where the reasoning the code cannot express survives for the next reader.
 
 **Guidelines:**
 
@@ -80,7 +80,7 @@ Body describes an optional project path: provide a body one blank line after the
 
 ## Footers
 
-Footers describes an optional project path: place one or more footers one blank line after the body (or after the description, if the body is omitted).
+Footers carry machine-parseable trailers — issue references, review credits, breaking-change notes — that tooling can extract without reading the prose.
 
 - `BREAKING CHANGE` is the only token allowed to contain a space. `BREAKING-CHANGE` (hyphenated) is synonymous and equally valid.
 
@@ -181,7 +181,7 @@ Refs: 676104e, a215868
 
 ## Tooling Notes
 
-Tooling Notes captures the project-specific context for the checklist below: The repository does not currently enforce commit messages with a commit hook or CI check, so authors (human or agent) MUST self-enforce this format.
+Nothing in the repository — no commit hook, no CI check — rejects a malformed message, so a non-conforming commit lands silently unless the author catches it first.
 
 - When amending or rewriting history, re-check that every rewritten commit still conforms — especially that breaking changes carry either `!` or the footer.
 

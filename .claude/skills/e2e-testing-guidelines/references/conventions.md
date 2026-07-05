@@ -4,16 +4,18 @@ _Code examples below use Playwright APIs (`getByTestId`, `storageState`, `test.s
 
 ## Locator Usage
 
-Locator Usage sets the required project default: use the framework's stable test-id locator for locators.
+Elements are targeted by stable test-id hooks scoped through their container, so copy edits and markup reshuffles never break a spec. When a hook is missing, the fallback order goes through accessibility, then copy: role-based locators cover accessible controls that cannot carry a test id, and text matching is reserved for assertions about the copy itself. Document structure is a last resort reserved for DOM the project cannot instrument.
 
 **Guidelines:**
 
-- MUST use the framework's test-id locator for locators.
+- MUST use the framework's test-id locator as the default for locating elements.
 - MUST use kebab-case for test IDs.
 - MUST use chained/scoped locators to narrow down the scope of the locator.
   - For example, scope a header lookup to its page container instead of querying the header globally.
-- SHOULD fall back to a generic CSS/structural locator only for cases that cannot be expressed with a test-id locator.
-- MUST NOT use text-matching locators (locating by visible text).
+- MUST use role-based locators, matching by accessible name, for accessible controls (buttons, options, menu items) that cannot carry a test id — for example, elements portaled out of the component's own markup.
+- MUST NOT use text-matching locators except when the assertion is about the copy itself, such as an empty-state message.
+- MUST add a new test id to the component when no stable hook exists rather than reaching for a structural CSS selector.
+- MAY scope a structural locator inside a test-id-anchored container as a last resort for third-party-rendered DOM the project cannot instrument, when no role applies and the assertion is not about copy; leave a comment naming why no stable hook was possible.
 
 **Example:**
 
@@ -46,9 +48,9 @@ test("Item summary section", async ({ page }) => {
 
 ## Assertions
 
-Assertions sets the required project default: prefer the framework's native auto-waiting assertions (visibility, focus, attribute, class, text, count) over pulling DOM state back into the test for manual comparison. Native assertions auto-wait and produce clearer failure messages; e.g., assert focus directly on the locator instead of reading `document.activeElement` and comparing it yourself.
+Prefer the framework's native auto-waiting assertions (visibility, focus, attribute, class, text, count) over pulling DOM state back into the test for manual comparison. Native assertions auto-wait and produce clearer failure messages; e.g., assert focus directly on the locator instead of reading `document.activeElement` and comparing it yourself.
 
-- To assert state that no native assertion covers (such as a computed style or a pseudo-element property), read it inside an in-browser evaluation on the host locator and wrap the call in a polling helper so scroll-driven or transition-driven changes have time to settle.
+To assert state that no native assertion covers (such as a computed style or a pseudo-element property), read it inside an in-browser evaluation on the host locator and wrap the call in a polling helper so scroll-driven or transition-driven changes have time to settle.
 
 **Guidelines:**
 
@@ -58,7 +60,7 @@ Assertions sets the required project default: prefer the framework's native auto
 
 ## Hooks Usage
 
-Hooks Usage describes the preferred project default: use a before-each hook for setup that is not dependent on the test case.
+Case-independent setup and cleanup belong in hooks so every spec starts from the same state and test bodies show only the behavior under test.
 
 **Guidelines:**
 
@@ -79,9 +81,12 @@ test.beforeEach(async ({ page }) => {
 
 ## API Calls
 
+<!-- INIT:OPTIONAL key=BACKEND_API — keep if the project has a backend/API surface OR delete this block (client-only projects). -->
+*If this project is client-only with no backend or API surface, delete this entire section during INIT.*
+
 ### Authentication
 
-Authentication describes the preferred project default: reuse authenticated storage state when using API call functions, so each test does not re-authenticate.
+Re-authenticating in every test is slow and adds a failure mode unrelated to the behavior under test; a saved authenticated storage state lets each spec and its API helpers share one login.
 
 **Guidelines:**
 
@@ -104,7 +109,7 @@ test.beforeEach(async ({ page }) => {
 
 ### API Call Usage
 
-API Call Usage describes the preferred project default: use API call functions to retrieve data to compare with the UI.
+Hard-coded expected values drift as content changes; fetching the same record through the API keeps UI assertions accurate without editing the spec every time the data moves.
 
 **Guidelines:**
 
@@ -141,6 +146,8 @@ test("Item header", async ({ page }, testInfo) => {
 ```
 
 ### API Call Function Definitions
+
+Centralizing request wiring in named helpers keeps auth state, URL construction, and response validation consistent across specs, so test cases read as behavior instead of HTTP plumbing.
 
 **Example:**
 

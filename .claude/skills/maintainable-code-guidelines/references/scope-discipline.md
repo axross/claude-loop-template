@@ -4,7 +4,7 @@ Apply these rules to verify the diff is exactly what the stated task required â€
 
 ## In-Scope vs Out-of-Scope
 
-In-Scope vs Out-of-Scope sets the required project default: identify the stated user goal (from the PR description, commit message, or the task the user gave the reviewer) and confirm every changed file traces back to that goal.
+Every changed file a reviewer cannot trace back to the stated goal widens the review surface and the blast radius of a regression.
 
 **Guidelines:**
 
@@ -14,7 +14,7 @@ In-Scope vs Out-of-Scope sets the required project default: identify the stated 
 
 ## YAGNI
 
-YAGNI sets the required project default: flag a new abstraction (a new helper, a new data-access function, a new component prop, a new generic type parameter) that has only **one** caller in the diff and no documented future caller. Inline it.
+An abstraction introduced before a second caller exists guesses at a shape the future may never need, paying indirection now for a payoff that may never come.
 
 **Guidelines:**
 
@@ -24,7 +24,7 @@ YAGNI sets the required project default: flag a new abstraction (a new helper, a
 
 ## DRY (Done Right)
 
-DRY (Done Right) describes the preferred project default: flag two or more code blocks in the diff that are byte-for-byte (or near-identical) duplicates **of the same concern**. Extract a helper.
+Genuine duplicates of a single concern drift apart the moment one copy is updated and the others are forgotten.
 
 **Guidelines:**
 
@@ -34,7 +34,7 @@ DRY (Done Right) describes the preferred project default: flag two or more code 
 
 ## KISS
 
-KISS describes the preferred project default: flag a clever one-liner that requires more than ten seconds to parse when a multi-line, named-step version would read cleaner.
+Code is read far more often than it is written, so a line that takes ten seconds to decode taxes every future reader.
 
 **Guidelines:**
 
@@ -44,7 +44,7 @@ KISS describes the preferred project default: flag a clever one-liner that requi
 
 ## SOLID Applied to Component Trees
 
-SOLID Applied to Component Trees describes the preferred project default: flag a server-side component whose responsibility extends across multiple unrelated entities (e.g., one component that fetches a record **and** the site settings **and** the tag list). Split per concern; each child gets its own loading/streaming boundary, per the project's own component skill, if defined.
+A component that owns several unrelated entities couples their fetches, so one slow or failing entity holds up everything the component renders.
 
 **Guidelines:**
 
@@ -54,7 +54,7 @@ SOLID Applied to Component Trees describes the preferred project default: flag a
 
 ## Diff Size
 
-Diff Size describes the preferred project default: flag a single PR/diff that touches more than ~15 unrelated files or more than ~600 lines net change as Minor "consider splitting". Large diffs increase the chance the reviewer misses something. Defer the split decision to the human owner per [escalation.md](../../code-review-guideline/references/escalation.md).
+The more unrelated ground one diff covers, the more likely a real defect slips past the reviewer unnoticed.
 
 **Guidelines:**
 

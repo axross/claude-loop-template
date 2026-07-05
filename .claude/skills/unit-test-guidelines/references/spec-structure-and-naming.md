@@ -41,9 +41,9 @@ describe("deleteRecordTool", () => {
 - MUST use the project's chosen test-case function consistently and not mix it with an alternative spelling.
 - MUST group scenarios with `describe(...)` by the exported function, method, handler object, schema, codec, object contract, or type contract under test.
 - MUST suffix function, method, or callable handler names in `describe(...)` or test-case titles with `()`, such as `describe("formatTags()")`, `describe("deleteRecordTool()")`, or `it("calls sanitize()")`.
-- MUST NOT suffix non-callable schemas, codecs, object contracts, or type names with `()`, such as `describe("RecordResponse")`.
+- MUST NOT suffix non-callable subjects with `()`: schemas, codecs, object contracts, and type names stay bare, such as `describe("RecordResponse")`, and UI-component subjects take angle brackets instead, such as `describe("<RecordHeader>")`, when the project's unit suite renders components.
 - MUST write test-case names as sentence-like behavior statements that describe what the scenario verifies or ensures.
-- MUST NOT repeat the outer `describe(...)` subject in every child test-case name.
+- SHOULD NOT repeat the outer `describe(...)` subject in every child test-case name.
 - MUST name condition-specific scenarios with the relevant condition, such as `when input is a paginated response`, `when index is invalid`, or `when an optional flag is enabled`.
 - MUST group multiple scenarios that share the same condition or situation under a nested `describe("when ...")` block.
 - SHOULD split one broad test case into multiple scenarios when it verifies different conditions, such as `null` vs primitive input, negative vs out-of-range indexes, or paginated vs single-record input.

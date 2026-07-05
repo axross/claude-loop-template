@@ -18,7 +18,11 @@ library, or service — and any agent — Claude Code, Cursor, Copilot, and othe
 ├── .gitignore               # ignores settings.local.json + .env.local (see INIT Step 6)
 ├── AGENTS.md                # master routing index + working agreement (universal)
 ├── CLAUDE.md                # @AGENTS.md — Claude Code's binding to AGENTS.md
+├── REVIEW.md                # optional: posted-review policy for the independent-review capability
+├── .github/
+│   └── workflows/           # optional: example CI reviewer + merge checks (GitHub Actions + Claude Code)
 └── .claude/
+    ├── commands/            # optional: /review + /address entry points (Claude Code examples)
     ├── skills/              # the generic, cross-project skill core (12 skills)
     │   ├── agent-skills-best-practices/
     │   ├── application-security-requirements/
@@ -42,6 +46,11 @@ GitHub, and review for maintainability, security, performance/reliability,
 observability, and QA evidence. Project-specific skills
 (structure, components, routing, UI, domain) are intentionally **not** shipped —
 you add them during adaptation.
+
+An optional **independent-review capability** ships alongside the core:
+`REVIEW.md` (the posted-review policy), the `.claude/commands/` entry points,
+and the example `.github/workflows/`. Keep and adapt it, or delete it — INIT
+Step 4 covers both paths.
 
 ## How it works
 

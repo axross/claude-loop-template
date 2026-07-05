@@ -4,7 +4,7 @@ Apply these rules to verify that changed files live in the right place with the 
 
 ## File Naming
 
-File Naming sets the required project default: flag any new source/style file whose name does not match the project's established file-naming convention (for example, if the project uses kebab-case, flag `RecordHeader.tsx` or `record_header.tsx`). Match whatever convention the surrounding files use, per the project's own component skill, if defined.
+A file that breaks the surrounding naming convention is harder to locate and makes readers and tooling second-guess what kind of module it is.
 
 **Guidelines:**
 
@@ -45,7 +45,7 @@ When the diff adds or moves a route/feature, the reviewer MUST verify it against
 
 ## Identifier Naming
 
-Identifier Naming sets the required project default: flag identifier-naming inconsistency within the changed file's neighborhood. Examples to flag:
+A symbol named or cased unlike its neighbors makes the reader stop to check whether the difference carries meaning.
 
 **Guidelines:**
 
