@@ -28,6 +28,16 @@ expect(decode(TagResponse, response)).toMatchSnapshot();
 - MUST NOT assert every incidental field merely because it exists in the returned object.
 - SHOULD assert stable error contracts, not every word of a third-party formatter unless the exact text is part of this project's API.
 
+## Distinguishing Observable Output
+
+Reaching a branch is necessary but not sufficient. An assertion that only checks something renders or exists proves reachability, not behavior — it keeps passing even after the branch itself is deleted.
+
+**Guidelines:**
+
+- MUST assert the branch's **distinguishing observable output**, not merely that something renders or exists — a test that exercises a conditional state but only makes an element-merely-renders assertion would still pass if the branch were deleted.
+- MUST assert the difference the branch produces: the toggled attribute or state, the changed text, the emitted call.
+- SHOULD add a negative case proving the distinguishing output is absent when the branch is not taken, where practical.
+
 ## Snapshot Discipline
 
 Snapshots are useful when the serialized output is small, deterministic, and easier to review than a hand-written assertion. They are risky when they are large, unstable, or accepted without understanding the behavior change.

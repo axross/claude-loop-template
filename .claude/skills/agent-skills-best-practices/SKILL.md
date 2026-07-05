@@ -1,6 +1,6 @@
 ---
 name: agent-skills-best-practices
-description: Apply this skill whenever creating, refining, restructuring, renaming, or auditing an agent skill under the host project's skill root (e.g., `.claude/skills/`) - drafting a `SKILL.md`, splitting a skill into reference files, tightening a `description`, or deciding where a new rule belongs. Covers agentskills.io frontmatter, host-project harness fields, kebab-case naming, description writing for discovery, section anatomy with concise examples plus RFC-2119 guideline bullets, progressive disclosure, relative-path cross-references, audit checks, and keeping the host project's master skill index in sync.
+description: Apply this skill whenever creating, refining, restructuring, renaming, or auditing an agent skill under the host project's skill root (e.g., `.claude/skills/`) - drafting a `SKILL.md`, splitting a skill into reference files, tightening a `description`, or deciding where a new rule belongs. Covers agentskills.io frontmatter, host-project harness fields, kebab-case naming, description writing for discovery, section anatomy with concise examples plus RFC-2119 guideline bullets, progressive disclosure, relative-path cross-references, archetype skeletons for the INIT-created project skills (structure, component, UI/design), audit checks, and keeping the host project's master skill index in sync.
 ---
 
 # Agent Skills Best Practices
@@ -56,6 +56,14 @@ See [cross-referencing.md](./references/cross-referencing.md) for:
 - adding, renaming, moving, deleting, or linking skills and reference files
 - choosing one source of truth instead of copying detailed rules across skills
 - verifying relative links and keeping the host project's master skill index synchronized
+
+## Project Skill Archetypes
+
+See [project-skill-archetypes.md](./references/project-skill-archetypes.md) for:
+
+- creating the INIT-called-for project skills: structure, component, and UI/design
+- the three-way ownership triangle and each archetype's skeleton, topics checklist, or table patterns
+- growing archetype skeletons with worked examples and mechanical boundary checks
 
 ## Audit Checklist
 
