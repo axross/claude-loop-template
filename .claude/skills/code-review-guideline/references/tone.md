@@ -4,7 +4,7 @@ Apply these rules to every line of every review the agent emits.
 
 ## Constructive Language
 
-Constructive Language sets the required project default: address the **code**, not the **author**. Write "this function does X" not "you wrote a function that does X".
+Feedback aimed at a person invites defensiveness and pulls the discussion away from the work; feedback aimed at the code stays actionable.
 
 **Guidelines:**
 
@@ -15,7 +15,7 @@ Constructive Language sets the required project default: address the **code**, n
 
 ## Stating the "Why"
 
-Stating the "Why" sets the required project default: include a "Risk:" or "Why:" line for every Critical and Major finding so the author understands the cost of leaving the issue, not just the rule cited.
+An author weighing whether to act on a finding needs to see the cost of leaving it, not just which rule it cites.
 
 **Guidelines:**
 
@@ -24,7 +24,7 @@ Stating the "Why" sets the required project default: include a "Risk:" or "Why:"
 
 ## Acknowledging Strengths
 
-Acknowledging Strengths sets the required project default: include at least one item in the **Strengths** section of every review unless the diff is trivially small (≤ 5 changed lines and no new files).
+A review that lists only faults reads as an attack and leaves the author no signal about what is working and worth preserving.
 
 **Guidelines:**
 
@@ -34,7 +34,7 @@ Acknowledging Strengths sets the required project default: include at least one 
 
 ## Handling Style and Preference
 
-Handling Style and Preference is a project prohibition: do not report personal-style preferences as Major or Critical. If a rule is not in the guidelines and not a clear correctness/security/perf issue, label it Nit and prefix with "Optional:".
+Blocking a merge over taste erodes trust in the severity labels that real defects depend on.
 
 **Guidelines:**
 
@@ -43,7 +43,7 @@ Handling Style and Preference is a project prohibition: do not report personal-s
 
 ## Flagging Assumptions
 
-Flagging Assumptions sets the required project default: state assumptions explicitly when the reviewer cannot verify a fact from the diff alone (e.g., "Assuming `STORAGE_TOKEN` is set in production; if not, this branch will never run.").
+An unstated assumption can silently invert whether a finding is even valid; naming it lets the author confirm or correct it instead of dismissing the whole finding.
 
 **Guidelines:**
 
@@ -52,7 +52,7 @@ Flagging Assumptions sets the required project default: state assumptions explic
 
 ## Human-Authored Content
 
-Human-Authored Content is a project prohibition: do not correct or comment on the wording, copy, or translations of human-authored content (e.g., content managed in the data/content layer or any localized strings). Content correctness is a separate responsibility, not code review. From the code review perspective, SHOULD only flag rendering, escaping, or localization-handling bugs in the surrounding code.
+Copy and translations belong to their authors; a reviewer editing them spends review attention on work that sits outside code review's remit.
 
 **Guidelines:**
 

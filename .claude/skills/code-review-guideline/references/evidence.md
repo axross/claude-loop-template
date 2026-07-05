@@ -4,7 +4,7 @@ Apply these rules so every finding is verifiable, actionable, and traceable back
 
 ## Citation Requirements
 
-Citation Requirements sets the required project default: cite a `file:line` (or `file:line-line` for a range) for every finding. Use repo-relative paths from the project root (e.g., `{{SOURCE_DIR}}/records/[id]/get-record.ts:42`).
+A finding the author cannot locate is one they cannot act on, so every finding is anchored to a precise, repo-relative `file:line`.
 
 **Guidelines:**
 
@@ -15,7 +15,7 @@ Citation Requirements sets the required project default: cite a `file:line` (or 
 
 ## Fix Snippet Format
 
-Fix Snippet Format sets the required project default: provide a concrete fix snippet for every Critical and Major finding. Minor findings SHOULD include a fix; Nits MAY omit it when the suggestion is self-evident.
+A concrete diff turns a finding into something the fixer can apply directly, instead of re-deriving the solution from a prose description.
 
 **Example:**
 

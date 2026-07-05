@@ -4,15 +4,17 @@ Apply these rules to label every finding before reporting it. Severity drives bo
 
 ## Severity Definitions
 
-Severity Definitions captures the project-specific context for the checklist below: **Critical** — MUST block merge. The change introduces a defect that will cause data loss, a security breach, a production outage, a broken `main` branch (lint/build/test failure), or a violation of a developer-facing MUST rule that any user will hit on the first request.
+Four severities order every finding and drive the verdict. Each pairs a merge impact with the class of defect that earns it.
 
+- **Critical** — MUST block merge. A defect that will cause data loss, a security breach, a production outage, a broken `main` branch (lint/build/test failure), or a violation of a developer-facing MUST rule that any user hits on the first request.
+- **Major** — SHOULD block merge unless deferred deliberately. A defect that degrades correctness, performance, or reliability in a way users notice, or violates a developer-facing SHOULD rule with no documented justification.
+- **Minor** — Non-blocking but worth addressing. Readability, naming, or small refactor opportunities; missing-but-non-critical test coverage; non-load-bearing convention drift.
 - **Nit** — Optional polish. Style preferences, alternative phrasings, micro-optimizations with no measurable benefit.
 
 **Guidelines:**
 
-- MUST classify **Critical** findings as merge-blocking. The change introduces a defect that will cause data loss, a security breach, a production outage, a broken `main` branch (lint/build/test failure), or a violation of a developer-facing MUST rule that any user will hit on the first request.
-- SHOULD classify **Major** findings as merge-blocking unless deferred deliberately. The change introduces a defect that will degrade correctness, performance, or reliability in a way users will notice, or violates a developer-facing SHOULD rule with no documented justification.
-- SHOULD classify **Minor** findings as non-blocking but worth addressing. Readability, naming, or small refactor opportunities; missing-but-non-critical test coverage; non-load-bearing convention drift.
+- MUST classify every finding as exactly one of the four severities above.
+- MUST treat Critical as merge-blocking, and Major as merge-blocking unless deferred deliberately with a stated reason.
 
 ## Required Severity Floors
 
@@ -57,7 +59,7 @@ The reviewer MUST emit one of these three verdicts in the report Summary, derive
 
 ## When in Doubt
 
-When in Doubt describes the preferred project default: escalate uncertain severity upward, not downward. A finding labeled Major that turns out to be Minor wastes the author's attention; a Critical mislabeled as Minor causes a production incident.
+The two directions of misclassification are not symmetric: an over-labeled finding costs a little of the author's attention, while an under-labeled one can ship a production incident.
 
 **Guidelines:**
 
