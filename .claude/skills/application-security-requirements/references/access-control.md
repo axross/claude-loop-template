@@ -7,7 +7,7 @@ Apply these rules to verify the data layer's access rules and the project's requ
 
 ## Data-Layer Access Rules
 
-Data-Layer Access Rules review focuses on critical-severity cases where a new data-layer resource (collection, model, table-backed entity) is added without explicit access rules. A default-deny data layer is safe, but a missing-by-omission rule on a resource that should be publicly readable (e.g., published content for anonymous visitors) means the rendered route returns empty.
+Access rules are enforced at the data layer itself, so every route, handler, and background job inherits whatever a resource's rules allow — a wrong rule is wrong everywhere at once.
 
 **Guidelines:**
 
@@ -18,7 +18,7 @@ Data-Layer Access Rules review focuses on critical-severity cases where a new da
 
 ## Unpublished / Non-Default Content Gating
 
-This review focuses on critical-severity cases where a data-access function accepts a flag requesting non-default content (e.g., `draft: true`) and forwards it without first verifying the request is authenticated to view that content. The established callers gate on an explicit request flag AND rely on the data layer's own auth — confirm both are present.
+Unpublished content is only as private as the least-guarded code path able to request it, so the authentication check belongs before the flag is forwarded, not somewhere downstream.
 
 **Guidelines:**
 
@@ -28,7 +28,7 @@ This review focuses on critical-severity cases where a data-access function acce
 
 ## Authentication Lockout Settings
 
-This review focuses on critical-severity cases where the diff weakens the authentication system's lockout settings.
+Lockout settings are the only brake on credential brute-forcing, and a weakened threshold looks like an innocuous config tweak in a diff.
 
 **Guidelines:**
 
@@ -39,7 +39,7 @@ This review focuses on critical-severity cases where the diff weakens the authen
 
 ## Request Handler Authentication
 
-Request Handler Authentication review focuses on critical-severity cases where a new mutation handler (`POST`, `PUT`, `PATCH`, `DELETE`) does not verify the caller's identity. Even seemingly harmless endpoints (e.g., a cache-revalidation endpoint) can be abused for DoS — the reviewer SHOULD recommend either rate-limiting or a shared-secret header for new ones.
+A mutation handler is reachable by every client on the internet the moment it deploys, whether or not any UI links to it.
 
 **Guidelines:**
 
@@ -48,7 +48,7 @@ Request Handler Authentication review focuses on critical-severity cases where a
 
 ## Preview / Privileged Mode
 
-Preview / Privileged Mode review focuses on critical-severity cases where a new route uses a query flag (e.g., `?preview=true`) to bypass production gating without also requiring the authenticated content path. A preview flag should only switch the rendering mode — it MUST NOT itself unlock non-public content.
+Query flags travel in URLs — shared, logged, crawled, and guessable — so a flag can select a rendering mode but never stand in for a credential.
 
 **Guidelines:**
 

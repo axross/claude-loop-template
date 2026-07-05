@@ -7,7 +7,7 @@ Apply these rules to verify the project's authentication is not weakened and the
 
 ## Authentication Lockout Settings
 
-This review focuses on critical-severity cases where the diff weakens the authentication system's lockout / rate-limit settings.
+Lockout and rate-limit settings are the only cost imposed on password guessing, so a relaxed threshold quietly turns the login form into a brute-force oracle.
 
 **Guidelines:**
 

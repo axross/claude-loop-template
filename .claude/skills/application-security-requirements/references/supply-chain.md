@@ -4,7 +4,7 @@ Apply these rules to verify new dependencies are justified, trustworthy, and do 
 
 ## Dependency Justification
 
-Dependency Justification review focuses on major-severity cases where the diff adds a new entry to the dependency manifest without a justification per [development-guidelines › change-management](../../development-guidelines/references/change-management.md). The author should have considered ≥ 2 alternatives and chosen the most popular / well-maintained / platform-agnostic option.
+A dependency is a permanent liability — maintenance, security surface, and weight — that outlives the task that introduced it, so admitting one is never a free decision.
 
 **Guidelines:**
 
@@ -17,7 +17,7 @@ Dependency Justification review focuses on major-severity cases where the diff a
 
 ## Lockfile
 
-Lockfile review focuses on critical-severity cases where the diff modifies the dependency manifest but the lockfile is unchanged, or vice versa — they must move together.
+When the manifest and lockfile drift apart, installs stop being reproducible and CI or a teammate can resolve versions the author never tested.
 
 **Guidelines:**
 
@@ -40,7 +40,7 @@ For each new direct dependency, the reviewer SHOULD verify (and request from the
 
 ## Postinstall and Lifecycle Scripts
 
-Postinstall and Lifecycle Scripts review focuses on critical-severity cases where a new dependency declares a `postinstall`, `preinstall`, `prepare`, or `prepublish` script in its own manifest (visible in the lockfile) that runs a shell command, downloads a binary, or runs the runtime against an arbitrary file. Known-good binary-installer dependencies already vetted in the project are acceptable — new ones in that category need explicit justification.
+Install-time scripts run arbitrary code on every developer and CI machine before any application code executes, which makes them a favored supply-chain attack vector.
 
 **Guidelines:**
 
@@ -48,7 +48,7 @@ Postinstall and Lifecycle Scripts review focuses on critical-severity cases wher
 
 ## Platform Specificity
 
-Platform Specificity review focuses on major-severity cases where a new dependency is platform-specific (e.g., a single-OS native module) when a platform-agnostic alternative exists. The project's deployment target and its development environment must both work.
+A dependency bound to one OS or runtime breaks whichever environment it does not support — either the deployment target or a contributor's machine.
 
 **Guidelines:**
 
@@ -60,7 +60,7 @@ Platform Specificity review focuses on major-severity cases where a new dependen
 <!-- INIT:OPTIONAL key=CLIENT_BUNDLE — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *This section applies only when the project bundles code for a client/browser. Delete it during INIT for projects that ship no client bundle (e.g., a CLI or backend service).*
 
-Bundling Implications review focuses on major-severity cases where the new dependency lacks tree-shaking support (no ESM, no `sideEffects: false`) and is imported into client-bundled code. Cross-reference with [performance-and-reliability-requirements › bundle-weight](../../performance-and-reliability-requirements/references/bundle-weight.md).
+A dependency that cannot be tree-shaken ships its whole body to the browser, taxing every visitor with code paths they never exercise.
 
 **Guidelines:**
 
@@ -69,7 +69,7 @@ Bundling Implications review focuses on major-severity cases where the new depen
 
 ## Transitive CVEs
 
-Transitive CVEs describes the preferred project default: recommend the author run the package manager's audit command and report findings before merge when the diff changes the lockfile. `high` and `critical` audit severities MUST be resolved or explicitly deferred with rationale.
+A single new direct dependency can pull in dozens of transitive packages the author never inspects, and any of them can already carry a known vulnerability.
 
 **Guidelines:**
 
