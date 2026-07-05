@@ -10,7 +10,7 @@ Apply this reference as a starting skeleton for the "Product requirement" and "A
 
 ## Skeleton
 
-Copy the fenced block into the spec, fill each slot, and delete the italic annotations before publishing.
+The two sections below are the spec's product-requirement halves; everything in `<…>` is a slot to fill, and everything in italics is an annotation to delete.
 
 ```markdown
 ## Product requirement

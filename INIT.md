@@ -91,8 +91,8 @@ user leaves unspecified — but never invent the project's goal or kind.
    drives both the token fill (Step 3) and the keep-or-delete decision for every
    `<!-- INIT:OPTIONAL -->` section (Step 4): **have** and **add** keep the
    section (fill the token; **add** also scaffolds the tool in Step 5); **skip**
-   deletes it. (GitHub operations is the one capability with no token — its keep
-   path is the Step-4 bullet, not a token fill.)
+   deletes it. (GitHub operations has no token — its keep path is the Step-4
+   bullet, not a token fill.)
 4. **Rough picture.** In one or two sentences, what is the project's goal /
    overview? (This becomes the Project Overview in `AGENTS.md`.)
 5. **Which agents** will use this repo (Claude Code, Cursor, Copilot, others)?
@@ -231,8 +231,7 @@ below apply to the **skip** path.
   keep the skill, delete its `<!-- INIT:OPTIONAL -->` marker and the italic
   "_delete or adapt_" note, replace the example tool-channel, marker, and
   branch-prefix names with your harness's real ones, and review its Conventions
-  section's delivery-policy SHOULDs (draft/leave-merging, `Closes #<n>`, and
-  issue-body preservation) against your project's policy.
+  section's SHOULD bullets against your project's policy.
 - **No e2e framework** → delete `.claude/skills/e2e-testing-guidelines/` and
   its index row, then remove every inbound link to it:
   - `quality-assurance-guidelines/references/e2e-coverage.md` (delete the file)

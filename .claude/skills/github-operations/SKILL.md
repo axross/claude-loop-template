@@ -24,11 +24,11 @@ These rules govern GitHub access **from inside an agent session**, where access 
 
 ## Agent-vs-Human Comments
 
-Because the agent shares the operator's identity, a reader cannot tell an agent comment from a human one by author. A marker does it instead. The marker must be **one** fixed string the project adopts and records once (replacing the example below), reused identically across every run and session — a later run recognizes an earlier run's comments as agent output only when the marker matches, so a per-task or per-run marker defeats the purpose.
+Because the agent shares the operator's identity, a reader cannot tell an agent comment from a human one by author. A marker does it instead. A per-task, per-run, or per-workflow marker defeats recognition of an earlier run's comments, which then get re-read as human input.
 
 **Guidelines:**
 
-- MUST begin every agent comment with the project's one fixed HTML marker line (e.g. `<!-- agent -->` — replace the example with the project's real string during INIT), identical across every run and session.
+- MUST begin every agent comment with the project's **one** fixed HTML marker line (e.g. `<!-- agent -->`), recorded here in this skill and reused identically across every run and session.
 - MUST treat any comment carrying that marker as agent output, and any comment without it as human input, when reconstructing a thread's state.
 - MUST tell a **separate bot identity** — a CI reviewer or app that posts under its own login, distinct from the operator — apart by that **author login**, not the marker; the marker only disambiguates the operator-shared agent from a human under the single operator identity.
 - MUST NOT embed another automation's trigger phrase (e.g. a review workflow's comment trigger) in a status, breadcrumb, or summary comment. Comment-triggered workflows match the phrase **anywhere** in the body, so naming it in prose spuriously fires the automation. Reserve the literal phrase for the comment that intends to trigger it, and refer to the automation by name elsewhere (e.g. "the independent review").
@@ -44,12 +44,13 @@ Once a pull request exists for an issue, the issue and the pull request are **di
 
 ## Conventions
 
-The MUST bullets are invariants of the shared-operator model (plus the project's title convention); the SHOULD bullets are default delivery conventions a project adjusts during INIT to match its own policy.
+The MUST bullets are non-negotiable; the SHOULD bullets are default delivery conventions a project adjusts during INIT to match its own policy.
 
 **Guidelines:**
 
 - MUST NOT push to the default branch; work on the harness's push-allowed branch prefix (e.g. an agent-namespaced `agent/`- or `claude/`-prefixed branch).
-- MUST post any pull-request review as a **COMMENT**-type review — never APPROVE or REQUEST_CHANGES. An agent review is advisory and MUST NOT gate merges: an APPROVE posts as the operator's own approval (and can satisfy branch protection) even though the operator never gave it. On the agent's own pull requests GitHub additionally rejects APPROVE / REQUEST_CHANGES outright, so COMMENT is also the only event that always works.
+- MUST treat an agent review as advisory — it MUST NOT gate merges; an APPROVE would post as the operator's own approval (and can satisfy branch protection) even though the operator never gave it.
+- MUST post any pull-request review as a **COMMENT**-type review — never APPROVE or REQUEST_CHANGES; on pull requests the operator identity authored (the agent's own included) GitHub rejects APPROVE / REQUEST_CHANGES outright, so COMMENT is also the only event that always works.
 - MUST title every pull request per [commit-messages.md › Pull Request Titles](../development-guidelines/references/commit-messages.md#pull-request-titles) — a PR title follows the same Conventional Commits header format as a commit.
 - SHOULD open a pull request in **draft** while work is in progress and leave merging to a human; a project whose agent is trusted to merge routine work MAY relax this.
 - SHOULD, when a pull request resolves an issue, include `Closes #<n>` to link it; a pull request not tied to an issue omits it.
