@@ -85,14 +85,14 @@ user leaves unspecified — but never invent the project's goal or kind.
    - **Structured logger** (e.g. Pino, Winston)
    - **Data / content layer** (e.g. Prisma, Drizzle, Payload CMS, a REST API)
    - **Hosting platform** (e.g. Vercel, AWS, Fly.io)
-   - **GitHub operations** (agents read/write GitHub through a proxied operator identity, e.g. Claude Code + GitHub MCP)
+   - **GitHub operations** (agents read/write GitHub through a proxied single-operator identity, e.g. Claude Code + GitHub MCP)
 
    Record each as **have**, **add → _tool_**, or **skip**. This single answer
    drives both the token fill (Step 3) and the keep-or-delete decision for every
    `<!-- INIT:OPTIONAL -->` section (Step 4): **have** and **add** keep the
    section (fill the token; **add** also scaffolds the tool in Step 5); **skip**
-   deletes it. (GitHub operations is the one capability with no token — its keep
-   path is the Step-4 bullet's name replacements, not a token fill.)
+   deletes it. (GitHub operations has no token — its keep path is the Step-4
+   bullet, not a token fill.)
 4. **Rough picture.** In one or two sentences, what is the project's goal /
    overview? (This becomes the Project Overview in `AGENTS.md`.)
 5. **Which agents** will use this repo (Claude Code, Cursor, Copilot, others)?
@@ -217,7 +217,7 @@ For **each** marked section, apply the Step 1 decision for that capability:
 - **skip** → delete the whole marked section (and, for a whole skill, follow the
   removal list below). Remove the marker, the note, and every inbound link.
 
-Do not leave a section half-resolved: a kept section MUST have its token filled;
+Do not leave a section half-resolved: a kept section MUST have its token (if any) filled;
 a skipped section MUST be gone along with its links. The detailed removal lists
 below apply to the **skip** path.
 
@@ -231,8 +231,7 @@ below apply to the **skip** path.
   keep the skill, delete its `<!-- INIT:OPTIONAL -->` marker and the italic
   "_delete or adapt_" note, replace the example tool-channel, marker, and
   branch-prefix names with your harness's real ones, and review its Conventions
-  section's delivery-policy SHOULDs (draft, `Closes #<n>`, leave-merging) against
-  your project's policy.
+  section's SHOULD bullets against your project's policy.
 - **No e2e framework** → delete `.claude/skills/e2e-testing-guidelines/` and
   its index row, then remove every inbound link to it:
   - `quality-assurance-guidelines/references/e2e-coverage.md` (delete the file)

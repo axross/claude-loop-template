@@ -50,5 +50,5 @@ Vague quality adjectives are a measured defect, not a style nitpick: empirical r
 **Guidelines:**
 
 - MUST replace vague quality adjectives ("user-friendly", "fast", "intuitive", "clean", "seamless") with concrete, checkable statements.
-- MUST keep each requirement to one thing with only one reasonable interpretation (atomic, per [Writing Atomic Requirements](https://tynerblain.com/2006/06/14/writing-atomic-requirements/)).
-- SHOULD name the exact copy, threshold, attribute, or state transition expected instead of describing a quality in the abstract.
+- MUST keep each requirement to one thing with only one reasonable interpretation (atomic: one requirement, one interpretation).
+- MUST name the exact copy, threshold, attribute, or state transition expected instead of describing a quality in the abstract.

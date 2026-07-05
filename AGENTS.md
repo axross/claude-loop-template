@@ -131,6 +131,7 @@ Verification should match the changed surface. Documentation-only changes need l
 
 - MUST run the relevant verification commands after non-trivial changes, or report why they could not run.
 - MUST run `{{FORMAT_CMD}}` and `{{LINT_CMD}}` after code or documentation edits.
+- MUST run `{{UNIT_TEST_CMD}}`, when the project has a unit suite, after a change affects code it covers.
 - MUST run `{{E2E_TEST_CMD}}`, when the project has an e2e suite, after a change affects a user-facing output surface or e2e coverage.
 - MUST run `{{BUILD_CMD}}`, when the project has a build step, after a change affects routes, metadata, data-layer config, runtime config, dependencies, or public type signatures.
 - SHOULD perform focused manual checks when browser behavior, crawler metadata, custom protocol behavior, responsive layout, or content-preview behavior changes.

@@ -10,6 +10,8 @@ Apply this reference as a starting skeleton for the "Product requirement" and "A
 
 ## Skeleton
 
+The two sections below are the spec's product-requirement halves; everything in `<…>` is a slot to fill, and everything in italics is an annotation to delete.
+
 ```markdown
 ## Product requirement
 

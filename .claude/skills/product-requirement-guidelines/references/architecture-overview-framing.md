@@ -38,6 +38,6 @@ Non-functional requirements belong in a spec as short, measurable targets, not a
 
 **Guidelines:**
 
-- MUST state non-functional requirements (performance, scale, security) as short, measurable targets, not vague adjectives.
+- MUST state non-functional requirements (performance, scale, security) as short, measurable targets, per [problem-and-scope.md › Concrete, Checkable Language](./problem-and-scope.md#concrete-checkable-language).
 - SHOULD scope each non-functional requirement to the specific component it constrains rather than declaring it for the whole system.
 - MUST NOT restate the implementation mechanism used to satisfy a constraint (e.g., "use Redis with a 5-minute TTL"); the constraint is the target, and the technique — if architecturally significant — belongs in the alternatives-considered discussion above.

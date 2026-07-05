@@ -38,7 +38,7 @@ A checklist that needs far more than a handful of criteria is usually a sign the
 **Guidelines:**
 
 - SHOULD right-size the checklist to roughly three to seven criteria; treat materially more as a signal to reconsider the change's scope rather than padding restatements of the same behavior.
-- MUST include the verification gates the change requires (format/lint, unit/e2e suites, build) as trailing checklist items, per the project's [verification rules](../../development-guidelines/references/verification.md).
+- MUST include the verification gates the change requires (format/lint, unit/e2e suites, build) as trailing checklist items, per [AGENTS.md › Verification](../../../../AGENTS.md#verification) (and [verification.md](../../development-guidelines/references/verification.md) for the e2e/manual side).
 - MUST NOT restate the same observable behavior across multiple bullets.
 - MUST write each criterion as a plain bullet (`-`), not a GitHub task-list checkbox (`- [ ]`) — unless the project actually checks the boxes as part of its process, an unchecked box reads as perpetually incomplete.
 
