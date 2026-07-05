@@ -26,7 +26,7 @@ A raw snapshot diff can't tell a reviewer whether the pixels changed on purpose;
 
 ## When Snapshots Should Have Been Regenerated But Weren't
 
-When Snapshots Should Have Been Regenerated But Weren't review focuses on critical-severity cases where the diff visibly changes the rendered output of a component covered by a snapshot test (e.g., a new element added to a header component) but no snapshot file changed. Either the test does not cover the affected route, or the author skipped the regeneration step.
+When the render visibly changes but no snapshot moves, the component's visual contract silently went unverified.
 
 **Guidelines:**
 
@@ -35,7 +35,7 @@ When Snapshots Should Have Been Regenerated But Weren't review focuses on critic
 
 ## Cross-Platform Drift
 
-Cross-Platform Drift sets the required project default: flag when one platform's snapshot differs from another platform's snapshot in non-trivial ways (font hinting, anti-aliasing) — these are unavoidable, but if a snapshot diff includes layout-level changes, that is a real bug, not OS drift.
+Font-hinting and anti-aliasing noise between platforms is expected; the risk is a genuine layout bug hiding inside that noise.
 
 **Guidelines:**
 
@@ -44,7 +44,7 @@ Cross-Platform Drift sets the required project default: flag when one platform's
 
 ## Snapshot Scope
 
-Snapshot Scope describes the preferred project default: flag a full-page screenshot assertion when a narrower locator (e.g., the changed component's root) would isolate the visual contract — broad screenshots churn on every unrelated visual change.
+A full-page snapshot re-fails on every unrelated visual change nearby, so it generates review churn without pinning down the contract it was meant to guard.
 
 **Guidelines:**
 
