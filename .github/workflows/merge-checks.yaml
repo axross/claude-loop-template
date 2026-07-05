@@ -1,0 +1,63 @@
+name: Merge Checks
+
+# INIT:OPTIONAL key=INDEPENDENT_REVIEW — EXAMPLE workflow, GitHub-Actions-
+# specific. Part of the independent-review capability: delete this file (with
+# claude-review.yaml, REVIEW.md, and the .claude/commands/ entry points) if the
+# project does not adopt it; see the INIT.md Step-4 bullet.
+#
+# The project's own CI: lint and unit tests that gate merges to the default
+# branch. This is the CI the /address command's tail polls after a push (see
+# .claude/commands/address.md). Keep REVIEW.md's do-not-report list in sync
+# with exactly what these jobs enforce.
+#
+# init.sh does NOT substitute tokens in YAML files, so the commands below are
+# npm-flavored PLACEHOLDERS. During INIT, replace them with the project's real
+# commands — the same values used for the LINT_CMD and UNIT_TEST_CMD tokens —
+# and replace the Node/npm toolchain setup with the project's own (setup-node,
+# .nvmrc, and `npm ci` are examples, not requirements). Drop the test job if
+# the project has no unit-test suite.
+
+on:
+  pull_request:
+  push:
+    branches: [main] # ← the project's default branch
+
+concurrency:
+  group: merge-checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node # ← replace with the project's toolchain setup
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Dependency Installation
+        run: npm ci # ← the project's INSTALL_CMD value
+      - name: Lint
+        run: npm run lint # ← the project's LINT_CMD value
+
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node # ← replace with the project's toolchain setup
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Dependency Installation
+        run: npm ci # ← the project's INSTALL_CMD value
+      - name: Unit Test Run
+        run: npm run test:unit # ← the project's UNIT_TEST_CMD value

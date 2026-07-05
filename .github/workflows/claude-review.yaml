@@ -1,0 +1,120 @@
+name: Claude Code Review
+
+# INIT:OPTIONAL key=INDEPENDENT_REVIEW — EXAMPLE workflow, GitHub-Actions- and
+# Claude-Code-specific. Part of the independent-review capability: delete this
+# file (with .github/workflows/merge-checks.yaml, REVIEW.md, and the
+# .claude/commands/ entry points) if the project does not adopt it; see the
+# INIT.md Step-4 bullet. On another CI or agent product, keep the three
+# load-bearing safety properties marked below and rebuild the rest.
+#
+# Independent pull-request review. Runs as a separate Claude Code session on a
+# GitHub-hosted runner — a different session, on different infrastructure,
+# under a bot identity distinct from the connected operator — triggered by a
+# comment containing the review trigger phrase (`@claude review`; if you change
+# it, change it in .claude/commands/*.md too). It bootstraps REVIEW.md at the
+# repo root as the review policy. This is the authoritative review for the
+# /address flow (.claude/commands/address.md), which posts the trigger phrase
+# after opening a PR and then addresses the findings this workflow leaves.
+#
+# NOTE: issue_comment workflows run only from the version on the DEFAULT
+# branch, so this reviewer fires on PRs only once this file is merged there —
+# the PR that introduces it cannot be reviewed by it.
+#
+# Operator prerequisites (one-time; the workflow no-ops until both are done):
+#   1. Install the Claude GitHub App: https://github.com/apps/claude
+#   2. Generate a subscription token locally with `claude setup-token` and add
+#      it as the repo secret CLAUDE_CODE_OAUTH_TOKEN
+#      (Settings → Secrets and variables → Actions).
+#      To use pay-as-you-go API billing instead of a subscription, set an
+#      ANTHROPIC_API_KEY secret and swap the `claude_code_oauth_token` input
+#      below for `anthropic_api_key`.
+
+on:
+  issue_comment:
+    types: [created]
+
+# LOAD-BEARING SAFETY PROPERTY 1 of 3 — least privilege, read-only contents.
+# The reviewer can read code and write review output, nothing else. No
+# contents:write — it never pushes, and its token cannot. pull-requests /
+# issues / checks writes cover inline review comments, the summary comment,
+# and the check-run respectively.
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  checks: write
+  id-token: write # claude-code-action mints the Claude App token via OIDC
+
+jobs:
+  review:
+    name: Review
+    # LOAD-BEARING SAFETY PROPERTY 1 (continued) — the author-association gate.
+    # Only fire on: a comment on a pull request (not a plain issue), containing
+    # the review trigger phrase, from a trusted user (owner/member/
+    # collaborator). This keeps untrusted authors from spending tokens or
+    # steering the reviewer. Do not widen the association list.
+    if: >-
+      github.event.issue.pull_request &&
+      contains(github.event.comment.body, '@claude review') &&
+      (github.event.comment.author_association == 'OWNER' ||
+       github.event.comment.author_association == 'MEMBER' ||
+       github.event.comment.author_association == 'COLLABORATOR')
+    # Job-level (not workflow-level) concurrency: only a job that passes the
+    # `if` gate joins the group, so an unrelated issue_comment — e.g. a
+    # deploy-preview bot comment — skips the job and cannot cancel an in-flight
+    # review. A fresh trigger comment still supersedes a running one.
+    concurrency:
+      group: claude-review-${{ github.event.issue.number }}
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      # LOAD-BEARING SAFETY PROPERTY 2 of 3 — base-ref checkout. Check out the
+      # base ref (the default branch), NEVER the PR head: the review reads the
+      # diff through the GitHub API, so untrusted head code is never executed
+      # on the runner. The checkout only supplies CLAUDE.md / AGENTS.md,
+      # REVIEW.md, and the project skills as trusted review context.
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Claude Review
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Run the official code-review plugin against this PR. The plugin
+          # ONLY posts when invoked with `--comment`; without it, it analyzes
+          # and stops silently. With `--comment` it posts inline comments via
+          # mcp__github_inline_comment__create_inline_comment plus one
+          # `gh pr comment` summary; it never submits a formal `gh pr review`.
+          # (The repo's /review command runs the same practice locally.)
+          plugin_marketplaces: "https://github.com/anthropics/claude-code.git"
+          plugins: "code-review@claude-code-plugins"
+          prompt: "/code-review:code-review ${{ github.repository }}/pull/${{ github.event.issue.number }} --comment"
+          # --allowedTools is REQUIRED: the action does not honor a plugin
+          # command's own `allowed-tools` frontmatter, so without this the
+          # plugin is denied the tools it needs and posts nothing. Allow
+          # general `Bash`, not a narrow per-subcommand allow-list: the plugin
+          # issues compound and non-gh shell commands to gather context, and
+          # the permission matcher cannot match those to a single prefix. This
+          # broad Bash is safe ONLY because of safety property 2: the runner
+          # only ever holds the trusted base tree, never the PR head, so no
+          # untrusted code can execute; and the token is contents:read, so it
+          # cannot push. Read/Grep/Glob let it inspect the base tree for
+          # conventions and sibling files.
+          claude_args: >-
+            --append-system-prompt "Read REVIEW.md at the repository root and follow it as the highest-priority, review-only instructions for this review. Review this pull request even if it is a draft — do not skip it for being a draft. Do the ENTIRE review within this single turn: run every check and review pass yourself, synchronously and in order. Do NOT kick off background or parallel work and then end your turn to wait for it — this is a one-shot job that terminates the instant your turn ends, so anything you defer is lost and no review is posted. You MUST post your findings (inline comments plus a summary via `gh pr comment`) before your turn ends. This reviewer is advisory and does not gate merges."
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Read,Grep,Glob,Bash"
+            --disallowedTools "WebFetch,WebSearch,Task"
+            --max-turns 200
+          # LOAD-BEARING SAFETY PROPERTY 3 of 3 — background-task denial
+          # (--disallowedTools above). Denying Task forces a synchronous review
+          # that completes and posts within the one turn: the plugin otherwise
+          # fans review passes out to BACKGROUND sub-agents, and when the main
+          # agent ends its turn while those still run, this single-shot action
+          # terminates and orphans them — nothing posts. WebFetch/WebSearch
+          # stay disallowed too (no external calls from the reviewer).
+          #
+          # Turn count scales with PR size and is high-variance even on a tiny
+          # diff, so size --max-turns for the worst case and let
+          # `timeout-minutes: 30` be the real backstop; the cap only guards
+          # against a pathological loop.

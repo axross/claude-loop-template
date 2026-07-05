@@ -52,6 +52,8 @@ The reviewer MUST emit findings in this exact section order so downstream agents
 **Guidelines:**
 
 - MUST emit review report sections in the exact order shown above.
+<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep the next bullet if the project adopts the posted-review channel (REVIEW.md) OR delete it; see the INIT.md Step-4 bullet. -->
+- SHOULD, for a **posted** PR review governed by the repo-root posted-review policy, follow that policy's report shape instead — its Important/Nit labels and one-line tally — per the [Repository Review Policy Overlay](../SKILL.md#repository-review-policy-overlay).
 
 ## What Counts as Evidence
 

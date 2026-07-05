@@ -86,13 +86,15 @@ user leaves unspecified — but never invent the project's goal or kind.
    - **Data / content layer** (e.g. Prisma, Drizzle, Payload CMS, a REST API)
    - **Hosting platform** (e.g. Vercel, AWS, Fly.io)
    - **GitHub operations** (agents read/write GitHub through a proxied operator identity, e.g. Claude Code + GitHub MCP)
+   - **Independent review channel** (a posted-review policy `REVIEW.md` plus a CI reviewer, a local review command, and an end-to-end delivery loop, e.g. GitHub Actions + Claude Code; requires GitHub operations)
 
    Record each as **have**, **add → _tool_**, or **skip**. This single answer
    drives both the token fill (Step 3) and the keep-or-delete decision for every
    `<!-- INIT:OPTIONAL -->` section (Step 4): **have** and **add** keep the
    section (fill the token; **add** also scaffolds the tool in Step 5); **skip**
-   deletes it. (GitHub operations is the one capability with no token — its keep
-   path is the Step-4 bullet's name replacements, not a token fill.)
+   deletes it. (GitHub operations and the independent review channel are the two
+   capabilities with no token — their keep paths are their Step-4 bullets' name
+   and phrase replacements, not a token fill.)
 4. **Rough picture.** In one or two sentences, what is the project's goal /
    overview? (This becomes the Project Overview in `AGENTS.md`.)
 5. **Which agents** will use this repo (Claude Code, Cursor, Copilot, others)?
@@ -233,6 +235,33 @@ below apply to the **skip** path.
   branch-prefix names with your harness's real ones, and review its Conventions
   section's delivery-policy SHOULDs (draft, `Closes #<n>`, leave-merging) against
   your project's policy.
+- **No independent-review channel** (no posted-review policy, CI reviewer, or
+  agent delivery loop) → delete every `INIT:OPTIONAL key=INDEPENDENT_REVIEW`
+  target: `REVIEW.md`, `.claude/commands/review.md`,
+  `.claude/commands/address.md`, `.github/workflows/claude-review.yaml`,
+  `.github/workflows/merge-checks.yaml`, the "Repository Review Policy Overlay"
+  section in `code-review-guideline/SKILL.md`, the marked posted-review bullets
+  in `code-review-guideline/references/severity.md` and
+  `references/evidence.md`, the posted-review parenthetical in
+  `references/escalation.md`, and the marked SHOULD bullet in `AGENTS.md`'s
+  Review Independence Gates. If the project **does** adopt it (it requires the
+  GitHub-operations capability — keep both or neither), keep all of the above,
+  delete the markers and italic notes, and:
+  - fill `REVIEW.md`'s do-not-report list with the checks the project's CI
+    actually enforces (the `merge-checks.yaml` jobs), and review its mandatory
+    checks against the project's `AGENTS.md` skill index;
+  - set the review trigger phrase and reviewer identity across
+    `claude-review.yaml` and the `.claude/commands/` files. The trigger phrase
+    is functional and dangerous in prose: a comment-triggered workflow matches
+    it **anywhere** in a comment body, so the literal phrase belongs ONLY in
+    the workflow and command files — everywhere else refer to it as "the
+    review trigger phrase";
+  - replace the `@<maintainer>`, agent-comment-marker, and branch-prefix
+    examples in `.claude/commands/address.md` with the project's real values
+    per `github-operations`;
+  - replace the placeholder commands and toolchain setup in `merge-checks.yaml`
+    with the project's real lint/unit-test commands — `init.sh` does **not**
+    substitute tokens in YAML files, which is why they are prose placeholders.
 - **No e2e framework** → delete `.claude/skills/e2e-testing-guidelines/` and
   its index row, then remove every inbound link to it:
   - `quality-assurance-guidelines/references/e2e-coverage.md` (delete the file)
@@ -357,7 +386,10 @@ Keep only the bindings for the agents named in Step 1.
 
 - [ ] No `{{` tokens remain in authored files (build/VCS dirs excluded):
       `./init.sh check` (or `grep -rn '{{' . --exclude-dir=node_modules
-      --exclude-dir=.next --exclude-dir=.git`).
+      --exclude-dir=.next --exclude-dir=.git --exclude-dir=.github`). The
+      `.github/` exclusion matters when the independent-review workflows are
+      kept: GitHub Actions `${{ ... }}` expressions match the grep but are not
+      template tokens — ignore them in `./init.sh check` output too.
 - [ ] No `<!-- INIT:OPTIONAL -->` markers remain: `grep -rn 'INIT:OPTIONAL' .`
 - [ ] No dangling relative skill links: `python3 tools/check-links.py` (checks
       the `.claude/` tree a `glob('**/*.md')` sweep would skip).

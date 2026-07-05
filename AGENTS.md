@@ -122,6 +122,8 @@ A single agent cannot provide true independent review. This project compensates 
 - MUST perform a second-pass re-review after fixing any blocking self-review finding.
 - MUST report verification evidence before completion: commands run, manual checks, failures, skipped checks, and residual risk.
 - MUST escalate high-risk changes to user review, CI/PR review, or an explicitly requested secondary review before calling them merge-ready.
+<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep the next bullet if the project adopts the independent-review capability (REVIEW.md at the repo root) OR delete it; see the INIT.md Step-4 bullet. -->
+- SHOULD route that escalation through the project's independent-review channel — the posted-review policy in [REVIEW.md](./REVIEW.md) — when the project adopts one. *Delete this bullet during INIT if the independent-review capability is skipped.*
 - SHOULD treat auth, access control, injection/output-encoding, SSRF/outbound fetching, data-layer migrations, public route/API contracts, production config, data-loss risk, and large refactors as high-risk.
 
 ### Verification
