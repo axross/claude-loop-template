@@ -33,7 +33,7 @@ Three pieces, joined by a stable scenario id:
 - MUST NOT rename a scenario id without updating every tag that references it in the same change — the id is the contract between catalog and tests.
 - MUST keep facet tags (area, priority) consistent with the tagged scenario's catalog row, so filtered runs and grouped reports stay trustworthy.
 - SHOULD keep genuinely-untested journeys in the catalog with an honest priority so the report shows real gaps; writing tests for surfaced gaps is follow-up work, not a prerequisite for reading the metric.
-- Only a passing test marks its scenario covered; a failing or skipped test correctly leaves it uncovered.
+- MUST count a scenario as covered only when a **passing** test carries its tag; a failing or skipped test leaves it uncovered.
 
 ## Phased Gate
 

@@ -37,7 +37,7 @@ Every custom node hand-generates markup outside the pipeline's normal path, so i
 
 ## Image / Media Sources
 
-This review focuses on critical-severity cases where a new component renders a media element with an unvalidated, authored-content-derived source that bypasses the project's host allowlist. Some optimized-image components have an "unoptimized" escape hatch that skips the host-allowlist check — that escape hatch is the only host gate, so bypassing it on user-controlled URLs is unsafe.
+The host allowlist is the only gate between authored URLs and the media pipeline, so a render path that skips it makes user-controlled input the entire boundary. Some optimized-image components have an "unoptimized" escape hatch that skips the host-allowlist check — that escape hatch is the only host gate, so bypassing it on user-controlled URLs is unsafe.
 
 - A pre-existing component may already pass an external authored image URL through such an escape hatch — that is a known risk the reviewer should be aware of, not flag again unless the diff worsens it (e.g., removes a metadata/source filter, or promotes the image to an eagerly-preloaded position).
 

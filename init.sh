@@ -109,7 +109,7 @@ PY
     if grep -rn '{{' . \
         --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=.next \
         --exclude-dir=dist --exclude-dir=build --exclude-dir=out \
-        --exclude-dir=coverage --exclude-dir=tools \
+        --exclude-dir=coverage --exclude-dir=tools --exclude-dir=.github \
         --exclude=tokens.json --exclude=init.values.json --exclude=init.sh \
         --exclude=INIT.md --exclude=README.md 2>/dev/null; then
       echo "  ^ tokens remain — fill them or remove the owning section."

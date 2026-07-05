@@ -208,7 +208,7 @@ The skill core is intentionally broad. Every capability-specific block is wrappe
 with a greppable marker so you can find them all:
 
 ```bash
-grep -rn 'INIT:OPTIONAL' .claude AGENTS.md   # every optional section, with a key
+grep -rn 'INIT:OPTIONAL' .claude .github AGENTS.md REVIEW.md   # every optional section, with a key
 ```
 
 For **each** marked section, apply the Step 1 decision for that capability:
