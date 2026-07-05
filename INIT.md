@@ -318,7 +318,10 @@ apply to the **skip** path.
     cache) is not a token — replace it with the project's own by hand.
     The template ships no `.nvmrc`: even a project keeping the npm-flavored
     setup must create one (or switch `setup-node` to `node-version:`), or
-    both jobs fail at Setup Node on every run.
+    both jobs fail at Setup Node on every run. Note both jobs self-skip
+    their real steps (and pass) while `INIT.md` exists; deleting the INIT
+    tooling in Step 7 is what arms them, so a green Merge Checks before
+    that point does not mean lint/tests ran.
 - **No e2e framework** → delete `.claude/skills/e2e-testing-guidelines/` and
   its index row, then remove every inbound link to it:
   - `quality-assurance-guidelines/references/e2e-coverage.md` (delete the file)
@@ -491,6 +494,9 @@ Keep only the bindings for the agents named in Step 1.
       "observability" when `observability-guidelines` was deleted).
 - [ ] Added capabilities have a working command (the `check.sh` / `format.sh`
       hooks actually run).
+- [ ] If `merge-checks.yaml` was kept: its jobs actually run the lint/test
+      steps instead of skipping them — the guard steps disarm once `INIT.md`
+      is deleted, so check a post-INIT run's log shows the steps executing.
 - [ ] Harness binding for each Step-1 agent is filled in and runnable.
 - [ ] A `.gitignore` excludes `settings.local.json` and `.env.local` (or the
       project's equivalent local-state/secret files).

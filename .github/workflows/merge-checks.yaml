@@ -18,6 +18,12 @@ name: Merge Checks
 # project keeping the npm-flavored setup must create one (or switch to
 # `node-version:`), or Setup Node fails on every run. Drop the test job if
 # the project has no unit-test suite.
+#
+# While the template is un-adapted, none of that can work — so each job's real
+# steps are gated on a guard that checks for INIT.md. INIT Step 7 deletes
+# INIT.md, which arms the steps in adapted projects automatically; until then
+# the jobs skip them (with a notice) and conclude green, keeping the template
+# repo's own CI meaningful instead of permanently red.
 
 on:
   pull_request:
@@ -41,14 +47,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Check Template Adaptation
+        id: adapted
+        run: |
+          if [ -f INIT.md ]; then
+            echo "::notice::Template not yet adapted (INIT.md present) — skipping lint."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
       - name: Setup Node # ← replace with the project's toolchain setup
+        if: steps.adapted.outputs.run == 'true'
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
       - name: Dependency Installation
+        if: steps.adapted.outputs.run == 'true'
         run: "{{INSTALL_CMD}}"
       - name: Lint
+        if: steps.adapted.outputs.run == 'true'
         run: "{{LINT_CMD}}"
 
   test:
@@ -57,12 +75,24 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Check Template Adaptation
+        id: adapted
+        run: |
+          if [ -f INIT.md ]; then
+            echo "::notice::Template not yet adapted (INIT.md present) — skipping unit tests."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
       - name: Setup Node # ← replace with the project's toolchain setup
+        if: steps.adapted.outputs.run == 'true'
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
       - name: Dependency Installation
+        if: steps.adapted.outputs.run == 'true'
         run: "{{INSTALL_CMD}}"
       - name: Unit Test Run
+        if: steps.adapted.outputs.run == 'true'
         run: "{{UNIT_TEST_CMD}}"
