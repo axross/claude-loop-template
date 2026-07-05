@@ -58,7 +58,7 @@ A type system's guarantees only hold when the code does not quietly opt out of t
 
 This project distinguishes two kinds of comment, each with its own style: **doc-comments** that document an API, and **line comments** that explain a specific spot in the code. Existing source files are the authority for both — read them before writing comments and match their voice. These rules apply to source-code comments only, not to commit messages (see [commit-messages.md](./commit-messages.md)) or to prose documentation.
 
-*During INIT, name the project's doc-comment standard (e.g., TSDoc, JSDoc, docstrings) and its line-comment voice (casing, punctuation, phrasing) here.*
+<!-- INIT: name the project's doc-comment standard (e.g., TSDoc, JSDoc, docstrings) and its line-comment voice (casing, punctuation, phrasing) in the intro above, then delete this comment. -->
 
 ### Doc-Comments
 

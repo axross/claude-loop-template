@@ -4,7 +4,7 @@ _Code examples below use Playwright APIs (`getByTestId`, `storageState`, `test.s
 
 ## Locator Usage
 
-Elements are targeted by stable test-id hooks scoped through their container, so copy edits and markup reshuffles never break a spec. When a hook is missing, the fallback order goes through accessibility, then copy — never document structure: role-based locators cover accessible controls that cannot carry a test id, and text matching is reserved for assertions about the copy itself.
+Elements are targeted by stable test-id hooks scoped through their container, so copy edits and markup reshuffles never break a spec. When a hook is missing, the fallback order goes through accessibility, then copy: role-based locators cover accessible controls that cannot carry a test id, and text matching is reserved for assertions about the copy itself. Document structure is a last resort reserved for DOM the project cannot instrument.
 
 **Guidelines:**
 
@@ -15,6 +15,7 @@ Elements are targeted by stable test-id hooks scoped through their container, so
 - MUST use role-based locators, matching by accessible name, for accessible controls (buttons, options, menu items) that cannot carry a test id — for example, elements portaled out of the component's own markup.
 - MUST NOT use text-matching locators except when the assertion is about the copy itself, such as an empty-state message.
 - MUST add a new test id to the component when no stable hook exists rather than reaching for a structural CSS selector.
+- MAY scope a structural locator inside a test-id-anchored container as a last resort for third-party-rendered DOM the project cannot instrument, when no role applies and the assertion is not about copy; leave a comment naming why no stable hook was possible.
 
 **Example:**
 

@@ -94,9 +94,13 @@ user leaves unspecified — but never invent the project's goal or kind.
    `<!-- INIT:OPTIONAL -->` section (Step 4): **have** and **add** keep the
    section (fill the token; **add** also scaffolds the tool in Step 5); **skip**
    deletes it — or, for infrastructure the project will plausibly add later,
-   marks it **dormant** (see Step 4). (GitHub operations, the independent review
-   channel, and E2E scenario coverage are the capabilities with no token — their
-   keep paths are described in their Step-4 bullets, not a token fill.)
+   marks it **dormant** (see Step 4). (Not every marked section has a token:
+   GitHub operations, the independent review channel, and E2E scenario coverage
+   have Step-4 bullets instead of a token fill, and a few smaller marked
+   sections — typed-language type safety, the unit-coverage gate, the
+   backend/API test helpers — carry their keep-or-delete instruction in the
+   marker itself. The Step-4 grep walk resolves them all; decide the smaller
+   ones from the project's own shape rather than a Step-1 answer.)
 4. **Rough picture.** In one or two sentences, what is the project's goal /
    overview? (This becomes the Project Overview in `AGENTS.md`.)
 5. **Which agents** will use this repo (Claude Code, Cursor, Copilot, others)?
@@ -230,7 +234,10 @@ For **each** marked section, apply the Step 1 decision for that capability:
   ```
 
   Replace any unfilled `{{TOKEN}}` inside a dormant section with neutral prose
-  (e.g. "the project's error tracker") so the token gate stays clean. Prefer
+  (e.g. "the project's error tracker") and delete the token's row from
+  `tokens.json` (and `init.values.json`, if already generated) — `./init.sh
+  apply` refuses to run while any manifest-listed token has no value, whether
+  or not it still occurs in the tree. Prefer
   **dormant** over **skip** for service-shaped capabilities the project is
   likely to acquire (an error tracker, server-side caching, a data layer): the
   rules are already correct and only their infrastructure is missing. Prefer
@@ -308,6 +315,9 @@ apply to the **skip** path.
   - replace the placeholder commands and toolchain setup in `merge-checks.yaml`
     with the project's real lint/unit-test commands — `init.sh` does **not**
     substitute tokens in YAML files, which is why they are prose placeholders.
+    The template ships no `.nvmrc`: even a project keeping the npm-flavored
+    defaults must create one (or switch `setup-node` to `node-version:`), or
+    both jobs fail at Setup Node on every run.
 - **No e2e framework** → delete `.claude/skills/e2e-testing-guidelines/` and
   its index row, then remove every inbound link to it:
   - `quality-assurance-guidelines/references/e2e-coverage.md` (delete the file)
@@ -349,7 +359,8 @@ apply to the **skip** path.
   - the `../unit-test-guidelines/SKILL.md` link in
     `product-requirement-guidelines/SKILL.md`;
   - the unit-test row of the developer-facing-skills table in
-    `code-review-guideline/SKILL.md`.
+    `code-review-guideline/SKILL.md`;
+  - the `{{UNIT_TEST_CMD}}` bullet in the `AGENTS.md` Verification section.
 - **No data/content layer** → remove the data-layer sections (each is marked
   optional) from `development-guidelines`, `application-security-requirements`,
   and `performance-and-reliability-requirements`.
@@ -449,8 +460,9 @@ Keep only the bindings for the agents named in Step 1.
   `tokens.json`, `init.values.json`, and (optionally) `tools/check-links.py` if
   you don't want to keep it as a CI check.
 - Remove the "Template note" blockquote at the top of `AGENTS.md`, every
-  `<!-- INIT:OPTIONAL ... -->` marker, and every "TEMPLATE NOTE" /
-  "_delete during INIT_" line for sections you decided to keep.
+  `<!-- INIT:OPTIONAL ... -->` marker and `<!-- INIT: ... -->` fill-in comment,
+  and every "TEMPLATE NOTE" / "_delete during INIT_" line for sections you
+  decided to keep.
 - Update `README.md` to describe the actual project (or replace it).
 
 ### Completion checklist
@@ -460,17 +472,19 @@ Keep only the bindings for the agents named in Step 1.
       --exclude-dir=.next --exclude-dir=.git --exclude-dir=.github`). The
       `.github/` exclusion matters when the independent-review workflows are
       kept: GitHub Actions `${{ ... }}` expressions match the grep but are not
-      template tokens — ignore them in `./init.sh check` output too.
-- [ ] No `<!-- INIT:OPTIONAL -->` markers remain: `grep -rn 'INIT:OPTIONAL' .`
+      template tokens (`./init.sh check` already excludes `.github/` for the
+      same reason).
+- [ ] No `<!-- INIT… -->` markers remain — neither `INIT:OPTIONAL` capability
+      markers nor `INIT:` fill-in comments: `grep -rn '<!-- INIT' .`
 - [ ] No dangling relative skill links: `python3 tools/check-links.py` (checks
       the `.claude/` tree a `glob('**/*.md')` sweep would skip).
 - [ ] `AGENTS.md` skill index matches the directories under `.claude/skills/`.
 - [ ] Removed skills have no remaining inbound links.
 - [ ] The conditional hedges in `AGENTS.md`'s Verification section are
-      resolved: in the `{{E2E_TEST_CMD}}` and `{{BUILD_CMD}}` bullets, delete
-      the "when the project has an e2e suite" / "when the project has a build
-      step" clause when the capability was kept, and delete the whole bullet
-      when it was skipped.
+      resolved: in every bullet hedged with a "when the project has …" clause
+      (the `{{UNIT_TEST_CMD}}`, `{{E2E_TEST_CMD}}`, and `{{BUILD_CMD}}`
+      bullets), delete the clause when the capability was kept, and delete the
+      whole bullet when it was skipped.
 - [ ] Every skill removed in Step 4 is also gone from the review-lenses MUST
       bullet in `AGENTS.md`'s Review Independence Gates (e.g. drop
       "observability" when `observability-guidelines` was deleted).

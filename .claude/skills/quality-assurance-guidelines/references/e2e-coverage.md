@@ -15,13 +15,13 @@ A new route or surface with no test is a hole in the project's primary verificat
 
 ## Test-ID Hooks
 
-Because the suite locates elements only by stable test id — never by text — an element that ships without one is invisible to every future test.
+Because the suite locates elements primarily by stable test id (with role and copy as narrow fallbacks per [e2e-testing-guidelines › conventions](../../e2e-testing-guidelines/references/conventions.md)), an element that ships without a stable hook is invisible to most future tests.
 
 **Guidelines:**
 
 - MUST flag a Major when the diff introduces a new visually distinct element (a new section, a new button, a new image, a new list) without a stable test id attribute. The e2e suite cannot target it otherwise.
 - MUST flag a Critical when the diff **removes** a test id that an existing e2e test references. Cross-check by searching the test directory.
-- MUST flag any use of text-content matching in a new or modified test where the project rule is stable-test-id locators only, per [e2e-testing-guidelines › conventions](../../e2e-testing-guidelines/references/conventions.md).
+- MUST flag any locator in a new or modified test that violates the locator fallback hierarchy of [e2e-testing-guidelines › conventions](../../e2e-testing-guidelines/references/conventions.md) — e.g., text matching where the assertion is not about the copy itself.
 - MUST flag a test id value that does not follow the project's required casing convention.
 - SHOULD flag a test id value chosen to be globally unique (e.g., `"record-header-title"`) instead of scope-relative (`"title"`) when the project chains locators by nesting, per the project's testable-component conventions, if defined.
 
@@ -42,7 +42,7 @@ Consistent names and locations are what let the runner discover route tests and 
 
 - MUST flag a new test file that does not follow the project's test-file naming convention.
 - MUST flag a new route-specific test file placed outside the test directory ({{TEST_DIR}}) layout the project uses for route tests.
-- MUST flag a test body that does not group each action into discrete steps per [e2e-testing-guidelines › structure](../../e2e-testing-guidelines/references/structure.md).
+- MUST flag a multi-phase test body that does not group its phases into discrete steps per [e2e-testing-guidelines › structure](../../e2e-testing-guidelines/references/structure.md) — short atomic tests may omit steps.
 - MUST flag a chained-locator chain that re-roots at the page level mid-test instead of narrowing from a previously captured locator — defeats the readability of the nesting pattern.
 
 ## Scenario Coverage
@@ -55,9 +55,9 @@ Scenario coverage tracks which real user journeys the e2e suite **asserts**, via
 **Guidelines:**
 
 - MUST require scenario-coverage evidence when a change adds or alters a user-facing journey: the overall and per-priority `covered/total` from the project's coverage command, plus any newly surfaced gaps.
-- MUST flag a Major when a change adds a new user-facing journey without a corresponding catalog row — an incomplete catalog inflates the percentage.
+- MUST flag a Major when a change adds a new user-facing journey without a corresponding catalog row, per the catalog-completeness rule in [e2e-testing-guidelines › scenario-coverage](../../e2e-testing-guidelines/references/scenario-coverage.md).
 - MUST treat a new `must`-priority scenario as a blocker until a passing tagged test asserts it; `should` / `may` gaps are reported, not blocking.
-- MUST flag a stale or mistyped scenario tag, a facet tag that disagrees with the catalog, and a scenario tag on a test that merely passes *through* the journey without asserting its outcome — the tag belongs on the asserting test.
+- MUST flag a stale or mistyped scenario tag, a facet tag that disagrees with the catalog, and any tag placement that violates the tagging rules of [e2e-testing-guidelines › scenario-coverage](../../e2e-testing-guidelines/references/scenario-coverage.md) (e.g., a scenario tag on a pass-through test).
 - SHOULD note surfaced `should` / `may` gaps as follow-up work rather than silently expanding the change's scope to close them.
 
 ## Test Helpers

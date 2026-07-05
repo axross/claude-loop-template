@@ -45,7 +45,7 @@ The project's comment and doc-comment rules are owned by [development-guidelines
 
 **Guidelines:**
 
-- MUST flag a changed public type definition, or a changed/added function whose body exceeds ~5 lines, that lacks a doc-comment in the project's doc-comment standard — Minor (Major when it is an exported API, or a function that can throw whose throwing conditions are undocumented).
+- MUST flag a changed/added type or function that lacks the doc-comment [code-quality › Doc-Comments](../../development-guidelines/references/code-quality.md) requires of it (including undocumented throwing conditions) — Minor, Major when it is an exported API.
 - MUST flag a line comment that violates the project's chosen comment voice — Nit.
 - SHOULD flag a line comment that merely restates the code it precedes.
 

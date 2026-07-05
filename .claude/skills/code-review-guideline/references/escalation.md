@@ -60,7 +60,7 @@ Frame deferred items under the **Recommended Actions** section as **Decision nee
 
 Guideline-gap reporting is reserved for missing reusable guidance. Ordinary execution failures and already documented rules should stay in the review findings instead.
 
-- Lint or format errors — the developer's [code-quality](../../development-guidelines/references/code-quality.md) loop covers them; flag them as Critical findings and let the fixer run {{FORMAT_CMD}} / {{LINT_CMD}}. (When the project has a posted-review policy, a **posted** PR review omits these CI-enforced findings per the [Repository Review Policy Overlay](../SKILL.md#repository-review-policy-overlay).)
+- Lint or format errors — the developer's [code-quality](../../development-guidelines/references/code-quality.md) loop covers them; flag them as Critical findings and let the fixer run {{FORMAT_CMD}} / {{LINT_CMD}}. <!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep the next parenthetical if the project adopts the posted-review channel (REVIEW.md) OR delete it; see the INIT.md Step-4 bullet. --> (When the project has a posted-review policy, a **posted** PR review omits these CI-enforced findings per the [Repository Review Policy Overlay](../SKILL.md#repository-review-policy-overlay).)
 - Snapshot regenerations — flag whether the change is intentional per [quality-assurance-guidelines](../../quality-assurance-guidelines/SKILL.md) and let the fixer re-run with the test runner's snapshot-update flag.
 - Anything resolvable by re-reading an existing guideline file.
 

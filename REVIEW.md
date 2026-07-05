@@ -1,6 +1,6 @@
 # Review Instructions
 
-<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep this file if the project adopts a posted-review channel OR delete it together with .claude/commands/review.md, .claude/commands/address.md, .github/workflows/claude-review.yaml, .github/workflows/merge-checks.yaml, the "Repository Review Policy Overlay" section (and its marked reference bullets) in .claude/skills/code-review-guideline/, and the marked bullet in AGENTS.md § Review Independence Gates; see the INIT.md Step-4 bullet. -->
+<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep this file if the project adopts a posted-review channel OR delete it together with every other key=INDEPENDENT_REVIEW site; the INIT.md Step-4 bullet is the authoritative deletion list. -->
 *If this project posts no independent reviews — no managed review product, no CI reviewer, no local review command — delete this file and the rest of the independent-review capability during INIT.*
 
 Review **policy** for this repository — the highest-priority, review-only
@@ -27,7 +27,7 @@ output — they exist for self-review, not for the pull-request thread.
 - **Important** — MUST be addressed before merge: a finding that breaks
   behavior, corrupts persisted state, leaks data, regresses accessibility,
   violates a MUST rule of a matching skill in the `AGENTS.md` skill index, or
-  leaves an acceptance criterion unmet.
+  leaves an acceptance criterion unmet or unverifiable from the diff.
 - **Nit** — safe to defer: style, naming, and refactoring suggestions.
 
 **Guidelines:**
@@ -35,8 +35,9 @@ output — they exist for self-review, not for the pull-request thread.
 - MUST label every posted finding exactly **Important** or **Nit** — no other
   labels appear in a posted review.
 - MUST label as Important every violated MUST rule of a matching
-  `AGENTS.md`-indexed skill, every unmet acceptance criterion, and every
-  mandatory-check miss that breaks a hard requirement.
+  `AGENTS.md`-indexed skill, every acceptance criterion that is unmet or cannot
+  be confirmed from the diff, and every mandatory-check miss that breaks a hard
+  requirement.
 - MUST label style, naming, and refactoring suggestions Nit at most.
 
 ## Mandatory Checks
@@ -73,7 +74,7 @@ only; internal self-review triage still flags these findings.
 
 <!-- INIT: replace the first bullet with the checks this project's CI actually enforces (the jobs in .github/workflows/merge-checks.yaml — e.g. its lint and unit-test runs). -->
 
-- Anything CI already enforces — the lint/format and test checks run by the
+- Anything CI already enforces — the lint and unit-test checks run by the
   project's merge-checks workflow.
 - Lockfiles and generated files.
 

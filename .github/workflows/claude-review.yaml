@@ -89,7 +89,7 @@ jobs:
           # (The repo's /review command runs the same practice locally.)
           plugin_marketplaces: "https://github.com/anthropics/claude-code.git"
           plugins: "code-review@claude-code-plugins"
-          prompt: "/code-review:code-review ${{ github.repository }}/pull/${{ github.event.issue.number }} --comment"
+          prompt: "/code-review:code-review https://github.com/${{ github.repository }}/pull/${{ github.event.issue.number }} --comment"
           # --allowedTools is REQUIRED: the action does not honor a plugin
           # command's own `allowed-tools` frontmatter, so without this the
           # plugin is denied the tools it needs and posts nothing. Allow

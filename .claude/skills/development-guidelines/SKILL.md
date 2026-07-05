@@ -13,6 +13,7 @@ See [code-quality.md](./references/code-quality.md) for:
 
 - The formatter/linter format/lint workflow
 - Language compliance requirements
+<!-- INIT:OPTIONAL key=TYPED_LANGUAGE — keep the next bullet for a typed language OR delete it (and the "type-safety discipline" / "type casts" phrases in this file's frontmatter description) together with the marked section in ./references/code-quality.md. -->
 - Type-safety discipline (unchecked casts and non-null/force-unwrap assertions), for typed languages
 - Doc-comment and line-comment conventions in source files
 - Import hygiene
