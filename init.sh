@@ -58,18 +58,36 @@ PY
   apply)
     [ -f "$VALUES" ] || { echo "$VALUES not found; run: ./init.sh init" >&2; exit 1; }
     python3 - "$MANIFEST" "$VALUES" <<'PY'
-import json, os, re, sys
+import json, os, sys
 
 manifest, values = sys.argv[1], sys.argv[2]
 tokens = [t["name"] for t in json.load(open(manifest))["tokens"]]
 
 # Tolerant JSON read: strip // line comments the user may leave in the
-# template. Only whole-line comments and comments that follow the end of a
-# JSON value are stripped, so a VALUE containing " //" is left intact.
-raw = open(values).read()
-raw = re.sub(r'(?m)^\s*//[^\n]*$', '', raw)
-raw = re.sub(r'(?m)(?<=["\],}0-9el])\s+//[^\n]*$', '', raw)
-vals = json.loads(raw)
+# template. A comment starts at the first // that sits OUTSIDE a quoted
+# string (tracked with quote/escape state), so a VALUE containing // — a
+# URL, a "value // note", anything — is never touched.
+def strip_line_comments(text):
+    out = []
+    for line in text.split("\n"):
+        in_string = escaped = False
+        cut = None
+        for i, ch in enumerate(line):
+            if escaped:
+                escaped = False
+            elif ch == "\\":
+                escaped = True
+            elif ch == '"':
+                in_string = not in_string
+            elif ch == "/" and not in_string and line[i : i + 2] == "//":
+                cut = i
+                break
+        if cut is not None:
+            line = line[:cut].rstrip()
+        out.append(line)
+    return "\n".join(out)
+
+vals = json.loads(strip_line_comments(open(values).read()))
 
 missing = [t for t in tokens if not vals.get(t, "").strip()]
 if missing:
