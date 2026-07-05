@@ -4,7 +4,7 @@ Apply these rules to verify the author respected the project's mandatory checks.
 
 ## Format
 
-Format sets the required project default: mentally run `{{FORMAT_CMD}}` ({{FORMATTER}}) over the diff. Flag any tab/space inconsistency, trailing whitespace, missing trailing newline, or quote-style drift as Critical (lint will fail).
+Formatting drift is caught by CI, so an unformatted diff is a guaranteed red build rather than a matter of taste.
 
 **Guidelines:**
 
@@ -13,7 +13,7 @@ Format sets the required project default: mentally run `{{FORMAT_CMD}}` ({{FORMA
 
 ## Lint
 
-Lint sets the required project default: flag a Critical for any introduced lint **error** (not warning). Watch for the categories the project's linter enforces, for example:
+A lint error fails the build, and most of the categories the linter promotes to errors mark a real hazard, not a style quibble.
 
 **Guidelines:**
 
@@ -28,7 +28,7 @@ Lint sets the required project default: flag a Critical for any introduced lint 
 
 ## Suppressions
 
-Suppressions sets the required project default: flag a new {{LINTER}}'s inline suppression (with justification) directive that lacks an inline justification on the same line. The project rule is "explain why, not just what".
+An unexplained suppression is indistinguishable from a bug being papered over; the justification is what lets a later reader trust it.
 
 **Guidelines:**
 
@@ -38,7 +38,7 @@ Suppressions sets the required project default: flag a new {{LINTER}}'s inline s
 
 ## Type Safety Compliance
 
-Type Safety Compliance sets the required project default: flag any introduced escape-hatch cast or suppression (e.g., an `any` cast, an unsafe double cast, or a type-checker error suppression) swallowing a real error, per the project's own code conventions, if defined.
+Every escape-hatch cast or suppression turns off the type checker exactly where it was about to catch something, pushing the failure to runtime.
 
 **Guidelines:**
 

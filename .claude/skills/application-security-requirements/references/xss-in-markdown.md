@@ -16,7 +16,7 @@ A rendering pipeline that turns authored content into markup typically has a few
 
 ## What the Reviewer MUST Flag
 
-This review focuses on critical-severity cases where a new render component uses a raw-HTML sink for any value derived from the authored content.
+Raw-HTML sinks bypass the one defense the rendering layer provides — automatic output encoding — so a single use undoes the safety of the entire pipeline.
 
 **Guidelines:**
 
@@ -27,7 +27,7 @@ This review focuses on critical-severity cases where a new render component uses
 
 ## Custom Render Nodes / Directives
 
-This review focuses on critical-severity cases where a new custom render node renders unescaped HTML from any authored attribute or child value.
+Every custom node hand-generates markup outside the pipeline's normal path, so it re-assumes responsibility for encoding guarantees the pipeline otherwise provides for free.
 
 **Guidelines:**
 
@@ -37,7 +37,7 @@ This review focuses on critical-severity cases where a new custom render node re
 
 ## Image / Media Sources
 
-This review focuses on critical-severity cases where a new component renders a media element with an unvalidated, authored-content-derived source that bypasses the project's host allowlist. Some optimized-image components have an "unoptimized" escape hatch that skips the host-allowlist check — that escape hatch is the only host gate, so bypassing it on user-controlled URLs is unsafe.
+The host allowlist is the only gate between authored URLs and the media pipeline, so a render path that skips it makes user-controlled input the entire boundary. Some optimized-image components have an "unoptimized" escape hatch that skips the host-allowlist check — that escape hatch is the only host gate, so bypassing it on user-controlled URLs is unsafe.
 
 - A pre-existing component may already pass an external authored image URL through such an escape hatch — that is a known risk the reviewer should be aware of, not flag again unless the diff worsens it (e.g., removes a metadata/source filter, or promotes the image to an eagerly-preloaded position).
 
@@ -47,7 +47,7 @@ This review focuses on critical-severity cases where a new component renders a m
 
 ## Framework-Specific Pitfalls
 
-This review focuses on critical-severity cases where a value derived from authored content is used both as a safe-by-encoding location AND as an unencoded sink. For example, a framework auto-encodes a list key, but the same value rendered as a URL attribute without canonicalization still reaches the DOM unsafely.
+Framework auto-encoding is contextual — the same string is inert as text content but live as a URL or attribute — so proof of safety in one sink proves nothing about another.
 
 **Guidelines:**
 
@@ -56,7 +56,7 @@ This review focuses on critical-severity cases where a value derived from author
 
 ## Bypass Paths
 
-This review focuses on critical-severity cases where new code processes raw HTML through the pipeline, or loads authored content from an untrusted source. Widening the input from a constrained format (e.g., markdown) to raw HTML enlarges the attack surface to anything the HTML pipeline accepts.
+A constrained input format is itself a security control: every capability the format cannot express is an attack the pipeline never has to defend against.
 
 **Guidelines:**
 

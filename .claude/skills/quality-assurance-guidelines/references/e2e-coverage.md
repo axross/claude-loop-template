@@ -4,7 +4,7 @@ Apply these rules to verify the change has the right e2e coverage. The project r
 
 ## Coverage Floor
 
-Coverage Floor review focuses on critical-severity cases where the diff adds a new route, feature, or visually distinct surface without co-located test coverage in the test directory ({{TEST_DIR}}).
+A new route or surface with no test is a hole in the project's primary verification mechanism — nothing re-checks it after the next change.
 
 **Guidelines:**
 
@@ -15,7 +15,7 @@ Coverage Floor review focuses on critical-severity cases where the diff adds a n
 
 ## Test-ID Hooks
 
-Test-ID Hooks review focuses on major-severity cases where the diff introduces a new visually distinct element (a new section, a new button, a new image, a new list) without a stable test id attribute. The e2e suite cannot target it otherwise, per the project's testable-component conventions, if defined.
+Because the suite locates elements only by stable test id — never by text — an element that ships without one is invisible to every future test.
 
 **Guidelines:**
 
@@ -27,7 +27,7 @@ Test-ID Hooks review focuses on major-severity cases where the diff introduces a
 
 ## Loading State Coverage
 
-Loading State Coverage describes the preferred project default: flag a new component using a loading/loaded split pattern that lacks a corresponding loading-state test id propagation in its orchestrator — without it, e2e cannot assert the placeholder is visible.
+The loading half of a split component is a distinct user-visible state; without a way to target its placeholder, that state ships unverified.
 
 **Guidelines:**
 
@@ -36,7 +36,7 @@ Loading State Coverage describes the preferred project default: flag a new compo
 
 ## Test File Conventions
 
-Test File Conventions sets the required project default: flag a new test file that does not follow the project's test-file naming convention.
+Consistent names and locations are what let the runner discover route tests and what let the next reader find them.
 
 **Guidelines:**
 
@@ -45,9 +45,24 @@ Test File Conventions sets the required project default: flag a new test file th
 - MUST flag a test body that does not group each action into discrete steps per [e2e-testing-guidelines › structure](../../e2e-testing-guidelines/references/structure.md).
 - MUST flag a chained-locator chain that re-roots at the page level mid-test instead of narrowing from a previously captured locator — defeats the readability of the nesting pattern.
 
+## Scenario Coverage
+
+<!-- INIT:OPTIONAL key=SCENARIO_COVERAGE — keep if the project adopts journey-catalog e2e coverage OR delete this section (with the marked sites in e2e-testing-guidelines and this skill's SKILL.md); see the INIT.md Step-4 bullet. -->
+*If this project does not adopt scenario coverage, delete this section during INIT.*
+
+Scenario coverage tracks which real user journeys the e2e suite **asserts**, via a human-authored journey catalog and per-test scenario tags — not e2e line coverage. Its denominator is the catalog itself, so review guards the catalog's completeness as much as the tests. See [e2e-testing-guidelines › scenario-coverage](../../e2e-testing-guidelines/references/scenario-coverage.md) for the mechanism.
+
+**Guidelines:**
+
+- MUST require scenario-coverage evidence when a change adds or alters a user-facing journey: the overall and per-priority `covered/total` from the project's coverage command, plus any newly surfaced gaps.
+- MUST flag a Major when a change adds a new user-facing journey without a corresponding catalog row — an incomplete catalog inflates the percentage.
+- MUST treat a new `must`-priority scenario as a blocker until a passing tagged test asserts it; `should` / `may` gaps are reported, not blocking.
+- MUST flag a stale or mistyped scenario tag, a facet tag that disagrees with the catalog, and a scenario tag on a test that merely passes *through* the journey without asserting its outcome — the tag belongs on the asserting test.
+- SHOULD note surfaced `should` / `may` gaps as follow-up work rather than silently expanding the change's scope to close them.
+
 ## Test Helpers
 
-Test Helpers sets the required project default: flag a setup or API call made inline in a test body when an existing shared helper exists for that resource. Use the helper.
+Inline setup duplicated across tests drifts out of sync as the resource changes; a shared helper keeps every test on the same, current path.
 
 **Guidelines:**
 

@@ -22,7 +22,7 @@ Every read against the data layer should make its projection, relationship depth
 
 ## N+1 Patterns to Reject
 
-N+1 review focuses on critical-severity cases where the diff iterates a list of records and issues a separate per-record read inside the loop. Use a single batched read (e.g., an `id IN (...)` filter) instead, or rely on the data layer's relationship population to fetch related records in the original query.
+A per-record read inside a loop multiplies round-trip latency by result-set size, so a page that is instant with ten records collapses at a thousand.
 
 **Guidelines:**
 
@@ -32,7 +32,7 @@ N+1 review focuses on critical-severity cases where the diff iterates a list of 
 
 ## Single Data Client Per Request
 
-This review focuses on major-severity cases where the diff constructs or acquires the data-layer client more than once inside the same request scope. Cache the client to a local variable and reuse it.
+Acquiring the data-layer client carries real setup cost — connections, config, auth — and paying it repeatedly within one request buys nothing.
 
 **Guidelines:**
 
@@ -41,7 +41,7 @@ This review focuses on major-severity cases where the diff constructs or acquire
 
 ## Pagination
 
-This review focuses on critical-severity cases where a new data-access function returns a result set directly without a comment about whether the total count exceeds the limit and will silently truncate. Either lift the limit, paginate, or document the intentional cap.
+Silent truncation is invisible in development, where collections are small; in production, records simply stop appearing once the dataset outgrows the default limit.
 
 **Guidelines:**
 
@@ -50,7 +50,7 @@ This review focuses on critical-severity cases where a new data-access function 
 
 ## Migration Cost
 
-This review focuses on critical-severity cases where a new data-layer schema migration drops a column or renames a field on a collection/table that holds production data, without a data-backfill step. Defer to the human owner per [code-review-guideline › escalation](../../code-review-guideline/references/escalation.md).
+A migration runs against production data exactly once, and a dropped or renamed column takes its data with it — there is no second pass to recover an oversight.
 
 **Guidelines:**
 
@@ -62,7 +62,7 @@ This review focuses on critical-severity cases where a new data-layer schema mig
 <!-- INIT:OPTIONAL key=LOCALE — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project has no per-locale or per-variant content, delete this section during INIT.*
 
-This review focuses on major-severity cases where a new data-access call omits the locale/variant parameter that content reads require. When the project has a default locale with fallback behavior, diverging from the pattern returns the wrong variant silently.
+Locale fallback makes an omitted variant parameter succeed with plausible-looking content, so the wrong variant ships without any error to catch it.
 
 **Guidelines:**
 

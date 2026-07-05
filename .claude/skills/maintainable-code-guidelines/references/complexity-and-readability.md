@@ -20,7 +20,7 @@ The project enforces complexity/length/typing thresholds in its `{{LINTER}}` con
 
 ## Magic Values
 
-Magic Values sets the required project default: flag a magic number / string that is not paired with either a design token (e.g., a CSS variable or shared constant), a named constant, or `{{LINTER}}`'s inline suppression directive (with a justification comment) that explains the meaning.
+A bare literal forces every later reader to reverse-engineer what it means, and scatters a value that should have one authoritative definition.
 
 **Guidelines:**
 
@@ -30,7 +30,7 @@ Magic Values sets the required project default: flag a magic number / string tha
 
 ## Dead Code
 
-Dead Code sets the required project default: flag commented-out code blocks introduced by the change. Remove or restore them — do not leave them as TODO breadcrumbs.
+Commented-out code cannot be tested or type-checked and only rots, and version control already preserves anything worth recovering.
 
 **Guidelines:**
 
@@ -39,9 +39,19 @@ Dead Code sets the required project default: flag commented-out code blocks intr
 - MUST flag an exported symbol from a changed module that has zero callers in the diff or in the existing codebase. Either remove the export or add the caller in the same change.
 - SHOULD flag an empty `try`/`catch` (e.g., `catch { /* swallow */ }`) — see [observability-guidelines › error-handling](../../observability-guidelines/references/error-handling.md) for the rethrow rule.
 
+## Comments and Doc-Comments
+
+The project's comment and doc-comment rules are owned by [development-guidelines › code-quality › Comments](../../development-guidelines/references/code-quality.md); this lens flags violations of them and links back rather than restating them.
+
+**Guidelines:**
+
+- MUST flag a changed public type definition, or a changed/added function whose body exceeds ~5 lines, that lacks a doc-comment in the project's doc-comment standard — Minor (Major when it is an exported API, or a function that can throw whose throwing conditions are undocumented).
+- MUST flag a line comment that violates the project's chosen comment voice — Nit.
+- SHOULD flag a line comment that merely restates the code it precedes.
+
 ## Type Reuse
 
-Type Reuse sets the required project default: flag an inline object type repeated more than once in the diff — extract into a named type alias.
+A repeated inline shape has to be changed in every copy when it evolves, whereas a single named alias documents the concept in one place.
 
 **Guidelines:**
 
@@ -51,7 +61,7 @@ Type Reuse sets the required project default: flag an inline object type repeate
 
 ## Control Flow
 
-Control Flow describes the preferred project default: flag a deeply nested ternary or `if`/`else` chain that could be flattened with early returns — improves the cognitive complexity score.
+Deep nesting forces a reader to hold every branch condition at once, while early returns let each case be understood and dismissed on its own.
 
 **Guidelines:**
 

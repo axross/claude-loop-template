@@ -4,7 +4,7 @@ Apply these rules to verify that caching is applied with a deliberate lifetime a
 
 ## Cache Placement
 
-This review focuses on critical-severity cases where caching is applied on the client tier (caching is a server-tier concern) or applied to request-specific data.
+A cache entry outlives the request that created it, so placement decides whether the entry is shared computation or one user's private state replayed to strangers.
 
 **Guidelines:**
 
@@ -15,7 +15,7 @@ This review focuses on critical-severity cases where caching is applied on the c
 
 ## Cache Lifetime (TTL) Choice
 
-This review focuses on critical-severity cases where caching is applied without a deliberately chosen lifetime/TTL. The default cache lifetime is unsafe to assume.
+A TTL encodes a judgment about how long stale data is tolerable, and framework defaults shift between versions — an unstated judgment is one nobody validated.
 
 **Guidelines:**
 
@@ -28,7 +28,7 @@ This review focuses on critical-severity cases where caching is applied without 
 
 ## Invalidation Wiring
 
-This review focuses on critical-severity cases where a new data source that backs cached server reads is added, but no corresponding cache-invalidation hook is wired on writes. Without it, edits leave stale UI for up to one cache lifetime.
+TTL expiry is the fallback, not the mechanism: freshness after an edit depends on the write actively evicting what it just made stale.
 
 **Guidelines:**
 
@@ -39,7 +39,7 @@ This review focuses on critical-severity cases where a new data source that back
 
 ## Invalidation Scope
 
-This review focuses on major-severity cases where invalidation is requested without specifying the correct scope (the unit invalidated vs. its shared layout/shell). Wrong scope either over-invalidates (perf) or under-invalidates (stale shared UI).
+Wrong scope fails in both directions — too broad discards warm cache for unaffected views, too narrow leaves shared UI stale past the edit.
 
 **Guidelines:**
 
@@ -48,7 +48,7 @@ This review focuses on major-severity cases where invalidation is requested with
 
 ## External-Fetch Cache Specifics
 
-This review focuses on critical-severity cases where a cached function that fetches external data is changed to vary by request-time inputs (e.g., adds a per-visitor `User-Agent` parameter) — that explodes the cache key.
+An external-fetch cache exists to shield a third-party dependency from per-request traffic, and it only shields anything while many requests share one cache key.
 
 **Guidelines:**
 

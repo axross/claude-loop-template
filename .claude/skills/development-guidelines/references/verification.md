@@ -33,7 +33,7 @@ Manual verification is the first line of confirmation. Run it before the automat
 
 ## Automated Verification
 
-Automated Verification sets the required project default: run the full end-to-end test suite after any change that touches an output surface:
+The e2e suite drives the real application through the full render pipeline, so it is the evidence that an output surface still behaves after a change.
 
 **Guidelines:**
 
@@ -63,7 +63,7 @@ The end-to-end suite should be configured to detect non-deterministic tests (for
 
 ## Responding to Failures
 
-Responding to Failures is a project prohibition: do not delete test cases or weaken assertions to make a failure pass.
+A red test is usually reporting a real regression; muting it ships the defect while destroying the signal that would have caught the next one.
 
 - Snapshots are typically platform-specific; regenerating them on one platform does not update the snapshots used on others (such as the CI runner). See [quality-assurance-guidelines › snapshot-handling](../../quality-assurance-guidelines/references/snapshot-handling.md) for the full snapshot-review discipline.
 

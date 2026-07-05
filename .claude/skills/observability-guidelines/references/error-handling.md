@@ -4,7 +4,7 @@ Apply these rules when writing, reviewing, or modifying any code that might thro
 
 ## Placement of try-catch
 
-Placement of try-catch sets the required project default: place `try-catch` blocks at the **root call site** — the outermost function that initiates an operation (e.g., a request handler, a top-level command, or an entry-point function).
+Only the root call site knows what the failed operation means to the user, so it alone can choose the right recovery — a nested helper can only guess.
 
 **Guidelines:**
 
@@ -73,7 +73,7 @@ unknownHandler: (_state, node) => {
 
 ## Top-Level Error Boundary
 
-The top-level error boundary sets the required project default: keep the framework's top-level error boundary as the last-resort handler for the entire application. This boundary MUST report unexpected errors (via {{ERROR_TRACKER}}'s capture call) so that unhandled render or runtime errors are also sent to the error-reporting service.
+Unhandled render and runtime errors end their journey at the top-level boundary, so its report to {{ERROR_TRACKER}} is the last guarantee that nothing fails invisibly.
 
 **Guidelines:**
 
@@ -93,7 +93,7 @@ export function TopLevelErrorBoundary({ error }: { error: Error }) {
 
 ## Error Messages
 
-Error Messages describes the preferred project default: write error messages that identify the exact function or condition that failed, so issues are immediately actionable without reading the stack trace.
+A reported issue is often read in a dashboard where the message is the headline and the stack trace is minified or several clicks away.
 
 **Guidelines:**
 

@@ -31,6 +31,7 @@ See [complexity-and-readability.md](./references/complexity-and-readability.md) 
 - The project's configured `{{LINTER}}` complexity/length thresholds are not silently bypassed
 - Magic numbers and strings have a named constant or design token, with `{{LINTER}}`'s inline suppression directive (and a justifying comment) only when justified
 - Dead code (unused imports, unreachable branches, commented-out blocks) is removed
+- Missing doc-comments on changed public types/functions, restating comments, and comment-voice violations (rules owned by development-guidelines › code-quality)
 - Inline `{{PRIMARY_LANGUAGE}}` types are extracted into named aliases when reused
 
 ## Scope Discipline

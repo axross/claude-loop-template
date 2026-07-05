@@ -4,7 +4,7 @@ Apply these rules to verify no secret is committed and `process.env` access stay
 
 ## Committed Secrets
 
-Committed Secrets review focuses on critical-severity cases where the diff contains any literal value matching the shape of a service credential.
+Git history is permanent and replicated to every clone, so a secret that lands in one commit is leaked for good and needs rotation even after a follow-up commit deletes it.
 
 **Guidelines:**
 
@@ -46,7 +46,7 @@ Most app frameworks expose a subset of env vars to the browser/client via a pref
 
 ## Logging and Telemetry
 
-Logging and Telemetry review focuses on critical-severity cases where a secret value (DSN, token, password, session ID, auth header) is interpolated into any log call, any error-report extras, or any analytics event payload. Structured logs go to stdout and are captured by the hosting platform; the error tracker and analytics service ship payloads off-server.
+Every telemetry channel copies its payload into third-party retention the project cannot purge on demand, so a secret reaching any of them stays compromised for as long as those systems keep it.
 
 **Guidelines:**
 
@@ -56,7 +56,7 @@ Logging and Telemetry review focuses on critical-severity cases where a secret v
 
 ## `.env.example`
 
-`.env.example` review focuses on major-severity cases where the diff introduces a new env var consumed at runtime but does not add a placeholder line to `.env.example`. The example file is the only documentation of which env vars exist.
+An undocumented env var fails at runtime on the next fresh checkout or deployment, long after the change that introduced it merged.
 
 **Guidelines:**
 

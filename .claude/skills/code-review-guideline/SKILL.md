@@ -37,6 +37,44 @@ See [severity.md](./references/severity.md) for:
 - Required severity for each major issue category (security, data loss, broken e2e, etc.)
 - How severity drives the final verdict (Approve / Approve with Nits / Request Changes)
 
+## Repository Review Policy Overlay
+
+<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep this section if the project adopts the posted-review channel (REVIEW.md at the repo root) OR delete it (and the marked posted-review bullets in ./references/severity.md and ./references/evidence.md, and the posted-review parenthetical in ./references/escalation.md); see the INIT.md Step-4 bullet. -->
+*If this project has no posted-review channel (no `REVIEW.md` at the repo root), delete this section during INIT.*
+
+When the review output is a **posted** pull-request review — the `/review`
+command, the CI reviewer, or a managed review product —
+[`REVIEW.md`](../../../REVIEW.md) at the repo root is the authoritative policy
+and overrides the vocabulary in this skill where they differ. The internal
+Critical/Major/Minor/Nit triage and verdict mapping still drive self-review;
+the posted report follows `REVIEW.md`.
+
+**Guidelines:**
+
+- MUST apply [`REVIEW.md`](../../../REVIEW.md) on top of this methodology for
+  any posted PR review, and let it win on conflict.
+- MUST collapse the posted report to `REVIEW.md`'s label set (Important / Nit)
+  and open the summary with its one-line tally, instead of the four-tier report
+  sections and severity labels used internally.
+- MUST suppress the internal verdict vocabulary in posted output: no
+  Approve / Approve with Nits / Request Changes verdict appears in a posted
+  review.
+- MUST run every mandatory check `REVIEW.md` lists on a posted review and raise
+  a finding for each miss, grading it by the severity floors in
+  [severity.md](./references/severity.md) (a miss that breaks the requirement
+  is Important).
+- MUST treat every acceptance criterion of the linked issue that the diff
+  leaves unmet or unverifiable as an **Important** posted finding.
+- MUST report **every** finding in a posted review — `REVIEW.md` sets no nit
+  cap, so do not drop or summarize findings away (repeated identical nits MAY
+  share one comment).
+- MUST NOT report, in a posted review, findings `REVIEW.md`'s do-not-report
+  list excludes (CI-enforced checks, lockfiles, generated files), even where
+  the severity floors would otherwise rate them Critical.
+- MUST keep a posted review **COMMENT**-type (never APPROVE /
+  REQUEST_CHANGES), per [github-operations](../github-operations/SKILL.md); the
+  reviewer is advisory and does not gate merges.
+
 ## Evidence-Based Reporting
 
 See [evidence.md](./references/evidence.md) for:

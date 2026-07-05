@@ -4,7 +4,7 @@ Apply these rules to verify client-tier additions do not balloon the code shippe
 
 ## Server-Only Imports in Client Files
 
-This review focuses on critical-severity cases where a client-tier file imports a package that is server-only or heavyweight — each pulls in significant weight or breaks the build:
+The bundler follows every import edge regardless of how little of a module is used, so one wrong import in a client-tier file drags a server-sized payload into what every visitor downloads.
 
 **Guidelines:**
 
@@ -20,7 +20,7 @@ This review focuses on critical-severity cases where a client-tier file imports 
 
 ## Heavy Client Dependencies
 
-This review focuses on major-severity cases where a client-tier file imports a heavyweight library that has a smaller equivalent or could run on the server tier instead.
+Server-tier code costs the server once per request; client-tier code costs every visitor's download, parse, and execution time — so where a library runs matters as much as what it does.
 
 **Guidelines:**
 
@@ -32,7 +32,7 @@ This review focuses on major-severity cases where a client-tier file imports a h
 
 ## Re-Exports and Barrel Files
 
-This review focuses on critical-severity cases where a new barrel file (an index that re-exports everything) is created and imported from a client-tier file. The project rule is to import directly from the source module per [development-guidelines › code-quality](../../development-guidelines/references/code-quality.md).
+A barrel import hands the bundler the whole index, and everything the re-exports touch rides along unless tree-shaking can prove it unused — which it often cannot.
 
 **Guidelines:**
 
@@ -56,7 +56,7 @@ Some bundlers let you mark packages that the server runtime should NOT bundle (t
 
 ## Dynamic Import Patterns
 
-The preferred default is to lazy-load large, route-local, below-the-fold client units.
+Lazy loading moves a unit's cost from every visitor's initial load to the moment the unit is actually needed.
 
 **Guidelines:**
 
@@ -65,7 +65,7 @@ The preferred default is to lazy-load large, route-local, below-the-fold client 
 
 ## Tree-Shaking
 
-This review focuses on major-severity cases where a client-tier file uses a default/namespace import instead of named imports for a library that supports tree-shaking. Such imports often defeat tree-shaking.
+Tree-shaking works by proving exports unused, and default or namespace imports of CommonJS-shaped modules make that proof impossible.
 
 **Guidelines:**
 
