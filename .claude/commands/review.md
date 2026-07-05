@@ -3,8 +3,6 @@ description: Run this repo's code review (the built-in /code-review practice) on
 argument-hint: <pr number / URL | ref-range like main...feature | empty = current branch vs base>
 ---
 
-<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — Claude Code harness binding EXAMPLE for the independent-review capability. Keep (and adapt to your harness) if the project adopts the posted-review channel OR delete this file with the capability; see the INIT.md Step-4 bullet. -->
-
 Run the harness's built-in code review on the target, layered with this repository's standards. This is the human/ad-hoc entry point to the **same review practice** the CI reviewer ([`claude-review.yaml`](../../.github/workflows/claude-review.yaml)) runs whenever a trusted comment contains `@claude review` (the review trigger phrase — if the project picks a different one during INIT, change it in the workflow and in every `.claude/commands/` file that posts it).
 
 Target: `$ARGUMENTS`

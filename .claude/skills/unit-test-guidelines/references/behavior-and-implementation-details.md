@@ -6,18 +6,18 @@ A unit test should fail when the public behavior breaks and keep passing when th
 
 ```ts
 describe("findRecordById()", () => {
-	it("returns null when no record matches the id", async () => {
-		const repository = {
-			find: async () => ({ items: [] }),
-		} as unknown as Repository;
+  it("returns null when no record matches the id", async () => {
+    const repository = {
+      find: async () => ({ items: [] }),
+    } as unknown as Repository;
 
-		await expect(
-			findRecordById(repository, "missing", {
-				includeArchived: false,
-				fields: { id: true },
-			}),
-		).resolves.toBeNull();
-	});
+    await expect(
+      findRecordById(repository, "missing", {
+        includeArchived: false,
+        fields: { id: true },
+      }),
+    ).resolves.toBeNull();
+  });
 });
 ```
 
@@ -47,22 +47,22 @@ AAA is useful when it keeps tests readable, but do not turn it into noisy commen
 
 ```ts
 it("preserves the published status when updating a published record", async () => {
-	const data = createRecordData();
-	let receivedOptions: UpdateOptions | undefined;
-	const repository = createUpdateRepository((options) => {
-		receivedOptions = options;
-		return { id: options.id, data: options.data, status: options.data.status };
-	});
+  const data = createRecordData();
+  let receivedOptions: UpdateOptions | undefined;
+  const repository = createUpdateRepository((options) => {
+    receivedOptions = options;
+    return { id: options.id, data: options.data, status: options.data.status };
+  });
 
-	const result = await updateRecord(
-		repository,
-		{ id: 42, slug: "example", status: "published" } as Record,
-		data,
-		{ includeArchived: false },
-	);
+  const result = await updateRecord(
+    repository,
+    { id: 42, slug: "example", status: "published" } as Record,
+    data,
+    { includeArchived: false },
+  );
 
-	expect(result.status).toBe("published");
-	expect(receivedOptions?.data.status).toBe("published");
+  expect(result.status).toBe("published");
+  expect(receivedOptions?.data.status).toBe("published");
 });
 ```
 

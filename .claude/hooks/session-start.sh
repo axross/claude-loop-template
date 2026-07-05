@@ -4,11 +4,6 @@
 # provisions the toolchain, prepares a local env file, materializes the opt-in
 # quality hooks, and installs dependencies so linters and tests are runnable as
 # soon as the session starts.
-#
-# TEMPLATE NOTE: this is an example Claude Code harness binding. During INIT,
-# replace the {{TOKENS}} below and adapt the toolchain-provisioning block to the
-# project's runtime (Node, Python, Go, Ruby, ...), or delete this hook if the
-# project does not need session bootstrapping.
 set -euo pipefail
 
 # only run in the remote (web/cloud) environment. local sessions manage their
@@ -53,4 +48,4 @@ fi
 
 # install dependencies (a plain install, not a clean/frozen install, so a cached
 # container layer can be reused across sessions).
-{{INSTALL_CMD}}
+npm install

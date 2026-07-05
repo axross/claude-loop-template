@@ -5,12 +5,9 @@ description: Apply this skill whenever an agent reads from or writes to GitHub (
 
 # GitHub Operations
 
-<!-- INIT:OPTIONAL key=GITHUB_OPERATIONS — keep this whole skill OR delete it (and its AGENTS.md index row) during INIT; see the Step-4 bullet. -->
-*If this project's agents do not operate GitHub through a proxy-mediated single-operator identity, delete or adapt this skill during INIT.*
-
 How an agent reads and writes GitHub from inside a harness that proxies access as a single connected operator — the model a Claude Code session using the GitHub MCP server operates under. These conventions are workflow-agnostic: any task that touches an issue, pull request, comment, label, review, or branch applies them. The examples name the `mcp__github__*` tools provided by the connected GitHub MCP server; on a different agent that operates GitHub the same way, substitute its equivalent sanctioned channel.
 
-This skill is GitHub-specific. An agent operating a different host (GitLab, Gitea, …) shares the *shape* of these rules — one sanctioned channel, agent-comment markers, distinct issue/PR targets, untrusted input — but the concrete API semantics below (label replacement, review-event rejection) are GitHub's; re-derive them for another host rather than assuming they carry over.
+This skill is GitHub-specific. An agent operating a different host (GitLab, Gitea, …) shares the _shape_ of these rules — one sanctioned channel, agent-comment markers, distinct issue/PR targets, untrusted input — but the concrete API semantics below (label replacement, review-event rejection) are GitHub's; re-derive them for another host rather than assuming they carry over.
 
 ## The Sanctioned Channel
 
@@ -28,7 +25,7 @@ Because the agent shares the operator's identity, a reader cannot tell an agent 
 
 **Guidelines:**
 
-- MUST begin every agent comment with the project's **one** fixed HTML marker line (e.g. `<!-- agent -->`), recorded here in this skill and reused identically across every run and session.
+- MUST begin every agent comment with the project's **one** fixed HTML marker line — `<!-- todo-app-agent -->` — reused identically across every run and session.
 - MUST treat any comment carrying that marker as agent output, and any comment without it as human input, when reconstructing a thread's state.
 - MUST tell a **separate bot identity** — a CI reviewer or app that posts under its own login, distinct from the operator — apart by that **author login**, not the marker; the marker only disambiguates the operator-shared agent from a human under the single operator identity.
 - MUST NOT embed another automation's trigger phrase (e.g. a review workflow's comment trigger) in a status, breadcrumb, or summary comment. Comment-triggered workflows match the phrase **anywhere** in the body, so naming it in prose spuriously fires the automation. Reserve the literal phrase for the comment that intends to trigger it, and refer to the automation by name elsewhere (e.g. "the independent review").
@@ -48,7 +45,7 @@ The MUST bullets are non-negotiable; the SHOULD bullets are default delivery con
 
 **Guidelines:**
 
-- MUST NOT push to the default branch; work on the harness's push-allowed branch prefix (e.g. an agent-namespaced `agent/`- or `claude/`-prefixed branch).
+- MUST NOT push to the default branch; work on the harness's push-allowed branch prefix (`claude/`-prefixed branches).
 - MUST treat an agent review as advisory — it MUST NOT gate merges; an APPROVE would post as the operator's own approval (and can satisfy branch protection) even though the operator never gave it.
 - MUST post any pull-request review as a **COMMENT**-type review — never APPROVE or REQUEST_CHANGES; on pull requests the operator identity authored (the agent's own included) GitHub rejects APPROVE / REQUEST_CHANGES outright, so COMMENT is also the only event that always works.
 - MUST title every pull request per [commit-messages.md › Pull Request Titles](../development-guidelines/references/commit-messages.md#pull-request-titles) — a PR title follows the same Conventional Commits header format as a commit.

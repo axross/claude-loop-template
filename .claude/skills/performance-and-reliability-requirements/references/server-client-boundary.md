@@ -1,6 +1,6 @@
 # Server / Client Boundary and Async Cost
 
-Apply these rules to verify that server/client composition (where {{APP_FRAMEWORK}} distinguishes a server tier from a client tier) does not create avoidable latency or ship unnecessary client code.
+Apply these rules to verify that server/client composition (where Next.js (App Router) distinguishes a server tier from a client tier) does not create avoidable latency or ship unnecessary client code.
 
 ## Async Waterfalls
 
@@ -13,9 +13,6 @@ Sequential awaits make response time the sum of every operation's latency; concu
 - SHOULD point to the project's established pattern of deriving independent inputs and data as deferred handles passed to the units that consume them, rather than awaiting everything up front.
 
 ## Streaming / Lazy Load Granularity
-
-<!-- INIT:OPTIONAL key=REVIEW — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
-*If this project's framework cannot stream or progressively render independent units, adapt this section to its lazy-loading mechanism during INIT.*
 
 A loading boundary streams at the pace of the slowest thing inside it, so grouping independent units forces the fast one to wait for the slow one.
 
@@ -43,26 +40,9 @@ The client-tier boundary is transitive — a promoted unit carries every import 
 
 - MUST flag a Major when the diff promotes a unit to the client tier when its only client-needing reason is a small interactive subtree. Extract the interactive part and keep the parent on the server tier.
 - MUST flag a Critical when promoting a unit to the client tier causes a previously server-only data fetch to ship to the browser. Lift the fetch into the server-tier parent and pass the result down as plain data.
-- MUST flag a Critical when a client-tier file imports a function that itself pulls in heavyweight or server-only packages (data-layer SDK, parsing/rendering pipelines, the structured logger, an error-tracker server entry, or a server-only marker module). Cross-reference with [bundle-weight.md](./bundle-weight.md).
-
-## Compiler / Memoization Implications
-
-<!-- INIT:OPTIONAL key=COMPILER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
-*If this project's toolchain has no auto-memoizing compiler, delete this entire subsection during INIT — heading, prose, and the **Guidelines:** block below (through the end of this section, before "Static / Dynamic Rendering Implications").*
-
-When the framework's compiler auto-memoizes client components, the reviewer SHOULD be aware:
-
-- Manual memoization in new client units is usually unnecessary. Flag a Minor when manual memoization is added without a reason the compiler cannot handle (e.g., a referential identity a third-party library requires).
-- Such compilers typically do NOT optimize server-tier units — those re-execute on every request unless cached. Flag a Major when an expensive computation lives in an uncached server-tier unit.
-
-**Guidelines:**
-
-- MUST account for the framework compiler's auto-memoization behavior before flagging or approving manual memoization in new client units.
+- MUST flag a Critical when a client-tier file imports a function that itself pulls in heavyweight or server-only packages (parsing/rendering pipelines, an error-tracker server entry, or a server-only marker module). Cross-reference with [bundle-weight.md](./bundle-weight.md).
 
 ## Static / Dynamic Rendering Implications
-
-<!-- INIT:OPTIONAL key=RENDERING — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
-*If this project's framework does not distinguish static from dynamic rendering, delete this subsection during INIT.*
 
 When the framework can statically prerender server-tier units, reading per-request state (cookies, headers, request-specific parameters) typically forces the enclosing unit into dynamic rendering. The reviewer SHOULD be aware:
 

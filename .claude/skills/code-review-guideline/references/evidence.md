@@ -8,7 +8,7 @@ A finding the author cannot locate is one they cannot act on, so every finding i
 
 **Guidelines:**
 
-- MUST cite a `file:line` (or `file:line-line` for a range) for every finding. Use repo-relative paths from the project root (e.g., `{{SOURCE_DIR}}/records/[id]/get-record.ts:42`).
+- MUST cite a `file:line` (or `file:line-line` for a range) for every finding. Use repo-relative paths from the project root (e.g., `app//records/[id]/get-record.ts:42`).
 - MUST quote the offending code (one-to-five lines) directly under the citation when the surrounding context is needed to understand the finding.
 - MUST link to the violated guideline section when the finding is a guideline violation, using a relative path from the report context (e.g., `[development-guidelines › change-management](../../development-guidelines/references/change-management.md)`).
 - MUST NOT invent line numbers or paths. If unsure, re-read the file.
@@ -20,7 +20,7 @@ A concrete diff turns a finding into something the fixer can apply directly, ins
 **Example:**
 
 ````
-[CRITICAL] {{SOURCE_DIR}}/records/get-record.ts:53 — Unsanitized `id` used in a data-layer query filter without an explicit string assertion.
+[CRITICAL] app//records/get-record.ts:53 — Unsanitized `id` used in a data-layer query filter without an explicit string assertion.
 Risk: A non-string `id` (e.g., an array via request-param coercion) bypasses the equals filter and could leak records the caller is not authorized to read.
 Fix:
 ```ts
@@ -47,12 +47,11 @@ The reviewer MUST emit findings in this exact section order so downstream agents
 5. **Minor Findings & Nits** — concise bullets, prefixed `[MINOR]` or `[NIT]`, with `file:line`. Fix snippet optional.
 6. **Pre-existing Observations** — bullets for issues outside the diff scope per [scoping.md](./scoping.md). Do not assign severity here.
 7. **Verification Evidence** — commands, manual checks, screenshots, logs, or reasoned checks the reviewer used; MUST include skipped required checks and residual risk.
-8. **Recommended Actions** — ordered checklist the author MUST complete before re-requesting review (e.g., "Run {{LINT_CMD}} after applying fix #1", "Re-run {{E2E_TEST_CMD}} and confirm the affected snapshots are unchanged").
+8. **Recommended Actions** — ordered checklist the author MUST complete before re-requesting review (e.g., "Run npm run lint after applying fix #1", "Re-run npm run test:e2e and confirm the affected snapshots are unchanged").
 
 **Guidelines:**
 
 - MUST emit review report sections in the exact order shown above.
-<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep the next bullet if the project adopts the posted-review channel (REVIEW.md) OR delete it; see the INIT.md Step-4 bullet. -->
 - SHOULD, for a **posted** PR review governed by the repo-root posted-review policy, follow that policy's report shape instead — its Important/Nit labels and one-line tally — per the [Repository Review Policy Overlay](../SKILL.md#repository-review-policy-overlay).
 
 ## What Counts as Evidence
@@ -65,7 +64,7 @@ Evidence is what lets a reader confirm a finding without taking the reviewer's w
 
 **Guidelines:**
 
-- SHOULD treat a failing or missing-but-required check (e.g., {{LINT_CMD}} would error on the changed file) as evidence and state the expected outcome explicitly.
+- SHOULD treat a failing or missing-but-required check (e.g., npm run lint would error on the changed file) as evidence and state the expected outcome explicitly.
 - MUST name every skipped required check and explain why it was skipped; skipped checks are residual risk, not success evidence.
 
 ## When the Reviewer Cannot Verify

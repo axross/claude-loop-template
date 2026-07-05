@@ -27,7 +27,7 @@ A structure skill is a map, not a rulebook: the stack facts an agent needs befor
 **Guidelines:**
 
 - MUST list stack facts as short factual bullets (versions, import aliases, config filenames), not tutorials.
-- MUST describe each significant path by what it *owns*, in a two-column path table.
+- MUST describe each significant path by what it _owns_, in a two-column path table.
 - MUST delegate placement semantics — such as which component tier a file belongs to — to the component skill; the structure skill states only the resulting directory.
 - SHOULD keep colocation rules (tests and styles next to their subject) in the structure skill, since they are pure placement.
 

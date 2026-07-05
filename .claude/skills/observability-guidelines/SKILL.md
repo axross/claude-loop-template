@@ -1,6 +1,6 @@
 ---
 name: observability-guidelines
-description: Use this skill whenever writing, reviewing, or modifying code that throws, catches, reports, or logs — including `try`/`catch` placement, error-reporting capture calls, top-level error boundaries, structured-logger usage and module child loggers, log-level choice (`info` / `warn`; `error` reserved for projects without a dedicated error tracker), and "Started / Completed" structured-log messages. Use even when the user only mentions an error tracker, a logger, capturing an exception, error boundaries, log levels, or debugging an unhandled exception in this project.
+description: Use this skill whenever writing, reviewing, or modifying code that throws, catches, or reports errors — including `try`/`catch` placement, error-reporting calls, and top-level error boundaries. Use even when the user only mentions capturing an exception, error boundaries, or debugging an unhandled exception in this project.
 ---
 
 # Observability Guidelines
@@ -18,18 +18,12 @@ See [error-handling.md](./references/error-handling.md) for:
 
 ## Error Tracking
 
+> **Dormant until an error tracker exists** — remove this banner when one (e.g.
+> Sentry) lands, making the lens unconditional.
+
 See [error-tracking.md](./references/error-tracking.md) for:
 
-- {{ERROR_TRACKER}} initialization and runtime-specific configuration files
+- Error-tracker initialization and runtime-specific configuration files
 - The error-reporting capture call's import source, context, and privacy boundaries
 - PII settings and safe event context
 - Source map and instrumentation changes
-
-## Logging
-
-See [logging.md](./references/logging.md) for:
-
-- When operations are worth logging and when they are not
-- Which log level to use (`info` vs `warn`; `error` only when the project has no dedicated error tracker)
-- Creating module-scoped child loggers from a shared root logger
-- Structuring log calls with context objects and "Started / Completed" messages

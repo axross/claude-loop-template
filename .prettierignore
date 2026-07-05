@@ -1,0 +1,9 @@
+node_modules/
+.next/
+out/
+build/
+coverage/
+test-results/
+playwright-report/
+package-lock.json
+.claude/settings.local.json

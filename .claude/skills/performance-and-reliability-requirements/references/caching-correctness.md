@@ -1,6 +1,6 @@
 # Caching Correctness
 
-Apply these rules to verify that caching is applied with a deliberate lifetime and scope, never to per-user/per-request data, and that invalidation is wired on writes. Map "the cache directive/API" and "the cache-lifetime API" to whatever {{APP_FRAMEWORK}} or the project's caching layer provides.
+Apply these rules to verify that caching is applied with a deliberate lifetime and scope, never to per-user/per-request data, and that invalidation is wired on writes. Map "the cache directive/API" and "the cache-lifetime API" to whatever Next.js (App Router) or the project's caching layer provides.
 
 ## Cache Placement
 
@@ -53,4 +53,3 @@ An external-fetch cache exists to shield a third-party dependency from per-reque
 **Guidelines:**
 
 - MUST flag a Critical when a cached external-fetch helper is changed to vary by request-time inputs, because that explodes the cache key.
-- SHOULD flag a Minor recommendation that newly-added external-fetch helpers also bracket their work with start/complete log pairs carrying a `duration`, so cache misses are observable. See [observability-guidelines › logging](../../observability-guidelines/references/logging.md).

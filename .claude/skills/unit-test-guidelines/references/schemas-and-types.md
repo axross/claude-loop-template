@@ -6,15 +6,15 @@ Schema modules should be tested with real valid and invalid inputs. Type-only mo
 
 ```ts
 describe("RecordParametersBase", () => {
-	it("applies locale and flag defaults when optional parameters are omitted", () => {
-		const params = RecordParameters.parse({
-			slug: "hello-world",
-			index: [0],
-		});
+  it("applies locale and flag defaults when optional parameters are omitted", () => {
+    const params = RecordParameters.parse({
+      slug: "hello-world",
+      index: [0],
+    });
 
-		expect(params.locale).toBe("ja-JP");
-		expect(params.includeArchived).toBe(false);
-	});
+    expect(params.locale).toBe("ja-JP");
+    expect(params.includeArchived).toBe(false);
+  });
 });
 ```
 
@@ -22,17 +22,17 @@ describe("RecordParametersBase", () => {
 
 ```ts
 describe("RecordResponse", () => {
-	it("decodes collection results when input is a paginated response", () => {
-		expect(
-			decode(RecordResponse, {
-				totalItems: 1,
-				items: [{ id: 1, slug: "hello", status: "draft" }],
-			}),
-		).toMatchObject({
-			totalItems: 1,
-			items: [{ id: 1, slug: "hello", status: "draft" }],
-		});
-	});
+  it("decodes collection results when input is a paginated response", () => {
+    expect(
+      decode(RecordResponse, {
+        totalItems: 1,
+        items: [{ id: 1, slug: "hello", status: "draft" }],
+      }),
+    ).toMatchObject({
+      totalItems: 1,
+      items: [{ id: 1, slug: "hello", status: "draft" }],
+    });
+  });
 });
 ```
 
@@ -40,7 +40,7 @@ describe("RecordResponse", () => {
 
 ```ts
 const response = {
-	content: [{ type: "text", text: "ok" }],
+  content: [{ type: "text", text: "ok" }],
 } satisfies TextResponse;
 
 expect(response.content).toEqual([{ type: "text", text: "ok" }]);
@@ -64,17 +64,17 @@ Invalid input tests should name the rejected condition and should not combine un
 
 ```ts
 describe("when index is invalid", () => {
-	it("rejects an empty index array", () => {
-		expect(() => {
-			RecordParameters.parse({ slug: "hello-world", index: [] });
-		}).toThrow(SchemaError);
-	});
+  it("rejects an empty index array", () => {
+    expect(() => {
+      RecordParameters.parse({ slug: "hello-world", index: [] });
+    }).toThrow(SchemaError);
+  });
 
-	it("rejects fractional index values", () => {
-		expect(() => {
-			RecordParameters.parse({ slug: "hello-world", index: [1.5] });
-		}).toThrow(SchemaError);
-	});
+  it("rejects fractional index values", () => {
+    expect(() => {
+      RecordParameters.parse({ slug: "hello-world", index: [1.5] });
+    }).toThrow(SchemaError);
+  });
 });
 ```
 

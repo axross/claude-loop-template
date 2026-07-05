@@ -20,12 +20,15 @@ matters. State the outcome sought, not the feature being built.>
 _(See problem-and-scope.md → Outcome Before Solution.)_
 
 **Non-goals** (omit only if nothing plausible is being excluded):
+
 - <A thing that could reasonably have been in scope, deliberately excluded, and why.>
-_(See problem-and-scope.md → Non-Goals and Out-of-Scope.)_
+  _(See problem-and-scope.md → Non-Goals and Out-of-Scope.)_
 
 **Assumptions** (distinct from open questions — an open question blocks planning and gets
 asked instead):
+
 - <A belief the plan relies on that the reader might disagree with.>
+
 _(See problem-and-scope.md → Assumptions vs. Open Questions.)_
 
 ## Acceptance criteria
@@ -37,8 +40,8 @@ _(See problem-and-scope.md → Assumptions vs. Open Questions.)_
   that must stay untouched.>
 - <Additional criteria only for behavior the sections above actually specify —
   right-size the checklist per the pointer below.>
-_(See acceptance-criteria.md → Coverage and Right-Sized Checklists.)_
+  _(See acceptance-criteria.md → Coverage and Right-Sized Checklists.)_
 - <The verification gates this change requires — e.g. format/lint, unit tests, e2e
   tests, build — as trailing items.>
-_(See acceptance-criteria.md → Right-Sized Checklists.)_
+  _(See acceptance-criteria.md → Right-Sized Checklists.)_
 ```

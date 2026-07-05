@@ -1,9 +1,6 @@
 # Error Handling and Observability
 
-Apply these rules to verify the change keeps the project's error-propagation model and structured-logging discipline intact. Defer the developer-facing rules to [observability-guidelines](../../observability-guidelines/SKILL.md) — this file is the **reviewer's** flagging checklist. Throughout, `reportError(...)` denotes the project's error-reporting call (it maps to {{ERROR_TRACKER}}'s capture function if the project has one), and `logger` denotes the project's structured logger ({{LOGGER}}).
-
-<!-- INIT:OPTIONAL key=ERROR_TRACKER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
-*If this project has no {{ERROR_TRACKER}}, treat `reportError(...)` as the project's equivalent failure-reporting mechanism (or delete the error-reporting clauses during INIT).*
+Apply these rules to verify the change keeps the project's error-propagation model intact. Defer the developer-facing rules to [observability-guidelines](../../observability-guidelines/SKILL.md) — this file is the **reviewer's** flagging checklist. Throughout, `reportError(...)` denotes the project's error-reporting call: `console.error` at the root call site until an error tracker lands, the tracker's capture call afterwards.
 
 ## `try`/`catch` Placement
 
@@ -15,7 +12,7 @@ A catch block inside a nested helper decides recovery policy for callers it know
 - MUST flag a Critical when a `catch` block does any of:
   - Logs without rethrowing or calling `reportError(...)` (silent error swallow)
   - Returns a default value (e.g., `return null`, `return []`) without `reportError(...)` — the failure becomes invisible
-  - Writes to a bare console/stderr instead of `reportError(...)` — ad-hoc console output does not reach the error tracker in production
+  - Writes ad-hoc console output in a nested helper instead of reporting at the root call site — scattered console noise will not migrate to the error tracker when one lands
 - MUST flag a Major when a `catch` rethrows but loses the original error (e.g., `throw new Error("something went wrong")`). Preserve the cause (e.g., `throw new Error("…", { cause: error })`) or just rethrow.
 
 ## Error-Reporting Discipline
@@ -29,27 +26,6 @@ An unreported failure leaves no production trace, so the first signal becomes a 
 - MUST flag a Major when the error-reporting call is imported from the wrong SDK entry point for the runtime (server vs. browser vs. edge). Use the integration that wires all runtimes correctly.
 - MUST flag a Major when an unexpected non-thrown state is silently ignored. Construct and report an explicit error for "should-not-happen" branches instead of swallowing them.
 
-## Logger Discipline
-
-The logger has none of the stack traces, grouping, or alerting the error tracker provides, so an error routed to it is found only by someone already reading the logs.
-
-**Guidelines:**
-
-- MUST flag a Critical when the diff calls the logger's error level for a real error — the project routes errors through `reportError(...)` per [observability-guidelines › logging](../../observability-guidelines/references/logging.md).
-- MUST flag a Critical when a new module constructs its own logger instance directly instead of deriving a child from the project's shared root logger.
-- MUST flag a Major when a new module's logger label/namespace collides with an existing one — labels must stay unique so logs are attributable.
-- MUST flag a Major when a new slow / external operation lacks the start/complete log pair carrying a `duration`. Match the project's convention of bracketing each fetch / parse / IO operation with start and complete logs.
-
-## Log Hygiene
-
-Log output is retained, indexed, and readable by far more people and systems than the code path that produced it, so a secret logged once is a secret widely distributed.
-
-**Guidelines:**
-
-- MUST flag a Critical when a log line interpolates a secret (token, password, session ID, full request body). Cross-reference with [application-security-requirements › secret-handling](../../application-security-requirements/references/secret-handling.md).
-- MUST flag a Major when a log message violates the project's established message style (the linter/formatter and convention enforce it).
-- MUST flag a Major when an info-level log is emitted for a high-frequency operation (e.g., per-render of a server unit, per-iteration inside a tight loop). Log at the boundary of the operation, not inside it.
-
 ## Error Boundaries
 
 Errors reaching the root boundary are precisely the ones nothing else caught, so its reporting hook is the difference between a recorded failure and a silent one.
@@ -62,8 +38,8 @@ Errors reaching the root boundary are precisely the ones nothing else caught, so
 
 ## Replay and Trace Sampling
 
-<!-- INIT:OPTIONAL key=ERROR_TRACKER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
-*If this project's {{ERROR_TRACKER}} has no session replay or trace sampling, delete this section during INIT.*
+> **Dormant until an error tracker exists** — remove this banner when one (e.g.
+> Sentry) lands, making the lens unconditional.
 
 Sampling decisions are made before anyone knows which session will error, and a replay that was never captured cannot be reconstructed afterward.
 

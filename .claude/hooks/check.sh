@@ -3,11 +3,6 @@
 # stop hook: before the task completes, run the unit tests and lint whenever
 # code changed in this session. failures block completion and are reported back
 # on stderr so the agent addresses them before finishing.
-#
-# TEMPLATE NOTE: this is an example Claude Code harness binding. During INIT,
-# replace the {{TOKENS}} below with the project's real values, or delete this
-# hook (and its entry in .claude/settings.local-example.json) if the project
-# has no automated checks.
 set -uo pipefail
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
@@ -21,13 +16,13 @@ if command -v mise >/dev/null 2>&1; then
 fi
 
 # nothing to verify without the package manager.
-command -v {{PACKAGE_MANAGER}} >/dev/null 2>&1 || exit 0
+command -v npm >/dev/null 2>&1 || exit 0
 
 # only run when this session has pending code changes, either uncommitted or
 # committed but not yet on the upstream branch. avoids checking on plain
-# conversational turns. {{CODE_FILE_REGEX}}: an extended-regex of source
+# conversational turns. \.(ts|tsx|css)$: an extended-regex of source
 # extensions, e.g. '\.(ts|tsx|js|css)$'.
-CODE_GLOB='{{CODE_FILE_REGEX}}'
+CODE_GLOB='\.(ts|tsx|css)$'
 code_changed() {
   if git status --porcelain 2>/dev/null | grep -qE "$CODE_GLOB"; then
     return 0
@@ -44,12 +39,12 @@ code_changed || exit 0
 # run both checks, collecting output for the failure report.
 OUTPUT="$(mktemp)"
 STATUS=0
-if ! {{UNIT_TEST_CMD}} >>"$OUTPUT" 2>&1; then STATUS=1; fi
-if ! {{LINT_CMD}} >>"$OUTPUT" 2>&1; then STATUS=1; fi
+if ! npm run test:unit >>"$OUTPUT" 2>&1; then STATUS=1; fi
+if ! npm run lint >>"$OUTPUT" 2>&1; then STATUS=1; fi
 
 if [ "$STATUS" -ne 0 ]; then
   {
-    echo "Pre-completion checks failed ({{UNIT_TEST_CMD}} / {{LINT_CMD}})."
+    echo "Pre-completion checks failed (npm run test:unit / npm run lint)."
     echo "Fix the errors below before completing the task:"
     echo
     tail -n 100 "$OUTPUT"

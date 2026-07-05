@@ -4,13 +4,13 @@ Apply these rules to verify that new code respects the project's separation of c
 
 ## Data-Access / UI Split
 
-When a UI module or request handler reaches into the data layer directly, caching, schema validation, and logging scatter across every call site instead of living in one place.
+When a UI component reads or writes persisted state directly, serialization, validation, and migration logic scatter across every call site instead of living in one place.
 
 **Guidelines:**
 
-- MUST flag a UI module or request handler that opens a connection to `{{CMS_OR_DATA_LAYER}}` or queries it directly. Data access MUST go through a dedicated data-access module so caching, schema validation (parsing the raw record into a validated view type), and logging are centralized.
-- MUST flag a data-access function that returns the raw record type from `{{CMS_OR_DATA_LAYER}}` instead of a validated/parsed view type (e.g., a `RecordDetail` or `RecordSummary` shape). The data-access layer owns the schema-to-domain transform.
-- MUST flag a data-access function that imports UI modules (components, routing, view libraries) — data-access modules MUST be UI-free.
+- MUST flag a component that calls `localStorage` directly. Todo persistence MUST go through the dedicated storage module (`lib/todo-store.ts`) so serialization, schema validation of stored JSON, and key naming are centralized.
+- MUST flag a storage function that returns unvalidated parsed JSON instead of the validated `Todo` type. The storage module owns the parse-and-validate transform.
+- MUST flag a storage function that imports UI modules (components, routing, view libraries) — storage modules MUST be UI-free.
 
 ## Server / Client Boundary
 
@@ -33,18 +33,6 @@ A shared pipeline copied into a second place drifts out of sync, so a fix applie
 - MUST flag domain processing attempted on the wrong side of the server/client boundary when the pipeline is server-side only.
 - MUST flag a new node/element type added to a renderer's component-mapping table without a corresponding component import.
 
-## Data-Layer Hooks / UI Boundary
-
-<!-- INIT:OPTIONAL key=DATA_LAYER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
-*If this project has no `{{CMS_OR_DATA_LAYER}}` with lifecycle hooks, delete this section during INIT.*
-
-Data-layer lifecycle hooks run server-side, outside the UI runtime, so a UI import there either breaks at runtime or drags view code into a realm that must stay UI-free.
-
-**Guidelines:**
-
-- MUST flag a `{{CMS_OR_DATA_LAYER}}` lifecycle hook (before/after an operation) that imports UI components or any view module — these hooks run server-side, outside the UI runtime.
-- MUST flag a `{{CMS_OR_DATA_LAYER}}` access/authorization rule that unconditionally grants access to an admin-only or non-default-state field (e.g., an unpublished/draft status flag) without an explicit comment justifying why it is public.
-
 ## Cross-Tier Imports
 
 An import that runs against the tier hierarchy couples layers meant to stay independent, eroding the boundaries the tiers exist to enforce.
@@ -52,6 +40,5 @@ An import that runs against the tier hierarchy couples layers meant to stay inde
 **Guidelines:**
 
 - MUST flag any import path that crosses tiers in the wrong direction:
-  - The `{{CMS_OR_DATA_LAYER}}` realm MUST NOT import from the application UI realm. The data layer is a separate process boundary.
   - Group-shared / global modules MUST NOT import from a specific route's route-local code. Shared code should not depend on route-local code.
 - SHOULD flag deep relative imports (`../../../`) that cross more than two directory levels — prefer the project's configured path aliases.

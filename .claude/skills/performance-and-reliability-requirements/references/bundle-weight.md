@@ -1,6 +1,6 @@
 # Bundle and Dependency Weight
 
-Apply these rules to verify client-tier additions do not balloon the code shipped to the browser (or, for non-web {{PROJECT_KIND}} projects, the code pulled into the client/edge bundle).
+Apply these rules to verify client-tier additions do not balloon the code shipped to the browser (or, for non-web web app projects, the code pulled into the client/edge bundle).
 
 ## Server-Only Imports in Client Files
 
@@ -12,7 +12,6 @@ The bundler follows every import edge regardless of how little of a module is us
   - The data-layer SDK / ORM / CMS client
   - Heavyweight content-processing or rendering pipelines (parsers, transformers, syntax highlighters)
   - Server-side metadata/scraping libraries
-  - The structured logger and its pretty-printer
   - An error-tracker's server-only entry points
   - Native runtime / platform builtins (e.g., `node:*` modules)
   - A "server-only" marker package (importing it in a client file is a build error by design)
@@ -40,9 +39,6 @@ A barrel import hands the bundler the whole index, and everything the re-exports
 - MUST flag a Major when a new client unit imports from a file that itself re-exports server-only modules. The transitive pull will fail the build at best and bloat the client bundle at worst.
 
 ## Server-External Package Configuration
-
-<!-- INIT:OPTIONAL key=BUNDLER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
-*If this project's bundler has no "external server packages" escape hatch, delete this section during INIT.*
 
 Some bundlers let you mark packages that the server runtime should NOT bundle (they stay loaded from the dependency tree at runtime). This list should stay minimal.
 

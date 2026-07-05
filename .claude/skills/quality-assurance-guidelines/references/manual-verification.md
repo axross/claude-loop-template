@@ -4,17 +4,17 @@ Apply these rules to verify the author exercised the change in the running app b
 
 ## Required Manual Checks
 
-The reviewer MUST ask the author to confirm (in the PR description or the review thread) that the following were checked when the diff touches the listed surface. Rows marked *(optional)* apply only if the project has the corresponding capability.
+The reviewer MUST ask the author to confirm (in the PR description or the review thread) that the following were checked when the diff touches the listed surface. Rows marked _(optional)_ apply only if the project has the corresponding capability.
 
-| Diff touches | Required manual check |
-|---|---|
-| Any user-facing view, screen, or route-local component | The affected surface was loaded in the running app via `{{DEV_CMD}}` |
-| Any data-driven surface that supports non-default content states *(optional)* | The surface was exercised in each non-default content state the data layer supports (e.g., a draft or unpublished state) |
-| A live-preview / CMS preview path *(optional)* | The preview path was loaded inside the data layer's preview/admin surface |
-| Not-found handling or any routing change | A non-existent identifier was requested and the not-found UI rendered correctly |
-| Metadata generation, if the project produces any (e.g., page metadata, sitemap, robots, social-share image) *(optional)* | The metadata response was inspected (e.g., view-source, the generated sitemap/robots endpoint, social-share preview) |
-| The content/markup rendering pipeline *(optional)* | A record containing the affected construct was rendered end-to-end |
-| Error-tracker / instrumentation config *(optional)* | The app starts without throwing, and a test exception was confirmed to reach the error tracker (or the author confirmed reporting is intentionally disabled in dev) |
+| Diff touches                                                                                                             | Required manual check                                                                                                                                               |
+| ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Any user-facing view, screen, or route-local component                                                                   | The affected surface was loaded in the running app via `npm run dev`                                                                                                |
+| Any data-driven surface that supports non-default content states _(optional)_                                            | The surface was exercised in each non-default content state the data layer supports (e.g., a draft or unpublished state)                                            |
+| A live-preview / CMS preview path _(optional)_                                                                           | The preview path was loaded inside the data layer's preview/admin surface                                                                                           |
+| Not-found handling or any routing change                                                                                 | A non-existent identifier was requested and the not-found UI rendered correctly                                                                                     |
+| Metadata generation, if the project produces any (e.g., page metadata, sitemap, robots, social-share image) _(optional)_ | The metadata response was inspected (e.g., view-source, the generated sitemap/robots endpoint, social-share preview)                                                |
+| The content/markup rendering pipeline _(optional)_                                                                       | A record containing the affected construct was rendered end-to-end                                                                                                  |
+| Error-tracker / instrumentation config _(optional)_                                                                      | The app starts without throwing, and a test exception was confirmed to reach the error tracker (or the author confirmed reporting is intentionally disabled in dev) |
 
 **Guidelines:**
 
@@ -26,17 +26,17 @@ New warnings in the dev log are the app's earliest signal that something regress
 
 **Guidelines:**
 
-- MUST flag a Major when the diff introduces new warning-level log lines that were not in the `{{DEV_CMD}}` output before the change (or removes existing warnings without explanation).
+- MUST flag a Major when the diff introduces new warning-level log lines that were not in the `npm run dev` output before the change (or removes existing warnings without explanation).
 - MUST flag a Critical when the diff causes the running app to throw an uncaught exception during a normal interaction — the error tracker may capture it, but users will see the top-level error UI.
-- SHOULD ask the author to include the `{{DEV_CMD}}` output snippet for the affected surface in the PR description when the change adds new data-layer calls or new logging.
+- SHOULD ask the author to include the `npm run dev` output snippet for the affected surface in the PR description when the change adds new data-layer calls or new logging.
 
 ## Local Production Build
 
-Dev and production diverge on transforms, caching, and asset handling, so a surface that works under `{{DEV_CMD}}` can still break once built.
+Dev and production diverge on transforms, caching, and asset handling, so a surface that works under `npm run dev` can still break once built.
 
 **Guidelines:**
 
-- SHOULD ask the author to run `{{BUILD_CMD}}` then `{{START_CMD}}` and reload the affected surface when the diff touches:
+- SHOULD ask the author to run `npm run build` then `npm run start` and reload the affected surface when the diff touches:
   - build/runtime configuration
   - anything affecting compiler/transform output where dev and prod behavior can differ
   - caching behavior that differs between dev and prod

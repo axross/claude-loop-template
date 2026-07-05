@@ -33,7 +33,7 @@ Correctness lives in context: a hunk that reads correctly on its own can still b
 - MUST read the full file containing each changed hunk, not just the diff hunk itself. A line that looks safe in isolation can be unsafe in its surrounding control flow.
 - MUST inspect every caller of a changed function and every callee a changed function added a call to.
 - SHOULD read the surrounding modules a changed unit participates in (its parent, siblings, and any shared entry point) even when the diff only touches a leaf, because cross-module assumptions (server-vs-client boundaries, test-hook attributes, async/lifecycle boundaries) cross file boundaries.
-- SHOULD read the matching test under {{TEST_DIR}} when a changed unit is covered by tests, to confirm whether the tests still cover the change.
+- SHOULD read the matching test under e2e/ when a changed unit is covered by tests, to confirm whether the tests still cover the change.
 
 ## Out-of-Scope Findings
 

@@ -22,12 +22,12 @@ Git history is permanent and replicated to every clone, so a secret that lands i
 
 The project restricts `process.env.*` access to a small set of whitelisted files (often enforced by a linter rule). The reviewer MUST flag a Critical for any new `process.env.*` access outside those files. The whitelist typically covers only:
 
-| File category | Why it is whitelisted |
-|---|---|
+| File category                  | Why it is whitelisted                                                                                                                      |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | The env-derived runtime barrel | The single sanctioned module that reads env vars and re-exports typed runtime values (origin, environment name, service DSNs/tokens, etc.) |
-| Data-layer config | The data/content layer needs DB/storage credentials at build/startup time |
-| App-framework config | Build/config-time access to CI and deployment env vars |
-| Test config | Test config-time access to CI flags, base URL, and automation-bypass secrets |
+| Data-layer config              | The data/content layer needs DB/storage credentials at build/startup time                                                                  |
+| App-framework config           | Build/config-time access to CI and deployment env vars                                                                                     |
+| Test config                    | Test config-time access to CI flags, base URL, and automation-bypass secrets                                                               |
 
 **Guidelines:**
 
@@ -50,7 +50,7 @@ Every telemetry channel copies its payload into third-party retention the projec
 
 **Guidelines:**
 
-- MUST flag a Critical when a secret value (DSN, token, password, session ID, auth header) is interpolated into any `logger.info()` / `logger.warn()` call, any error-report extras, or any analytics event payload. Logs are captured by the hosting platform; the error tracker and analytics ship payloads off-server.
+- MUST flag a Critical when a secret value (DSN, token, password, session ID, auth header) is interpolated into any log/console output or any error-report extras. Logs are captured by the hosting platform; an error tracker ships payloads off-server.
 - MUST account for a "send default PII" option being enabled in the error-tracker config (if the project enables it) because IP addresses, cookies, and request bodies may already be attached.
 - MUST flag a Major when a change adds explicitly sensitive context (e.g., a bearer token) on top of that default.
 

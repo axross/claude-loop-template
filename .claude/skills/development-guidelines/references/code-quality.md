@@ -4,47 +4,44 @@ Apply these rules whenever you write or modify code in this project.
 
 ## Check Sequence
 
-The order matters because the linter reports format problems the formatter alone does not resolve, so a passing format step is not proof the code is clean.
+The order matters because the linter reports correctness and quality problems the formatter does not touch, so a passing format step is not proof the code is clean.
 
-- `{{FORMAT_CMD}}` applies auto-fixable formatting. `{{LINT_CMD}}` enforces both lint rules and format rules. Some format violations are only caught by the lint step, so it may still report format issues even after running the formatter.
+- `npm run format` applies Prettier formatting. `npm run lint` enforces lint rules only (`eslint-config-prettier` disables stylistic rules), so both steps are always required.
 
 **Guidelines:**
 
 - MUST always run checks in this order after making any code change:
-  1. **Format** (`{{FORMAT_CMD}}`) — auto-formats all modified files.
-  2. **Lint** (`{{LINT_CMD}}`) — detects code quality and remaining format issues.
+  1. **Format** (`npm run format`) — auto-formats all modified files.
+  2. **Lint** (`npm run lint`) — detects code-quality issues.
   3. **Fix all reported errors.**
   4. **Re-run lint** — confirm all errors are resolved.
-  5. **Test** (`{{E2E_TEST_CMD}}`) — only when the project has an e2e suite and the change affects a UI output surface; see [verification.md](./verification.md) for which changes require testing.
+  5. **Test** (`npm run test:e2e`) — when the change affects a UI output surface; see [verification.md](./verification.md) for which changes require testing.
 
 - MUST NOT skip or reorder these steps.
 
 ## Formatting
 
-Delegating whitespace and layout to {{FORMATTER}} keeps diffs free of style noise and ends manual formatting debates in review.
+Delegating whitespace and layout to Prettier keeps diffs free of style noise and ends manual formatting debates in review.
 
 **Guidelines:**
 
-- MUST run `{{FORMAT_CMD}}` after every set of code changes, before committing or considering the task done.
-- MUST NOT manually adjust spacing, indentation, or line endings — let {{FORMATTER}} handle them.
+- MUST run `npm run format` after every set of code changes, before committing or considering the task done.
+- MUST NOT manually adjust spacing, indentation, or line endings — let Prettier handle them.
 - MUST NOT submit code that has not been passed through the formatter.
 
 ## Linting
 
-The linter catches correctness and quality problems the formatter cannot see, and re-flags any format issues that slipped past it.
+The linter catches correctness and quality problems the formatter cannot see.
 
 **Guidelines:**
 
-- MUST run `{{LINT_CMD}}` after formatting to surface code quality issues.
+- MUST run `npm run lint` after formatting to surface code-quality issues.
 - MUST fix every lint **error** before considering the task complete.
 - SHOULD fix lint **warnings** in any file that was modified as part of the task. MAY also fix pre-existing warnings in those files.
-- MUST NOT suppress lint rules with {{LINTER}}'s inline suppression directive unless there is a clear, documented reason why the rule cannot be satisfied.
+- MUST NOT suppress lint rules with ESLint's inline suppression directive unless there is a clear, documented reason why the rule cannot be satisfied.
   - When suppression is genuinely necessary, add an inline comment on the same line explaining the reason.
 
 ## Type Safety
-
-<!-- INIT:OPTIONAL key=TYPED_LANGUAGE — keep for a typed {{PRIMARY_LANGUAGE}} OR delete this section. -->
-*If {{PRIMARY_LANGUAGE}} has no static type system, delete this section during INIT.*
 
 A type system's guarantees only hold when the code does not quietly opt out of them. An unchecked cast or a non-null/force-unwrap assertion silences the compiler at the exact spot a bug would surface, trading a compile-time check for a runtime risk — and because such escape hatches are often not lint-caught, they are a discipline the author owns.
 
@@ -56,9 +53,7 @@ A type system's guarantees only hold when the code does not quietly opt out of t
 
 ## Comments
 
-This project distinguishes two kinds of comment, each with its own style: **doc-comments** that document an API, and **line comments** that explain a specific spot in the code. Existing source files are the authority for both — read them before writing comments and match their voice. These rules apply to source-code comments only, not to commit messages (see [commit-messages.md](./commit-messages.md)) or to prose documentation.
-
-<!-- INIT: name the project's doc-comment standard (e.g., TSDoc, JSDoc, docstrings) and its line-comment voice (casing, punctuation, phrasing) in the intro above, then delete this comment. -->
+This project distinguishes two kinds of comment, each with its own style: **doc-comments** that document an API (written as TSDoc), and **line comments** that explain a specific spot in the code (sentence-cased, ending with a period). Existing source files are the authority for both — read them before writing comments and match their voice. These rules apply to source-code comments only, not to commit messages (see [commit-messages.md](./commit-messages.md)) or to prose documentation.
 
 ### Doc-Comments
 

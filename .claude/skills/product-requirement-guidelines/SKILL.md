@@ -9,8 +9,8 @@ Apply this skill whenever drafting or reviewing the parts of a product requireme
 
 This skill deliberately does not own everything a spec contains. It owns problem framing, scope boundaries, acceptance-criteria craft, and — when those sections are warranted — the spec-level framing of the UI design and system-design/architecture sections. It does not own the implementation mechanics behind them:
 
-- UI component structure, CSS, and markup mechanics — the project's own UI/component skill (created during INIT). This skill owns only how to *describe* hierarchy, states, accessibility, and responsive intent in the spec (see below).
-- Actual data flow implementation, routes, and module placement — the project's own structure skill (created during INIT). This skill owns only how to *describe* system-design decisions in the spec (see below).
+- UI component structure, CSS, and markup mechanics — the project's own UI/component skill (created during INIT). This skill owns only how to _describe_ hierarchy, states, accessibility, and responsive intent in the spec (see below).
+- Actual data flow implementation, routes, and module placement — the project's own structure skill (created during INIT). This skill owns only how to _describe_ system-design decisions in the spec (see below).
 - Test coverage strategy — [E2E Testing Guidelines](../e2e-testing-guidelines/SKILL.md) and [Unit Test Guidelines](../unit-test-guidelines/SKILL.md).
 
 ## Problem Framing and Scope

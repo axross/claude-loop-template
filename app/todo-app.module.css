@@ -1,0 +1,82 @@
+.app {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form {
+  display: flex;
+  gap: 8px;
+}
+
+.input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid var(--gray-alpha-200, rgba(0, 0, 0, 0.15));
+  border-radius: 8px;
+  font-size: 16px;
+  background: transparent;
+  color: inherit;
+}
+
+.addButton {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--foreground, #171717);
+  color: var(--background, #ffffff);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.empty {
+  text-align: center;
+  opacity: 0.6;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--gray-alpha-200, rgba(0, 0, 0, 0.15));
+  border-radius: 8px;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.completedText {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.deleteButton {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.deleteButton:hover {
+  opacity: 1;
+}

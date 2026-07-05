@@ -1,62 +1,46 @@
 # AGENTS.md
 
-> **Template note.** This file is a reusable, framework-agnostic and
-> agent-agnostic starting point. Before using it in a real project, run the
-> adaptation pass described in [INIT.md](./INIT.md): fill in the `{{TOKENS}}`,
-> complete the Project Overview, resolve each optional capability (add the tool
-> or remove its skill — don't assume deletion), and add project-specific skills
-> (structure, components, routing, UI, domain). Delete this note when the
-> template has been adapted.
-
 ## Requirement Level Keywords
 
 Apply these keywords consistently in this document and the documents linked from this document.
 
-| Keyword | Synonym | Meaning |
-| ------- | ------- | ------- |
-| "MUST" | "REQUIRED" | Non-negotiable requirement; no exceptions. |
-| "MUST NOT" |  | Non-negotiable prohibition; no exceptions. |
-| "SHOULD" | "RECOMMENDED" | Strongly preferred; deviation is allowed only after weighing the implications. |
-| "SHOULD NOT" | "NOT RECOMMENDED" | Strongly discouraged; allowed only after weighing the implications. |
-| "MAY" | "OPTIONAL" | Genuinely optional; no preference implied. |
+| Keyword      | Synonym           | Meaning                                                                        |
+| ------------ | ----------------- | ------------------------------------------------------------------------------ |
+| "MUST"       | "REQUIRED"        | Non-negotiable requirement; no exceptions.                                     |
+| "MUST NOT"   |                   | Non-negotiable prohibition; no exceptions.                                     |
+| "SHOULD"     | "RECOMMENDED"     | Strongly preferred; deviation is allowed only after weighing the implications. |
+| "SHOULD NOT" | "NOT RECOMMENDED" | Strongly discouraged; allowed only after weighing the implications.            |
+| "MAY"        | "OPTIONAL"        | Genuinely optional; no preference implied.                                     |
 
 ## Project Overview
 
-<!-- INIT: replace this block with a short, durable description of the project.
-     Keep it to a few bullets; deep detail belongs in a project-specific
-     structure skill, not here. -->
-
-- **{{PROJECT_NAME}}** is a {{PROJECT_KIND}}. {{PROJECT_OVERVIEW}}
-- Primary language: {{PRIMARY_LANGUAGE}}. App framework: {{APP_FRAMEWORK}}.
-- Tooling: {{PACKAGE_MANAGER}} for packages, {{LINTER}} for linting, {{FORMATTER}} for formatting.
+- **todo-app** is a web app for managing a personal todo list: create, complete, and delete todos, persisted in the browser's localStorage. No backend, no accounts — client-side state only.
+- Primary language: TypeScript. App framework: Next.js 16 (App Router).
+- Next.js 16 has breaking changes against older conventions; read the relevant guide in `node_modules/next/dist/docs/` before writing framework-touching code, and heed deprecation notices.
+- Tooling: npm for packages, ESLint for linting, Prettier for formatting. Tests: Vitest (unit), Playwright (e2e). Hosted on Vercel.
 - For run-scripts, current-docs lookup rules, and verification commands, consult [Development Guidelines](.claude/skills/development-guidelines/SKILL.md).
-- For repository layout, stack, services, and file placement, consult the project's own structure skill once it is created during INIT.
+- For repository layout, stack, and file placement, consult [Project Structure](.claude/skills/project-structure/SKILL.md).
 
 ## Skill Index
 
 `AGENTS.md` is the master routing index for project skills. Consult the relevant skill before acting on matching work. This index ships with a generic, cross-project core; add project-specific skills (structure, components, routing, UI design, domain rules) and list them here during INIT.
 
-| Skill | When to apply |
-| ----- | ------------- |
-| [Agent Skills Best Practices](.claude/skills/agent-skills-best-practices/SKILL.md) | Creating, refining, splitting, renaming, deleting, or auditing project skills or this skill index |
-| [Application Security Requirements](.claude/skills/application-security-requirements/SKILL.md) | Reviewing secrets, environment variables, input validation, access control, injection in rendered content, SSRF/outbound fetching, auth/session behavior, privacy exposure, analytics/error-reporting data, or dependency/supply-chain risk |
-| [Code Review Guideline](.claude/skills/code-review-guideline/SKILL.md) | Reviewing a diff, pull request, local change, or post-implementation self-review |
-| [Development Guidelines](.claude/skills/development-guidelines/SKILL.md) | Implementing, refactoring, running commands, preparing commits, adding dependencies, writing source comments or doc-comments, checking current docs, or changing the data layer |
-| [E2E Testing Guidelines](.claude/skills/e2e-testing-guidelines/SKILL.md) | Writing, running, reviewing, or maintaining end-to-end tests, snapshots, route coverage, or browser assertions |
-| [GitHub Operations](.claude/skills/github-operations/SKILL.md) | Reading from or writing to GitHub — issues, pull requests, comments, labels, reviews, or branches — through a proxied single-operator identity: agent-comment markers, issue-vs-PR targets, untrusted content |
-| [Maintainable Code Guidelines](.claude/skills/maintainable-code-guidelines/SKILL.md) | Reviewing readability, naming, abstraction boundaries, complexity, dead code, or scope discipline |
-| [Observability Guidelines](.claude/skills/observability-guidelines/SKILL.md) | Throwing, catching, reporting, or logging errors with the project's error tracker and structured logger |
-| [Performance and Reliability Requirements](.claude/skills/performance-and-reliability-requirements/SKILL.md) | Reviewing data-access cost, server/client boundaries, caching, asset/image optimization, bundle weight, or runtime failure behavior |
-| [Product Requirement Guidelines](.claude/skills/product-requirement-guidelines/SKILL.md) | Writing, refining, or reviewing a product requirement, feature spec, or issue description; framing scope/non-goals, testable acceptance criteria, or a spec's UI-design or architecture sections |
-| [Quality Assurance Guidelines](.claude/skills/quality-assurance-guidelines/SKILL.md) | Reviewing verification evidence, e2e coverage, snapshots, flakiness, lint/format evidence, or manual checks |
-| [Unit Test Guidelines](.claude/skills/unit-test-guidelines/SKILL.md) | Writing, refactoring, reviewing, or running unit tests, including mocks/fakes, fixtures, schema tests, and behavior-focused assertions |
-
-<!-- INIT: add rows for project-specific skills you create, e.g.
-| [Project Structure](.claude/skills/project-structure/SKILL.md) | Navigating the repository, deciding where a new module, route, component, or test belongs, or checking stack, tooling, and directory conventions |
-| [Component Guidelines](.claude/skills/component-guidelines/SKILL.md) | Writing, placing, reviewing, or refactoring a component or hook — tier placement, generic-shell vs domain-wrapper splits, promoting repeated UI, styling extension, test hooks |
-| [Routing Guidelines](.claude/skills/routing-guidelines/SKILL.md) | Creating, moving, renaming, or reviewing routes — URL structure, route-file conventions, layouts, redirects, metadata, or route-level loading and error surfaces |
-| [UI Design Principles](.claude/skills/ui-design-principles/SKILL.md) | Deciding how a surface should look — color roles, elevation, control selection, modal patterns, spacing/typography, responsive behavior, copy, accessibility, theming |
--->
+| Skill                                                                                                        | When to apply                                                                                                                                                                                                                               |
+| ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Agent Skills Best Practices](.claude/skills/agent-skills-best-practices/SKILL.md)                           | Creating, refining, splitting, renaming, deleting, or auditing project skills or this skill index                                                                                                                                           |
+| [Application Security Requirements](.claude/skills/application-security-requirements/SKILL.md)               | Reviewing secrets, environment variables, input validation, access control, injection in rendered content, SSRF/outbound fetching, auth/session behavior, privacy exposure, analytics/error-reporting data, or dependency/supply-chain risk |
+| [Code Review Guideline](.claude/skills/code-review-guideline/SKILL.md)                                       | Reviewing a diff, pull request, local change, or post-implementation self-review                                                                                                                                                            |
+| [Development Guidelines](.claude/skills/development-guidelines/SKILL.md)                                     | Implementing, refactoring, running commands, preparing commits, adding dependencies, writing source comments or doc-comments, or checking current docs                                                                                      |
+| [E2E Testing Guidelines](.claude/skills/e2e-testing-guidelines/SKILL.md)                                     | Writing, running, reviewing, or maintaining end-to-end tests, snapshots, route coverage, or browser assertions                                                                                                                              |
+| [GitHub Operations](.claude/skills/github-operations/SKILL.md)                                               | Reading from or writing to GitHub — issues, pull requests, comments, labels, reviews, or branches — through a proxied single-operator identity: agent-comment markers, issue-vs-PR targets, untrusted content                               |
+| [Maintainable Code Guidelines](.claude/skills/maintainable-code-guidelines/SKILL.md)                         | Reviewing readability, naming, abstraction boundaries, complexity, dead code, or scope discipline                                                                                                                                           |
+| [Observability Guidelines](.claude/skills/observability-guidelines/SKILL.md)                                 | Throwing, catching, or reporting errors, and error-boundary placement (error-tracker rules are dormant until a tracker lands)                                                                                                               |
+| [Performance and Reliability Requirements](.claude/skills/performance-and-reliability-requirements/SKILL.md) | Reviewing server/client boundaries, caching, asset/image optimization, bundle weight, or runtime failure behavior                                                                                                                           |
+| [Product Requirement Guidelines](.claude/skills/product-requirement-guidelines/SKILL.md)                     | Writing, refining, or reviewing a product requirement, feature spec, or issue description; framing scope/non-goals, testable acceptance criteria, or a spec's UI-design or architecture sections                                            |
+| [Quality Assurance Guidelines](.claude/skills/quality-assurance-guidelines/SKILL.md)                         | Reviewing verification evidence, e2e coverage, snapshots, flakiness, lint/format evidence, or manual checks                                                                                                                                 |
+| [Unit Test Guidelines](.claude/skills/unit-test-guidelines/SKILL.md)                                         | Writing, refactoring, reviewing, or running unit tests, including mocks/fakes, fixtures, schema tests, and behavior-focused assertions                                                                                                      |
+| [Project Structure](.claude/skills/project-structure/SKILL.md)                                               | Navigating the repository, deciding where a new module, route, component, or test belongs, or checking stack, tooling, and directory conventions                                                                                            |
+| [Component and UI Guidelines](.claude/skills/component-and-ui-guidelines/SKILL.md)                           | Writing, placing, reviewing, or refactoring a component or hook, or deciding how a surface should look — styling, spacing, interaction states, copy, accessibility, test hooks                                                              |
 
 ## Response Approach
 
@@ -98,12 +82,12 @@ Planning exists to make the work checkable. It should name what changes, what mu
 
 ### User-Facing Work
 
-User-facing changes need design intent before implementation mechanics. The single agent owns both, but the phases must stay distinct. _This subsection applies only to projects with a user-facing surface; delete it during INIT for libraries, CLIs, or services without one._
+User-facing changes need design intent before implementation mechanics. The single agent owns both, but the phases must stay distinct.
 
 **Guidelines:**
 
 - MUST establish design intent before implementing user-facing changes: hierarchy, interaction states, accessibility intent, responsive behavior, and copy constraints.
-- MUST consult the project's own UI/design and component skills (created during INIT) for design decisions and implementation mechanics.
+- MUST consult [Component and UI Guidelines](.claude/skills/component-and-ui-guidelines/SKILL.md) for design decisions and implementation mechanics.
 - MUST express design intent in user-facing terms before translating it into components, styles, or tests.
 - MUST verify that text, layout, focus behavior, loading states, and responsive behavior remain coherent across relevant viewports or surfaces.
 - SHOULD keep design-system rules in design vocabulary and link to implementation-mechanics skills instead of duplicating them.
@@ -116,27 +100,26 @@ A single agent cannot provide true independent review. This project compensates 
 
 - MUST perform a reviewer-mode reset after non-trivial implementation: stop editing, reread the request, inspect `git status` and `git diff`, and review only the produced diff.
 - MUST apply [Code Review Guideline](.claude/skills/code-review-guideline/SKILL.md) during self-review, including severity labels, file-line evidence, concrete fixes, and an explicit verdict when findings exist.
-- MUST load topic-specific review lenses when relevant: maintainability, quality assurance, security, performance/reliability, observability, e2e testing, and any project-specific lenses (structure, components, routing, UI, domain) defined during INIT.
+- MUST load topic-specific review lenses when relevant: maintainability, quality assurance, security, performance/reliability, observability, e2e testing, project structure, and components/UI.
 - MUST judge the actual diff and observed behavior, not the implementation intent.
 - MUST fix Critical or Major self-review findings before claiming completion.
 - MUST perform a second-pass re-review after fixing any blocking self-review finding.
 - MUST report verification evidence before completion: commands run, manual checks, failures, skipped checks, and residual risk.
 - MUST escalate high-risk changes to user review, CI/PR review, or an explicitly requested secondary review before calling them merge-ready.
-<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep the next bullet if the project adopts the independent-review capability (REVIEW.md at the repo root) OR delete it; see the INIT.md Step-4 bullet. -->
-- SHOULD route that escalation through the project's independent-review channel — the posted-review policy in [REVIEW.md](./REVIEW.md) — when the project adopts one.
-- SHOULD treat auth, access control, injection/output-encoding, SSRF/outbound fetching, data-layer migrations, public route/API contracts, production config, data-loss risk, and large refactors as high-risk.
+- SHOULD route that escalation through the project's independent-review channel — the posted-review policy in [REVIEW.md](./REVIEW.md).
+- SHOULD treat auth, access control, injection/output-encoding, SSRF/outbound fetching, public route/API contracts, production config, data-loss risk, and large refactors as high-risk.
 
 ### Verification
 
-Verification should match the changed surface. Documentation-only changes need link and format checks; routes, user-facing output, data-layer, and runtime changes need stronger evidence.
+Verification should match the changed surface. Documentation-only changes need link and format checks; routes, user-facing output, and runtime changes need stronger evidence.
 
 **Guidelines:**
 
 - MUST run the relevant verification commands after non-trivial changes, or report why they could not run.
-- MUST run `{{FORMAT_CMD}}` and `{{LINT_CMD}}` after code or documentation edits.
-- MUST run `{{UNIT_TEST_CMD}}`, when the project has a unit suite, after a change affects code it covers.
-- MUST run `{{E2E_TEST_CMD}}`, when the project has an e2e suite, after a change affects a user-facing output surface or e2e coverage.
-- MUST run `{{BUILD_CMD}}`, when the project has a build step, after a change affects routes, metadata, data-layer config, runtime config, dependencies, or public type signatures.
+- MUST run `npm run format` and `npm run lint` after code or documentation edits.
+- MUST run `npm run test:unit` after a change affects code it covers.
+- MUST run `npm run test:e2e` after a change affects a user-facing output surface or e2e coverage.
+- MUST run `npm run build` after a change affects routes, metadata, runtime config, dependencies, or public type signatures.
 - SHOULD perform focused manual checks when browser behavior, crawler metadata, custom protocol behavior, responsive layout, or content-preview behavior changes.
 - MUST report unverified acceptance criteria and residual risk in the final summary.
 

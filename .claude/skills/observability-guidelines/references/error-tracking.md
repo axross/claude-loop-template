@@ -1,20 +1,20 @@
 # Error Tracking
 
-<!-- INIT:OPTIONAL key=ERROR_TRACKER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
-*If this project has no {{ERROR_TRACKER}} (error-reporting service), delete or adapt this section during INIT.*
+> **Dormant until an error tracker exists** — remove this banner when one (e.g.
+> Sentry) lands, making the lens unconditional.
 
-Apply these rules when writing, reviewing, or modifying {{ERROR_TRACKER}} setup, error event capture, instrumentation files, or error context.
+Apply these rules when writing, reviewing, or modifying error-tracker setup, error event capture, instrumentation files, or error context.
 
 ## Error Tracker Integration Boundaries
 
-This project uses {{ERROR_TRACKER}} as its error-reporting service, initialized through the error tracker's init/config files. {{ERROR_TRACKER}} changes affect production diagnostics and privacy, so treat them as observability and security work.
+The project's error tracker is initialized through its init/config files. Error-tracker changes affect production diagnostics and privacy, so treat them as observability and security work.
 
 **Guidelines:**
 
-- MUST import error-reporting helpers from {{ERROR_TRACKER}}'s SDK, not from an unrelated or lower-level package.
+- MUST import error-reporting helpers from the error tracker's SDK, not from an unrelated or lower-level package.
 - MUST consult [Development Guidelines › current-docs](../../development-guidelines/references/current-docs.md) before changing the error tracker's init/config files, source maps, or runtime options.
 - MUST consult [Application Security Requirements › privacy and exposure](../../application-security-requirements/references/privacy-and-exposure.md) before adding event context, tags, user identifiers, breadcrumbs, or request data.
-- SHOULD keep {{ERROR_TRACKER}} setup in the existing init/config files instead of scattering initialization across feature modules.
+- SHOULD keep error-tracker setup in the existing init/config files instead of scattering initialization across feature modules.
 
 ## Capturing Exceptions
 
@@ -22,7 +22,7 @@ Captured exceptions should represent unexpected failures or unexpected states th
 
 **Guidelines:**
 
-- MUST report an error (via {{ERROR_TRACKER}}'s capture call) whenever a caught error represents an unexpected failure that should be investigated.
+- MUST report an error (via the error tracker's capture call) whenever a caught error represents an unexpected failure that should be investigated.
 - MUST report before an early return, redirect, not-found, or fallback path when the failure would otherwise disappear.
 - MUST rethrow after reporting when the caller or error boundary still needs to handle the failure.
 - SHOULD report non-thrown unexpected states with a descriptive `Error` object when they indicate a renderer, parser, or data-contract gap.
@@ -30,11 +30,11 @@ Captured exceptions should represent unexpected failures or unexpected states th
 
 ## Event Context and PII
 
-{{ERROR_TRACKER}} context should explain the failure without copying private content into a third-party event.
+Error-tracker context should explain the failure without copying private content into a third-party event.
 
 **Guidelines:**
 
-- MUST NOT attach secrets, raw request bodies, raw user content, access tokens, non-public content, session data, or private data-layer fields to {{ERROR_TRACKER}} context.
+- MUST NOT attach secrets, raw request bodies, raw user content, access tokens, non-public content, session data, or private data-layer fields to error-tracker context.
 - MUST treat any "send default PII" option as a privacy-sensitive setting and justify any new user, request, or identifier context.
 - SHOULD prefer route names, public identifiers, operation names, feature flags, and booleans over raw content values.
 - SHOULD include enough stable context to make issues actionable, such as an entity `id`, `url`, `filename`, or module name when those values are intentionally public.

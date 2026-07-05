@@ -31,7 +31,7 @@ For each new direct dependency, the reviewer SHOULD verify (and request from the
 - Recent activity (commits within the last 12 months, ideally)
 - Reasonable adoption (loosely: a download/usage count appropriate for the dependency's niche)
 - Active issue tracker, no recent unaddressed CVEs
-- Type definitions either built-in or available as a companion types package (for a typed {{PRIMARY_LANGUAGE}} project)
+- Type definitions either built-in or available as a companion types package (for a typed TypeScript project)
 - Permissive license (MIT / ISC / Apache-2.0); flag a Critical on copyleft licenses (GPL, AGPL) when the project's license posture is incompatible with them
 
 **Guidelines:**
@@ -57,9 +57,6 @@ A dependency bound to one OS or runtime breaks whichever environment it does not
 
 ## Bundling Implications
 
-<!-- INIT:OPTIONAL key=CLIENT_BUNDLE — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
-*This section applies only when the project bundles code for a client/browser. Delete it during INIT for projects that ship no client bundle (e.g., a CLI or backend service).*
-
 A dependency that cannot be tree-shaken ships its whole body to the browser, taxing every visitor with code paths they never exercise.
 
 **Guidelines:**
@@ -73,4 +70,4 @@ A single new direct dependency can pull in dozens of transitive packages the aut
 
 **Guidelines:**
 
-- SHOULD recommend the author run the {{PACKAGE_MANAGER}} audit command and report findings before merge when the diff changes the lockfile. `high` and `critical` severities MUST be resolved or explicitly deferred with rationale.
+- SHOULD recommend the author run the npm audit command and report findings before merge when the diff changes the lockfile. `high` and `critical` severities MUST be resolved or explicitly deferred with rationale.

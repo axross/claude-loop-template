@@ -6,19 +6,19 @@ AHA testing means "avoid hasty abstraction." Do not extract a setup helper just 
 
 ```ts
 function createDeleteRepositoryWithData(data: Record["data"]): {
-	repository: Repository;
-	wasUpdateCalled: () => boolean;
+  repository: Repository;
+  wasUpdateCalled: () => boolean;
 } {
-	let updateCalled = false;
-	const repository = {
-		find: async () => ({ items: [{ id: 1, slug: "hello", data }] }),
-		update: async () => {
-			updateCalled = true;
-			return {};
-		},
-	} as unknown as Repository;
+  let updateCalled = false;
+  const repository = {
+    find: async () => ({ items: [{ id: 1, slug: "hello", data }] }),
+    update: async () => {
+      updateCalled = true;
+      return {};
+    },
+  } as unknown as Repository;
 
-	return { repository, wasUpdateCalled: () => updateCalled };
+  return { repository, wasUpdateCalled: () => updateCalled };
 }
 ```
 
@@ -45,21 +45,21 @@ Large framework- or library-owned objects (request contexts, ORM clients, SDK ha
 
 ```ts
 interface FindOptions {
-	collection: string;
-	includeArchived?: boolean;
-	locale?: "en-US" | "ja-JP";
-	where?: {
-		slug?: {
-			equals?: string;
-		};
-	};
+  collection: string;
+  includeArchived?: boolean;
+  locale?: "en-US" | "ja-JP";
+  where?: {
+    slug?: {
+      equals?: string;
+    };
+  };
 }
 
 const repository = {
-	find: async (options: FindOptions) => {
-		expect(options.collection).toBe("records");
-		return { items: [{ id: 1, slug: "hello-world" }] };
-	},
+  find: async (options: FindOptions) => {
+    expect(options.collection).toBe("records");
+    return { items: [{ id: 1, slug: "hello-world" }] };
+  },
 } as unknown as Repository;
 ```
 
@@ -80,6 +80,6 @@ Mocks are useful for expensive, external, nondeterministic, or framework-owned b
 - SHOULD use manual fakes for large boundary objects, filesystem/network boundaries, clocks, and loggers.
 - SHOULD NOT mock neighboring pure helpers unless the test specifically covers how the unit handles that dependency's failure.
 - MUST keep module-mock declarations visible near the imports they affect.
-- MUST import the mocking API explicitly if {{UNIT_TEST_FRAMEWORK}} requires it before using its mock, spy, or typed-mock helpers.
+- MUST import the mocking API explicitly if Vitest requires it before using its mock, spy, or typed-mock helpers.
 - SHOULD prefer typed mocks when a mock has non-trivial arguments or return values.
 - SHOULD restore spies and replaced globals in a teardown hook.

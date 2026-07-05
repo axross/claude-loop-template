@@ -41,13 +41,13 @@ External links from untrusted input can become clickable UI, so validation is a 
 
 RFC-2119 keywords mark how strongly a rule applies. They let future agents distinguish absolute requirements from preferred defaults and true options.
 
-| Keyword | Synonym | Meaning |
-| ------- | ------- | ------- |
-| "MUST" | "REQUIRED" | Non-negotiable requirement; no exceptions. |
-| "MUST NOT" |  | Non-negotiable prohibition; no exceptions. |
-| "SHOULD" | "RECOMMENDED" | Strongly preferred; deviation is allowed only after weighing the implications. |
-| "SHOULD NOT" | "NOT RECOMMENDED" | Strongly discouraged; allowed only after weighing the implications. |
-| "MAY" | "OPTIONAL" | Genuinely optional; no preference implied. |
+| Keyword      | Synonym           | Meaning                                                                        |
+| ------------ | ----------------- | ------------------------------------------------------------------------------ |
+| "MUST"       | "REQUIRED"        | Non-negotiable requirement; no exceptions.                                     |
+| "MUST NOT"   |                   | Non-negotiable prohibition; no exceptions.                                     |
+| "SHOULD"     | "RECOMMENDED"     | Strongly preferred; deviation is allowed only after weighing the implications. |
+| "SHOULD NOT" | "NOT RECOMMENDED" | Strongly discouraged; allowed only after weighing the implications.            |
+| "MAY"        | "OPTIONAL"        | Genuinely optional; no preference implied.                                     |
 
 **Guidelines:**
 

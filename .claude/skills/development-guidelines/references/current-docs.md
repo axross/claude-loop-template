@@ -6,14 +6,12 @@ Apply this reference when a change depends on framework, platform, service, or t
 
 Use current official docs before changing behavior governed by fast-moving frameworks, services, or tools that the project depends on. The table below lists representative surfaces by tool token; delete rows for tools the project does not use during INIT, and add rows for any other fast-moving dependency.
 
-| Surface | Refresh docs before changing |
-| ------- | ---------------------------- |
-| {{APP_FRAMEWORK}} | Routing/rendering conventions, request/response handling, metadata, caching, configuration, instrumentation, asset/image behavior |
-| {{CMS_OR_DATA_LAYER}} | Schema/model definitions, fields, access control, hooks, admin/customization, migrations, query APIs, storage adapters |
-| {{ERROR_TRACKER}} | SDK setup, instrumentation, source maps, event capture, PII behavior, runtime-specific config |
-| {{HOSTING_PLATFORM}} | Deployment/runtime behavior, asset optimization, storage, environment variables |
-| {{E2E_TEST_FRAMEWORK}} | Test runner configuration, snapshot behavior, locator/assertion APIs |
-| {{LINTER}} | Formatter/linter configuration, suppression syntax, rule names |
+| Surface              | Refresh docs before changing                                                                                                                                                                                                                                                |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Next.js (App Router) | Routing/rendering conventions, request/response handling, metadata, caching, configuration, instrumentation, asset/image behavior. Next.js 16 ships its own docs in `node_modules/next/dist/docs/` — read the relevant guide there first; it matches the installed version. |
+| Vercel               | Deployment/runtime behavior, asset optimization, storage, environment variables                                                                                                                                                                                             |
+| Playwright           | Test runner configuration, snapshot behavior, locator/assertion APIs                                                                                                                                                                                                        |
+| ESLint               | Formatter/linter configuration, suppression syntax, rule names                                                                                                                                                                                                              |
 
 **Guidelines:**
 
@@ -29,8 +27,6 @@ Some project areas are especially sensitive because a small API mismatch can pro
 
 **Guidelines:**
 
-- MUST refresh {{APP_FRAMEWORK}} docs before changing framework entry points, routing/rendering APIs, metadata generation, caching APIs, or framework configuration files.
-- MUST refresh {{CMS_OR_DATA_LAYER}} docs before changing schemas, auth/access rules, editor/field configuration, migrations, or storage integration.
-- MUST refresh {{ERROR_TRACKER}} docs before changing its initialization/instrumentation files, event-capture behavior, source maps, or PII settings.
-- MUST refresh {{HOSTING_PLATFORM}} docs before changing deployment/runtime assumptions, storage usage, or environment-variable exposure.
-- SHOULD refresh {{E2E_TEST_FRAMEWORK}} or {{LINTER}} docs before changing their configuration files, snapshot behavior, or suppression syntax.
+- MUST refresh Next.js (App Router) docs (preferring the bundled `node_modules/next/dist/docs/`) before changing framework entry points, routing/rendering APIs, metadata generation, caching APIs, or framework configuration files.
+- MUST refresh Vercel docs before changing deployment/runtime assumptions, storage usage, or environment-variable exposure.
+- SHOULD refresh Playwright or ESLint docs before changing their configuration files, snapshot behavior, or suppression syntax.

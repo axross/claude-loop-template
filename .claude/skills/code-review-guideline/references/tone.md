@@ -31,7 +31,6 @@ A review that lists only faults reads as an attack and leaves the author no sign
 - MUST include at least one item in the **Strengths** section of every review unless the diff is trivially small (≤ 5 changed lines and no new files).
 - SHOULD name specific things — "extracts the cache-key derivation into a helper, which makes the call site readable" — not generic praise like "good code".
 
-
 ## Handling Style and Preference
 
 Blocking a merge over taste erodes trust in the severity labels that real defects depend on.

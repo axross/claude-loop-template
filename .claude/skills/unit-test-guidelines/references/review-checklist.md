@@ -1,6 +1,6 @@
 # Review Checklist
 
-Use this checklist during implementation self-review or code review for {{UNIT_TEST_FRAMEWORK}} unit tests. It complements [Quality Assurance Guidelines](../../quality-assurance-guidelines/SKILL.md), which owns verification evidence and residual-risk reporting.
+Use this checklist during implementation self-review or code review for Vitest unit tests. It complements [Quality Assurance Guidelines](../../quality-assurance-guidelines/SKILL.md), which owns verification evidence and residual-risk reporting.
 
 ## Mandatory Verification
 
@@ -8,26 +8,12 @@ A test change is incomplete without proof that the code still passes the local c
 
 **Guidelines:**
 
-- MUST verify every new or changed spec imports the test framework's APIs explicitly if {{UNIT_TEST_FRAMEWORK}} requires it.
+- MUST verify every new or changed spec imports the test framework's APIs explicitly if Vitest requires it.
 - MUST verify new or changed specs use the project's chosen test-case function consistently.
-- MUST verify `{{UNIT_TEST_CMD}}` passes or report the exact blocker.
-- MUST run `{{FORMAT_CMD}}` and `{{LINT_CMD}}` after adding or changing unit tests, plus `{{TYPECHECK_CMD}}` when the project has a type-check step.
+- MUST verify `npm run test:unit` passes or report the exact blocker.
+- MUST run `npm run format` and `npm run lint` after adding or changing unit tests, plus `npm run typecheck`.
 - MUST report skipped commands with a concrete reason and residual risk.
 - MUST run e2e tests instead of relying only on unit tests when the change affects UI output, route behavior, metadata, browser behavior, or e2e coverage.
-
-## Coverage Gate
-
-<!-- INIT:OPTIONAL key=UNIT_COVERAGE — keep if the project enforces unit-test coverage OR delete this section. -->
-*If this project does not enforce unit-test coverage, delete or adapt this section during INIT.*
-
-A coverage number is only trustworthy when every exclusion is deliberate: the gate proves branches were exercised, and each ignored branch records where it is verified instead.
-
-**Guidelines:**
-
-- MUST run the project's coverage command, when one exists, after adding or changing unit tests, and report the result.
-- MUST treat coverage thresholds and file exclusions as project decisions recorded during INIT, not values to loosen ad hoc to make a run pass.
-- MUST cover a branch that cannot be exercised in the unit-test environment with e2e coverage instead, and exclude it with the coverage tool's ignore pragma plus a one-line reason.
-- SHOULD prefer deleting provably dead code over excluding it from coverage.
 
 ## Naming And Structure Review
 

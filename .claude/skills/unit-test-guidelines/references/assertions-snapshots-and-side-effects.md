@@ -6,11 +6,11 @@ Assertions should make the reason for failure obvious. A test with a precise ass
 
 ```ts
 expect(decode(TagResponse, response)).toEqual({
-	totalItems: 1,
-	limit: undefined,
-	page: undefined,
-	totalPages: undefined,
-	items: [{ id: 1, slug: "typescript", name: "TypeScript" }],
+  totalItems: 1,
+  limit: undefined,
+  page: undefined,
+  totalPages: undefined,
+  items: [{ id: 1, slug: "typescript", name: "TypeScript" }],
 });
 ```
 
@@ -80,7 +80,7 @@ Async tests should fail deterministically when a promise rejects, resolves incor
 
 ```ts
 await expect(validateReferences(repository, data)).rejects.toThrow(
-	/relation='media'/,
+  /relation='media'/,
 );
 ```
 

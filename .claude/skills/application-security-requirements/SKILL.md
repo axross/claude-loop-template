@@ -1,11 +1,11 @@
 ---
 name: application-security-requirements
-description: Use this skill when reviewing security or privacy implications of a change. Covers secrets/env vars, the framework's public/client-exposed env-var prefix, input validation, data-layer access control, public exposure, output-encoding/injection in rendered untrusted content, SSRF/outbound fetch of user-controlled URLs, auth/session settings, analytics/error-reporting data capture, and dependency supply-chain risk. Use for "is this safe", "security", "auth", "admin", "secret", "privacy", "PII", "XSS", "SSRF", or dependency reviews.
+description: Use this skill when reviewing security or privacy implications of a change. Covers secrets/env vars, the framework's public/client-exposed env-var prefix, input validation (including localStorage-persisted state), public exposure, output-encoding/injection in rendered untrusted content, SSRF/outbound fetch of user-controlled URLs, error-reporting data capture, and dependency supply-chain risk. Use for "is this safe", "security", "secret", "privacy", "PII", "XSS", "SSRF", or dependency reviews.
 ---
 
 # Application Security Requirements
 
-Apply these rules when reviewing the security implications of any code change in this project. The framing is OWASP Top 10 mapped onto this project's stack. Where a section names a concrete tool (`{{CMS_OR_DATA_LAYER}}`, `{{HOSTING_PLATFORM}}`, `{{ERROR_TRACKER}}`, an analytics service), treat it as a placeholder for whatever the project actually uses, and delete the section if the project has no such tool.
+Apply these rules when reviewing the security implications of any code change in this project. The framing is OWASP Top 10 mapped onto this project's stack (Next.js on Vercel, client-side localStorage persistence, no auth, no backend data layer).
 
 ## Secret and Environment-Variable Handling
 
@@ -20,28 +20,18 @@ See [secret-handling.md](./references/secret-handling.md) for:
 
 See [input-validation.md](./references/input-validation.md) for:
 
-- All request handlers validate and coerce request inputs before passing them to the data layer or an outbound `fetch`
 - All route params / query params are treated as untrusted (their static types do not guarantee their runtime shape)
-- Data-layer queries receive sanitized values (no type-coercion bypass on identifiers)
-- Data-layer return values are parsed through the project's schema/validation library before reaching consumers
-
-## Access Control
-
-See [access-control.md](./references/access-control.md) for:
-
-- Each data-layer resource has explicit access rules appropriate for its data sensitivity
-- Unpublished / non-default content is gated so it is not served to unauthorized requests
-- The authentication system's lockout / rate-limit settings are not weakened
-- New mutation endpoints are protected against unauthenticated abuse
+- Values read back from `localStorage` are validated in the storage module before use
+- User-entered todo text only reaches the page through React's safe-encoding path
 
 ## Privacy and Exposure Control
 
 See [privacy-and-exposure.md](./references/privacy-and-exposure.md) for:
 
-- Unpublished, preview, admin-only, and private content cannot leak through public routes, metadata, structured data, sitemap, robots, or media routes
-- Public media/asset URLs expose only intentionally public assets and do not reveal private storage tokens or internal identifiers
-- Analytics and error-reporting changes do not capture unnecessary PII, secrets, private content, or internal fields
-- Client-exposed environment variables, analytics event properties, and error context are intentionally public
+- Private content cannot leak through public routes, metadata, structured data, sitemap, robots, or media routes
+- Error-reporting changes do not capture unnecessary PII, secrets, or private content (dormant until an error tracker lands)
+- Client-exposed environment variables and error context are intentionally public
+- Localhost-only code paths have a production equivalent
 
 ## Injection in Rendered Untrusted Content
 
@@ -60,14 +50,6 @@ See [ssrf-and-embeds.md](./references/ssrf-and-embeds.md) for:
 - Image/asset rendering does not bypass the host allowlist for user-controlled URLs
 - New user-controlled URLs that flow into a `fetch` call go through an allowlist or a hostname check
 - New entries in the config allowlist of external hosts are tightly scoped
-
-## Auth and Session Management
-
-See [auth-and-session.md](./references/auth-and-session.md) for:
-
-- Authentication lockout / rate-limit settings are not relaxed
-- Privileged / preview state is reachable only via the authentication path, not via a query-string bypass
-- Error-tracker PII exposure is acknowledged when adding new identifiers/contexts
 
 ## Supply Chain
 

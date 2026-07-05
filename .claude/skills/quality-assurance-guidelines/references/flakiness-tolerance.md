@@ -1,6 +1,6 @@
 # Flakiness Tolerance
 
-Apply these rules to verify the change does not introduce or paper over test flakiness. When the project's {{E2E_TEST_FRAMEWORK}} config is set so flakiness fails the suite (e.g., repeating each test and failing on flaky results rather than silently retrying), an intermittent test is a failure, not a warning.
+Apply these rules to verify the change does not introduce or paper over test flakiness. When the project's Playwright config is set so flakiness fails the suite (e.g., repeating each test and failing on flaky results rather than silently retrying), an intermittent test is a failure, not a warning.
 
 ## Flakiness Workarounds to Reject
 
@@ -13,7 +13,7 @@ Each of these hides a real race instead of fixing it, so the nondeterminism ship
   - a `try`/`catch` around an assertion to "make the test pass when it sometimes fails".
   - a skip/fixme marker added to suppress an intermittent failure rather than to skip a known-broken test with a tracked issue.
   - a retry loop wrapping an assertion.
-- MUST flag a Critical when the diff modifies the {{E2E_TEST_FRAMEWORK}} config to weaken anti-flake settings (repeat-each, fail-on-flaky, forbid-focused-tests) or to add retries. Defer the change to the human owner per [escalation.md](../../code-review-guideline/references/escalation.md).
+- MUST flag a Critical when the diff modifies the Playwright config to weaken anti-flake settings (repeat-each, fail-on-flaky, forbid-focused-tests) or to add retries. Defer the change to the human owner per [escalation.md](../../code-review-guideline/references/escalation.md).
 
 ## Root-Cause Investigation
 

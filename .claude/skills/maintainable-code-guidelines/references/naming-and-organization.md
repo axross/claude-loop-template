@@ -16,18 +16,16 @@ A file that breaks the surrounding naming convention is harder to locate and mak
 
 Place shared logic at the lowest tier that has more than one caller. Most projects have a progression from route-local code, to a group-shared tier, to a global/shared tier, plus possibly a separate realm for the data/content layer. The reviewer MUST verify a new module lives at the **lowest** tier that has more than one caller:
 
-| Tier | When to use |
-|---|---|
-| Route-local | Used only by the files of one route/feature |
-| Group-shared | Used by ≥ 2 routes/features within the same group |
-| Global / shared | Used broadly across the application |
-| Data/content-layer realm | Runs inside the `{{CMS_OR_DATA_LAYER}}` realm only |
+| Tier            | When to use                                       |
+| --------------- | ------------------------------------------------- |
+| Route-local     | Used only by the files of one route/feature       |
+| Group-shared    | Used by ≥ 2 routes/features within the same group |
+| Global / shared | Used broadly across the application               |
 
 **Guidelines:**
 
 - MUST flag a new file placed in a group-shared or global tier that is consumed by only one route/feature — it SHOULD live in that route's local tier instead.
 - MUST flag a new file placed in a route-local tier that is also imported by another route/feature — it SHOULD be promoted to the lowest shared tier covering all its callers.
-- MUST flag a new file placed in the `{{CMS_OR_DATA_LAYER}}`-owned realm that does not belong there, per [development-guidelines › change-management](../../development-guidelines/references/change-management.md).
 - MUST flag any helper or component placed where the framework would misinterpret it (e.g., a non-route file dropped directly into a directory the framework treats as a route segment).
 
 ## Route File Layout
@@ -52,6 +50,5 @@ A symbol named or cased unlike its neighbors makes the reader stop to check whet
 - MUST flag identifier-naming inconsistency within the changed file's neighborhood. Examples to flag:
   - A new symbol cased differently from its siblings (e.g., `PascalCase` where siblings use `camelCase`, or vice versa) — match the existing file.
   - A data-access function that breaks the sibling naming pattern (e.g., `fetchRecord` when siblings are `getRecord`, `getRecords`, `getSettings`).
-  - A logging-module label/tag that duplicates an existing module's label when the project requires unique per-module labels, per [observability-guidelines › logging](../../observability-guidelines/references/logging.md).
 - SHOULD flag opaque abbreviations in new identifiers (`rec` for "record", `usr` for "user"). Prefer full words.
 - SHOULD flag a value that breaks the project's established suffix/alias convention for its kind (e.g., an unresolved async value not carrying the expected naming alias), per the project's own component skill, if defined.

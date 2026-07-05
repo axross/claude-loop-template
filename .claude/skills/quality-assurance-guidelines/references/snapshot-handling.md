@@ -4,7 +4,7 @@ Apply these rules to verify visual snapshot changes are intentional and adequate
 
 ## Snapshot Path Awareness
 
-The project's {{E2E_TEST_FRAMEWORK}} config typically writes snapshots to a path that includes a **platform-specific** segment, which means snapshots are **OS-specific**. The reviewer MUST be aware:
+The project's Playwright config typically writes snapshots to a path that includes a **platform-specific** segment, which means snapshots are **OS-specific**. The reviewer MUST be aware:
 
 - A local snapshot update (e.g., the framework's update-snapshots flag) updates only the local platform's snapshots in the diff, not the snapshots for the platform CI runs on.
 - If CI regenerates snapshots and opens an automated snapshot change (CI snapshot automation, if any), that automation still needs review for visual intent.

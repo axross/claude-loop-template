@@ -1,14 +1,12 @@
 # E2E Test Structure
 
-_Code examples below use Playwright APIs as the concrete shape. Translate them to `{{E2E_TEST_FRAMEWORK}}`'s equivalents during INIT; the structure conventions in the prose are framework-neutral._
-
 ## Project Structure
 
 Tests are easiest to find when their location mirrors the surface they cover. The default layout groups suites by route, so a route change points directly at the tests that guard it, while helpers and setup files stay in shared locations every suite can reach.
 
 ```
 <root>
-├── {{TEST_DIR}}/
+├── e2e/
 │   ├── .data/                         # local temporary data
 │   ├── helpers/                       # test helpers
 │   └── tests/
@@ -28,16 +26,16 @@ Tests are easiest to find when their location mirrors the surface they cover. Th
 
 **Guidelines:**
 
-- MUST place route/feature-specific e2e tests under `{{TEST_DIR}}/tests/routes/`.
-- MUST keep reusable e2e helpers under `{{TEST_DIR}}/helpers/`.
-- SHOULD keep setup and global metadata tests directly under `{{TEST_DIR}}/tests/` when they are not route/feature-specific.
+- MUST place route/feature-specific e2e tests under `e2e/tests/routes/`.
+- MUST keep reusable e2e helpers under `e2e/helpers/`.
+- SHOULD keep setup and global metadata tests directly under `e2e/tests/` when they are not route/feature-specific.
 
 ### Purpose-Based Layout
 
 A route tree adds empty hierarchy when the app has one route or its value lives in cross-route journeys. Purpose-named suites keep the cheapest signal first: smoke proves the app boots and the core loop works, happy-path walks the main journeys end to end, regressions hold named guards for previously shipped bugs, and feature-area suites cover one surface in depth.
 
 ```
-{{TEST_DIR}}/
+e2e/
 └── tests/
     ├── smoke.test.ts          # boots + core loop, the first gate
     ├── happy-path.test.ts     # main journeys end to end

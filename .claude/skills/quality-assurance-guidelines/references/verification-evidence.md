@@ -8,9 +8,9 @@ A review should connect each changed surface to the command, manual check, or re
 
 **Guidelines:**
 
-- MUST require `{{FORMAT_CMD}}` and `{{LINT_CMD}}` evidence after code or documentation edits.
-- MUST require `{{E2E_TEST_CMD}}` evidence, when the project has an e2e suite, after the change affects user-facing output, e2e coverage, snapshots, route behavior, metadata, content rendering, or other observable runtime state.
-- MUST require `{{BUILD_CMD}}` evidence, when the project has a build step, after the change affects routes, metadata, data-layer config, runtime config, dependencies, or type signatures.
+- MUST require `npm run format` and `npm run lint` evidence after code or documentation edits.
+- MUST require `npm run test:e2e` evidence, when the project has an e2e suite, after the change affects user-facing output, e2e coverage, snapshots, route behavior, metadata, content rendering, or other observable runtime state.
+- MUST require `npm run build` evidence, when the project has a build step, after the change affects routes, metadata, data-layer config, runtime config, dependencies, or type signatures.
 - MUST require manual evidence for changed output surfaces listed in [manual-verification.md](./manual-verification.md).
 - MUST map skipped required checks to a concrete reason and residual risk.
 - MUST require a second-pass verification statement after fixing any Critical or Major finding.
@@ -21,7 +21,7 @@ Evidence should be short but specific enough that another reviewer can see what 
 
 **Guidelines:**
 
-- SHOULD state each command with its observed result, such as "`{{LINT_CMD}}` passed" or "`{{E2E_TEST_CMD}}` failed in a record-detail snapshot".
+- SHOULD state each command with its observed result, such as "`npm run lint` passed" or "`npm run test:e2e` failed in a record-detail snapshot".
 - SHOULD name manual routes or surfaces checked, such as "the record-detail page in its non-default content state rendered the expected banner".
 - SHOULD include relevant log, screenshot, or diff context when the result is not obvious from command success alone.
 - MUST NOT accept "tested manually" or "looks fine" without the route, state, or behavior that was checked.

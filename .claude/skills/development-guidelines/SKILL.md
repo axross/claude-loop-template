@@ -1,6 +1,6 @@
 ---
 name: development-guidelines
-description: Apply this skill at the start of EVERY task in this project. Covers the format/lint loop, scoped change management, current-docs lookup triggers, run-script commands, type-safety discipline, source-comment and doc-comment conventions, verification requirements, data-layer/migration handling, end-to-end test expectations, and Conventional Commits. Use even when the user does not mention formatting, linting, testing, type casts, comments, doc-comments, dependencies, migrations, docs, commands, or commit wording.
+description: Apply this skill at the start of EVERY task in this project. Covers the format/lint loop, scoped change management, current-docs lookup triggers, run-script commands, type-safety discipline, source-comment and doc-comment conventions, verification requirements, end-to-end test expectations, and Conventional Commits. Use even when the user does not mention formatting, linting, testing, type casts, comments, doc-comments, dependencies, docs, commands, or commit wording.
 ---
 
 # Development Guidelines
@@ -13,8 +13,7 @@ See [code-quality.md](./references/code-quality.md) for:
 
 - The formatter/linter format/lint workflow
 - Language compliance requirements
-<!-- INIT:OPTIONAL key=TYPED_LANGUAGE — keep the next bullet for a typed language OR delete it (and the "type-safety discipline" / "type casts" phrases in this file's frontmatter description) together with the marked section in ./references/code-quality.md. -->
-- Type-safety discipline (unchecked casts and non-null/force-unwrap assertions), for typed languages
+- Type-safety discipline (unchecked casts and non-null assertions)
 - Doc-comment and line-comment conventions in source files
 - Import hygiene
 
@@ -25,7 +24,7 @@ See [change-management.md](./references/change-management.md) for:
 - Staying within the scope of the task
 - Making incremental, verifiable changes
 - Following existing patterns before introducing new ones
-- Adding dependencies and modifying the data layer
+- Adding dependencies and handling generated code
 
 ## Verification
 
@@ -49,8 +48,7 @@ See [dev-commands.md](./references/dev-commands.md) for:
 
 - Development, build, and production-start commands
 - End-to-end test command and snapshot update flow
-- Data-layer / migration commands (if the project has a data layer)
-- Format and lint commands
+- Format, lint, typecheck, and unit-test commands
 
 ## Commit Messages
 
@@ -66,12 +64,12 @@ See [commit-messages.md](./references/commit-messages.md) for:
 
 Consult the appropriate skill for detailed guidance on each area:
 
-| Topic | Skill |
-|---|---|
-| Error handling, error-reporting, and logging | [Observability Guidelines](../observability-guidelines/SKILL.md) |
-| End-to-end test structure, conventions, and commands | [E2E Testing Guidelines](../e2e-testing-guidelines/SKILL.md) |
+| Topic                                                | Skill                                                            |
+| ---------------------------------------------------- | ---------------------------------------------------------------- |
+| Error handling, error-reporting, and logging         | [Observability Guidelines](../observability-guidelines/SKILL.md) |
+| End-to-end test structure, conventions, and commands | [E2E Testing Guidelines](../e2e-testing-guidelines/SKILL.md)     |
 
-Project-specific topic skills — covering repository structure, routing, UI components, visual design, the data/content layer, and any domain rules — are created per-project during INIT. Consult those skills when implementation touches the area they own, if they have been defined.
+Project-specific topic skills — [Project Structure](../project-structure/SKILL.md) and [Component and UI Guidelines](../component-and-ui-guidelines/SKILL.md) — own repository layout and component/UI rules. Consult them when implementation touches the area they own.
 
 **Guidelines:**
 

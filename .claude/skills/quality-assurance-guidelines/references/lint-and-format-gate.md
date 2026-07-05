@@ -8,7 +8,7 @@ Formatting drift is caught by CI, so an unformatted diff is a guaranteed red bui
 
 **Guidelines:**
 
-- MUST mentally run `{{FORMAT_CMD}}` ({{FORMATTER}}) over the diff. Flag any tab/space inconsistency, trailing whitespace, missing trailing newline, or quote-style drift as Critical (lint will fail).
+- MUST mentally run `npm run format` (Prettier) over the diff. Flag any tab/space inconsistency, trailing whitespace, missing trailing newline, or quote-style drift as Critical (lint will fail).
 - MUST flag a hand-applied formatting change to a file the diff did not otherwise need to touch — that violates [development-guidelines › change-management](../../development-guidelines/references/change-management.md) scope discipline.
 
 ## Lint
@@ -32,8 +32,8 @@ An unexplained suppression is indistinguishable from a bug being papered over; t
 
 **Guidelines:**
 
-- MUST flag a new {{LINTER}}'s inline suppression (with justification) directive that lacks an inline justification on the same line. The project rule is "explain why, not just what".
-- MUST flag a new block-level {{LINTER}} suppression in any file that is not one of the whitelisted exception points the linter config defines.
+- MUST flag a new ESLint's inline suppression (with justification) directive that lacks an inline justification on the same line. The project rule is "explain why, not just what".
+- MUST flag a new block-level ESLint suppression in any file that is not one of the whitelisted exception points the linter config defines.
 - SHOULD flag a type-checker suppression (e.g., a "ts-expect-error"-style directive) introduced without a comment explaining the upstream type bug it works around.
 
 ## Type Safety Compliance

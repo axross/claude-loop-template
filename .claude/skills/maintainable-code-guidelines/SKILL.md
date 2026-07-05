@@ -1,6 +1,6 @@
 ---
 name: maintainable-code-guidelines
-description: Use this skill when reviewing maintainability and design of changed code. Covers naming and file organization, route-local vs shared abstraction boundaries, complexity/readability limits, magic-number and dead-code discipline, scope control, and SOLID/DRY/KISS/YAGNI judgment across the project's modules and data/content layer. This is the reviewer's lens on top of the project's development, structure, and any project-defined component/routing rules. Use for "readable", "too long", "refactor", "abstraction", or "should this live elsewhere".
+description: Use this skill when reviewing maintainability and design of changed code. Covers naming and file organization, route-local vs shared abstraction boundaries, complexity/readability limits, magic-number and dead-code discipline, scope control, and SOLID/DRY/KISS/YAGNI judgment across the project's modules. This is the reviewer's lens on top of the project's development, structure, and component/UI rules. Use for "readable", "too long", "refactor", "abstraction", or "should this live elsewhere".
 ---
 
 # Maintainable Code Guidelines
@@ -28,11 +28,11 @@ See [abstraction-boundaries.md](./references/abstraction-boundaries.md) for:
 
 See [complexity-and-readability.md](./references/complexity-and-readability.md) for:
 
-- The project's configured `{{LINTER}}` complexity/length thresholds are not silently bypassed
-- Magic numbers and strings have a named constant or design token, with `{{LINTER}}`'s inline suppression directive (and a justifying comment) only when justified
+- The project's configured `ESLint` complexity/length thresholds are not silently bypassed
+- Magic numbers and strings have a named constant or design token, with `ESLint`'s inline suppression directive (and a justifying comment) only when justified
 - Dead code (unused imports, unreachable branches, commented-out blocks) is removed
 - Missing doc-comments on changed public types/functions, restating comments, and comment-voice violations (rules owned by development-guidelines › code-quality)
-- Inline `{{PRIMARY_LANGUAGE}}` types are extracted into named aliases when reused
+- Inline `TypeScript` types are extracted into named aliases when reused
 
 ## Scope Discipline
 

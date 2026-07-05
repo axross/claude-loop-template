@@ -109,11 +109,11 @@ A breaking change MUST be indicated in at least one of two ways (both MAY be use
 
 SemVer Correlation maps each Conventional Commit shape to the release bump it signals. Use this table when choosing the header type and breaking-change marker for a commit.
 
-| Commit shape | SemVer bump |
-|---|---|
-| `fix: ...` | PATCH |
-| `feat: ...` | MINOR |
-| Any type with `!` or a `BREAKING CHANGE:` footer | MAJOR |
+| Commit shape                                                                              | SemVer bump     |
+| ----------------------------------------------------------------------------------------- | --------------- |
+| `fix: ...`                                                                                | PATCH           |
+| `feat: ...`                                                                               | MINOR           |
+| Any type with `!` or a `BREAKING CHANGE:` footer                                          | MAJOR           |
 | `chore`, `docs`, `style`, `refactor`, `test`, `build`, `ci`, `perf`, `revert` without `!` | No release bump |
 
 **Guidelines:**
@@ -127,26 +127,31 @@ SemVer Correlation maps each Conventional Commit shape to the release bump it si
 These examples show accepted commit shapes for common cases, including scopes, bodies, footers, breaking changes, and reverts.
 
 **Simple, no scope, no body:**
+
 ```
 docs: correct spelling of CHANGELOG
 ```
 
 **With scope:**
+
 ```
 feat(lang): add Polish language
 ```
 
 **Breaking change via `!`:**
+
 ```
 feat!: send an email to the customer when a product is shipped
 ```
 
 **Breaking change via `!` with scope:**
+
 ```
 feat(api)!: drop support for Node 18
 ```
 
 **Breaking change via footer (no `!`):**
+
 ```
 feat: allow provided config object to extend other configs
 
@@ -154,6 +159,7 @@ BREAKING CHANGE: `extends` key in config file is now used for extending other co
 ```
 
 **With body and multiple footers:**
+
 ```
 fix: prevent racing of requests
 
@@ -168,6 +174,7 @@ Refs: #123
 ```
 
 **Revert:**
+
 ```
 revert: feat(lang): add Polish language
 

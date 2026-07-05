@@ -1,34 +1,14 @@
 name: Merge Checks
 
-# INIT:OPTIONAL key=INDEPENDENT_REVIEW — EXAMPLE workflow, GitHub-Actions-
-# specific. Part of the independent-review capability: delete this file (with
-# claude-review.yaml, REVIEW.md, and the .claude/commands/ entry points) if the
-# project does not adopt it; see the INIT.md Step-4 bullet.
-#
 # The project's own CI: lint and unit tests that gate merges to the default
 # branch. This is the CI the /address command's tail polls after a push (see
 # .claude/commands/address.md). Keep REVIEW.md's do-not-report list in sync
 # with exactly what these jobs enforce.
-#
-# The tokenized run commands below are substituted by `./init.sh apply` along
-# with the rest of the template (the tokens are quoted because a YAML plain
-# scalar cannot start with `{`). The toolchain setup is NOT a token: during
-# INIT, replace it with the project's own (setup-node, .nvmrc, and the npm
-# cache are examples, not requirements). The template ships no .nvmrc — even a
-# project keeping the npm-flavored setup must create one (or switch to
-# `node-version:`), or Setup Node fails on every run. Drop the test job if
-# the project has no unit-test suite.
-#
-# While the template is un-adapted, none of that can work — so each job's real
-# steps are gated on a guard that checks for INIT.md. INIT Step 7 deletes
-# INIT.md, which arms the steps in adapted projects automatically; until then
-# the jobs skip them (with a notice) and conclude green, keeping the template
-# repo's own CI meaningful instead of permanently red.
 
 on:
   pull_request:
   push:
-    branches: [main] # ← the project's default branch
+    branches: [main]
 
 # Cancel superseded runs on PR refs only: on the default branch every push is a
 # distinct merged commit whose checks must run to completion, or back-to-back
@@ -47,27 +27,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Check Template Adaptation
-        id: adapted
-        run: |
-          if [ -f INIT.md ]; then
-            echo "::notice::Template not yet adapted (INIT.md present) — skipping lint."
-            echo "run=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "run=true" >> "$GITHUB_OUTPUT"
-          fi
-      - name: Setup Node # ← replace with the project's toolchain setup
-        if: steps.adapted.outputs.run == 'true'
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
       - name: Dependency Installation
-        if: steps.adapted.outputs.run == 'true'
-        run: "{{INSTALL_CMD}}"
+        run: "npm install"
       - name: Lint
-        if: steps.adapted.outputs.run == 'true'
-        run: "{{LINT_CMD}}"
+        run: "npm run lint"
 
   test:
     name: Unit Tests
@@ -75,24 +43,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Check Template Adaptation
-        id: adapted
-        run: |
-          if [ -f INIT.md ]; then
-            echo "::notice::Template not yet adapted (INIT.md present) — skipping unit tests."
-            echo "run=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "run=true" >> "$GITHUB_OUTPUT"
-          fi
-      - name: Setup Node # ← replace with the project's toolchain setup
-        if: steps.adapted.outputs.run == 'true'
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
       - name: Dependency Installation
-        if: steps.adapted.outputs.run == 'true'
-        run: "{{INSTALL_CMD}}"
+        run: "npm install"
       - name: Unit Test Run
-        if: steps.adapted.outputs.run == 'true'
-        run: "{{UNIT_TEST_CMD}}"
+        run: "npm run test:unit"

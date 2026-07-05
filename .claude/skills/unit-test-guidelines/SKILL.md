@@ -1,11 +1,11 @@
 ---
 name: unit-test-guidelines
-description: Apply this skill when writing, refactoring, reviewing, or running {{UNIT_TEST_FRAMEWORK}} unit tests in this project. Covers test framework configuration, explicit test-API imports, colocated test files, describe/case naming and grouping conventions, behavior-focused test design, fixture quality, AHA test abstraction, mocks and fakes, async assertions, snapshot discipline, schema/codec tests, type-only modules, the optional coverage gate (thresholds and ignore pragmas), and when unit tests should yield to integration or e2e coverage.
+description: Apply this skill when writing, refactoring, reviewing, or running Vitest unit tests in this project. Covers test framework configuration, explicit test-API imports, colocated test files, describe/case naming and grouping conventions, behavior-focused test design, fixture quality, AHA test abstraction, mocks and fakes, async assertions, snapshot discipline, schema/codec tests, type-only modules, the optional coverage gate (thresholds and ignore pragmas), and when unit tests should yield to integration or e2e coverage.
 ---
 
 # Unit Test Guidelines
 
-Use this skill for {{UNIT_TEST_FRAMEWORK}}-based unit tests. Unit tests are valuable when they exercise a small exported contract quickly, independently, and from a caller's point of view. They are harmful when they overfit implementation details or replace higher-confidence integration/e2e coverage.
+Use this skill for Vitest-based unit tests. Unit tests are valuable when they exercise a small exported contract quickly, independently, and from a caller's point of view. They are harmful when they overfit implementation details or replace higher-confidence integration/e2e coverage.
 
 ## Testing Scope
 
@@ -61,7 +61,7 @@ See [schemas-and-types.md](./references/schemas-and-types.md) for:
 
 See [review-checklist.md](./references/review-checklist.md) for:
 
-- implementation self-review or code review for {{UNIT_TEST_FRAMEWORK}} unit tests
+- implementation self-review or code review for Vitest unit tests
 - checking structure, naming, fixtures, mocks, assertions, and scope
 - the optional coverage gate: the project's coverage command, INIT-recorded thresholds, and ignore-pragma discipline
 - reporting residual risk when unit tests cannot cover the behavior with enough confidence
@@ -72,9 +72,9 @@ These defaults are intentionally short. Follow the linked references for example
 
 **Guidelines:**
 
-- MUST colocate {{UNIT_TEST_FRAMEWORK}} tests following the project's colocated unit-test file naming convention unless an existing local pattern requires a different location.
-- MUST import the test framework's APIs explicitly if {{UNIT_TEST_FRAMEWORK}} requires it, rather than relying on implicit global-scope symbols.
+- MUST colocate Vitest tests following the project's colocated unit-test file naming convention unless an existing local pattern requires a different location.
+- MUST import the test framework's APIs explicitly if Vitest requires it, rather than relying on implicit global-scope symbols.
 - MUST use the project's chosen test-case function consistently and not mix it with an alternative spelling within the same project.
-- MUST run unit tests through `{{UNIT_TEST_CMD}}` unless investigating a targeted failure.
-- MUST run `{{FORMAT_CMD}}` and `{{LINT_CMD}}` after adding or changing unit tests, plus `{{TYPECHECK_CMD}}` when the project has a type-check step.
+- MUST run unit tests through `npm run test:unit` unless investigating a targeted failure.
+- MUST run `npm run format` and `npm run lint` after adding or changing unit tests, plus `npm run typecheck` when the project has a type-check step.
 - SHOULD prefer integration or e2e tests when confidence depends on framework runtime wiring, the data layer, browser behavior, rendering, routing, or user-facing UI.
