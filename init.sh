@@ -63,9 +63,12 @@ import json, os, re, sys
 manifest, values = sys.argv[1], sys.argv[2]
 tokens = [t["name"] for t in json.load(open(manifest))["tokens"]]
 
-# Tolerant JSON read: strip // line comments the user may leave in the template.
+# Tolerant JSON read: strip // line comments the user may leave in the
+# template. Only whole-line comments and comments that follow the end of a
+# JSON value are stripped, so a VALUE containing " //" is left intact.
 raw = open(values).read()
-raw = re.sub(r'(^|\s)//[^\n]*', r'\1', raw)
+raw = re.sub(r'(?m)^\s*//[^\n]*$', '', raw)
+raw = re.sub(r'(?m)(?<=["\],}0-9el])\s+//[^\n]*$', '', raw)
 vals = json.loads(raw)
 
 missing = [t for t in tokens if not vals.get(t, "").strip()]

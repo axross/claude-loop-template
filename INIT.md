@@ -45,11 +45,18 @@ merge rather than clobber:
   the existing file already contains (framework gotchas, "read these docs first"
   notes, house style) into the template's **Project Overview** (Step 2) or a
   project-specific skill (Step 5). Replace `AGENTS.md` only once its content is
-  preserved.
+  preserved. Concrete example: `create-next-app` generates an `AGENTS.md` whose
+  one rule is load-bearing — Next.js 16 has breaking changes and ships its own
+  docs in `node_modules/next/dist/docs/`; fold that into the Project Overview
+  and the current-docs table, don't drop it.
 - **Existing `CLAUDE.md`** — if it is already just `@AGENTS.md`, keep it. If it
   holds other instructions, append `@AGENTS.md` rather than replacing them.
 - **Existing `.gitignore`** — keep the project's file; merge in the template's
   `settings.local.json` / `.env.local` entries (Step 6) instead of overwriting.
+  Watch for a blanket `.env*` entry (`create-next-app` ships one): it also
+  ignores the `.env.example` that `session-start.sh` copies from — replace it
+  with the template's `.env.local` / `.env.*.local` entries so the example
+  file stays committable.
 - **Existing `.claude/`** — merge directory-by-directory; never
   replace wholesale.
 
@@ -164,8 +171,8 @@ stack not listed.
 | `{{LINTER}}` | Linter | `Biome` · `ESLint` · `Ruff` · `golangci-lint` · `Clippy` |
 | `{{FORMATTER}}` | Formatter | `Biome` · `Prettier` · `Ruff` · `gofmt` · `rustfmt` |
 | `{{UNIT_TEST_FRAMEWORK}}` | Unit test framework | `Jest` · `Vitest` · `pytest` · `go test` · `cargo test` |
-| `{{SOURCE_DIR}}` | Main source dir | `src/` · `app/` · `lib/` · `internal/` |
-| `{{TEST_DIR}}` | Test root dir | `e2e/` · `tests/` · `__tests__/` · `spec/` |
+| `{{SOURCE_DIR}}` | Main source dir (no trailing slash — templates append the `/`) | `src` · `app` · `lib` · `internal` |
+| `{{TEST_DIR}}` | Test root dir (no trailing slash — templates append the `/`) | `e2e` · `tests` · `__tests__` · `spec` |
 
 ### Optional integrations
 
@@ -265,6 +272,12 @@ apply to the **skip** path.
     in `development-guidelines/SKILL.md`;
   - the `{{ERROR_TRACKER}} config and {{LOGGER}} setup` row of the
     output-surface table in `development-guidelines/references/verification.md`;
+  - the `{{ERROR_TRACKER}}` row and refresh bullet in
+    `development-guidelines/references/current-docs.md` (marked
+    `key=ERROR_TRACKER`);
+  - the `logger.info()` / `logger.warn()` phrasing in the secret-interpolation
+    bullet of `application-security-requirements/references/secret-handling.md`
+    (reword to "any log/console output" when the logger is dropped);
   - in `performance-and-reliability-requirements/SKILL.md` and its
     `references/error-and-observability.md`, the rules survive as the
     reviewer's checklist: drop each `per [observability-guidelines › …]` /
@@ -365,9 +378,34 @@ apply to the **skip** path.
   - the unit-test row of the developer-facing-skills table in
     `code-review-guideline/SKILL.md`;
   - the `{{UNIT_TEST_CMD}}` bullet in the `AGENTS.md` Verification section.
-- **No data/content layer** → remove the data-layer sections (each is marked
-  optional) from `development-guidelines`, `application-security-requirements`,
-  and `performance-and-reliability-requirements`.
+- **No data/content layer** → delete every `key=DATA_LAYER` site (the Step-4
+  grep finds them all): the marked sections in `development-guidelines`
+  (`dev-commands.md`, `change-management.md`, plus the `current-docs.md` row
+  and bullet), `application-security-requirements` (`access-control.md`),
+  `performance-and-reliability-requirements`
+  (`references/data-access-efficiency.md` — the whole file — and its
+  "Data-Access Efficiency" section in `SKILL.md`), and
+  `maintainable-code-guidelines` (`abstraction-boundaries.md` — rewrite the
+  Data-Access / UI Split bullets around the project's actual persistence
+  boundary — and the realm row/bullet in `naming-and-organization.md`). Then
+  sweep the prose: the "data-layer/migration handling" / "migrations" phrases
+  in `development-guidelines/SKILL.md`'s description and body, the
+  data-access/data-layer phrases in the `AGENTS.md` index rows
+  (Development Guidelines, Performance and Reliability) and in `AGENTS.md`'s
+  high-risk and Verification bullets, and the data-layer mentions in
+  `performance-and-reliability-requirements/SKILL.md`'s description.
+- **No authentication system** (nothing logs in — no accounts, sessions, or
+  admin surface) → delete every `key=AUTH` site:
+  `application-security-requirements/references/auth-and-session.md` (move its
+  auth-independent "Localhost / Production Divergence" section into
+  `privacy-and-exposure.md` first) and, when the project also has no data
+  layer, `references/access-control.md` entirely; then remove their routing
+  sections ("Access Control", "Auth and Session Management") from that skill's
+  `SKILL.md`, the auth phrases from its frontmatter description and the
+  `AGENTS.md` index row, and the inbound access-control link in
+  `performance-and-reliability-requirements/references/data-access-efficiency.md`
+  (itself deleted on the no-data-layer path). Verify with
+  `python3 tools/check-links.py`.
 - **No client bundle / not a UI project** → remove the "User-Facing Work"
   subsection from `AGENTS.md` and the bundling/asset sections (marked optional)
   in `performance-and-reliability-requirements`.
@@ -484,11 +522,20 @@ Keep only the bindings for the agents named in Step 1.
       the `.claude/` tree a `glob('**/*.md')` sweep would skip).
 - [ ] `AGENTS.md` skill index matches the directories under `.claude/skills/`.
 - [ ] Removed skills have no remaining inbound links.
-- [ ] The conditional hedges in `AGENTS.md`'s Verification section are
-      resolved: in every bullet hedged with a "when the project has …" clause
-      (the `{{UNIT_TEST_CMD}}`, `{{E2E_TEST_CMD}}`, and `{{BUILD_CMD}}`
-      bullets), delete the clause when the capability was kept, and delete the
-      whole bullet when it was skipped.
+- [ ] The conditional hedges are resolved — in every bullet hedged with a
+      "when the project has …" clause, delete the clause when the capability
+      was kept and the whole bullet when it was skipped. They live in
+      `AGENTS.md`'s Verification section (the `{{UNIT_TEST_CMD}}`,
+      `{{E2E_TEST_CMD}}`, and `{{BUILD_CMD}}` bullets) **and** outside it:
+      `development-guidelines/references/dev-commands.md` (build, unit, e2e
+      bullets), `references/code-quality.md` (check-sequence test step),
+      `references/verification.md` (the e2e-suite bullet), and
+      `unit-test-guidelines/references/review-checklist.md` (the typecheck
+      clause). Grep for `when the project has` to catch them all.
+- [ ] Skipped capabilities no longer appear in prose: grep the tree for each
+      skipped tool's name and for generic phrases like "data layer",
+      "structured logger", or "error tracker" in skill descriptions and
+      `AGENTS.md` index rows, and reword or delete the stragglers.
 - [ ] Every skill removed in Step 4 is also gone from the review-lenses MUST
       bullet in `AGENTS.md`'s Review Independence Gates (e.g. drop
       "observability" when `observability-guidelines` was deleted).

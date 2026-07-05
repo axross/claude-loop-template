@@ -4,6 +4,8 @@ Apply these rules to verify that new code respects the project's separation of c
 
 ## Data-Access / UI Split
 
+<!-- INIT:OPTIONAL key=DATA_LAYER — fill the token OR, if the project has no data/content layer, rewrite these bullets around whatever persistence boundary it does have (e.g. a localStorage-backed store module). -->
+
 When a UI module or request handler reaches into the data layer directly, caching, schema validation, and logging scatter across every call site instead of living in one place.
 
 **Guidelines:**
@@ -52,6 +54,6 @@ An import that runs against the tier hierarchy couples layers meant to stay inde
 **Guidelines:**
 
 - MUST flag any import path that crosses tiers in the wrong direction:
-  - The `{{CMS_OR_DATA_LAYER}}` realm MUST NOT import from the application UI realm. The data layer is a separate process boundary.
+  - The `{{CMS_OR_DATA_LAYER}}` realm MUST NOT import from the application UI realm. The data layer is a separate process boundary. <!-- INIT:OPTIONAL key=DATA_LAYER — fill the token OR delete this sub-bullet. -->
   - Group-shared / global modules MUST NOT import from a specific route's route-local code. Shared code should not depend on route-local code.
 - SHOULD flag deep relative imports (`../../../`) that cross more than two directory levels — prefer the project's configured path aliases.

@@ -9,6 +9,8 @@ Apply these rules when reviewing the runtime cost and failure-mode behavior of a
 
 ## Data-Access Efficiency
 
+<!-- INIT:OPTIONAL key=DATA_LAYER — keep this section OR delete it together with ./references/data-access-efficiency.md. -->
+
 See [data-access-efficiency.md](./references/data-access-efficiency.md) for:
 
 - Explicit projection, relationship depth, result limit, and filter on every data-layer read

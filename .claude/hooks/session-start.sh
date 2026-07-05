@@ -6,7 +6,7 @@
 # soon as the session starts.
 #
 # TEMPLATE NOTE: this is an example Claude Code harness binding. During INIT,
-# replace the {{TOKENS}} below and adapt the toolchain-provisioning block to the
+# replace the `{{...}}` tokens below and adapt the toolchain-provisioning block to the
 # project's runtime (Node, Python, Go, Ruby, ...), or delete this hook if the
 # project does not need session bootstrapping.
 set -euo pipefail

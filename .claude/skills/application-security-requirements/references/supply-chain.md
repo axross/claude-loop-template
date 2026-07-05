@@ -57,7 +57,7 @@ A dependency bound to one OS or runtime breaks whichever environment it does not
 
 ## Bundling Implications
 
-<!-- INIT:OPTIONAL key=CLIENT_BUNDLE — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
+<!-- INIT:OPTIONAL key=CLIENT_BUNDLE — keep this section OR delete it (projects with no client bundle). -->
 *This section applies only when the project bundles code for a client/browser. Delete it during INIT for projects that ship no client bundle (e.g., a CLI or backend service).*
 
 A dependency that cannot be tree-shaken ships its whole body to the browser, taxing every visitor with code paths they never exercise.

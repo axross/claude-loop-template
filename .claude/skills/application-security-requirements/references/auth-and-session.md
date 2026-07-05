@@ -2,8 +2,8 @@
 
 Apply these rules to verify the project's authentication is not weakened and the error tracker's PII exposure is bounded.
 
-<!-- INIT:OPTIONAL key=ERROR_TRACKER_OR_ANALYTICS — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
-*This lens assumes the project has an authentication system (often provided by the data/content layer) and, optionally, an {{ERROR_TRACKER}} and analytics service. Delete the subsections for tools the project does not use during INIT.*
+<!-- INIT:OPTIONAL key=AUTH — this whole file assumes the project has an authentication system. Keep it OR, if the project has no auth at all, delete the file per the INIT.md Step-4 bullet (the "Localhost / Production Divergence" section is auth-independent — move it into privacy-and-exposure.md before deleting). -->
+*This lens assumes the project has an authentication system (often provided by the data/content layer) and, optionally, an error tracker and analytics service. Delete the file if the project has no auth (see the marker above); otherwise delete only the subsections for tools the project does not use during INIT.*
 
 ## Authentication Lockout Settings
 
