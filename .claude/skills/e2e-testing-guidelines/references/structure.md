@@ -1,6 +1,6 @@
 # E2E Test Structure
 
-_Code examples below use Playwright APIs as the concrete shape. Translate them to `{{E2E_TEST_FRAMEWORK}}`'s equivalents during INIT; the structure conventions in the prose are framework-neutral._
+_Code examples below use Playwright APIs as the concrete shape. If the project's e2e framework is not Playwright, translate them during INIT; the structure conventions in the prose are framework-neutral._
 
 ## Project Structure
 

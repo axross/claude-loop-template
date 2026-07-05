@@ -1,6 +1,6 @@
 # E2E Test Conventions
 
-_Code examples below use Playwright APIs (`getByTestId`, `storageState`, `test.step`, `page.request`) as the concrete shape. Translate them to `{{E2E_TEST_FRAMEWORK}}`'s equivalents during INIT; the conventions in the prose are framework-neutral._
+_Code examples below use Playwright APIs (`getByTestId`, `storageState`, `test.step`, `page.request`) and the `@playwright/test` package as the concrete shape. If the project's e2e framework is not Playwright, translate them during INIT; the conventions in the prose are framework-neutral._
 
 ## Locator Usage
 
@@ -20,7 +20,7 @@ Elements are targeted by stable test-id hooks scoped through their container, so
 **Example:**
 
 ```ts
-import { expect, type Locator, test } from "{{E2E_TEST_FRAMEWORK}}";
+import { expect, type Locator, test } from "@playwright/test";
 
 test("Item summary section", async ({ page }) => {
 	const itemPage = page.getByTestId("page");
@@ -70,7 +70,7 @@ Case-independent setup and cleanup belong in hooks so every spec starts from the
 **Example:**
 
 ```ts
-import { expect, test } from "{{E2E_TEST_FRAMEWORK}}";
+import { expect, test } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
 	await test.step("Navigate to the index route", async () => {
@@ -95,7 +95,7 @@ Re-authenticating in every test is slow and adds a failure mode unrelated to the
 **Example:**
 
 ```ts
-import { test } from "{{E2E_TEST_FRAMEWORK}}";
+import { test } from "@playwright/test";
 import { authenticatedStorageState } from "@/{{TEST_DIR}}/helpers/api/auth";
 
 test.use({ storageState: authenticatedStorageState });
@@ -120,7 +120,7 @@ Hard-coded expected values drift as content changes; fetching the same record th
 **Example:**
 
 ```ts
-import { expect, test } from "{{E2E_TEST_FRAMEWORK}}";
+import { expect, test } from "@playwright/test";
 import { getExampleItem } from "@/{{TEST_DIR}}/helpers/api/item";
 import { authenticatedStorageState } from "@/{{TEST_DIR}}/helpers/api/auth";
 
@@ -152,7 +152,7 @@ Centralizing request wiring in named helpers keeps auth state, URL construction,
 **Example:**
 
 ```ts
-import type { Page, TestInfo } from "{{E2E_TEST_FRAMEWORK}}";
+import type { Page, TestInfo } from "@playwright/test";
 import type z from "zod";
 import { ItemSchema } from "@/repositories/schema";
 

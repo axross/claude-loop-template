@@ -4,9 +4,9 @@ Apply these rules whenever you write or modify code in this project.
 
 ## Check Sequence
 
-The order matters because the linter reports format problems the formatter alone does not resolve, so a passing format step is not proof the code is clean.
+The order matters because the linter reports problems the formatter alone does not resolve, so a passing format step is not proof the code is clean.
 
-- `{{FORMAT_CMD}}` applies auto-fixable formatting. `{{LINT_CMD}}` enforces both lint rules and format rules. Some format violations are only caught by the lint step, so it may still report format issues even after running the formatter.
+- `{{FORMAT_CMD}}` applies auto-fixable formatting. `{{LINT_CMD}}` enforces the lint rules — and, in toolchains where the linter also checks formatting (e.g. Biome), re-flags format issues the formatter missed. In toolchains where it does not (e.g. ESLint with `eslint-config-prettier`), both steps are still always required. <!-- INIT: keep whichever clause matches the project's toolchain and delete the other, then delete this comment. -->
 
 **Guidelines:**
 
@@ -31,7 +31,7 @@ Delegating whitespace and layout to {{FORMATTER}} keeps diffs free of style nois
 
 ## Linting
 
-The linter catches correctness and quality problems the formatter cannot see, and re-flags any format issues that slipped past it.
+The linter catches correctness and quality problems the formatter cannot see (and, when it also enforces format rules, re-flags any that slipped past the formatter).
 
 **Guidelines:**
 
@@ -43,8 +43,8 @@ The linter catches correctness and quality problems the formatter cannot see, an
 
 ## Type Safety
 
-<!-- INIT:OPTIONAL key=TYPED_LANGUAGE — keep for a typed {{PRIMARY_LANGUAGE}} OR delete this section. -->
-*If {{PRIMARY_LANGUAGE}} has no static type system, delete this section during INIT.*
+<!-- INIT:OPTIONAL key=TYPED_LANGUAGE — keep for a statically typed language OR delete this section. -->
+*If the project's primary language has no static type system, delete this section during INIT.*
 
 A type system's guarantees only hold when the code does not quietly opt out of them. An unchecked cast or a non-null/force-unwrap assertion silences the compiler at the exact spot a bug would surface, trading a compile-time check for a runtime risk — and because such escape hatches are often not lint-caught, they are a discipline the author owns.
 

@@ -13,7 +13,7 @@ Use this table to determine which output surfaces a change puts at risk. Adapt t
 | Route/navigation definitions and error/not-found handlers | Routing and navigation |
 | Metadata generation, sitemap, robots, and social-preview assets | Metadata and discoverability |
 | Content-processing pipeline (if any) | Content fidelity |
-| {{ERROR_TRACKER}} config and {{LOGGER}} setup | Observability |
+| {{ERROR_TRACKER}} config and {{LOGGER}} setup | Observability <!-- INIT:OPTIONAL key=ERROR_TRACKER_OR_LOGGER — fill the tokens OR trim/delete this row for the tool(s) the project lacks. --> |
 
 - Changes that touch none of the above — type definitions, data-layer config, migration files, or utilities with no UI call path — do not put any output surface at risk.
 

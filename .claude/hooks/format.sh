@@ -4,7 +4,7 @@
 # stay consistent. fires on edit/write tools.
 #
 # TEMPLATE NOTE: this is an example Claude Code harness binding. During INIT,
-# replace the {{TOKENS}} below with the project's real values, or delete this
+# replace the `{{...}}` tokens below with the project's real values, or delete this
 # hook (and its entry in .claude/settings.local-example.json) if the project
 # has no formatter.
 set -uo pipefail
@@ -15,7 +15,7 @@ PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." &
 FILE_PATH="$(jq -r '.tool_input.file_path // empty' 2>/dev/null || true)"
 
 # only format when a source file the formatter understands changed; skip the
-# rest. {{CODE_FILE_GLOB}}: a case-pattern of extensions, e.g.
+# rest. the case-pattern below is the CODE_FILE_GLOB token, e.g.
 # "*.ts | *.tsx | *.js | *.css".
 case "$FILE_PATH" in
   {{CODE_FILE_GLOB}}) ;;

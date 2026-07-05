@@ -5,7 +5,7 @@
 # on stderr so the agent addresses them before finishing.
 #
 # TEMPLATE NOTE: this is an example Claude Code harness binding. During INIT,
-# replace the {{TOKENS}} below with the project's real values, or delete this
+# replace the `{{...}}` tokens below with the project's real values, or delete this
 # hook (and its entry in .claude/settings.local-example.json) if the project
 # has no automated checks.
 set -uo pipefail
@@ -25,8 +25,8 @@ command -v {{PACKAGE_MANAGER}} >/dev/null 2>&1 || exit 0
 
 # only run when this session has pending code changes, either uncommitted or
 # committed but not yet on the upstream branch. avoids checking on plain
-# conversational turns. {{CODE_FILE_REGEX}}: an extended-regex of source
-# extensions, e.g. '\.(ts|tsx|js|css)$'.
+# conversational turns. CODE_GLOB below is the CODE_FILE_REGEX token, an
+# extended-regex of source extensions, e.g. '\.(ts|tsx|js|css)$'.
 CODE_GLOB='{{CODE_FILE_REGEX}}'
 code_changed() {
   if git status --porcelain 2>/dev/null | grep -qE "$CODE_GLOB"; then

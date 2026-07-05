@@ -33,7 +33,7 @@ Loading hints tell the browser which bytes gate first paint, so a wrong hint eit
 
 ## Upload / Ingest Configuration
 
-<!-- INIT:OPTIONAL key=IMAGES — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
+<!-- INIT:OPTIONAL key=IMAGES — keep this section OR delete it. -->
 *If this project does not ingest user-uploaded images, delete this section during INIT.*
 
 Ingest is the single chance to bound an asset's lifetime cost — an original stored unconverted or unbounded is served at full size on every view thereafter.
@@ -55,7 +55,7 @@ Each allowlist entry authorizes the optimizer to fetch and process bytes from an
 
 ## Image-Processing Backend
 
-<!-- INIT:OPTIONAL key=IMAGES — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
+<!-- INIT:OPTIONAL key=IMAGES — keep this section OR delete it. -->
 *If this project does not run a server-side image-processing backend, delete this section during INIT.*
 
 The processing backend fails soft: uploads keep succeeding while silently skipping conversion and resizing, so its loss shows up as slow pages rather than errors.

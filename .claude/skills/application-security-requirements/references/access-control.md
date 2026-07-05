@@ -2,8 +2,8 @@
 
 Apply these rules to verify the data layer's access rules and the project's request handlers gate sensitive data correctly.
 
-<!-- INIT:OPTIONAL key=DATA_LAYER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
-*Some sections below assume a data/content layer with built-in access rules and a draft/published lifecycle (a CMS-style `{{CMS_OR_DATA_LAYER}}`). If the project has no such layer, adapt or delete the layer-specific sections during INIT.*
+<!-- INIT:OPTIONAL key=DATA_LAYER — keep & fill the token OR delete the layer-specific sections; a project with neither a data layer nor an authentication system deletes this whole file per the INIT.md Step-4 AUTH bullet. -->
+*Some sections below assume a data/content layer with built-in access rules and a draft/published lifecycle (a CMS-style `{{CMS_OR_DATA_LAYER}}`); others assume an authentication system. If the project has neither, delete this file during INIT; if it has only one, adapt or delete the sections that assume the other.*
 
 ## Data-Layer Access Rules
 

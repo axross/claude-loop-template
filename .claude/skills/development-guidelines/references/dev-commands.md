@@ -26,12 +26,15 @@ These commands enforce formatting, linting, and end-to-end behavior.
 | ------- | ------- |
 | `{{FORMAT_CMD}}` | Formats the code and documentation with {{FORMATTER}}. |
 | `{{LINT_CMD}}` | Runs {{LINTER}}, including formatting and lint rules. |
+| `{{TYPECHECK_CMD}}` | Type-checks the project. <!-- INIT:OPTIONAL key=TYPED_LANGUAGE — fill the token OR delete this row for an untyped language. --> |
+| `{{UNIT_TEST_CMD}}` | Runs the {{UNIT_TEST_FRAMEWORK}} unit suite. <!-- INIT:OPTIONAL key=UNIT_TESTS — fill the tokens OR delete this row if the project has no unit suite. --> |
 | `{{E2E_TEST_CMD}}` | Runs the {{E2E_TEST_FRAMEWORK}} end-to-end suite. |
 | `{{E2E_TEST_CMD}} -- --update-snapshots` | Regenerates end-to-end snapshots for the local platform (flag syntax depends on {{E2E_TEST_FRAMEWORK}}). |
 
 **Guidelines:**
 
 - MUST run `{{FORMAT_CMD}}` and `{{LINT_CMD}}` after code or documentation edits.
+- MUST run `{{UNIT_TEST_CMD}}`, when the project has a unit suite, after a change affects code it covers.
 - MUST run `{{E2E_TEST_CMD}}`, when the project has an e2e suite, after a change affects a UI output surface or e2e coverage.
 - MUST NOT use snapshot updates to hide unexpected visual regressions; pair each snapshot update with a reason the visual change is intentional.
 - SHOULD report skipped quality commands, including the reason and residual risk, before completion.

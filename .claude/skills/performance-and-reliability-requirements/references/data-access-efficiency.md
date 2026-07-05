@@ -1,5 +1,8 @@
 # Data-Access Efficiency
 
+<!-- INIT:OPTIONAL key=DATA_LAYER — fill the token OR, if the project has no data/content layer, delete this file together with the "Data-Access Efficiency" section in ../SKILL.md and the data-access phrases in that skill's frontmatter description and the AGENTS.md index row. -->
+*If this project has no data/content layer, delete this file during INIT (see the marker above for the inbound links).*
+
 Apply these rules to verify that reads against the data/content layer ({{CMS_OR_DATA_LAYER}}) are bounded and N+1-free.
 
 ## Mandatory Query Bounds
@@ -59,7 +62,7 @@ A migration runs against production data exactly once, and a dropped or renamed 
 
 ## Locale / Variant Handling
 
-<!-- INIT:OPTIONAL key=LOCALE — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
+<!-- INIT:OPTIONAL key=LOCALE — keep this section OR delete it. -->
 *If this project has no per-locale or per-variant content, delete this section during INIT.*
 
 Locale fallback makes an omitted variant parameter succeed with plausible-looking content, so the wrong variant ships without any error to catch it.

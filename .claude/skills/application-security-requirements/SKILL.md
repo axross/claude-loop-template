@@ -5,7 +5,7 @@ description: Use this skill when reviewing security or privacy implications of a
 
 # Application Security Requirements
 
-Apply these rules when reviewing the security implications of any code change in this project. The framing is OWASP Top 10 mapped onto this project's stack. Where a section names a concrete tool (`{{CMS_OR_DATA_LAYER}}`, `{{HOSTING_PLATFORM}}`, `{{ERROR_TRACKER}}`, an analytics service), treat it as a placeholder for whatever the project actually uses, and delete the section if the project has no such tool.
+Apply these rules when reviewing the security implications of any code change in this project. The framing is OWASP Top 10 mapped onto this project's stack. Where a section names a concrete tool (the data/content layer, the hosting platform, the error tracker, an analytics service), treat it as a placeholder for whatever the project actually uses, and delete the section if the project has no such tool.
 
 ## Secret and Environment-Variable Handling
 
