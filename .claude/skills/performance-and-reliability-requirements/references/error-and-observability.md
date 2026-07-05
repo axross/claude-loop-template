@@ -7,7 +7,7 @@ Apply these rules to verify the change keeps the project's error-propagation mod
 
 ## `try`/`catch` Placement
 
-This review focuses on major-severity cases where a new `try`/`catch` is placed inside a nested helper rather than at the root call site (the request entry point / top-level handler / server action). The project rule per [observability-guidelines › error-handling](../../observability-guidelines/references/error-handling.md) is "let errors propagate to the root call site".
+A catch block inside a nested helper decides recovery policy for callers it knows nothing about, intercepting failures before they reach the one place with enough context to handle them.
 
 **Guidelines:**
 
@@ -20,7 +20,7 @@ This review focuses on major-severity cases where a new `try`/`catch` is placed 
 
 ## Error-Reporting Discipline
 
-This review focuses on critical-severity cases where a new caught error is not reported via `reportError(...)`. The only exception is a known control-flow signal (e.g., the sentinel thrown by a "not found" / redirect helper).
+An unreported failure leaves no production trace, so the first signal becomes a user complaint instead of an alert.
 
 **Guidelines:**
 
@@ -31,7 +31,7 @@ This review focuses on critical-severity cases where a new caught error is not r
 
 ## Logger Discipline
 
-This review focuses on critical-severity cases where the diff logs an error through the logger instead of reporting it. The project routes errors to the error tracker via `reportError(...)`, not to the logger, per [observability-guidelines › logging](../../observability-guidelines/references/logging.md).
+The logger has none of the stack traces, grouping, or alerting the error tracker provides, so an error routed to it is found only by someone already reading the logs.
 
 **Guidelines:**
 
@@ -42,7 +42,7 @@ This review focuses on critical-severity cases where the diff logs an error thro
 
 ## Log Hygiene
 
-This review focuses on critical-severity cases where a log line interpolates a secret (token, password, session ID, full request body). Cross-reference with [application-security-requirements › secret-handling](../../application-security-requirements/references/secret-handling.md).
+Log output is retained, indexed, and readable by far more people and systems than the code path that produced it, so a secret logged once is a secret widely distributed.
 
 **Guidelines:**
 
@@ -52,7 +52,7 @@ This review focuses on critical-severity cases where a log line interpolates a s
 
 ## Error Boundaries
 
-This review focuses on critical-severity cases where the diff modifies the project's last-resort/root error boundary to remove its error-reporting hook — that boundary is the final sink for otherwise-unhandled errors.
+Errors reaching the root boundary are precisely the ones nothing else caught, so its reporting hook is the difference between a recorded failure and a silent one.
 
 **Guidelines:**
 
@@ -65,7 +65,7 @@ This review focuses on critical-severity cases where the diff modifies the proje
 <!-- INIT:OPTIONAL key=ERROR_TRACKER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project's {{ERROR_TRACKER}} has no session replay or trace sampling, delete this section during INIT.*
 
-This review focuses on critical-severity cases where the diff lowers error-time session-replay capture below full sampling. Error-time replay is the most diagnostic signal.
+Sampling decisions are made before anyone knows which session will error, and a replay that was never captured cannot be reconstructed afterward.
 
 **Guidelines:**
 
@@ -74,7 +74,7 @@ This review focuses on critical-severity cases where the diff lowers error-time 
 
 ## Idempotency
 
-This review focuses on critical-severity cases where a new mutation handler is not idempotent (a retry produces a different result) and the caller (e.g., a data-layer write hook) does not handle the partial-failure case. Match the project's idempotent mutation handlers.
+Timeouts, retries, and impatient users mean every mutation handler eventually runs twice for a single intended action.
 
 **Guidelines:**
 

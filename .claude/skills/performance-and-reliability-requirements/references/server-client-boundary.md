@@ -4,7 +4,7 @@ Apply these rules to verify that server/client composition (where {{APP_FRAMEWOR
 
 ## Async Waterfalls
 
-This review focuses on major-severity cases where server-side code does `await getA()` followed by `await getB()` where `getB` does not depend on `getA`. Run independent async work concurrently (e.g., `Promise.all([getA(), getB()])`), or defer each unit so the consumer awaits it where the result is actually used.
+Sequential awaits make response time the sum of every operation's latency; concurrent execution makes it the slowest one.
 
 **Guidelines:**
 
@@ -17,7 +17,7 @@ This review focuses on major-severity cases where server-side code does `await g
 <!-- INIT:OPTIONAL key=REVIEW — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project's framework cannot stream or progressively render independent units, adapt this section to its lazy-loading mechanism during INIT.*
 
-This review focuses on major-severity cases where a single loading boundary wraps two independently-slow async units. Split into one boundary per slow unit so each can render/stream as it resolves.
+A loading boundary streams at the pace of the slowest thing inside it, so grouping independent units forces the fast one to wait for the slow one.
 
 **Guidelines:**
 
@@ -27,7 +27,7 @@ This review focuses on major-severity cases where a single loading boundary wrap
 
 ## Loading / Loaded Split
 
-This review focuses on major-severity cases where a new unit performs data fetching but is not split into a structure that separates the loading state, the loaded state, and the orchestrator when the loading state is user-visible.
+Mixing loading and loaded concerns in one unit couples the skeleton to data that does not exist yet, which is how skeletons quietly stop rendering before the fetch resolves.
 
 **Guidelines:**
 
@@ -37,7 +37,7 @@ This review focuses on major-severity cases where a new unit performs data fetch
 
 ## Client Promotion
 
-This review focuses on major-severity cases where the diff promotes a whole unit to the client tier when only a small interactive subtree needs to run on the client (e.g., one button). Extract the interactive part into its own client unit and keep the parent on the server tier.
+The client-tier boundary is transitive — a promoted unit carries every import beneath it — so one event handler can drag an entire subtree and its dependencies into the bundle.
 
 **Guidelines:**
 

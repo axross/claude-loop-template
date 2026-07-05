@@ -4,7 +4,7 @@ Apply these rules to verify images and other large assets are sized, formatted, 
 
 ## Optimized Image Pipeline Usage
 
-This review focuses on critical-severity cases where a new unit renders a raw, unoptimized image element for any image that comes from the data layer, a bundled/public asset, or a known external host. Use the framework's optimized image pipeline so the right size is served for the device.
+Images dominate page weight, and a raw image element ships one fixed file to every device regardless of viewport, pixel density, or format support.
 
 - Read intrinsic dimensions from the source (the data-layer record or static asset) where available, and fall back to the unoptimized path only when dimensions are unknown. Match the project's existing image-rendering pattern.
 
@@ -15,7 +15,7 @@ This review focuses on critical-severity cases where a new unit renders a raw, u
 
 ## Unoptimized-Path Discipline
 
-This review focuses on critical-severity cases where the unoptimized image path is used with a user-controlled URL whose host is not in the project's allowlist of permitted external image hosts. Cross-reference with [application-security-requirements › ssrf-and-embeds](../../application-security-requirements/references/ssrf-and-embeds.md).
+The unoptimized path skips the byte savings and the host-allowlist check at once, so reaching for it is a performance and a security decision in the same line.
 
 **Guidelines:**
 
@@ -24,7 +24,7 @@ This review focuses on critical-severity cases where the unoptimized image path 
 
 ## Loading and Priority
 
-This review focuses on major-severity cases where a new above-the-fold image is rendered without a priority hint or with lazy loading. Above-the-fold imagery should be prioritized.
+Loading hints tell the browser which bytes gate first paint, so a wrong hint either delays the largest visible element or spends bandwidth on imagery nobody has scrolled to.
 
 **Guidelines:**
 
@@ -36,7 +36,7 @@ This review focuses on major-severity cases where a new above-the-fold image is 
 <!-- INIT:OPTIONAL key=IMAGES — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project does not ingest user-uploaded images, delete this section during INIT.*
 
-This review focuses on major-severity cases where a new image-upload path is added without a configured output format (e.g., a modern compressed format) or without bounded resizing. Match the project's shared upload-processing helpers.
+Ingest is the single chance to bound an asset's lifetime cost — an original stored unconverted or unbounded is served at full size on every view thereafter.
 
 **Guidelines:**
 
@@ -46,7 +46,7 @@ This review focuses on major-severity cases where a new image-upload path is add
 
 ## External Image Host Allowlist
 
-This review focuses on critical-severity cases where a new permitted external image host uses a wildcard hostname or omits a path scope. Existing entries should be tightly scoped to specific hosts and path prefixes.
+Each allowlist entry authorizes the optimizer to fetch and process bytes from an external origin on demand, so entry breadth is attack surface and cost surface, not convenience.
 
 **Guidelines:**
 
@@ -58,7 +58,7 @@ This review focuses on critical-severity cases where a new permitted external im
 <!-- INIT:OPTIONAL key=IMAGES — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project does not run a server-side image-processing backend, delete this section during INIT.*
 
-This review focuses on critical-severity cases where the diff removes the image-processing backend the upload pipeline depends on — uploads would fall back to copying files unprocessed, breaking the format-conversion and resize pipeline.
+The processing backend fails soft: uploads keep succeeding while silently skipping conversion and resizing, so its loss shows up as slow pages rather than errors.
 
 **Guidelines:**
 

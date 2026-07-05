@@ -15,7 +15,7 @@ Any function that performs a server-side `fetch(url)` where `url` originates fro
 
 ## Image Optimization and Remote Hosts
 
-This review focuses on major-severity cases where a new entry in the config allowlist of external image/asset hosts uses a wildcard hostname or covers more than one origin. Allowlist entries should be tightly scoped to a single known origin.
+The image-host allowlist defines which external origins the server will fetch on a visitor's behalf, so a wildcard entry delegates that fetch capability to every host it matches.
 
 - A pre-existing optimized-image component may use an "unoptimized" escape hatch for an externally fetched image URL — flag a Critical only if the diff worsens this (e.g., promotes the image to an eagerly-preloaded position, or replaces the framework's `<Image>`-style component with a raw `<img>`).
 
@@ -26,7 +26,7 @@ This review focuses on major-severity cases where a new entry in the config allo
 
 ## Social-Preview / Sitemap / Robots
 
-This review focuses on critical-severity cases where a social-preview (OG) image route accepts a `src` query parameter that flows into `fetch(src)` without an allowlist. This is the canonical OG-image SSRF pattern.
+Metadata routes run server-side with no user session in front of them, which makes a fetched URL parameter an unauthenticated proxy into the server's network position.
 
 **Guidelines:**
 
@@ -35,7 +35,7 @@ This review focuses on critical-severity cases where a social-preview (OG) image
 
 ## CSRF on Mutation Endpoints
 
-This review focuses on major-severity cases where a new mutation handler (`POST`, `PUT`, `PATCH`, `DELETE`) does not check the `Origin` or `Sec-Fetch-Site` header for cross-site requests. Even idempotent endpoints (e.g., a cache-flush endpoint) can be abused cross-site.
+Browsers attach the victim's cookies to cross-site requests automatically, so an unprotected mutation endpoint can be driven by any page the victim merely visits.
 
 **Guidelines:**
 

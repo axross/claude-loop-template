@@ -7,7 +7,7 @@ Apply these rules when writing, reviewing, or modifying any code that emits log 
 
 ## When to Log
 
-When to Log describes the preferred project default: log the start and end of any operation that is slow, depends on an external system, or could fail (e.g., database queries, HTTP fetches, file or media processing).
+A log line pays off during an incident, when the question is which operation was in flight and how far it got — the operations that stall or fail are the ones worth bracketing.
 
 **Guidelines:**
 
@@ -17,7 +17,7 @@ When to Log describes the preferred project default: log the start and end of an
 
 ## Log Levels
 
-Log Levels describes the preferred project default: use `logger.info()` for informational messages that describe normal progress.
+Levels are the filter operators reach for under pressure, so a message at the wrong level is either noise burying a signal or a signal buried in noise.
 
 **Guidelines:**
 

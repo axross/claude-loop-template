@@ -4,7 +4,7 @@ Apply these rules to verify every untrusted input is validated and coerced befor
 
 ## Route Inputs (params, query params)
 
-Route Inputs review focuses on critical-severity cases where a route param or query param value reaches a data-layer query, a `fetch` URL, or a redirect target without an explicit type assertion or schema parse. The static type at the boundary lies — at runtime a query value could be `string | string[] | undefined`.
+Route and query params are the cheapest input an attacker controls — anyone crafts them in a URL — and the declared types at the boundary promise shapes the runtime never enforces.
 
 **Guidelines:**
 
@@ -14,7 +14,7 @@ Route Inputs review focuses on critical-severity cases where a route param or qu
 
 ## Server Actions and Request Handlers
 
-Server Actions and Request Handlers review focuses on critical-severity cases where a new request handler reads a JSON body, form data, or the request URL without a schema (or equivalent) validating the parsed shape before use.
+Request bodies and form data arrive from arbitrary clients, so the handler's parameter types describe intent, not what actually shows up at runtime.
 
 **Guidelines:**
 
@@ -24,7 +24,7 @@ Server Actions and Request Handlers review focuses on critical-severity cases wh
 
 ## Data Layer
 
-Data Layer review focuses on critical-severity cases where a new data-access function does not parse (or safe-parse) its result through the project's schema/validation library before returning. The project's pattern is to define a schema transform per record shape and parse before return.
+Stored records drift from the code's expectations — schema migrations, older writes, and hand-edited rows all produce shapes the static types no longer describe.
 
 **Guidelines:**
 
@@ -34,7 +34,7 @@ Data Layer review focuses on critical-severity cases where a new data-access fun
 
 ## Rendering Pipeline Inputs
 
-Rendering Pipeline Inputs review focuses on critical-severity cases where a new code path passes user-supplied content into a rendering pipeline (markdown/rich-text/HTML) without going through the sanctioned loader that the pipeline assumes its input came from. A pipeline that trusts its input source is unsafe if a new path feeds it arbitrary external content.
+The rendering pipeline's safety argument rests entirely on where its input comes from, so a new feed path invalidates that argument even when the pipeline code is untouched.
 
 **Guidelines:**
 
@@ -43,7 +43,7 @@ Rendering Pipeline Inputs review focuses on critical-severity cases where a new 
 
 ## File Uploads
 
-File Uploads review focuses on critical-severity cases where a new upload-accepting resource lacks a content-type (MIME) filter when it accepts user-uploaded files. The established upload resources restrict accepted types (e.g., `image/*`) — match the pattern.
+An uploaded file is attacker-controlled bytes the server stores and later serves back, so type and filename restrictions are what separate an image host from a malware host.
 
 **Guidelines:**
 
