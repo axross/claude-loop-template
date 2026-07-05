@@ -312,12 +312,16 @@ apply to the **skip** path.
   - replace the `@<maintainer>`, agent-comment-marker, and branch-prefix
     examples in `.claude/commands/address.md` with the project's real values
     per `github-operations`;
-  - replace the placeholder commands and toolchain setup in `merge-checks.yaml`
-    with the project's real lint/unit-test commands — `init.sh` does **not**
-    substitute tokens in YAML files, which is why they are prose placeholders.
+  - the `{{INSTALL_CMD}}` / `{{LINT_CMD}}` / `{{UNIT_TEST_CMD}}` run commands
+    in `merge-checks.yaml` are substituted by `./init.sh apply` like every
+    other token; only the toolchain setup (setup-node, `.nvmrc`, the npm
+    cache) is not a token — replace it with the project's own by hand.
     The template ships no `.nvmrc`: even a project keeping the npm-flavored
-    defaults must create one (or switch `setup-node` to `node-version:`), or
-    both jobs fail at Setup Node on every run.
+    setup must create one (or switch `setup-node` to `node-version:`), or
+    both jobs fail at Setup Node on every run. Note both jobs self-skip
+    their real steps (and pass) while `INIT.md` exists; deleting the INIT
+    tooling in Step 7 is what arms them, so a green Merge Checks before
+    that point does not mean lint/tests ran.
 - **No e2e framework** → delete `.claude/skills/e2e-testing-guidelines/` and
   its index row, then remove every inbound link to it:
   - `quality-assurance-guidelines/references/e2e-coverage.md` (delete the file)
@@ -467,13 +471,13 @@ Keep only the bindings for the agents named in Step 1.
 
 ### Completion checklist
 
-- [ ] No `{{` tokens remain in authored files (build/VCS dirs excluded):
-      `./init.sh check` (or `grep -rn '{{' . --exclude-dir=node_modules
-      --exclude-dir=.next --exclude-dir=.git --exclude-dir=.github`). The
-      `.github/` exclusion matters when the independent-review workflows are
-      kept: GitHub Actions `${{ ... }}` expressions match the grep but are not
-      template tokens (`./init.sh check` already excludes `.github/` for the
-      same reason).
+- [ ] No `{{TOKEN}}`s remain in authored files (build/VCS dirs excluded):
+      `./init.sh check` (or `grep -rnE '\{\{[A-Z][A-Z0-9_]*\}\}' .
+      --exclude-dir=node_modules --exclude-dir=.next --exclude-dir=.git`).
+      The uppercase-token pattern matters when the independent-review
+      workflows are kept: GitHub Actions `${{ ... }}` expressions contain
+      `{{` but are lowercase, so they never match, while leftover tokens in
+      `.github/` (e.g. `merge-checks.yaml`'s run commands) are caught.
 - [ ] No `<!-- INIT… -->` markers remain — neither `INIT:OPTIONAL` capability
       markers nor `INIT:` fill-in comments: `grep -rn '<!-- INIT' .`
 - [ ] No dangling relative skill links: `python3 tools/check-links.py` (checks
@@ -490,6 +494,9 @@ Keep only the bindings for the agents named in Step 1.
       "observability" when `observability-guidelines` was deleted).
 - [ ] Added capabilities have a working command (the `check.sh` / `format.sh`
       hooks actually run).
+- [ ] If `merge-checks.yaml` was kept: its jobs actually run the lint/test
+      steps instead of skipping them — the guard steps disarm once `INIT.md`
+      is deleted, so check a post-INIT run's log shows the steps executing.
 - [ ] Harness binding for each Step-1 agent is filled in and runnable.
 - [ ] A `.gitignore` excludes `settings.local.json` and `.env.local` (or the
       project's equivalent local-state/secret files).

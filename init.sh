@@ -90,7 +90,7 @@ for dirpath, dirnames, filenames in os.walk("."):
     for fn in filenames:
         if fn in SKIP_FILES:
             continue
-        if not fn.endswith((".md", ".sh", ".json")):
+        if not fn.endswith((".md", ".sh", ".json", ".yaml", ".yml")):
             continue
         path = os.path.join(dirpath, fn)
         src = open(path, encoding="utf-8").read()
@@ -106,10 +106,14 @@ PY
 
   check)
     echo "== Gate: any {{TOKEN}} left in authored files? =="
-    if grep -rn '{{' . \
+    # Match the UPPER_CASE token shape (digits included: E2E_TEST_CMD), not
+    # bare '{{': GitHub Actions ${{ ... }} expressions in .github/ contain
+    # '{{' but are lowercase, so workflows can be scanned for leftover tokens
+    # without false positives.
+    if grep -rnE '\{\{[A-Z][A-Z0-9_]*\}\}' . \
         --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=.next \
         --exclude-dir=dist --exclude-dir=build --exclude-dir=out \
-        --exclude-dir=coverage --exclude-dir=tools --exclude-dir=.github \
+        --exclude-dir=coverage --exclude-dir=tools \
         --exclude=tokens.json --exclude=init.values.json --exclude=init.sh \
         --exclude=INIT.md --exclude=README.md 2>/dev/null; then
       echo "  ^ tokens remain — fill them or remove the owning section."
