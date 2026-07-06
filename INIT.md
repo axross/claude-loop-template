@@ -66,56 +66,130 @@ If the repository is empty/new, there is nothing to reconcile — continue.
 
 ## Step 1 — Interview the user (REQUIRED, do this first)
 
-You MUST ask the user the following before editing any file. Ask them together
-(grouped), accept partial answers, and infer sensible defaults only for what the
-user leaves unspecified — but never invent the project's goal or kind.
+You MUST ask the user the questions below before editing any file. Ask them
+together, grouped by sub-step, and batch related questions rather than
+dribbling them out over many rounds. The interview is strict:
 
-1. **Project kind.** What kind of project is this — a web app, mobile app, CLI,
-   library, backend service, desktop app, something else? Does it have a
-   user-facing UI surface?
-2. **Always-present tooling.** Which does the project use for each of:
-   - **App framework / runtime** (e.g. Next.js, React Native, Express, none)
+- MUST ask every area that applies to the project. Each area lists concrete
+  example options — offer them, but accept any answer.
+- MUST NOT infer a default for an area the user has not answered. If the user
+  explicitly delegates an area ("your pick", "whatever is standard"), choose a
+  sensible option and record it as a stated assumption — delegation is an
+  answer; silence is not.
+- MUST NOT invent the project's goal or kind under any circumstances.
+- MUST record every answer — including delegated picks and "not applicable" —
+  in the **Stack Decision Record** (end of this step) before starting Step 2.
+- SHOULD skip asking an area whose applicability condition clearly fails
+  (e.g. styling for a headless REST API), recording it as not applicable.
+
+### 1a — Project identity
+
+1. **Project overview.** In one or two sentences, what is the project's
+   purpose / goal / what it is? (This becomes the Project Overview in
+   `AGENTS.md`.)
+2. **Application type.** What kind of project is this?
+   - Web client / full-stack web app
+   - Mobile app
+   - Server (RESTful API, GraphQL, WebSocket, …)
+   - CLI, library, desktop app, something else
+
+   Does it have a user-facing UI surface?
+
+### 1b — Core toolchain (always present)
+
+3. **Always-present tooling.** Which does the project use for each of:
+   - **App framework / runtime** — examples per application type: web
+     (Next.js, Remix, …), mobile (Expo, Flutter, …), server (Hono, NestJS,
+     Apollo, Express, …), or `none (plain runtime)`
+   - **Primary language** (e.g. TypeScript, Python, Go)
+   - **Package manager** (e.g. npm, pnpm, yarn, bun, pip)
    - **Linter** (e.g. Biome, ESLint, Ruff)
    - **Formatter** (e.g. Biome, Prettier, gofmt). If the project has **no
      dedicated formatter** (a default `create-next-app`, for example, ships
      ESLint but no Prettier), say so — see Step 3 for how to handle it.
-   - **Package manager** (e.g. npm, pnpm, yarn, bun, pip)
-   - **Primary language** (e.g. TypeScript, Python, Go)
-3. **Optional capabilities — for each, decide _have / add / skip_.** Do **not**
-   assume these exist. A freshly scaffolded app usually has none of them, so the
-   honest default is often "add" or "skip", not "delete". For each one ask: does
-   the project already have it, do you want to **add** it now (and with which
-   tool), or skip it?
-   - **Unit tests** (e.g. Vitest, Jest, pytest)
-   - **E2E tests** (e.g. Playwright, Cypress, Detox)
-   - **E2E scenario coverage** (a journey-catalog coverage metric over the e2e suite — which user journeys the tests assert; requires E2E tests)
-   - **Error tracker** (e.g. Sentry, Rollbar)
-   - **Structured logger** (e.g. Pino, Winston)
-   - **Data / content layer** (e.g. Prisma, Drizzle, Payload CMS, a REST API)
-   - **Hosting platform** (e.g. Vercel, AWS, Fly.io)
-   - **GitHub operations** (agents read/write GitHub through a proxied single-operator identity, e.g. Claude Code + GitHub MCP)
-   - **Independent review channel** (a posted-review policy `REVIEW.md` plus a CI reviewer, a local review command, and an end-to-end delivery loop, e.g. GitHub Actions + Claude Code; requires GitHub operations)
 
-   Record each as **have**, **add → _tool_**, or **skip**. This single answer
-   drives both the token fill (Step 3) and the keep-or-delete decision for every
-   `<!-- INIT:OPTIONAL -->` section (Step 4): **have** and **add** keep the
-   section (fill the token; **add** also scaffolds the tool in Step 5); **skip**
-   deletes it — or, for infrastructure the project will plausibly add later,
-   marks it **dormant** (see Step 4). (Not every marked section has a token:
-   GitHub operations, the independent review channel, and E2E scenario coverage
-   have Step-4 bullets instead of a token fill, and a few smaller marked
-   sections — typed-language type safety, the unit-coverage gate, the
-   backend/API test helpers — carry their keep-or-delete instruction in the
-   marker itself. The Step-4 grep walk resolves them all; decide the smaller
-   ones from the project's own shape rather than a Step-1 answer.)
-4. **Rough picture.** In one or two sentences, what is the project's goal /
-   overview? (This becomes the Project Overview in `AGENTS.md`.)
-5. **Which agents** will use this repo (Claude Code, Cursor, Copilot, others)?
-   This decides which harness bindings to keep (see Step 6).
+### 1c — Architecture & structure
+
+These answers fill no `{{TOKEN}}`; they live in the Stack Decision Record and
+are consumed by Step 2 (Project Overview) and Step 5 (the structure /
+component / UI-design skills). Ask each area that applies:
+
+4. **Directory structure** (worth deciding early, especially for smaller
+   apps):
+   - by feature (domain A, domain B, …)
+   - by purpose/type (components, hooks, persistence, …)
+5. **Business-logic structure:**
+   - React hooks and context-based
+   - Bloc (or a similar event/state pattern)
+   - Clean Architecture model-based
+   - none / ad-hoc
+6. **State management** *(if the app holds client-side or shared state)*:
+   - client state (e.g. Zustand, Jotai, Redux)
+   - server cache (e.g. TanStack Query, Apollo Client)
+   - Bloc, or another pattern-supplied store
+7. **Interface / validation & sanitization** *(if the project parses external
+   input — API payloads, forms, env)*: zod, valibot, …
+8. **Styling** *(if the project renders UI)*: CSS Modules, Tailwind, Emotion, …
+9. **Theming** *(if the project renders UI)*: CSS variables + Radix color
+   system, React Native Unistyles, …
+10. **Base component library** *(if the project renders UI)*: Base UI,
+    Radix UI, none (hand-rolled), …
+
+### 1d — Optional capabilities
+
+11. **For each, decide _have / add / skip_.** Do **not**
+    assume these exist. A freshly scaffolded app usually has none of them, so
+    the honest default is often "add" or "skip", not "delete". For each one
+    ask: does the project already have it, do you want to **add** it now, or
+    skip it? For **have** and **add**, the answer MUST name the tool — "we
+    have unit tests" without a framework name is not a recorded decision.
+    - **Unit tests** (e.g. Vitest, Jest, pytest)
+    - **E2E tests** (e.g. Playwright, Cypress, Detox, Maestro)
+    - **E2E scenario coverage** (a journey-catalog coverage metric over the e2e suite — which user journeys the tests assert; requires E2E tests)
+    - **Error tracker** (e.g. Sentry, Rollbar)
+    - **Structured logger** (e.g. Pino, Winston)
+    - **Data / content layer** (e.g. Prisma, Drizzle, Payload CMS, a REST API)
+    - **Hosting platform** (e.g. Vercel, AWS, Fly.io)
+    - **GitHub operations** (agents read/write GitHub through a proxied single-operator identity, e.g. Claude Code + GitHub MCP)
+    - **Independent review channel** (a posted-review policy `REVIEW.md` plus a CI reviewer, a local review command, and an end-to-end delivery loop, e.g. GitHub Actions + Claude Code; requires GitHub operations)
+
+    Record each as **have → _tool_**, **add → _tool_**, or **skip**. This
+    single answer drives both the token fill (Step 3) and the keep-or-delete
+    decision for every `<!-- INIT:OPTIONAL -->` section (Step 4): **have** and
+    **add** keep the section (fill the token; **add** also scaffolds the tool
+    in Step 5); **skip** deletes it — or, for infrastructure the project will
+    plausibly add later, marks it **dormant** (see Step 4). (Not every marked
+    section has a token: GitHub operations, the independent review channel,
+    and E2E scenario coverage have Step-4 bullets instead of a token fill, and
+    a few smaller marked sections — typed-language type safety, the
+    unit-coverage gate, the backend/API test helpers — carry their
+    keep-or-delete instruction in the marker itself. The Step-4 grep walk
+    resolves them all; decide the smaller ones from the project's own shape
+    rather than a Step-1 answer.)
+
+### 1e — Agents
+
+12. **Which agents** will use this repo (Claude Code, Cursor, Copilot,
+    others)? This decides which harness bindings to keep (see Step 6).
+
+### Stack Decision Record
+
+Collect every 1a–1e answer into one table — the Stack Decision Record — and
+keep it for the rest of the INIT run: Step 2 (Project Overview), Step 3 (token
+fill), Step 4 (optional-capability resolution), and Step 5 (project-specific
+skills) all consume it. `Source` is one of `answered`, `delegated
+(assumption)`, or `not applicable`:
+
+| Area | Decision | Source |
+| ---- | -------- | ------ |
+| Application type | full-stack web app | answered |
+| State management | Zustand | delegated (assumption) |
+| Theming | — (headless REST API) | not applicable |
 
 If the project already has a manifest/lockfile/config, you SHOULD read it to
-confirm the answers instead of relying solely on the user. **Prefer adding a
-missing capability over silently dropping it** — deleting a whole testing or
+confirm the answers instead of relying solely on the user — confirmation
+supplements the interview; it never replaces asking. **Prefer adding a missing
+capability over silently dropping it** — deleting a whole testing or
 observability skill should be a deliberate choice the user made, not a default.
 
 ---
@@ -123,15 +197,17 @@ observability skill should be a deliberate choice the user made, not a default.
 ## Step 2 — Fill the Project Overview
 
 In `AGENTS.md`, replace the `## Project Overview` placeholder block with a short,
-durable description built from the Step 1 answers. Keep it to a few bullets;
-deep layout detail belongs in a project-specific structure skill (Step 5), not
-here. Remove the top-of-file "Template note" blockquote.
+durable description built from the Stack Decision Record (Step 1). Keep it to a
+few bullets; deep layout detail — and the 1c architecture decisions — belongs
+in a project-specific structure skill (Step 5), not here. Remove the
+top-of-file "Template note" blockquote.
 
 ---
 
 ## Step 3 — Replace the placeholder tokens
 
-Every `{{TOKEN}}` maps to a Step 1 answer. Replace ALL occurrences across
+Every `{{TOKEN}}` maps to a Stack Decision Record entry (Step 1). Replace ALL
+occurrences across
 `AGENTS.md` and `.claude/**`. The table below is the
 complete set used by the template (also machine-readable in `tokens.json`). Each
 row gives several example values across different stacks so the substitution is
@@ -428,9 +504,13 @@ reference — section-by-section skeletons for the skills below. Common ones to
 add:
 
 - **Project Structure** — repository layout, stack, services, file placement.
-  Create this first; `AGENTS.md` already points at it.
+  Create this first; `AGENTS.md` already points at it. Its Stack section MUST
+  record the Stack Decision Record's directory-structure, business-logic
+  structure, state-management, and validation/sanitization decisions (1c).
 - **Component / UI skills** — if the project has a UI (component conventions,
-  styling, UI design principles, accessibility).
+  styling, UI design principles, accessibility). These MUST record the Stack
+  Decision Record's base-component-library, styling, and theming decisions
+  (1c).
 - **Routing** — if the project has a routing layer.
 - **Domain skills** — content authoring, data-model/CMS operations, or any
   domain workflow specific to this project.
