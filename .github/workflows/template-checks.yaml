@@ -1,0 +1,31 @@
+name: Template Checks
+
+# The TEMPLATE REPOSITORY's own CI — not part of any adapted project's CI.
+# Keeps the template's cross-linked skill tree honest by running the
+# relative-link checker on every change.
+#
+# tools/check-links.py is INIT-time tooling: adapted projects delete it in
+# INIT Step 7 together with INIT.md, init.sh, and tokens.json — and delete
+# THIS WORKFLOW FILE with it. Nothing here is meant to survive adaptation.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  docs:
+    name: Docs Link Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check Relative Links
+        run: python3 tools/check-links.py

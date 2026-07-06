@@ -14,13 +14,14 @@ library, or service — and any agent — Claude Code, Cursor, Copilot, and othe
 ├── INIT.md                  # how to adapt this template (start here)
 ├── init.sh                  # metacharacter-safe {{TOKEN}} substitution + gates
 ├── tokens.json              # machine-readable manifest of every {{TOKEN}}
-├── tools/check-links.py     # relative-link integrity (descends the .claude/ dot-dir)
+├── tools/check-links.py     # relative-link integrity (INIT tooling; deleted during INIT)
 ├── .gitignore               # ignores settings.local.json + .env.local (see INIT Step 6)
 ├── AGENTS.md                # master routing index + working agreement (universal)
 ├── CLAUDE.md                # @AGENTS.md — Claude Code's binding to AGENTS.md
 ├── REVIEW.md                # optional: posted-review policy for the independent-review capability
 ├── .github/
-│   └── workflows/           # optional: example CI reviewer + merge checks (GitHub Actions + Claude Code)
+│   └── workflows/           # optional: example CI reviewer + merge checks (GitHub Actions + Claude Code);
+│                            # plus template-checks.yaml, this repo's own link-check CI (deleted during INIT)
 └── .claude/
     ├── commands/            # optional: /review + /address entry points (Claude Code examples)
     ├── skills/              # the generic, cross-project skill core (12 skills)
