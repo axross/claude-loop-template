@@ -70,8 +70,8 @@ Step 4 covers both paths.
    and ask it to "run INIT". INIT reconciles any files a scaffold already
    generated (e.g. an existing `AGENTS.md`), interviews you about the project
    kind, frameworks, architecture (directory structure, business-logic
-   structure, state management, styling, theming), and goal, then fills the
-   `{{TOKENS}}` via `./init.sh`. For
+   structure, state management, database layer, styling, theming), and goal,
+   then fills the `{{TOKENS}}` via `./init.sh`. For
    each optional capability — unit tests, e2e, observability — it asks whether to
    **add** it (and with which tool) or skip it, rather than assuming it should be
    deleted, and it adds project-specific skills.

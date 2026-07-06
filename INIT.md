@@ -127,17 +127,25 @@ component / UI-design skills). Ask each area that applies:
    - client state (e.g. Zustand, Jotai, Redux)
    - server cache (e.g. TanStack Query, Apollo Client)
    - Bloc, or another pattern-supplied store
-7. **Interface / validation & sanitization** *(if the project parses external
+7. **Database layer** *(if the app persists data — mobile and
+   server/full-stack apps especially)*: PostgreSQL, MySQL, Firebase
+   Firestore, libSQL/SQLite, … Whether the project has, adds, or skips a
+   data/content layer at all is decided in 1d; this records *which* engine.
+8. **ORM / db-wrapper library** *(if the app persists data and a database
+   layer was picked in item 7 — mobile and server/full-stack apps
+   especially)*: Drizzle, Prisma, … — or none (raw driver/SQL).
+9. **Interface / validation & sanitization** *(if the project parses external
    input — API payloads, forms, env)*: zod, valibot, …
-8. **Styling** *(if the project renders UI)*: CSS Modules, Tailwind, Emotion, …
-9. **Theming** *(if the project renders UI)*: CSS variables + Radix color
-   system, React Native Unistyles, …
-10. **Base component library** *(if the project renders UI)*: Base UI,
+10. **Styling** *(if the project renders UI)*: CSS Modules, Tailwind,
+    Emotion, …
+11. **Theming** *(if the project renders UI)*: CSS variables + Radix color
+    system, React Native Unistyles, …
+12. **Base component library** *(if the project renders UI)*: Base UI,
     Radix UI, none (hand-rolled), …
 
 ### 1d — Optional capabilities
 
-11. **For each, decide _have / add / skip_.** Do **not**
+13. **For each, decide _have / add / skip_.** Do **not**
     assume these exist. A freshly scaffolded app usually has none of them, so
     the honest default is often "add" or "skip", not "delete". For each one
     ask: does the project already have it, do you want to **add** it now, or
@@ -148,7 +156,7 @@ component / UI-design skills). Ask each area that applies:
     - **E2E scenario coverage** (a journey-catalog coverage metric over the e2e suite — which user journeys the tests assert; requires E2E tests)
     - **Error tracker** (e.g. Sentry, Rollbar)
     - **Structured logger** (e.g. Pino, Winston)
-    - **Data / content layer** (e.g. Prisma, Drizzle, Payload CMS, a REST API)
+    - **Data / content layer** (e.g. Prisma, Drizzle, Payload CMS, a REST API — the engine and ORM/wrapper picked in 1c, when the project has one)
     - **Hosting platform** (e.g. Vercel, AWS, Fly.io)
     - **GitHub operations** (agents read/write GitHub through a proxied single-operator identity, e.g. Claude Code + GitHub MCP)
     - **Independent review channel** (a posted-review policy `REVIEW.md` plus a CI reviewer, a local review command, and an end-to-end delivery loop, e.g. GitHub Actions + Claude Code; requires GitHub operations)
@@ -169,7 +177,7 @@ component / UI-design skills). Ask each area that applies:
 
 ### 1e — Agents
 
-12. **Which agents** will use this repo (Claude Code, Cursor, Copilot,
+14. **Which agents** will use this repo (Claude Code, Cursor, Copilot,
     others)? This decides which harness bindings to keep (see Step 6).
 
 ### Stack Decision Record
@@ -506,7 +514,8 @@ add:
 - **Project Structure** — repository layout, stack, services, file placement.
   Create this first; `AGENTS.md` already points at it. Its Stack section MUST
   record the Stack Decision Record's directory-structure, business-logic
-  structure, state-management, and validation/sanitization decisions (1c).
+  structure, state-management, database-engine, ORM/db-wrapper, and
+  validation/sanitization decisions (1c).
 - **Component / UI skills** — if the project has a UI (component conventions,
   styling, UI design principles, accessibility). These MUST record the Stack
   Decision Record's base-component-library, styling, and theming decisions

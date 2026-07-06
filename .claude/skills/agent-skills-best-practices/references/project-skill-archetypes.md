@@ -20,7 +20,7 @@ A structure skill is a map, not a rulebook: the stack facts an agent needs befor
 **Skeleton:**
 
 1. Opening paragraph: what the project is, plus the neighbor-ownership sentence.
-2. **Stack** — factual bullets: runtime/framework, language, package manager, lint/format tooling, test tooling, directory-structure convention, business-logic structure, state-management and validation libraries, styling approach.
+2. **Stack** — factual bullets: runtime/framework, language, package manager, lint/format tooling, test tooling, directory-structure convention, business-logic structure, state-management and validation libraries, database engine and ORM/db-wrapper, styling approach.
 3. **Top-level layout** — a `| Path | Owns |` table covering every directory an agent will touch.
 4. **File placement** — guideline bullets for where each kind of new file goes.
 
