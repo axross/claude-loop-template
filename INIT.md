@@ -131,8 +131,9 @@ component / UI-design skills). Ask each area that applies:
    server/full-stack apps especially)*: PostgreSQL, MySQL, Firebase
    Firestore, libSQL/SQLite, … Whether the project has, adds, or skips a
    data/content layer at all is decided in 1d; this records *which* engine.
-8. **ORM / db-wrapper library** *(if the project has a database layer)*:
-   Drizzle, Prisma, … — or none (raw driver/SQL).
+8. **ORM / db-wrapper library** *(if the app persists data and a database
+   layer was picked in item 7 — mobile and server/full-stack apps
+   especially)*: Drizzle, Prisma, … — or none (raw driver/SQL).
 9. **Interface / validation & sanitization** *(if the project parses external
    input — API payloads, forms, env)*: zod, valibot, …
 10. **Styling** *(if the project renders UI)*: CSS Modules, Tailwind,
