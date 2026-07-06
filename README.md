@@ -69,7 +69,9 @@ Step 4 covers both paths.
 2. Open **[INIT.md](./INIT.md)** and follow it — or hand the repo to an AI agent
    and ask it to "run INIT". INIT reconciles any files a scaffold already
    generated (e.g. an existing `AGENTS.md`), interviews you about the project
-   kind, frameworks, and goal, then fills the `{{TOKENS}}` via `./init.sh`. For
+   kind, frameworks, architecture (directory structure, business-logic
+   structure, state management, styling, theming), and goal, then fills the
+   `{{TOKENS}}` via `./init.sh`. For
    each optional capability — unit tests, e2e, observability — it asks whether to
    **add** it (and with which tool) or skip it, rather than assuming it should be
    deleted, and it adds project-specific skills.
