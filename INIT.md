@@ -140,7 +140,7 @@ component / UI-design skills). Ask each area that applies:
     Emotion, …
 11. **Theming** *(if the project renders UI)*: CSS variables + Radix color
     system, React Native Unistyles, …
-12. **Base component library** *(if the project renders UI)*: Base UI,
+12. **Headless component library** *(if the project renders UI)*: Base UI,
     Radix UI, none (hand-rolled), …
 
 ### 1d — Optional capabilities
@@ -518,7 +518,7 @@ add:
   validation/sanitization decisions (1c).
 - **Component / UI skills** — if the project has a UI (component conventions,
   styling, UI design principles, accessibility). These MUST record the Stack
-  Decision Record's base-component-library, styling, and theming decisions
+  Decision Record's headless-component-library, styling, and theming decisions
   (1c).
 - **Routing** — if the project has a routing layer.
 - **Domain skills** — content authoring, data-model/CMS operations, or any
