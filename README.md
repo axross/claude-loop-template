@@ -3,9 +3,9 @@
 A reusable, **framework-agnostic** and **AI-agent-agnostic** starting point for
 giving coding agents a structured working agreement and a library of skills.
 
-It is extracted from a production setup and stripped of all stack-specific
-detail, leaving a generic core you adapt to any project — web, mobile, CLI,
-library, or service — and any agent — Claude Code, Cursor, Copilot, and others.
+It is extracted from a production setup and stripped of stack-specific detail,
+leaving a generic core you adapt to any project — web, mobile, CLI, library, or
+service — and any agent — Claude Code, Cursor, Copilot, and others.
 
 ## What's inside
 
@@ -37,8 +37,9 @@ library, or service — and any agent — Claude Code, Cursor, Copilot, and othe
     │   ├── product-requirement-guidelines/
     │   ├── quality-assurance-guidelines/
     │   └── unit-test-guidelines/
-    ├── hooks/               # example Claude Code harness binding (session-start, format, check)
-    └── settings.json        # wires the SessionStart hook
+    ├── hooks/               # session-start (always on), format + check (opt-in)
+    ├── settings.json        # wires the SessionStart hook (always on)
+    └── settings.local-example.json  # opt-in: copied to settings.local.json (by session-start) to wire format + check
 ```
 
 The skill core covers cross-project workflow: how to author skills, frame
@@ -59,8 +60,8 @@ Step 4 covers both paths.
   working agreement (plan → implement → self-review → verify → report).
 - **`.claude/skills/**`** hold the detailed, progressively-disclosed rules each
   index entry routes to.
-- **Bindings** connect a specific agent to `AGENTS.md`: `CLAUDE.md` + `.claude/`
-  for Claude Code; an equivalent rules file for other agents.
+- **Bindings** connect a specific agent to `AGENTS.md`: `CLAUDE.md` plus
+  `.claude/` for Claude Code; an equivalent rules file for other agents.
 
 ## Getting started
 
@@ -68,12 +69,12 @@ Step 4 covers both paths.
 2. Open **[INIT.md](./INIT.md)** and follow it — or hand the repo to an AI agent
    and ask it to "run INIT". INIT reconciles any files a scaffold already
    generated (e.g. an existing `AGENTS.md`), interviews you about the project
-   kind, frameworks, and goal, then fills the `{{TOKENS}}` (via `./init.sh`).
-   For each optional capability — unit tests, e2e, observability — it asks
-   whether to **add** it (and with which tool) or skip it, rather than assuming
-   it should be deleted, and adds project-specific skills.
-3. Delete `INIT.md` and this `README.md` (or rewrite it for your project) when
-   adaptation is complete.
+   kind, frameworks, and goal, then fills the `{{TOKENS}}` via `./init.sh`. For
+   each optional capability — unit tests, e2e, observability — it asks whether to
+   **add** it (and with which tool) or skip it, rather than assuming it should be
+   deleted, and it adds project-specific skills.
+3. When adaptation is complete, delete `INIT.md` and this `README.md` (or rewrite
+   the README for your project).
 
 Placeholders use the `{{TOKEN}}` convention so they are easy to find and replace;
 the full token list lives in [INIT.md](./INIT.md).
