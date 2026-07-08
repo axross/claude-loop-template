@@ -81,8 +81,8 @@ it rather than cloning it.
      to copy by hand. Skip to step 2.
    - **Existing repository** — copy the template's files into it: the
      adaptation tooling (`INIT.md`, `init.sh`, `tokens.json`), the working
-     agreement and skills (`AGENTS.md`, `CLAUDE.md`, `.claude/`), and the
-     optional `.github/` and `REVIEW.md`.
+     agreement, skills, and ignore rules (`AGENTS.md`, `CLAUDE.md`, `.claude/`,
+     `.gitignore`), and the optional `.github/` and `REVIEW.md`.
 2. Open **[INIT.md](./INIT.md)** and follow it — or hand the repo to Claude Code
    and ask it to "run INIT". INIT reconciles any files a scaffold already
    generated (e.g. an existing `AGENTS.md`), interviews you about the project
