@@ -72,4 +72,5 @@ Create a single comprehensive markdown document in a working location outside th
 Wrap-up runs into ambiguity of its own: an unclear argument, uncertainty about which artifacts belong to the work, or doubt about whether a to-do was actually completed.
 
 - MUST route every such decision through the harness's dedicated question tool (in Claude Code, `AskUserQuestion`): frame it as 2–4 concrete options, mark the default you would otherwise take as recommended, and use the answer inline.
+- MUST, if the question tool errors (or a synchronous answer is otherwise unavailable), re-present the decision in plain text — the question and its options with the recommended default marked — and call `AskUserQuestion` again, holding for the human. Do not route around the human or end wrap-up as blocked; a closed or errored stream means *re-present and wait* — the same asking-behavior as [`/address`](./address.md#asking-the-human).
 - MUST NOT proceed on an unstated assumption when the session's own history plus local investigation cannot settle the question.
