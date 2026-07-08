@@ -1,7 +1,8 @@
 # AGENTS.md
 
-> **Template note.** This file is a reusable, framework-agnostic and
-> agent-agnostic starting point. Before using it in a real project, run the
+> **Template note.** This file is a reusable, framework-agnostic starting
+> point — the working agreement and skill index a Claude Code project loads
+> through `CLAUDE.md`. Before using it in a real project, run the
 > adaptation pass described in [INIT.md](./INIT.md): fill in the `{{...}}` tokens,
 > complete the Project Overview, resolve each optional capability (add the tool
 > or remove its skill — don't assume deletion), and add project-specific skills
