@@ -13,7 +13,7 @@ Make all GitHub reads and writes per [GitHub Operations](../skills/github-operat
 
 ## Execution Model
 
-You are the only long-lived actor. Advance the work as far as you can autonomously, and stop the turn whenever the next step needs a human. Two — and only two — kinds of thing resume a stopped run:
+You are the only long-lived actor. Advance the work as far as you can autonomously, and stop the turn whenever the next step needs a human. (A fresh-session take-over is not a resume — it *creates* a run from a handoff package, then follows this same model; see [Take Over a Handoff](#take-over-a-handoff).) Two — and only two — kinds of thing resume a stopped run:
 
 - **A machine event that completes on its own** — CI, or the independent review this flow requests (see [Independent Review](#phase-3--request-independent-review)). Schedule your own wake-up where the harness provides one (in Claude Code, `send_later`) and poll until it resolves (see [CI and Review Tail](#ci-and-review-tail)).
 - **A human decision — a Phase 1 Must-ask, plan approval, an ambiguous finding, or a conflict judgment call:** ask it through the dedicated question UI and use the answer inline (see [Asking the Human](#asking-the-human)). When a synchronous answer can't be obtained (the question tool errors, or a headless run has no human to answer), or when a machine event is stuck, post your state, **end the turn**, and wait at zero cost; the human resumes by sending **`/address continue`** in this same session.
@@ -26,11 +26,11 @@ You are the only long-lived actor. Advance the work as far as you can autonomous
 
 ## Asking the Human
 
-Every human-gated **decision** in this flow — a Phase 1 Must-ask, plan approval under `--review-plan`, an ambiguous review finding, or a conflict-resolution judgment call — is asked through the harness's dedicated question tool where the session supports it (in Claude Code, **`AskUserQuestion`**): it renders your options as selectable choices in the chat and returns the answer inline, so the run continues in the same turn instead of ending and waiting for `/address continue`.
+Every human-gated **decision** in this flow — a Phase 1 Must-ask, plan approval under `--review-plan`, an ambiguous review finding, a conflict-resolution judgment call, or a take-over decision (which package, a zip↔inventory mismatch, a diverged precondition) — is asked through the harness's dedicated question tool where the session supports it (in Claude Code, **`AskUserQuestion`**): it renders your options as selectable choices in the chat and returns the answer inline, so the run continues in the same turn instead of ending and waiting for `/address continue`.
 
 - MUST prefer the question tool when it is available: frame the decision as concrete options (2–4), state the **default you would otherwise take** and mark it recommended, and rely on the tool's built-in "Other" choice for anything unanticipated. Never bury a decision in prose or silently assume an answer.
 - A closed or errored question tool is **not proof the surface lacks the UI**. On a remote or cloud session the permission stream can close **transiently** — no client was synchronously attached at that instant — even though the human is reachable and will answer on a later turn (the async `send_later` / `/address continue` model this flow assumes elsewhere). The harness returns the *same* error for that transient case and for a genuinely headless run with no human, so you **cannot tell them apart from the error alone**: MUST NOT diagnose the surface, or assert the UI is unavailable, from a single stream-close.
-- MUST, when the question tool errors (or a synchronous answer is otherwise unavailable), fall back to a marked GitHub comment that @mentions `@<maintainer>` and then **end the turn**. Frame it as **"couldn't get a synchronous answer — decision recorded here"**, NOT as a claim about what the surface can or cannot render. The comment is a durable breadcrumb `/address continue` resumes from, so the run never stalls.
+- MUST, when the question tool errors (or a synchronous answer is otherwise unavailable), fall back to a marked GitHub comment that @mentions `@<maintainer>` and then **end the turn**. Frame it as **"couldn't get a synchronous answer — decision recorded here"**, NOT as a claim about what the surface can or cannot render. The comment is a durable breadcrumb `/address continue` resumes from, so the run never stalls. Exception: a pre-anchor take-over question (no issue or pull request exists yet, so there is no GitHub thread to write the breadcrumb to) — state the open question in the turn output, end the turn, and wait in-session instead.
 - MUST make the fallback comment offer the **same options, in the same order, with the same recommended default** as the `AskUserQuestion` call. Numbering that drifts between the two channels would map a bare answer token (e.g. `2`) to a different branch with no error — so mirror the UI ask exactly.
 - MUST, on the next turn, treat a bare answer token — an option number, an option label, or free-form "Other" text — as answering the **still-open** question: reconcile it against the options recorded in the fallback comment and continue from that choice, rather than restarting or re-asking.
 - MUST keep the pinned status comment current with any open question, so a reclaimed session recovers it regardless of which channel asked.
@@ -45,12 +45,15 @@ Resolve `$ARGUMENTS` first, then enter the matching phase.
 | Issue number / URL | Plan and deliver the issue | Plan |
 | Pull request number / URL | Resume delivery of an open pull request | Address / tail |
 | Free-form prompt | Ad-hoc task with no issue yet | Open a tracking issue, then Plan |
-| `continue` | Resume the paused run in this session — or, in a fresh-context session with a `/handoff` package, take over that work | Reconstruct state, re-enter the pending step — or [Take Over a Handoff](#take-over-a-handoff) |
+| `continue` (bare token) | Resume the in-session run — or, when there is none, take over a human-provided `/handoff` package | Three-way precedence below: resume, [Take Over a Handoff](#take-over-a-handoff), or ask |
 | `--review-plan` (flag) | Add a human approval gate after Plan | Modifier on any of the above |
 
 - For a free-form prompt, open a tracking issue capturing the request before planning, so the run is issue-anchored and `/address continue` can reconstruct it.
-- For `continue`, decide first which resume this is. When this session holds a paused `/address` run (or its pinned status comment on GitHub names one for this session), re-read the target's current state — the open pull request, its CI status, the independent review's comments, unresolved threads, and your pinned status comment — before acting, and resume the single pending step rather than restarting. When this is a fresh-context session and the human attached or provided a handoff package (`handoff-<unix epoch>.md`, optionally with a matching zip), enter [Take Over a Handoff](#take-over-a-handoff) instead. When both readings are plausible, ask which was meant (see [Asking the Human](#asking-the-human)).
-- Run full-auto by default, but treat any unresolved product, UX, scope, or edge-case decision as blocking — clarify it before Code (see the required gate in [Phase 1](#phase-1--plan)) rather than proceeding on an unstated assumption. Add a further plan-approval gate only when invoked with `--review-plan`.
+- `continue` matches the bare token only; an argument that merely starts with the word (e.g. `continue the migration work`) is a free-form prompt. For bare `continue`, MUST resolve the invocation to exactly one of three outcomes — in this precedence order, before any other action:
+  1. **This session holds an `/address` run** (paused, or reclaimed with its context thinned) → resume it: re-read the target's current state — the open pull request, its CI status, the independent review's comments, unresolved threads, and your pinned status comment — before acting, and resume the single pending step rather than restarting. A handoff package already ingested by this session is part of that run — MUST NOT re-ingest it.
+  2. **No in-session run, and the human provided a handoff package this session** (`handoff-<unix epoch>.md`, optionally with a matching zip) → enter [Take Over a Handoff](#take-over-a-handoff).
+  3. **Neither** → state that there is nothing to resume and ask what was meant (see [Asking the Human](#asking-the-human)). MUST NOT start new work from a bare `continue`.
+- Run full-auto by default, but treat any unresolved product, UX, scope, or edge-case decision as blocking — clarify it before Code (see the required gate in [Phase 1](#phase-1--plan)) rather than proceeding on an unstated assumption. Add a further plan-approval gate only when invoked with `--review-plan`; the flag has meaning only when the run (re-)enters Plan — on a resume or take-over already past Plan it is ignored.
 
 ## Take Over a Handoff
 
@@ -58,21 +61,22 @@ Resolve `$ARGUMENTS` first, then enter the matching phase.
 
 ### Locate and ingest the package
 
-- Find the handoff document: the `handoff-<unix epoch>.md` the human attached or uploaded to this session, or one present in the working directory. When several candidates exist, propose the newest epoch and confirm the choice with the human; when none is found, ask the human to provide it — MUST NOT guess or reconstruct a handoff from thin air.
-- MUST read the entire document before taking any action, and extract the companion zip (matching epoch) beside it when one exists.
+- Find the handoff document the human attached or uploaded to this session. A package merely found on disk — especially one tracked by git, which the wrap-up rules in [handoff.md](handoff.md) forbid committing — is NOT the human's package: MUST confirm it with the human (see [Asking the Human](#asking-the-human)) before ingesting it. When several candidates exist, propose the newest epoch and confirm the choice; when none is found, ask the human to provide it — MUST NOT guess or reconstruct a handoff from thin air.
+- MUST read the entire document before taking any action. Extract the companion zip (matching epoch) into a scratch location outside the repository checkout, verify its inventory there, and apply entries deliberately per the document's **Precondition** section (patches via `git apply` / `git am`, other files copied individually) only after the [Verify preconditions](#verify-preconditions) gate below clears — never unzip directly into the working tree.
 - MUST check the zip's contents against the document's **Precondition** inventory and treat any mismatch — a missing entry, an unexpected extra — as a question for the human (see [Asking the Human](#asking-the-human)), never something to silently ignore.
 
 ### Verify preconditions
 
-- Check every item in the document's **Precondition** section against reality: right repository and branch, expected `HEAD`, patches apply cleanly, tools and environment available.
+- MUST verify every item in the document's **Precondition** section against reality — right repository and branch, expected `HEAD`, patches apply cleanly, tools and environment available — and resolve, or have the human waive, every divergence BEFORE the first repository mutation.
 - When state has diverged — the branch moved, a patch conflicts, a required credential is missing — surface the divergence and ask how to proceed (see [Asking the Human](#asking-the-human)) rather than forcing a resolution.
 
 ### Resume the work
 
 - Adopt the document's **Goal** as the success criteria and its **Concerns and/or blockers** as live risks.
 - Trust `- [x]` items as done — spot-check cheaply where practical, but do not redo them — and resume at the first `- [ ]` item, using **History/transition** to avoid re-treading recorded dead ends.
-- Before editing anything, report a short takeover summary — what the handoff says, what was verified, and the plan — so the human can catch a misreading early.
-- Then re-enter the normal flow: when the handoff names a GitHub issue or pull request, resume the phase matching the work's current state (Plan, Code, Address, or the CI/review tail); when it names none, open a tracking issue capturing the handoff's **Goal** and remaining to-dos — the same issue-anchoring as a free-form prompt — and continue from there. From this point the run is ordinary `/address` work: follow [Development Guidelines](../skills/development-guidelines/SKILL.md), the [Response Approach](../../AGENTS.md) workflow, and every skill whose routing condition matches the surface being changed.
+- MUST report a short takeover summary — what the handoff says, what was verified, and the plan — before editing anything, so the human can catch a misreading early.
+- Then re-enter the normal flow: when the handoff names a GitHub issue or pull request, resume the phase matching the work's current state (Plan, Code, Address, or the CI/review tail); when it names none, search for an existing tracking issue first (the predecessor may have opened one without recording it in the package), and only then open one capturing the handoff's **Goal** and remaining to-dos — the same issue-anchoring as a free-form prompt — and continue from there. From this point the run is ordinary `/address` work: follow [Development Guidelines](../skills/development-guidelines/SKILL.md), the [Response Approach](../../AGENTS.md) workflow, and every skill whose routing condition matches the surface being changed.
+- Once anchored to an issue or pull request, MUST create or update the pinned status comment recording the takeover — the package epoch, the verified `HEAD`, and the to-do resumed — so a later resume, or a second would-be successor, can see the package was already consumed. MUST treat an existing takeover record for the same epoch as a stop-and-ask (see [Asking the Human](#asking-the-human)), never a second takeover.
 
 ## Phase 1 — Plan
 
@@ -129,7 +133,7 @@ State lives in this running session; GitHub carries a thin, human-visible breadc
 
 - Maintain a single pinned status comment on the issue (and, once open, the pull request) recording the current phase, the review-round count, and what the run is waiting on. Update it in place; do not post a new comment per step.
 - Never write the literal review trigger phrase in a status, breadcrumb, or any comment other than the dedicated review request — the review workflow fires on that phrase appearing **anywhere** in a comment body, so embedding it even in prose spuriously starts a review (and muddies the run). Refer to it as "the independent review" everywhere except the request itself, per [GitHub Operations](../skills/github-operations/SKILL.md).
-- On `/address continue`, reconstruct state from GitHub before acting — the open pull request, its CI status, the independent review's comments, unresolved threads, and the pinned status comment — and resume the one pending step the comment names, not restart from Plan.
+- On an in-session `/address continue` resume, reconstruct state from GitHub before acting — the open pull request, its CI status, the independent review's comments, unresolved threads, and the pinned status comment — and resume the one pending step the comment names, not restart from Plan. (A fresh-session take-over reconstructs from the handoff package instead — see [Take Over a Handoff](#take-over-a-handoff).)
 - Labels are optional and purely informational; the run does not depend on a label state machine.
 
 ## Termination Guard
