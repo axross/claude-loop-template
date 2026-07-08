@@ -1,5 +1,5 @@
 ---
-description: Drive a GitHub issue, PR, or prompt end-to-end — plan, code, then request an independent review and respond to it — in one continuing session
+description: Drive a GitHub issue, PR, or prompt end-to-end — plan, code, then request an independent review and respond to it — in one continuing session; `continue` also takes over a /handoff package in a fresh session
 argument-hint: <issue-or-pr number/URL | prompt | continue> [--review-plan]
 ---
 
@@ -45,12 +45,34 @@ Resolve `$ARGUMENTS` first, then enter the matching phase.
 | Issue number / URL | Plan and deliver the issue | Plan |
 | Pull request number / URL | Resume delivery of an open pull request | Address / tail |
 | Free-form prompt | Ad-hoc task with no issue yet | Open a tracking issue, then Plan |
-| `continue` | Resume the paused run in this session | Reconstruct state, re-enter the pending step |
+| `continue` | Resume the paused run in this session — or, in a fresh-context session with a `/handoff` package, take over that work | Reconstruct state, re-enter the pending step — or [Take Over a Handoff](#take-over-a-handoff) |
 | `--review-plan` (flag) | Add a human approval gate after Plan | Modifier on any of the above |
 
 - For a free-form prompt, open a tracking issue capturing the request before planning, so the run is issue-anchored and `/address continue` can reconstruct it.
-- For `continue`, re-read the target's current state — the open pull request, its CI status, the independent review's comments, unresolved threads, and your pinned status comment — before acting, and resume the single pending step rather than restarting.
+- For `continue`, decide first which resume this is. When this session holds a paused `/address` run (or its pinned status comment on GitHub names one for this session), re-read the target's current state — the open pull request, its CI status, the independent review's comments, unresolved threads, and your pinned status comment — before acting, and resume the single pending step rather than restarting. When this is a fresh-context session and the human attached or provided a handoff package (`handoff-<unix epoch>.md`, optionally with a matching zip), enter [Take Over a Handoff](#take-over-a-handoff) instead. When both readings are plausible, ask which was meant (see [Asking the Human](#asking-the-human)).
 - Run full-auto by default, but treat any unresolved product, UX, scope, or edge-case decision as blocking — clarify it before Code (see the required gate in [Phase 1](#phase-1--plan)) rather than proceeding on an unstated assumption. Add a further plan-approval gate only when invoked with `--review-plan`.
+
+## Take Over a Handoff
+
+[`/handoff`](handoff.md) suspends another session's in-progress work into a self-contained `handoff-<unix epoch>.md` document plus an optional same-epoch `handoff-<unix epoch>.zip` of supporting files (the package contract is defined there). When `/address continue` runs in a fresh-context session with such a package, this section rebuilds the suspended state and hands the work to the normal phase flow — the handoff document replaces the session context that an in-session resume would have had.
+
+### Locate and ingest the package
+
+- Find the handoff document: the `handoff-<unix epoch>.md` the human attached or uploaded to this session, or one present in the working directory. When several candidates exist, propose the newest epoch and confirm the choice with the human; when none is found, ask the human to provide it — MUST NOT guess or reconstruct a handoff from thin air.
+- MUST read the entire document before taking any action, and extract the companion zip (matching epoch) beside it when one exists.
+- MUST check the zip's contents against the document's **Precondition** inventory and treat any mismatch — a missing entry, an unexpected extra — as a question for the human (see [Asking the Human](#asking-the-human)), never something to silently ignore.
+
+### Verify preconditions
+
+- Check every item in the document's **Precondition** section against reality: right repository and branch, expected `HEAD`, patches apply cleanly, tools and environment available.
+- When state has diverged — the branch moved, a patch conflicts, a required credential is missing — surface the divergence and ask how to proceed (see [Asking the Human](#asking-the-human)) rather than forcing a resolution.
+
+### Resume the work
+
+- Adopt the document's **Goal** as the success criteria and its **Concerns and/or blockers** as live risks.
+- Trust `- [x]` items as done — spot-check cheaply where practical, but do not redo them — and resume at the first `- [ ]` item, using **History/transition** to avoid re-treading recorded dead ends.
+- Before editing anything, report a short takeover summary — what the handoff says, what was verified, and the plan — so the human can catch a misreading early.
+- Then re-enter the normal flow: when the handoff names a GitHub issue or pull request, resume the phase matching the work's current state (Plan, Code, Address, or the CI/review tail); when it names none, open a tracking issue capturing the handoff's **Goal** and remaining to-dos — the same issue-anchoring as a free-form prompt — and continue from there. From this point the run is ordinary `/address` work: follow [Development Guidelines](../skills/development-guidelines/SKILL.md), the [Response Approach](../../AGENTS.md) workflow, and every skill whose routing condition matches the surface being changed.
 
 ## Phase 1 — Plan
 

@@ -51,10 +51,11 @@ you add them during adaptation.
 An optional **independent-review capability** ships alongside the core:
 `REVIEW.md` (the posted-review policy), the `/review` + `/address` entry points
 in `.claude/commands/`, and the example `.github/workflows/`. Keep and adapt
-it, or delete it — INIT Step 4 covers both paths. A standalone **`/handoff`**
-command also ships in `.claude/commands/`: it suspends in-progress work into a
-downloadable handoff package (a `handoff-<unix epoch>.md` plus an optional zip
-of supporting files) that a fresh session takes over with `/handoff continue`.
+it, or delete it — INIT Step 4 covers both paths. A **`/handoff`** command also
+ships in `.claude/commands/`: it suspends in-progress work into a downloadable
+handoff package (a `handoff-<unix epoch>.md` plus an optional zip of supporting
+files) that a fresh session takes over with `/address continue` — so it rides
+along with the `/address` entry point rather than standing alone.
 
 ## How it works
 
