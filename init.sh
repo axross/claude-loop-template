@@ -134,7 +134,7 @@ PY
     if grep -rnE '\{\{[A-Z][A-Z0-9_]*\}\}' . \
         --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=.next \
         --exclude-dir=dist --exclude-dir=build --exclude-dir=out \
-        --exclude-dir=coverage --exclude-dir=tools \
+        --exclude-dir=coverage \
         --exclude=tokens.json --exclude=init.values.json --exclude=init.sh \
         --exclude=INIT.md --exclude=README.md 2>/dev/null; then
       echo "  ^ tokens remain — fill them or remove the owning section."
@@ -144,12 +144,12 @@ PY
     echo
     echo "== Optional sections still present (decide ADD vs DELETE — INIT Step 4) =="
     grep -rn 'INIT:OPTIONAL' . \
-      --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=tools \
+      --exclude-dir=.git --exclude-dir=node_modules \
       --exclude=INIT.md --exclude=init.sh --exclude=README.md --exclude=tokens.json 2>/dev/null \
       || echo "  none remain."
     echo
     echo "== Relative-link integrity =="
-    python3 "$ROOT/tools/check-links.py"
+    "$ROOT/.claude/skills/agent-skills-best-practices/scripts/check-links.sh"
     ;;
 
   *)
