@@ -1,10 +1,10 @@
 # INIT — Adapting this template to a project
 
-This repository is a **reusable, framework-agnostic and AI-agent-agnostic
-template** for an `AGENTS.md`-driven skill system. It ships:
+This repository is a **reusable, framework-agnostic template** for a Claude Code
+project built on an `AGENTS.md`-driven skill system. It ships:
 
-- `AGENTS.md` — the master routing index + working agreement (the universal,
-  agent-agnostic entry point).
+- `AGENTS.md` — the master routing index + working agreement (the shared entry
+  point each agent binding routes through).
 - `CLAUDE.md` — a one-line binding (`@AGENTS.md`) so Claude Code loads `AGENTS.md`.
 - `.claude/skills/**` — a generic, cross-project **skill core** (12 skills).
 - `.claude/**` — an **example** Claude Code harness binding (hooks + settings).
@@ -562,7 +562,7 @@ Confirm each added command actually runs before relying on the `check.sh` /
 
 ## Step 6 — Set up the agent harness binding(s)
 
-`AGENTS.md` + `.claude/skills/**` are the agent-agnostic substance. Each agent
+`AGENTS.md` + `.claude/skills/**` are the portable substance. Each agent
 reads them through its own binding:
 
 - **Claude Code** — `CLAUDE.md` (`@AGENTS.md`) plus the `.claude/` directory:
