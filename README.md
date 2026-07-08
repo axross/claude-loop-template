@@ -1,11 +1,14 @@
-# AGENTS.md Skill Template
+# Claude Loop Engineering Template
 
-A reusable, **framework-agnostic** and **AI-agent-agnostic** starting point for
-giving coding agents a structured working agreement and a library of skills.
+A reusable, **framework-agnostic** starting point for giving **Claude Code** a
+structured working agreement and a library of skills.
 
 It is extracted from a production setup and stripped of stack-specific detail,
 leaving a generic core you adapt to any project — web, mobile, CLI, library, or
-service — and any agent — Claude Code, Cursor, Copilot, and others.
+service. The system is built for Claude Code: the skill core, the `/address`,
+`/handoff`, and `/review` commands, and the example GitHub Actions all target
+it, with the working agreement kept in `AGENTS.md` and loaded through
+`CLAUDE.md`.
 
 ## What's inside
 
@@ -15,7 +18,7 @@ service — and any agent — Claude Code, Cursor, Copilot, and others.
 ├── init.sh                  # metacharacter-safe {{TOKEN}} substitution + gates
 ├── tokens.json              # machine-readable manifest of every {{TOKEN}}
 ├── .gitignore               # ignores settings.local.json + .env.local (see INIT Step 6)
-├── AGENTS.md                # master routing index + working agreement (universal)
+├── AGENTS.md                # master routing index + working agreement
 ├── CLAUDE.md                # @AGENTS.md — Claude Code's binding to AGENTS.md
 ├── REVIEW.md                # optional: posted-review policy for the independent-review capability
 ├── .github/
@@ -59,17 +62,28 @@ along with the `/address` entry point rather than standing alone.
 
 ## How it works
 
-- **`AGENTS.md`** is the agent-agnostic source of truth: a skill index plus a
-  working agreement (plan → implement → self-review → verify → report).
+- **`AGENTS.md`** is the source of truth: a skill index plus a working
+  agreement (plan → implement → self-review → verify → report).
 - **`.claude/skills/**`** hold the detailed, progressively-disclosed rules each
   index entry routes to.
-- **Bindings** connect a specific agent to `AGENTS.md`: `CLAUDE.md` plus
-  `.claude/` for Claude Code; an equivalent rules file for other agents.
+- **`CLAUDE.md`** plus **`.claude/`** bind Claude Code to `AGENTS.md`, loading
+  the working agreement and skills into every session.
 
 ## Getting started
 
-1. Copy this template into a new (or existing) repository.
-2. Open **[INIT.md](./INIT.md)** and follow it — or hand the repo to an AI agent
+This repository is a GitHub **template repository**, so you start from a copy of
+it rather than cloning it.
+
+1. Get the template into your repository:
+   - **New repository** — on GitHub, click **Use this template → Create a new
+     repository**. Your repository starts as a copy of this one, so the files
+     below — including this `README.md` — are already in place; there is nothing
+     to copy by hand. Skip to step 2.
+   - **Existing repository** — copy the template's files into it: the
+     adaptation tooling (`INIT.md`, `init.sh`, `tokens.json`), the working
+     agreement, skills, and ignore rules (`AGENTS.md`, `CLAUDE.md`, `.claude/`,
+     `.gitignore`), and the optional `.github/` and `REVIEW.md`.
+2. Open **[INIT.md](./INIT.md)** and follow it — or hand the repo to Claude Code
    and ask it to "run INIT". INIT reconciles any files a scaffold already
    generated (e.g. an existing `AGENTS.md`), interviews you about the project
    kind, frameworks, architecture (directory structure, business-logic
