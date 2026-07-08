@@ -396,7 +396,11 @@ apply to the **skip** path.
   in `code-review-guideline/references/severity.md` and
   `references/evidence.md`, the posted-review parenthetical in
   `references/escalation.md`, and the marked SHOULD bullet in `AGENTS.md`'s
-  Review Independence Gates. If the project **does** adopt it (it requires the
+  Review Independence Gates. Mind the knock-on: `.claude/commands/handoff.md`
+  (`key=SESSION_HANDOFF`) resumes suspended work via `/address continue`, so on
+  this delete path also delete `handoff.md` or point its resume instructions at
+  a replacement take-over entry point (its own marker says the same). If the
+  project **does** adopt it (it requires the
   GitHub-operations capability — keep both or neither), keep all of the above,
   delete the markers and italic notes, and:
   - fill `REVIEW.md`'s do-not-report list with the checks the project's CI
