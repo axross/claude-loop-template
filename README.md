@@ -23,7 +23,7 @@ service — and any agent — Claude Code, Cursor, Copilot, and others.
 │   └── workflows/           # optional: example CI reviewer + merge checks (GitHub Actions + Claude Code);
 │                            # plus template-checks.yaml, this repo's own link-check CI (deleted during INIT)
 └── .claude/
-    ├── commands/            # optional: /review + /address entry points (Claude Code examples)
+    ├── commands/            # optional: /review + /address + /handoff entry points (Claude Code examples)
     ├── skills/              # the generic, cross-project skill core (12 skills)
     │   ├── agent-skills-best-practices/
     │   ├── application-security-requirements/
@@ -50,9 +50,12 @@ observability, and QA evidence. Project-specific skills
 you add them during adaptation.
 
 An optional **independent-review capability** ships alongside the core:
-`REVIEW.md` (the posted-review policy), the `.claude/commands/` entry points,
-and the example `.github/workflows/`. Keep and adapt it, or delete it — INIT
-Step 4 covers both paths.
+`REVIEW.md` (the posted-review policy), the `/review` + `/address` entry points
+in `.claude/commands/`, and the example `.github/workflows/`. Keep and adapt
+it, or delete it — INIT Step 4 covers both paths. A standalone **`/handoff`**
+command also ships in `.claude/commands/`: it suspends in-progress work into a
+downloadable handoff package (a `handoff-<unix epoch>.md` plus an optional zip
+of supporting files) that a fresh session takes over with `/handoff continue`.
 
 ## How it works
 
