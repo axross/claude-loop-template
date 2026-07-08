@@ -68,7 +68,14 @@ The parent `SKILL.md` is the routing table for Markdown topic files under `refer
 
 ## Link Resolution Check
 
-Link checks catch quiet skill failures. They are especially important after renames because broken links may not fail tests.
+Link checks catch quiet skill failures. They are especially important after renames because broken links may not fail tests. This skill ships a checker at `scripts/check-links.sh`: it walks every Markdown file under the given roots (default: the whole tree, including dot-directories that `glob('**/*.md')` sweeps skip), ignores links inside fenced code blocks, inline code spans, and HTML comments, and exits non-zero when any relative `.md` link fails to resolve.
+
+**Example:**
+
+```sh
+# From the repository root; pass paths to narrow the scan.
+.claude/skills/agent-skills-best-practices/scripts/check-links.sh
+```
 
 **Example Verification Flow:**
 
@@ -83,6 +90,7 @@ flowchart LR
 **Guidelines:**
 
 - MUST verify relative links before finalizing a skill-tree change.
+- SHOULD run this skill's `scripts/check-links.sh` for that verification instead of checking links by hand.
 - MUST update directory name, `name` frontmatter, cross-references, master-index entries, and role-profile references together during a rename.
 - SHOULD include touched skill paths in the change summary for rename or consolidation work.
 - MUST NOT finalize a skill move while any old path remains in the index.

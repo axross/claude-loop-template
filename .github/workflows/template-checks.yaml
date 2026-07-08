@@ -4,9 +4,10 @@ name: Template Checks
 # Keeps the template's cross-linked skill tree honest by running the
 # relative-link checker on every change.
 #
-# tools/check-links.py is INIT-time tooling: adapted projects delete it in
-# INIT Step 7 together with INIT.md, init.sh, and tokens.json — and delete
-# THIS WORKFLOW FILE with it. Nothing here is meant to survive adaptation.
+# The checker itself ships with the agent-skills-best-practices skill and
+# survives adaptation; THIS WORKFLOW FILE does not — adapted projects delete
+# it in INIT Step 7 together with INIT.md, init.sh, and tokens.json. A project
+# that wants an ongoing docs-link gate wires the script into its own CI.
 
 on:
   pull_request:
@@ -28,4 +29,4 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Check Relative Links
-        run: python3 tools/check-links.py
+        run: .claude/skills/agent-skills-best-practices/scripts/check-links.sh

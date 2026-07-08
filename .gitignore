@@ -5,6 +5,3 @@
 /.claude/settings.local.json
 .env.local
 .env.*.local
-
-# Python bytecode (tools/check-links.py)
-__pycache__/

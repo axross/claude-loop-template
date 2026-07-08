@@ -14,7 +14,6 @@ service — and any agent — Claude Code, Cursor, Copilot, and others.
 ├── INIT.md                  # how to adapt this template (start here)
 ├── init.sh                  # metacharacter-safe {{TOKEN}} substitution + gates
 ├── tokens.json              # machine-readable manifest of every {{TOKEN}}
-├── tools/check-links.py     # relative-link integrity (INIT tooling; deleted during INIT)
 ├── .gitignore               # ignores settings.local.json + .env.local (see INIT Step 6)
 ├── AGENTS.md                # master routing index + working agreement (universal)
 ├── CLAUDE.md                # @AGENTS.md — Claude Code's binding to AGENTS.md
@@ -25,7 +24,7 @@ service — and any agent — Claude Code, Cursor, Copilot, and others.
 └── .claude/
     ├── commands/            # optional: /review + /address + /handoff entry points (Claude Code examples)
     ├── skills/              # the generic, cross-project skill core (12 skills)
-    │   ├── agent-skills-best-practices/
+    │   ├── agent-skills-best-practices/  # ships scripts/check-links.sh (relative-link integrity)
     │   ├── application-security-requirements/
     │   ├── code-review-guideline/
     │   ├── development-guidelines/
