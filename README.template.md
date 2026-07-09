@@ -52,20 +52,65 @@ detailed skills under [`.claude/skills/`](./.claude/skills). Human and agent
 contributors follow the same loop: plan → implement → self-review → verify →
 report.
 
-<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep this block if the project keeps the independent-review capability (REVIEW.md + /address + /review); delete the whole block otherwise and describe the project's own PR flow instead. -->
-Delivery runs through two entry points:
+<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep the command subsections below if the project keeps the independent-review capability (REVIEW.md + /address + /review); delete them otherwise and describe the project's own PR flow instead. -->
+### `/address` — deliver a unit of work end-to-end
 
-- **[`/address`](./.claude/commands/address.md)** — takes a GitHub issue, pull
-  request, or free-form prompt end-to-end: plan, implement, verify, open a
-  draft pull request, request the independent review, and address findings
-  until CI and the review are green. Merging stays a human decision.
-- **[`/review`](./.claude/commands/review.md)** — runs this repository's
-  review policy ([`REVIEW.md`](./REVIEW.md)) on a pull request or local diff
-  and posts findings. The same policy runs in CI via
-  [`claude-review.yaml`](./.github/workflows/claude-review.yaml).
-- **[`/handoff`](./.claude/commands/handoff.md)** — suspends in-progress work
-  into a package a fresh session takes over with `/address continue`.
-  <!-- INIT:OPTIONAL key=SESSION_HANDOFF — delete this bullet if the project dropped /handoff. -->
+[`/address`](./.claude/commands/address.md) is the main delivery entry point.
+It takes one unit of work — a GitHub issue, a pull request, or a free-form
+prompt — from intake to a merge-ready pull request in a single continuing
+session:
+
+1. **Plan** — reads the issue and its thread, asks you the product and scope
+   questions the spec leaves open, and rewrites the issue body into a
+   reviewable plan with acceptance criteria.
+2. **Code + verify** — implements on an agent-namespaced branch, runs the
+   checks the changed surface requires, and self-reviews the diff.
+3. **Independent review** — opens a draft pull request and requests the CI
+   reviewer, a separate bot session, so the code's author never certifies its
+   own work.
+4. **Address** — fixes review findings and CI failures, tying each resolved
+   thread to the resolving commit, for up to four rounds.
+5. **Ready** — flips the pull request to ready and pings the maintainer once
+   CI is green and the review is clean. Merging always stays a human decision.
+
+Practical examples:
+
+```text
+/address https://github.com/OWNER/REPO/issues/42   # deliver issue #42 end-to-end
+/address 57                                        # resume delivery of open PR #57
+/address The 404 page should link back home        # no issue yet: files a tracking
+                                                   #   issue, then delivers it
+/address --review-plan 42                          # same delivery, but pauses for
+                                                   #   your approval after the plan
+/address continue                                  # resume a paused run — after you
+                                                   #   answer a question, leave PR
+                                                   #   comments, or start a fresh
+                                                   #   session from a /handoff package
+```
+
+The run pauses whenever it genuinely needs a human — an ambiguous requirement,
+a plan approval, a judgment call on conflicting changes — and `/address
+continue` picks it back up where it stopped.
+
+### `/review` — get findings on any diff
+
+[`/review`](./.claude/commands/review.md) runs this repository's review policy
+([`REVIEW.md`](./REVIEW.md)) — severity-tagged findings with `file:line`
+evidence and concrete fixes — on a pull request (`/review 57`), a ref range
+(`/review main...feature`), or the current branch's diff (`/review`). Use it
+for a pre-merge check on a hand-written change or a second opinion before
+pushing; the same policy runs automatically in CI
+([`claude-review.yaml`](./.github/workflows/claude-review.yaml)) against
+`/address` pull requests.
+
+<!-- INIT:OPTIONAL key=SESSION_HANDOFF — delete this subsection if the project dropped /handoff. -->
+### `/handoff` — suspend work for another session
+
+[`/handoff`](./.claude/commands/handoff.md) packages in-progress work — goal,
+current state, remaining to-dos, uncommitted changes — into a downloadable
+`handoff-<epoch>.md` (plus an optional zip of supporting files). Use it when a
+session is running low on context, or to park work for later; a fresh session
+(yours or a teammate's) takes the package over with `/address continue`.
 
 Changes made without an agent follow the same bar: branch, implement, run the
 checks below, open a pull request, and get it reviewed before merge.

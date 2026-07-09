@@ -407,9 +407,9 @@ apply to the **skip** path.
   in `code-review-guideline/references/severity.md` and
   `references/evidence.md`, the posted-review parenthetical in
   `references/escalation.md`, the marked SHOULD bullet in `AGENTS.md`'s
-  Review Independence Gates, and the marked delivery-entry-points block in
-  `README.template.md`'s Development workflow section (replace it with a
-  description of the project's own PR flow). Mind the knock-on: `.claude/commands/handoff.md`
+  Review Independence Gates, and the marked `/address` / `/review` / `/handoff`
+  command subsections in `README.template.md`'s Development workflow section
+  (replace them with a description of the project's own PR flow). Mind the knock-on: `.claude/commands/handoff.md`
   (`key=SESSION_HANDOFF`) resumes suspended work via `/address continue`, so on
   this delete path also delete `handoff.md` or point its resume instructions at
   a replacement take-over entry point (its own marker says the same). If the
