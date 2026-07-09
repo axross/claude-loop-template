@@ -8,6 +8,9 @@ project built on an `AGENTS.md`-driven skill system. It ships:
 - `CLAUDE.md` — a one-line binding (`@AGENTS.md`) so Claude Code loads `AGENTS.md`.
 - `.claude/skills/**` — a generic, cross-project **skill core** (12 skills).
 - `.claude/**` — an **example** Claude Code harness binding (hooks + settings).
+- `README.template.md` — a seed for the initialized project's own README
+  (summary, tech stack, getting started, development workflow, testing,
+  related links), finalized into `README.md` in Step 7.
 
 Everything project-specific has been replaced with `{{TOKEN}}` placeholders or
 neutral prose. This file tells an AI agent how to turn the template into a
@@ -59,6 +62,11 @@ merge rather than clobber:
   ignores the `.env.example` that `session-start.sh` copies from — replace it
   with the template's `.env.local` / `.env.*.local` entries so the example
   file stays committable.
+- **Existing `README.md`** (a real project README, not this template's own) —
+  do **not** let Step 7's finalize clobber it: fold `README.template.md`'s
+  sections (summary, tech stack, getting started, development workflow,
+  testing, related links) into the existing README there instead of renaming
+  the seed over it, then delete the seed.
 - **Existing `.claude/`** — merge directory-by-directory; never
   replace wholesale.
 
@@ -88,7 +96,10 @@ dribbling them out over many rounds. The interview is strict:
 
 1. **Project overview.** In one or two sentences, what is the project's
    purpose / goal / what it is? (This becomes the Project Overview in
-   `AGENTS.md`.)
+   `AGENTS.md` and the quick summary in the project README.) Also collect any
+   **related links** — docs, issue tracker, deployment dashboard, design
+   files — for the README's Related-links section (Step 7); "none" is a fine
+   answer.
 2. **Application type.** What kind of project is this?
    - Web client / full-stack web app
    - Mobile app
@@ -218,7 +229,7 @@ top-of-file "Template note" blockquote.
 
 Every `{{TOKEN}}` maps to a Stack Decision Record entry (Step 1). Replace ALL
 occurrences across
-`AGENTS.md` and `.claude/**`. The table below is the
+`AGENTS.md`, `README.template.md`, and `.claude/**`. The table below is the
 complete set used by the template (also machine-readable in `tokens.json`). Each
 row gives several example values across different stacks so the substitution is
 unambiguous — pick the one matching the project, or follow the same shape for a
@@ -305,7 +316,7 @@ The skill core is intentionally broad. Every capability-specific block is wrappe
 with a greppable marker so you can find them all:
 
 ```bash
-grep -rn 'INIT:OPTIONAL' .claude .github AGENTS.md REVIEW.md   # every optional section, with a key
+grep -rn 'INIT:OPTIONAL' .claude .github AGENTS.md REVIEW.md README.template.md   # every optional section, with a key
 ```
 
 For **each** marked section, apply the Step 1 decision for that capability:
@@ -395,8 +406,10 @@ apply to the **skip** path.
   section in `code-review-guideline/SKILL.md`, the marked posted-review bullets
   in `code-review-guideline/references/severity.md` and
   `references/evidence.md`, the posted-review parenthetical in
-  `references/escalation.md`, and the marked SHOULD bullet in `AGENTS.md`'s
-  Review Independence Gates. Mind the knock-on: `.claude/commands/handoff.md`
+  `references/escalation.md`, the marked SHOULD bullet in `AGENTS.md`'s
+  Review Independence Gates, and the marked `/address` / `/review` / `/handoff`
+  command subsections in `README.template.md`'s Development workflow section
+  (replace them with a description of the project's own PR flow). Mind the knock-on: `.claude/commands/handoff.md`
   (`key=SESSION_HANDOFF`) resumes suspended work via `/address continue`, so on
   this delete path also delete `handoff.md` or point its resume instructions at
   a replacement take-over entry point (its own marker says the same). If the
@@ -442,7 +455,9 @@ apply to the **skip** path.
     `performance-and-reliability-requirements/references/server-client-boundary.md`;
   - the e2e-authoring pointer in
     `development-guidelines/references/verification.md`;
-  - the `{{E2E_TEST_CMD}}` bullet in the `AGENTS.md` Verification section.
+  - the `{{E2E_TEST_CMD}}` bullet in the `AGENTS.md` Verification section;
+  - the marked e2e rows in `README.template.md`'s Tech stack and Testing
+    tables.
 
   Deleting the e2e skill also removes every `key=SCENARIO_COVERAGE` site (next
   bullet) — the two that live outside `e2e-testing-guidelines/` are inside
@@ -467,7 +482,9 @@ apply to the **skip** path.
     `product-requirement-guidelines/SKILL.md`;
   - the unit-test row of the developer-facing-skills table in
     `code-review-guideline/SKILL.md`;
-  - the `{{UNIT_TEST_CMD}}` bullet in the `AGENTS.md` Verification section.
+  - the `{{UNIT_TEST_CMD}}` bullet in the `AGENTS.md` Verification section;
+  - the marked unit-test rows in `README.template.md`'s Tech stack and
+    Testing tables.
 - **No data/content layer** → delete every `key=DATA_LAYER` site (the Step-4
   grep finds them all): the marked sections in `development-guidelines`
   (`dev-commands.md`, `change-management.md`, plus the `current-docs.md` row
@@ -477,7 +494,8 @@ apply to the **skip** path.
   "Data-Access Efficiency" section in `SKILL.md`), and
   `maintainable-code-guidelines` (`abstraction-boundaries.md` — rewrite the
   Data-Access / UI Split bullets around the project's actual persistence
-  boundary — and the realm row/bullet in `naming-and-organization.md`). Then
+  boundary — and the realm row/bullet in `naming-and-organization.md`), plus
+  the marked data-layer row in `README.template.md`'s Tech stack table. Then
   sweep the prose: the "data-layer/migration handling" / "migrations" phrases
   in `development-guidelines/SKILL.md`'s description and body, the
   data-access/data-layer phrases in the `AGENTS.md` index rows
@@ -594,6 +612,20 @@ Keep only the bindings for the agents named in Step 1.
 
 ## Step 7 — Finalize
 
+- Finalize the project README from its seed:
+  `git mv -f README.template.md README.md` (replacing the template's own
+  README — but when the repository already had its own real README, merge the
+  seed's sections into it instead and delete the seed; see Step 0),
+  then complete it against the Stack Decision Record and the Step-1 answers —
+  expand the quick summary into a short paragraph, trim the Tech stack table
+  to what the project actually uses, verify the Getting-started commands run,
+  resolve the Development-workflow and Testing markers against the kept
+  capabilities, and fill Related links (or delete that section) — and delete
+  every `<!-- INIT… -->` comment in it. The finished README MUST cover: a
+  quick summary, the tech stack, getting started, the development workflow
+  (including `/address` and `/review` when the independent-review capability
+  is kept), the testing strategy and its commands, and related links (when
+  applicable).
 - Run `./init.sh check` and resolve everything it reports.
 - Walk the completion checklist below **while the INIT tooling still exists** —
   several items run `./init.sh check`, and checking them after the deletion
@@ -611,7 +643,6 @@ Keep only the bindings for the agents named in Step 1.
   `<!-- INIT:OPTIONAL ... -->` marker and `<!-- INIT: ... -->` fill-in comment,
   and every "TEMPLATE NOTE" / "_delete during INIT_" line for sections you
   decided to keep.
-- Update `README.md` to describe the actual project (or replace it).
 
 ### Completion checklist
 
@@ -657,3 +688,11 @@ Keep only the bindings for the agents named in Step 1.
 - [ ] `INIT.md` and template scaffolding notes/tooling are deleted — including
       `init.sh`, `tokens.json`, `init.values.json`, and
       `.github/workflows/template-checks.yaml`.
+- [ ] The README seed is finalized: `README.template.md` is gone (renamed
+      over — or merged into — `README.md`), no `<!-- INIT… -->` comment or
+      `{{TOKEN}}` remains in
+      `README.md`, and it covers the quick summary, tech stack, getting
+      started, development workflow, testing strategy and commands, and
+      related links (or that section was deliberately dropped). The template's
+      own README — the one titled "Claude Loop Engineering Template" — no
+      longer exists.

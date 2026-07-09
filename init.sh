@@ -148,6 +148,19 @@ PY
       --exclude=INIT.md --exclude=init.sh --exclude=README.md --exclude=tokens.json 2>/dev/null \
       || echo "  none remain."
     echo
+    echo "== README seed (INIT.md Step 7) =="
+    # README.md itself is excluded from the token gate above: pre-finalize it
+    # is the template's own README, whose prose legitimately mentions the
+    # {{TOKEN}} convention. The seed (README.template.md) IS covered by the
+    # gate; once it is renamed over README.md, scan the result here instead.
+    if [ -f README.template.md ]; then
+      echo "  README.template.md still present — finalize it into README.md."
+    elif [ -f README.md ] && grep -nE '\{\{[A-Z][A-Z0-9_]*\}\}|<!-- INIT' README.md; then
+      echo "  ^ leftover tokens / INIT comments in README.md — finish the Step-7 finalize."
+    else
+      echo "  finalized."
+    fi
+    echo
     echo "== Relative-link integrity =="
     "$ROOT/.claude/skills/agent-skills-best-practices/scripts/check-links.sh"
     ;;
