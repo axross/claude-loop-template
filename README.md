@@ -17,6 +17,7 @@ it, with the working agreement kept in `AGENTS.md` and loaded through
 ├── INIT.md                  # how to adapt this template (start here)
 ├── init.sh                  # metacharacter-safe {{TOKEN}} substitution + gates
 ├── tokens.json              # machine-readable manifest of every {{TOKEN}}
+├── README.template.md       # seed for the initialized project's README (finalized in INIT Step 7)
 ├── .gitignore               # ignores settings.local.json + .env.local (see INIT Step 6)
 ├── AGENTS.md                # master routing index + working agreement
 ├── CLAUDE.md                # @AGENTS.md — Claude Code's binding to AGENTS.md
@@ -80,9 +81,10 @@ it rather than cloning it.
      below — including this `README.md` — are already in place; there is nothing
      to copy by hand. Skip to step 2.
    - **Existing repository** — copy the template's files into it: the
-     adaptation tooling (`INIT.md`, `init.sh`, `tokens.json`), the working
-     agreement, skills, and ignore rules (`AGENTS.md`, `CLAUDE.md`, `.claude/`,
-     `.gitignore`), and the optional `.github/` and `REVIEW.md`.
+     adaptation tooling (`INIT.md`, `init.sh`, `tokens.json`), the README seed
+     (`README.template.md`), the working agreement, skills, and ignore rules
+     (`AGENTS.md`, `CLAUDE.md`, `.claude/`, `.gitignore`), and the optional
+     `.github/` and `REVIEW.md`.
 2. Open **[INIT.md](./INIT.md)** and follow it — or hand the repo to Claude Code
    and ask it to "run INIT". INIT reconciles any files a scaffold already
    generated (e.g. an existing `AGENTS.md`), interviews you about the project
@@ -92,8 +94,11 @@ it rather than cloning it.
    each optional capability — unit tests, e2e, observability — it asks whether to
    **add** it (and with which tool) or skip it, rather than assuming it should be
    deleted, and it adds project-specific skills.
-3. When adaptation is complete, delete `INIT.md` and this `README.md` (or rewrite
-   the README for your project).
+3. When adaptation is complete, INIT finalizes `README.template.md` into your
+   project's `README.md` — a README covering the project summary, tech stack,
+   getting started, the development workflow (`/address` + `/review`, when the
+   independent-review capability is kept), testing strategy and commands, and
+   related links — replacing this template README, and deletes `INIT.md`.
 
 Placeholders use the `{{TOKEN}}` convention so they are easy to find and replace;
 the full token list lives in [INIT.md](./INIT.md).
