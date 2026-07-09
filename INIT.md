@@ -568,7 +568,8 @@ reads them through its own binding:
 - **Claude Code** — `CLAUDE.md` (`@AGENTS.md`) plus the `.claude/` directory:
   - `.claude/skills/**` is also discovered natively by Claude Code, so each
     skill is directly invocable in addition to being routed via `AGENTS.md`.
-  - `.claude/settings.json` wires the `SessionStart` hook.
+  - `.claude/settings.json` wires the `SessionStart` hook and sets the
+    default reasoning effort level (`effortLevel`; ships as `xhigh`).
   - `.claude/settings.local-example.json` is the opt-in quality binding
     (format-on-edit + lint/test-before-stop); the session-start hook copies it
     to `settings.local.json` in cloud sessions.
