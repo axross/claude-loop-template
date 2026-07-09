@@ -1,6 +1,6 @@
 ---
 name: development-guidelines
-description: Apply this skill at the start of EVERY task in this project. Covers the format/lint loop, scoped change management, current-docs lookup triggers, run-script commands, type-safety discipline, source-comment and doc-comment conventions, verification requirements, data-layer/migration handling, end-to-end test expectations, and Conventional Commits. Use even when the user does not mention formatting, linting, testing, type casts, comments, doc-comments, dependencies, migrations, docs, commands, or commit wording.
+description: Apply this skill at the start of EVERY task in this project. Covers the format/lint loop, scoped change management, current-docs lookup triggers, run-script commands, type-safety discipline, source-comment and doc-comment conventions, verification requirements, data-layer/migration handling, end-to-end test expectations, Conventional Commits, and pull request descriptions. Use even when the user does not mention formatting, linting, testing, type casts, comments, doc-comments, dependencies, migrations, docs, commands, commit wording, or pull request bodies.
 ---
 
 # Development Guidelines
@@ -61,6 +61,15 @@ See [commit-messages.md](./references/commit-messages.md) for:
 - Scope, description, body, and footer conventions
 - Breaking-change markers (`!` and `BREAKING CHANGE:` footer) and their SemVer correlation
 - Pull request titles (the same header format applies to PR titles, not just commits)
+
+## Pull Request Descriptions
+
+See [pull-request-descriptions.md](./references/pull-request-descriptions.md) for:
+
+- What a pull request body contains, and why the "why" leads
+- Using the repository's pull request template (`.github/pull_request_template.md`), including bodies authored programmatically
+- Issue linking, verification evidence, risk disclosure, and reviewer guidance
+- Keeping the description current across review rounds
 
 ## Topic-Specific Guidelines
 
