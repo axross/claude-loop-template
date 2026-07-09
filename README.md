@@ -40,7 +40,7 @@ it, with the working agreement kept in `AGENTS.md` and loaded through
     │   ├── quality-assurance-guidelines/
     │   └── unit-test-guidelines/
     ├── hooks/               # session-start (always on), format + check (opt-in)
-    ├── settings.json        # wires the SessionStart hook (always on)
+    ├── settings.json        # wires the SessionStart hook + default effort level (always on)
     └── settings.local-example.json  # opt-in: copied to settings.local.json (by session-start) to wire format + check
 ```
 
