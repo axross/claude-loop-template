@@ -55,7 +55,9 @@ you add them during adaptation.
 An optional **independent-review capability** ships alongside the core:
 `REVIEW.md` (the posted-review policy), the `/review` + `/address` entry points
 in `.claude/commands/`, and the example `.github/workflows/`. Keep and adapt
-it, or delete it — INIT Step 4 covers both paths. A **`/handoff`** command also
+it, or delete it — INIT Step 4 covers both paths. Its CI reviewer needs a
+one-time secret setup before it runs — see [Getting started](#getting-started).
+A **`/handoff`** command also
 ships in `.claude/commands/`: it suspends in-progress work into a downloadable
 handoff package (a `handoff-<unix epoch>.md` plus an optional zip of supporting
 files) that a fresh session takes over with `/address continue` — so it rides
@@ -99,6 +101,16 @@ it rather than cloning it.
    getting started, the development workflow (`/address` + `/review`, when the
    independent-review capability is kept), testing strategy and commands, and
    related links — replacing this template README, and deletes `INIT.md`.
+4. **Enable the CI reviewer (optional).** If you keep the independent-review
+   capability, its GitHub Actions reviewer
+   ([`claude-review.yaml`](./.github/workflows/claude-review.yaml)) needs a
+   one-time operator setup before it runs: install the
+   [Claude GitHub App](https://github.com/apps/claude) and add a
+   `CLAUDE_CODE_OAUTH_TOKEN` repository secret — generate it locally with
+   `claude setup-token` — under **Settings → Secrets and variables → Actions**,
+   or set an `ANTHROPIC_API_KEY` secret instead for pay-as-you-go API billing.
+   Until both are in place the workflow no-ops. The workflow file's header
+   comment documents the exact steps.
 
 Placeholders use the `{{TOKEN}}` convention so they are easy to find and replace;
 the full token list lives in [INIT.md](./INIT.md).
