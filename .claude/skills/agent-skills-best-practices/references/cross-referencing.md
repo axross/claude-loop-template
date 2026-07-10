@@ -16,7 +16,7 @@ Consult the project's quality-assurance guidelines when a review finding depends
 
 - MUST reference another skill by a descriptive, index-resolvable name (e.g. "the project's quality-assurance guidelines"), never by a relative or repo-root-absolute path.
 - MUST NOT link into another skill by path — neither its `SKILL.md` front door nor, especially, its `references/` files.
-- MUST NOT deep-link into another skill's `references/`; name the owning skill and its topic (e.g. "the project's development guidelines, change-management rules") and let that skill's own progressive disclosure surface the detail.
+- MUST NOT deep-link into another skill's `references/`; name the owning skill and its topic (e.g. "the project's development guidelines (change-management rules)") and let that skill's own progressive disclosure surface the detail.
 - MUST keep the descriptive name specific enough to resolve to exactly one master-index row; where neighboring skills share a topic space (e.g. end-to-end vs. unit testing), keep the distinguishing token that separates them.
 - MUST use leading-dot relative paths for links inside the same skill, such as `./references/topic.md`; these stay relative because they move with the skill.
 - MAY use root-relative paths from a repo-root document (e.g. the master index) when the host renderer resolves them reliably.
