@@ -5,8 +5,8 @@ structured working agreement and a library of skills.
 
 It is extracted from a production setup and stripped of stack-specific detail,
 leaving a generic core you adapt to any project — web, mobile, CLI, library, or
-service. The system is built for Claude Code: the skill core, the `/address`,
-`/handoff`, and `/review` commands, and the example GitHub Actions all target
+service. The system is built for Claude Code: the skill core, the `/address`
+and `/handoff` commands, and the example GitHub Actions all target
 it, with the working agreement kept in `AGENTS.md` and loaded through
 `CLAUDE.md`.
 
@@ -26,7 +26,7 @@ it, with the working agreement kept in `AGENTS.md` and loaded through
 │   └── workflows/           # optional: example CI reviewer + merge checks (GitHub Actions + Claude Code);
 │                            # plus template-checks.yaml, this repo's own link-check CI (deleted during INIT)
 └── .claude/
-    ├── commands/            # optional: /review + /address + /handoff entry points (Claude Code examples)
+    ├── commands/            # optional: /address + /handoff entry points (Claude Code examples)
     ├── skills/              # the generic, cross-project skill core (12 skills)
     │   ├── agent-skills-best-practices/  # ships scripts/check-links.sh (relative-link integrity)
     │   ├── application-security-requirements/
@@ -53,7 +53,7 @@ observability, and QA evidence. Project-specific skills
 you add them during adaptation.
 
 An optional **independent-review capability** ships alongside the core:
-`REVIEW.md` (the posted-review policy), the `/review` + `/address` entry points
+`REVIEW.md` (the posted-review policy), the `/address` entry point
 in `.claude/commands/`, and the example `.github/workflows/`. Keep and adapt
 it, or delete it — INIT Step 4 covers both paths. Its CI reviewer needs a
 one-time secret setup before it runs — see [Getting started](#getting-started).
@@ -98,7 +98,7 @@ it rather than cloning it.
    deleted, and it adds project-specific skills.
 3. When adaptation is complete, INIT finalizes `README.template.md` into your
    project's `README.md` — a README covering the project summary, tech stack,
-   getting started, the development workflow (`/address` + `/review`, when the
+   getting started, the development workflow (`/address`, when the
    independent-review capability is kept), testing strategy and commands, and
    related links — replacing this template README, and deletes `INIT.md`.
 4. **Enable the CI reviewer (optional).** If you keep the independent-review

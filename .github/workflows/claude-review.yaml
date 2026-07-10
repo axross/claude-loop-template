@@ -86,7 +86,6 @@ jobs:
           # and stops silently. With `--comment` it posts inline comments via
           # mcp__github_inline_comment__create_inline_comment plus one
           # `gh pr comment` summary; it never submits a formal `gh pr review`.
-          # (The repo's /review command runs the same practice locally.)
           plugin_marketplaces: "https://github.com/anthropics/claude-code.git"
           plugins: "code-review@claude-code-plugins"
           prompt: "/code-review:code-review https://github.com/${{ github.repository }}/pull/${{ github.event.issue.number }} --comment"

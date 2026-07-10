@@ -5,10 +5,10 @@
 
 Review **policy** for this repository — the highest-priority, review-only
 instructions. Every reviewer entry point reads this file: a managed review
-product (e.g. Claude Code's managed Code Review) natively, and both the CI
-reviewer ([`claude-review.yaml`](.github/workflows/claude-review.yaml)) and the
-local [`/review`](.claude/commands/review.md) command via a system-prompt
-bootstrap. This file overrides reviewer defaults and complements the review
+product (e.g. Claude Code's managed Code Review) natively, and the CI
+reviewer ([`claude-review.yaml`](.github/workflows/claude-review.yaml)) via a
+system-prompt bootstrap. This file overrides reviewer defaults and complements
+the review
 **methodology** in
 [Code Review Guideline](.claude/skills/code-review-guideline/SKILL.md); where
 the two differ about what a posted review reports, this file wins (see that

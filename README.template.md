@@ -52,7 +52,7 @@ detailed skills under [`.claude/skills/`](./.claude/skills). Human and agent
 contributors follow the same loop: plan → implement → self-review → verify →
 report.
 
-<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep the command subsections below if the project keeps the independent-review capability (REVIEW.md + /address + /review); delete them otherwise and describe the project's own PR flow instead. -->
+<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep the command subsections below if the project keeps the independent-review capability (REVIEW.md + /address); delete them otherwise and describe the project's own PR flow instead. -->
 ### `/address` — deliver a unit of work end-to-end
 
 [`/address`](./.claude/commands/address.md) is the main delivery entry point.
@@ -96,16 +96,14 @@ genuinely needs a human — an ambiguous requirement, a judgment call on
 conflicting changes — and `/address continue` picks it back up where it
 stopped.
 
-### `/review` — get findings on any diff
+### `@claude review` — get findings on any PR
 
-[`/review`](./.claude/commands/review.md) runs this repository's review policy
-([`REVIEW.md`](./REVIEW.md)) — severity-tagged findings with `file:line`
-evidence and concrete fixes — on a pull request (`/review 57`), a ref range
-(`/review main...feature`), or the current branch's diff (`/review`). Use it
-for a pre-merge check on a hand-written change or a second opinion before
-pushing; the same policy runs automatically in CI
-([`claude-review.yaml`](./.github/workflows/claude-review.yaml)) against
-`/address` pull requests.
+Comment **`@claude review`** on a pull request to run this repository's review
+policy ([`REVIEW.md`](./REVIEW.md)) — severity-tagged findings with `file:line`
+evidence and concrete fixes, posted as inline comments by the CI reviewer
+([`claude-review.yaml`](./.github/workflows/claude-review.yaml)). Use it for a
+pre-merge check on a hand-written change or a second opinion before merging; the
+same review runs automatically against `/address` pull requests.
 
 <!-- INIT:OPTIONAL key=SESSION_HANDOFF — delete this subsection if the project dropped /handoff. -->
 ### `/handoff` — suspend work for another session
