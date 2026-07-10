@@ -1,6 +1,6 @@
 # Error Handling and Observability
 
-Apply these rules to verify the change keeps the project's error-propagation model and structured-logging discipline intact. Defer the developer-facing rules to [observability-guidelines](../../observability-guidelines/SKILL.md) — this file is the **reviewer's** flagging checklist. Throughout, `reportError(...)` denotes the project's error-reporting call (it maps to {{ERROR_TRACKER}}'s capture function if the project has one), and `logger` denotes the project's structured logger ({{LOGGER}}).
+Apply these rules to verify the change keeps the project's error-propagation model and structured-logging discipline intact. Defer the developer-facing rules to the project's observability guidelines — this file is the **reviewer's** flagging checklist. Throughout, `reportError(...)` denotes the project's error-reporting call (it maps to {{ERROR_TRACKER}}'s capture function if the project has one), and `logger` denotes the project's structured logger ({{LOGGER}}).
 
 <!-- INIT:OPTIONAL key=ERROR_TRACKER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
 *If this project has no {{ERROR_TRACKER}}, treat `reportError(...)` as the project's equivalent failure-reporting mechanism (or delete the error-reporting clauses during INIT).*
@@ -11,7 +11,7 @@ A catch block inside a nested helper decides recovery policy for callers it know
 
 **Guidelines:**
 
-- MUST flag a Major when a new `try`/`catch` is placed inside a nested helper rather than at the root call site (the request entry point / top-level handler / server action). The project rule per [observability-guidelines › error-handling](../../observability-guidelines/references/error-handling.md) is "let errors propagate to the root call site".
+- MUST flag a Major when a new `try`/`catch` is placed inside a nested helper rather than at the root call site (the request entry point / top-level handler / server action). The project rule per the project's observability guidelines (error-handling rules) is "let errors propagate to the root call site".
 - MUST flag a Critical when a `catch` block does any of:
   - Logs without rethrowing or calling `reportError(...)` (silent error swallow)
   - Returns a default value (e.g., `return null`, `return []`) without `reportError(...)` — the failure becomes invisible
@@ -35,7 +35,7 @@ The logger has none of the stack traces, grouping, or alerting the error tracker
 
 **Guidelines:**
 
-- MUST flag a Critical when the diff calls the logger's error level for a real error — the project routes errors through `reportError(...)` per [observability-guidelines › logging](../../observability-guidelines/references/logging.md).
+- MUST flag a Critical when the diff calls the logger's error level for a real error — the project routes errors through `reportError(...)` per the project's observability guidelines (logging rules).
 - MUST flag a Critical when a new module constructs its own logger instance directly instead of deriving a child from the project's shared root logger.
 - MUST flag a Major when a new module's logger label/namespace collides with an existing one — labels must stay unique so logs are attributable.
 - MUST flag a Major when a new slow / external operation lacks the start/complete log pair carrying a `duration`. Match the project's convention of bracketing each fetch / parse / IO operation with start and complete logs.
@@ -46,7 +46,7 @@ Log output is retained, indexed, and readable by far more people and systems tha
 
 **Guidelines:**
 
-- MUST flag a Critical when a log line interpolates a secret (token, password, session ID, full request body). Cross-reference with [application-security-requirements › secret-handling](../../application-security-requirements/references/secret-handling.md).
+- MUST flag a Critical when a log line interpolates a secret (token, password, session ID, full request body). Cross-reference with the project's application-security requirements (secret-handling rules).
 - MUST flag a Major when a log message violates the project's established message style (the linter/formatter and convention enforce it).
 - MUST flag a Major when an info-level log is emitted for a high-frequency operation (e.g., per-render of a server unit, per-iteration inside a tight loop). Log at the boundary of the operation, not inside it.
 

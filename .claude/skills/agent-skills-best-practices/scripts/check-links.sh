@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# check-links.sh — relative-link integrity check for a cross-linked skill tree.
+# check-links.sh — relative-link integrity check for a skill tree's Markdown links.
 #
 # Walks every Markdown file under the given roots — including the `.claude/`
 # dot-directory, which `glob('**/*.md')` sweeps silently skip — and reports

@@ -77,8 +77,8 @@ Consult the appropriate skill for detailed guidance on each area:
 
 | Topic | Skill |
 |---|---|
-| Error handling, error-reporting, and logging | [Observability Guidelines](../observability-guidelines/SKILL.md) |
-| End-to-end test structure, conventions, and commands | [E2E Testing Guidelines](../e2e-testing-guidelines/SKILL.md) |
+| Error handling, error-reporting, and logging | the project's observability guidelines |
+| End-to-end test structure, conventions, and commands | the project's end-to-end testing guidelines |
 
 Project-specific topic skills — covering repository structure, routing, UI components, visual design, the data/content layer, and any domain rules — are created per-project during INIT. Consult those skills when implementation touches the area they own, if they have been defined.
 

@@ -53,4 +53,4 @@ An external-fetch cache exists to shield a third-party dependency from per-reque
 **Guidelines:**
 
 - MUST flag a Critical when a cached external-fetch helper is changed to vary by request-time inputs, because that explodes the cache key.
-- SHOULD flag a Minor recommendation that newly-added external-fetch helpers also bracket their work with start/complete log pairs carrying a `duration`, so cache misses are observable. See [observability-guidelines › logging](../../observability-guidelines/references/logging.md).
+- SHOULD flag a Minor recommendation that newly-added external-fetch helpers also bracket their work with start/complete log pairs carrying a `duration`, so cache misses are observable. See the project's observability guidelines (logging rules).

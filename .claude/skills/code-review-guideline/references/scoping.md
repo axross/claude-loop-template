@@ -55,10 +55,10 @@ With nothing to diff, there is no defined change to review, and any files the re
 
 ## Repository-Specific Boundaries
 
-Style feedback on files the tooling produces is noise the author cannot act on, since the fix would mean changing the generator rather than the file. See [Development Guidelines › change-management](../../development-guidelines/references/change-management.md) for which paths the project treats as generated/managed.
+Style feedback on files the tooling produces is noise the author cannot act on, since the fix would mean changing the generator rather than the file. See the project's development guidelines (change-management rules) for which paths the project treats as generated/managed.
 
 **Guidelines:**
 
-- MUST NOT review generated or tool-managed files (e.g., framework- or data-layer-generated directories, generated type definitions, lockfiles) for code style. See [Development Guidelines › change-management](../../development-guidelines/references/change-management.md) for the project's list.
+- MUST NOT review generated or tool-managed files (e.g., framework- or data-layer-generated directories, generated type definitions, lockfiles) for code style. See the project's development guidelines (change-management rules) for the project's list.
 - MUST NOT review auto-generated data-layer schema migrations for code style. Only flag a migration if it appears to drop a column or rename a field destructively without a data backfill.
 - MUST consult the project's own structure / change-management skill (defined during INIT) for the exact set of paths to exclude from review, since these vary per project.

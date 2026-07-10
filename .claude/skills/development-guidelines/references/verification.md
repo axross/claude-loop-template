@@ -41,7 +41,7 @@ The e2e suite drives the real application through the full render pipeline, so i
   ```bash
   {{E2E_TEST_CMD}}
   ```
-- MUST follow the e2e authoring and coverage rules owned by [e2e-testing-guidelines](../../e2e-testing-guidelines/SKILL.md) and [quality-assurance-guidelines › e2e-coverage](../../quality-assurance-guidelines/references/e2e-coverage.md) — new-route/feature coverage, stable test-targetable identifiers, and co-location under `{{TEST_DIR}}` — rather than restating them here.
+- MUST follow the e2e authoring and coverage rules owned by the project's end-to-end testing guidelines and the project's quality-assurance guidelines (e2e-coverage rules) — new-route/feature coverage, stable test-targetable identifiers, and co-location under `{{TEST_DIR}}` — rather than restating them here.
 
 ## E2E Tests vs Unit Tests
 
@@ -65,7 +65,7 @@ The end-to-end suite should be configured to detect non-deterministic tests (for
 
 A red test is usually reporting a real regression; muting it ships the defect while destroying the signal that would have caught the next one.
 
-- Snapshots are typically platform-specific; regenerating them on one platform does not update the snapshots used on others (such as the CI runner). See [quality-assurance-guidelines › snapshot-handling](../../quality-assurance-guidelines/references/snapshot-handling.md) for the full snapshot-review discipline.
+- Snapshots are typically platform-specific; regenerating them on one platform does not update the snapshots used on others (such as the CI runner). See the project's quality-assurance guidelines (snapshot-handling rules) for the full snapshot-review discipline.
 
 **Guidelines:**
 

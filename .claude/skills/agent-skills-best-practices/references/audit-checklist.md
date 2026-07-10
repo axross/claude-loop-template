@@ -9,7 +9,7 @@ A useful audit moves from inventory to mechanics to judgment. Mechanical checks 
 1. Inventory skills and reference files.
 2. Verify the master index and parent `SKILL.md` links.
 3. Check parent routing-section format, section anatomy, and RFC-2119 guideline bullets.
-4. Check relative links outside code fences.
+4. Check relative links outside code fences resolve, and that cross-skill references are name-based rather than path links into another skill.
 5. Review content ownership and project fit.
 6. Report prioritized improvement items.
 
@@ -37,6 +37,7 @@ find .claude/skills -name '*.md' -print | sort
 - MUST check that every substantive rule section has a `**Guidelines:**` block after its explanation or demonstration.
 - MUST check that every guideline bullet begins with an RFC-2119 keyword.
 - MUST check that relative Markdown links outside fenced code blocks resolve; this skill's `scripts/check-links.sh` automates the check (see [cross-referencing.md](./cross-referencing.md)).
+- MUST check that cross-skill references are name-based and index-resolvable, not path links into another skill's `SKILL.md` or `references/` files.
 - SHOULD check for stale plain labels such as `Guidelines:` or `Example:` when the project standard is bold subheading-like labels.
 - SHOULD check for stale fenced `text` examples when a blockquote or table would be clearer.
 
@@ -57,7 +58,7 @@ Content review asks whether each skill owns one coherent responsibility and give
 - MUST identify duplicated source-of-truth rules across sibling skills.
 - MUST identify stale project assumptions, old framework guidance, missing commands, or paths that do not exist.
 - SHOULD flag generic advice that does not add project-specific value.
-- SHOULD prefer cross-links over copied doctrine when another skill owns the detailed rule.
+- SHOULD prefer a name-based cross-reference over copied doctrine when another skill owns the detailed rule.
 - SHOULD note where examples, tables, diagrams, or command snippets would make abstract guidance easier to apply.
 
 ## Report Shape

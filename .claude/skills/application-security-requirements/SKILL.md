@@ -73,7 +73,7 @@ See [auth-and-session.md](./references/auth-and-session.md) for:
 
 See [supply-chain.md](./references/supply-chain.md) for:
 
-- New dependencies justify their addition per [development-guidelines › change-management](../development-guidelines/references/change-management.md)
+- New dependencies justify their addition per the project's development guidelines (change-management rules)
 - New dependencies are reasonably popular, maintained, and platform-agnostic
 - Lockfile is updated; transitive additions are inspected for known-vulnerable versions
 - No `postinstall` / `prepare` script in a new dependency runs unexpected code

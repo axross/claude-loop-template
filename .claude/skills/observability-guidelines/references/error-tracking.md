@@ -12,8 +12,8 @@ This project uses {{ERROR_TRACKER}} as its error-reporting service, initialized 
 **Guidelines:**
 
 - MUST import error-reporting helpers from {{ERROR_TRACKER}}'s SDK, not from an unrelated or lower-level package.
-- MUST consult [Development Guidelines › current-docs](../../development-guidelines/references/current-docs.md) before changing the error tracker's init/config files, source maps, or runtime options.
-- MUST consult [Application Security Requirements › privacy and exposure](../../application-security-requirements/references/privacy-and-exposure.md) before adding event context, tags, user identifiers, breadcrumbs, or request data.
+- MUST consult the project's development guidelines (current-docs rules) before changing the error tracker's init/config files, source maps, or runtime options.
+- MUST consult the project's application-security requirements (privacy-and-exposure rules) before adding event context, tags, user identifiers, breadcrumbs, or request data.
 - SHOULD keep {{ERROR_TRACKER}} setup in the existing init/config files instead of scattering initialization across feature modules.
 
 ## Capturing Exceptions

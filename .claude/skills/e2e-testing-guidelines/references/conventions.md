@@ -55,7 +55,7 @@ To assert state that no native assertion covers (such as a computed style or a p
 **Guidelines:**
 
 - MUST prefer the framework's native auto-waiting assertions (visibility, focus, attribute, class, text, count) over evaluating DOM state and comparing it manually in the test. Native assertions auto-wait and produce clearer failure messages.
-- MUST NOT use fixed sleeps to "let the animation finish" (see [flakiness-tolerance.md](../../quality-assurance-guidelines/references/flakiness-tolerance.md)).
+- MUST NOT use fixed sleeps to "let the animation finish" (see the project's quality-assurance guidelines, flakiness-tolerance rules).
 - MUST use a polling / wait-for-condition helper to re-sample state until the expected value is reached when no native assertion covers it, such as scroll position, computed styles, scroll-driven animations, transitions, or intersection-observer-driven classes.
 
 ## Hooks Usage

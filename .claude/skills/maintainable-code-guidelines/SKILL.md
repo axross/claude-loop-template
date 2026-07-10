@@ -38,7 +38,7 @@ See [complexity-and-readability.md](./references/complexity-and-readability.md) 
 
 See [scope-discipline.md](./references/scope-discipline.md) for:
 
-- The diff matches the stated user goal — no drive-by refactors per [development-guidelines › change-management](../development-guidelines/references/change-management.md)
+- The diff matches the stated user goal — no drive-by refactors per the project's development guidelines (change-management rules)
 - Pre-existing problems are flagged separately, not bundled into this change
 - New abstractions are justified by ≥ 2 concrete call sites (YAGNI)
 - Repeated logic across the diff is consolidated only when the duplication is truly the same concern (DRY without coupling unrelated callers)

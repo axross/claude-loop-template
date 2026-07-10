@@ -61,5 +61,5 @@ If the data/content layer ships its own admin UI under a dedicated route segment
 
 **Guidelines:**
 
-- MUST NOT review files inside a tool-owned admin route segment per [code-review-guideline › scoping](../../code-review-guideline/references/scoping.md). The data/content layer owns that route segment.
+- MUST NOT review files inside a tool-owned admin route segment per the project's code-review guideline (scoping rules). The data/content layer owns that route segment.
 - MUST flag a Critical when a data-layer field is added with a "hidden from admin UI" flag to "hide" sensitive data — hiding is a UI affordance, not access control. Use the read access rule to actually gate the field.

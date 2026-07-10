@@ -13,7 +13,7 @@ Each of these hides a real race instead of fixing it, so the nondeterminism ship
   - a `try`/`catch` around an assertion to "make the test pass when it sometimes fails".
   - a skip/fixme marker added to suppress an intermittent failure rather than to skip a known-broken test with a tracked issue.
   - a retry loop wrapping an assertion.
-- MUST flag a Critical when the diff modifies the {{E2E_TEST_FRAMEWORK}} config to weaken anti-flake settings (repeat-each, fail-on-flaky, forbid-focused-tests) or to add retries. Defer the change to the human owner per [escalation.md](../../code-review-guideline/references/escalation.md).
+- MUST flag a Critical when the diff modifies the {{E2E_TEST_FRAMEWORK}} config to weaken anti-flake settings (repeat-each, fail-on-flaky, forbid-focused-tests) or to add retries. Defer the change to the human owner per the project's code-review guideline (escalation rules).
 
 ## Root-Cause Investigation
 

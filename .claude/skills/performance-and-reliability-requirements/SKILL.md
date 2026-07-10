@@ -43,7 +43,7 @@ See [image-optimization.md](./references/image-optimization.md) for:
 - Images and large assets go through the framework's optimized asset pipeline rather than raw, unoptimized elements
 - Intrinsic dimensions are provided so optimization can apply
 - Above-the-fold imagery is prioritized; below-the-fold imagery is lazy-loaded
-- New external image hosts are tightly scoped via an allowlist per [application-security-requirements › ssrf-and-embeds](../application-security-requirements/references/ssrf-and-embeds.md)
+- New external image hosts are tightly scoped via an allowlist per the project's application-security requirements (SSRF and embedded-content rules)
 
 ## Bundle and Dependency Weight
 
@@ -58,7 +58,7 @@ See [bundle-weight.md](./references/bundle-weight.md) for:
 
 See [error-and-observability.md](./references/error-and-observability.md) for:
 
-- `try`/`catch` is at the root call site (request entry point / top-level handler), not in nested helpers, per [observability-guidelines › error-handling](../observability-guidelines/references/error-handling.md)
+- `try`/`catch` is at the root call site (request entry point / top-level handler), not in nested helpers, per the project's observability guidelines (error-handling rules)
 - The error-reporting call fires before any early "not found" / redirect / return
-- Slow or external operations are bracketed by start/complete log pairs per [observability-guidelines › logging](../observability-guidelines/references/logging.md)
+- Slow or external operations are bracketed by start/complete log pairs per the project's observability guidelines (logging rules)
 - New routes/segments have error boundaries when they need custom error UI, and the root/last-resort error boundary is not bypassed

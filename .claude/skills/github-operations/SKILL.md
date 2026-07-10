@@ -51,8 +51,8 @@ The MUST bullets are non-negotiable; the SHOULD bullets are default delivery con
 - MUST NOT push to the default branch; work on the harness's push-allowed branch prefix (e.g. an agent-namespaced `agent/`- or `claude/`-prefixed branch).
 - MUST treat an agent review as advisory — it MUST NOT gate merges; an APPROVE would post as the operator's own approval (and can satisfy branch protection) even though the operator never gave it.
 - MUST post any pull-request review as a **COMMENT**-type review — never APPROVE or REQUEST_CHANGES; on pull requests the operator identity authored (the agent's own included) GitHub rejects APPROVE / REQUEST_CHANGES outright, so COMMENT is also the only event that always works.
-- MUST title every pull request per [commit-messages.md › Pull Request Titles](../development-guidelines/references/commit-messages.md#pull-request-titles) — a PR title follows the same Conventional Commits header format as a commit.
-- MUST structure every pull request body per [pull-request-descriptions.md](../development-guidelines/references/pull-request-descriptions.md) — reproduce the repository pull request template's sections when authoring the body through the API, where GitHub does not pre-fill it.
+- MUST title every pull request per the project's development guidelines (commit-messages rules, Pull Request Titles) — a PR title follows the same Conventional Commits header format as a commit.
+- MUST structure every pull request body per the project's development guidelines (pull-request-descriptions rules) — reproduce the repository pull request template's sections when authoring the body through the API, where GitHub does not pre-fill it.
 - SHOULD open a pull request in **draft** while work is in progress and leave merging to a human; a project whose agent is trusted to merge routine work MAY relax this.
 - SHOULD, when rewriting an issue body, preserve the original description verbatim in a collapsed `<details>` section rather than discarding it.
 
