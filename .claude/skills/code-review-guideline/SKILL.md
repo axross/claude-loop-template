@@ -42,8 +42,8 @@ See [severity.md](./references/severity.md) for:
 <!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep this section if the project adopts the posted-review channel (REVIEW.md at the repo root) OR delete it (and the marked posted-review bullets in ./references/severity.md and ./references/evidence.md, and the posted-review parenthetical in ./references/escalation.md); see the INIT.md Step-4 bullet. -->
 *If this project has no posted-review channel (no `REVIEW.md` at the repo root), delete this section during INIT.*
 
-When the review output is a **posted** pull-request review — the `/review`
-command, the CI reviewer, or a managed review product —
+When the review output is a **posted** pull-request review — the CI
+reviewer or a managed review product —
 [`REVIEW.md`](../../../REVIEW.md) at the repo root is the authoritative policy
 and overrides the vocabulary in this skill where they differ. The internal
 Critical/Major/Minor/Nit triage and verdict mapping still drive self-review;

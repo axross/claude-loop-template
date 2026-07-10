@@ -400,14 +400,14 @@ apply to the **skip** path.
   section's SHOULD bullets against your project's policy.
 - **No independent-review channel** (no posted-review policy, CI reviewer, or
   agent delivery loop) → delete every `INIT:OPTIONAL key=INDEPENDENT_REVIEW`
-  target: `REVIEW.md`, `.claude/commands/review.md`,
-  `.claude/commands/address.md`, `.github/workflows/claude-review.yaml`,
+  target: `REVIEW.md`, `.claude/commands/address.md`,
+  `.github/workflows/claude-review.yaml`,
   `.github/workflows/merge-checks.yaml`, the "Repository Review Policy Overlay"
   section in `code-review-guideline/SKILL.md`, the marked posted-review bullets
   in `code-review-guideline/references/severity.md` and
   `references/evidence.md`, the posted-review parenthetical in
   `references/escalation.md`, the marked SHOULD bullet in `AGENTS.md`'s
-  Review Independence Gates, and the marked `/address` / `/review` / `/handoff`
+  Review Independence Gates, and the marked `/address` / `/handoff`
   command subsections in `README.template.md`'s Development workflow section
   (replace them with a description of the project's own PR flow). Mind the knock-on: `.claude/commands/handoff.md`
   (`key=SESSION_HANDOFF`) resumes suspended work via `/address continue`, so on
@@ -623,7 +623,7 @@ Keep only the bindings for the agents named in Step 1.
   capabilities, and fill Related links (or delete that section) — and delete
   every `<!-- INIT… -->` comment in it. The finished README MUST cover: a
   quick summary, the tech stack, getting started, the development workflow
-  (including `/address` and `/review` when the independent-review capability
+  (including `/address` when the independent-review capability
   is kept), the testing strategy and its commands, and related links (when
   applicable).
 - Run `./init.sh check` and resolve everything it reports.
