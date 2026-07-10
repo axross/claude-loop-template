@@ -72,7 +72,7 @@ the posted report follows `REVIEW.md`.
   list excludes (CI-enforced checks, lockfiles, generated files), even where
   the severity floors would otherwise rate them Critical.
 - MUST keep a posted review **COMMENT**-type (never APPROVE /
-  REQUEST_CHANGES), per [github-operation-guidelines](../github-operation-guidelines/SKILL.md); the
+  REQUEST_CHANGES), per the project's GitHub operation guidelines; the
   reviewer is advisory and does not gate merges.
 
 ## Evidence-Based Reporting
@@ -105,14 +105,14 @@ See [escalation.md](./references/escalation.md) for:
 
 ## Topic-Specific Guidelines
 
-Consult the appropriate skill for detailed review checklists in each lens. These are the **reviewer's** lens; they layer on top of the developer-facing guidelines linked at the bottom and add "what to flag" rather than "how to write".
+Consult the appropriate skill for detailed review checklists in each lens. These are the **reviewer's** lens; they layer on top of the developer-facing guidelines referenced at the bottom and add "what to flag" rather than "how to write". Resolve each skill named below through the master skill index (`AGENTS.md`).
 
 | Lens | Skill |
 |---|---|
-| Readability, naming, complexity, abstraction boundaries, scope discipline, dead code | [Maintainable Code Guidelines](../maintainable-code-guidelines/SKILL.md) |
-| Verifying e2e coverage, snapshot handling, flakiness, manual verification, lint/format gate | [Quality Assurance Guidelines](../quality-assurance-guidelines/SKILL.md) |
-| OWASP-lens application security — secrets, input validation, access control, XSS, SSRF, auth, supply chain | [Application Security Requirements](../application-security-requirements/SKILL.md) |
-| Data-layer query cost (N+1), server/client boundary cost, caching correctness, asset/image optimization, bundle weight, error and observability hooks | [Performance and Reliability Requirements](../performance-and-reliability-requirements/SKILL.md) |
+| Readability, naming, complexity, abstraction boundaries, scope discipline, dead code | the project's maintainable-code guidelines |
+| Verifying e2e coverage, snapshot handling, flakiness, manual verification, lint/format gate | the project's quality-assurance guidelines |
+| OWASP-lens application security — secrets, input validation, access control, XSS, SSRF, auth, supply chain | the project's application-security requirements |
+| Data-layer query cost (N+1), server/client boundary cost, caching correctness, asset/image optimization, bundle weight, error and observability hooks | the project's performance-and-reliability requirements |
 
 In addition to the lenses above, the reviewer MUST also load the project's own topic-specific skills when they exist and overlap the diff — for example skills covering repository structure, components, routing, UI design, or the project's domain rules. These are project-specific skills created during INIT and are not part of this template; consult whichever ones the project defines.
 
@@ -128,14 +128,14 @@ Developer-facing skills own how to write project-conforming code. The review ski
 
 | Topic | Skill |
 |---|---|
-| Format/lint loop, change scope discipline, dependency / data-layer migration rules | [Development Guidelines](../development-guidelines/SKILL.md) |
-| Error handling and structured logging | [Observability Guidelines](../observability-guidelines/SKILL.md) |
-| End-to-end test structure, conventions, and commands | [E2E Testing Guidelines](../e2e-testing-guidelines/SKILL.md) |
-| Unit test structure, conventions, mocks/fixtures, and commands | [Unit Test Guidelines](../unit-test-guidelines/SKILL.md) |
+| Format/lint loop, change scope discipline, dependency / data-layer migration rules | the project's development guidelines |
+| Error handling and structured logging | the project's observability guidelines |
+| End-to-end test structure, conventions, and commands | the project's end-to-end testing guidelines |
+| Unit test structure, conventions, mocks/fixtures, and commands | the project's unit-test guidelines |
 
 In addition, the reviewer MUST defer to the project's own developer-facing skills when they exist — for example skills covering repository structure and file placement, routing/URL conventions, component conventions, or UI/visual design. These are project-specific skills created during INIT and are not part of this template; cite whichever ones the project defines instead of restating their rules.
 
 **Guidelines:**
 
 - MUST defer to these developer-facing skills when checking that a change conforms to project conventions.
-- MUST cite and link the owning guideline instead of restating its detailed rule in the review report.
+- MUST cite the owning guideline by name instead of restating its detailed rule in the review report.

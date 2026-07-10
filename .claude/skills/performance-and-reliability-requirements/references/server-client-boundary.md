@@ -33,7 +33,7 @@ Mixing loading and loaded concerns in one unit couples the skeleton to data that
 
 - MUST flag a Major when a new data-fetching unit does not separate its loading view, loaded view, and orchestrator when the loading state is user-visible. Match the project's canonical layout for such units.
 - MUST flag a Critical when a loading skeleton imports the loaded-data type and renders fields from it — the skeleton MUST render with no data so it can show before the fetch resolves.
-- MUST flag a Major when the orchestrator does not propagate the project's test-identifier convention to the loading fallback — automated tests cannot assert the skeleton state otherwise. See [e2e-testing-guidelines](../../e2e-testing-guidelines/SKILL.md).
+- MUST flag a Major when the orchestrator does not propagate the project's test-identifier convention to the loading fallback — automated tests cannot assert the skeleton state otherwise. See the project's end-to-end testing guidelines.
 
 ## Client Promotion
 
@@ -70,4 +70,4 @@ When the framework can statically prerender server-tier units, reading per-reque
 
 **Guidelines:**
 
-- MUST NOT recommend disabling the framework's compiler or static-rendering features to "fix" a perf issue — escalate to the human owner per [code-review-guideline › escalation](../../code-review-guideline/references/escalation.md).
+- MUST NOT recommend disabling the framework's compiler or static-rendering features to "fix" a perf issue — escalate to the human owner per the project's code-review guideline (escalation rules).

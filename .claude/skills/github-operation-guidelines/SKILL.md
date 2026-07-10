@@ -56,7 +56,7 @@ The MUST bullets are non-negotiable; the SHOULD bullets are default delivery con
 
 ## Commit Messages, Pull Request Titles, and Descriptions
 
-The Conventional Commits header format and the PR-description content rules are owned as single sources of truth by the project's development guidelines — see [commit-messages.md](../development-guidelines/references/commit-messages.md) and [pull-request-descriptions.md](../development-guidelines/references/pull-request-descriptions.md). This section does not restate them; it names the two consequences that operating GitHub through the API adds on top, so the format the reference mandates actually lands where it matters.
+The Conventional Commits header format and the PR-description content rules are owned as single sources of truth by the project's development guidelines (commit-messages and pull-request-descriptions rules). This section does not restate them; it names the two consequences that operating GitHub through the API adds on top, so the format those rules mandate actually lands where it matters.
 
 **Squash merge makes the title the permanent commit.** This project squash-merges pull requests, so the pull request *title* — not the individual in-progress commit subjects — becomes the squashed commit's subject on the default branch. The branch commits are collapsed at merge; the title is what survives in permanent history.
 
@@ -64,8 +64,8 @@ The Conventional Commits header format and the PR-description content rules are 
 
 **Guidelines:**
 
-- MUST title every pull request with a Conventional Commits header (`<type>[scope][!]: <description>`) per [commit-messages.md › Pull Request Titles](../development-guidelines/references/commit-messages.md#pull-request-titles). Because the squash merge promotes the title to the default-branch commit subject, a title missing a valid type prefix lands a non-conforming commit in permanent history — a silent defect, since nothing rejects it.
-- MUST author every pull request body from the repository template's sections per [pull-request-descriptions.md](../development-guidelines/references/pull-request-descriptions.md), reproducing them by hand because the API body is empty. Fill each kept section with real content — the problem and *why* over a mechanical restatement of the diff, verification evidence, risks, issue link — or delete the section; never leave an empty heading, placeholder, or unrendered instructional comment.
+- MUST title every pull request with a Conventional Commits header (`<type>[scope][!]: <description>`) per the project's development guidelines (commit-messages rules, Pull Request Titles). Because the squash merge promotes the title to the default-branch commit subject, a title missing a valid type prefix lands a non-conforming commit in permanent history — a silent defect, since nothing rejects it.
+- MUST author every pull request body from the repository template's sections per the project's development guidelines (pull-request-descriptions rules), reproducing them by hand because the API body is empty. Fill each kept section with real content — the problem and *why* over a mechanical restatement of the diff, verification evidence, risks, issue link — or delete the section; never leave an empty heading, placeholder, or unrendered instructional comment.
 - MUST keep the description concise and self-contained: orient the reviewer, summarize any linked page's load-bearing points inline (links rot), and update the body when review rounds change the scope or approach it describes.
 - SHOULD still write each in-progress commit as a well-formed Conventional Commit even though the squash collapses it at merge — those commits are the branch's human-readable trace between review rounds (see [Preserve History](#preserve-history--no-amend-or-force-push)).
 

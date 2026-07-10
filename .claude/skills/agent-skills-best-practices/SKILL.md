@@ -1,6 +1,6 @@
 ---
 name: agent-skills-best-practices
-description: Apply this skill whenever creating, refining, restructuring, renaming, or auditing an agent skill under the host project's skill root (e.g., `.claude/skills/`) - drafting a `SKILL.md`, splitting a skill into reference files, tightening a `description`, or deciding where a new rule belongs. Covers agentskills.io frontmatter, host-project harness fields, kebab-case naming, description writing for discovery, section anatomy with concise examples plus RFC-2119 guideline bullets, progressive disclosure, relative-path cross-references, archetype skeletons for the INIT-created project skills (structure, component, UI/design), audit checks, and keeping the host project's master skill index in sync.
+description: Apply this skill whenever creating, refining, restructuring, renaming, or auditing an agent skill under the host project's skill root (e.g., `.claude/skills/`) - drafting a `SKILL.md`, splitting a skill into reference files, tightening a `description`, or deciding where a new rule belongs. Covers agentskills.io frontmatter, host-project harness fields, kebab-case naming, description writing for discovery, section anatomy with concise examples plus RFC-2119 guideline bullets, progressive disclosure, name-based cross-references, archetype skeletons for the INIT-created project skills (structure, component, UI/design), audit checks, and keeping the host project's master skill index in sync.
 ---
 
 # Agent Skills Best Practices
@@ -55,7 +55,7 @@ See [cross-referencing.md](./references/cross-referencing.md) for:
 
 - adding, renaming, moving, deleting, or linking skills and reference files
 - choosing one source of truth instead of copying detailed rules across skills
-- verifying relative links and keeping the host project's master skill index synchronized
+- using name-based cross-skill references, verifying intra-skill relative links, and keeping the host project's master skill index synchronized
 
 ## Project Skill Archetypes
 
@@ -70,5 +70,5 @@ See [project-skill-archetypes.md](./references/project-skill-archetypes.md) for:
 See [audit-checklist.md](./references/audit-checklist.md) for:
 
 - auditing multiple skills or reporting skill-tree quality
-- checking inventory, index sync, section anatomy, RFC-2119 bullets, and relative links
+- checking inventory, index sync, section anatomy, RFC-2119 bullets, name-based cross-skill references, and relative links
 - identifying overlap, stale assumptions, orphan references, and missing source-of-truth links

@@ -9,8 +9,8 @@ The three INIT-created skills divide one surface without overlap: the structure 
 **Guidelines:**
 
 - MUST give each of the three skills exactly one side of the triangle: placement (structure), construction (component), appearance (UI/design).
-- MUST name, in each skill's opening paragraph, which neighboring skill owns the adjacent concerns, with relative links.
-- MUST keep the detailed wording of a shared rule in one owning skill and let neighbors link to it, per [cross-referencing.md](./cross-referencing.md).
+- MUST name, in each skill's opening paragraph, which neighboring skill owns the adjacent concerns, by name (resolved via the master index), not by path link.
+- MUST keep the detailed wording of a shared rule in one owning skill and let neighbors reference it by name, per [cross-referencing.md](./cross-referencing.md).
 - SHOULD route appearance decisions ("which color role, which control") to the UI/design skill even when they arise mid-implementation.
 
 ## Structure-Skill Skeleton
@@ -50,7 +50,7 @@ The component skill owns construction strategy and mechanics. At full size it us
 - MUST include a component catalog with a "compose existing components instead of re-creating their look" rule, kept current as components are added or removed.
 - MUST define the tier boundary with a mechanically checkable import rule: an explicit allowed/forbidden import list plus the check command (e.g., a grep expected to return nothing) that verifies it.
 - MUST state promotion criteria: how much duplication earns a shared component, and when a single-consumer pattern stays local.
-- MUST cover component anatomy including test-id hooks, and cross-link the unit-test and e2e skills for how those hooks are consumed.
+- MUST cover component anatomy including test-id hooks, and cross-reference the unit-test and e2e skills by name for how those hooks are consumed.
 - SHOULD cover styling composition and logic extraction as their own sections or reference files once the codebase exercises them.
 
 ## UI-Design-Skill Pattern

@@ -16,7 +16,7 @@ The bundler follows every import edge regardless of how little of a module is us
   - An error-tracker's server-only entry points
   - Native runtime / platform builtins (e.g., `node:*` modules)
   - A "server-only" marker package (importing it in a client file is a build error by design)
-- MUST flag a Critical when a client-tier file imports from a server-only module tier (e.g., the data-access or data-layer-config directories). These tiers contain server-only code per [maintainable-code-guidelines › abstraction-boundaries](../../maintainable-code-guidelines/references/abstraction-boundaries.md).
+- MUST flag a Critical when a client-tier file imports from a server-only module tier (e.g., the data-access or data-layer-config directories). These tiers contain server-only code per the project's maintainable-code guidelines (abstraction-boundaries rules).
 
 ## Heavy Client Dependencies
 
@@ -28,7 +28,7 @@ Server-tier code costs the server once per request; client-tier code costs every
   - A utility library is fine, but flag it if the diff pulls in many of its submodules and the work could happen on the server tier.
   - A library that is necessarily client-side (e.g., browser analytics) — do not flag.
   - Tiny utilities — do not flag.
-- MUST flag a Major when a new dependency with a large installed size (roughly > 200 KB) is imported into a client-tier file. Cross-reference with [application-security-requirements › supply-chain](../../application-security-requirements/references/supply-chain.md).
+- MUST flag a Major when a new dependency with a large installed size (roughly > 200 KB) is imported into a client-tier file. Cross-reference with the project's application-security requirements (supply-chain rules).
 
 ## Re-Exports and Barrel Files
 
@@ -36,7 +36,7 @@ A barrel import hands the bundler the whole index, and everything the re-exports
 
 **Guidelines:**
 
-- MUST flag a Critical when a new barrel file is created that re-exports many items and is imported from a client-tier file. Import directly from the source module per [development-guidelines › code-quality](../../development-guidelines/references/code-quality.md).
+- MUST flag a Critical when a new barrel file is created that re-exports many items and is imported from a client-tier file. Import directly from the source module per the project's development guidelines (code-quality rules).
 - MUST flag a Major when a new client unit imports from a file that itself re-exports server-only modules. The transitive pull will fail the build at best and bloat the client bundle at worst.
 
 ## Server-External Package Configuration

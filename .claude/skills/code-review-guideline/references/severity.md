@@ -30,7 +30,7 @@ These categories use fixed minimum severities, regardless of perceived "smallnes
 | New test failure introduced, or removal of an existing assertion that covered changed behavior | Critical |
 | Missing `await` on a Promise returned from a data-layer or network call | Critical |
 | Importing a server-only module from a client-side module (or otherwise crossing the server/client boundary unsafely) | Critical |
-| New dependency added without justification per [development-guidelines › change-management](../../development-guidelines/references/change-management.md) | Major |
+| New dependency added without justification per the project's development guidelines (change-management rules) | Major |
 | Snapshot regenerated without explanation when the observable change was intentional but undocumented | Major |
 | Data fetched on every request without caching when the data is cacheable | Major |
 | Client-side code pulled into a path that was previously server-only, materially increasing client bundle weight, with no interactivity justification | Major |
