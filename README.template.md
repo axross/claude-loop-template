@@ -62,16 +62,20 @@ session:
 
 1. **Plan** — reads the issue and its thread, asks you the product and scope
    questions the spec leaves open, and rewrites the issue body into a
-   reviewable plan with acceptance criteria.
-2. **Code + verify** — implements on an agent-namespaced branch, runs the
-   checks the changed surface requires, and self-reviews the diff.
+   reviewable plan with acceptance criteria. It then **always pauses for your
+   approval**: it verifies nothing gets built until you review the plan and
+   send `/address continue`.
+2. **Code + verify** — implements the approved plan (on a separate worktree
+   unless it is running in a Claude Code cloud environment, so it never blocks
+   your working copy) on an agent-namespaced branch, runs the checks the
+   changed surface requires, and self-reviews the diff.
 3. **Independent review** — opens a draft pull request and requests the CI
    reviewer, a separate bot session, so the code's author never certifies its
    own work.
 4. **Address** — fixes review findings and CI failures, tying each resolved
    thread to the resolving commit, for up to four rounds.
-5. **Ready** — flips the pull request to ready and pings the maintainer once
-   CI is green and the review is clean. Merging always stays a human decision.
+5. **Ready** — flips the pull request to ready once CI is green and the review
+   is clean. Merging always stays a human decision.
 
 Practical examples:
 
@@ -80,17 +84,17 @@ Practical examples:
 /address 57                                        # resume delivery of open PR #57
 /address The 404 page should link back home        # no issue yet: files a tracking
                                                    #   issue, then delivers it
-/address --review-plan 42                          # same delivery, but pauses for
-                                                   #   your approval after the plan
-/address continue                                  # resume a paused run — after you
-                                                   #   answer a question, leave PR
-                                                   #   comments, or start a fresh
-                                                   #   session from a /handoff package
+/address continue                                  # approve a paused plan, or resume
+                                                   #   after you answer a question,
+                                                   #   leave PR comments, or start a
+                                                   #   fresh session from a /handoff
+                                                   #   package
 ```
 
-The run pauses whenever it genuinely needs a human — an ambiguous requirement,
-a plan approval, a judgment call on conflicting changes — and `/address
-continue` picks it back up where it stopped.
+Every run pauses after the plan for your approval, and pauses again whenever it
+genuinely needs a human — an ambiguous requirement, a judgment call on
+conflicting changes — and `/address continue` picks it back up where it
+stopped.
 
 ### `/review` — get findings on any diff
 
