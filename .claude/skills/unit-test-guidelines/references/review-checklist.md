@@ -1,6 +1,6 @@
 # Review Checklist
 
-Use this checklist during implementation self-review or code review for {{UNIT_TEST_FRAMEWORK}} unit tests. It complements [Quality Assurance Guidelines](../../quality-assurance-guidelines/SKILL.md), which owns verification evidence and residual-risk reporting.
+Use this checklist during implementation self-review or code review for {{UNIT_TEST_FRAMEWORK}} unit tests. It complements the project's quality-assurance guidelines, which owns verification evidence and residual-risk reporting.
 
 ## Mandatory Verification
 

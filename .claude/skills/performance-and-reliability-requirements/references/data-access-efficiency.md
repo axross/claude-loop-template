@@ -14,7 +14,7 @@ Every read against the data layer should make its projection, relationship depth
 | Field selection (projection) | Without an explicit projection, the data layer returns every field on every record, including large blobs (e.g., a full body/content field). Select only what the consumer renders. |
 | Relationship depth | If the data layer auto-populates related records, an unbounded or deep population fans out joins. Removing an explicit shallow depth is Critical when the consumer relies on populated relationships; an excessively deep population is Major because each level multiplies the work. |
 | Result limit | Many data layers apply a small default limit silently. Flag a Critical when the consumer expects all records but no limit is set (the user will silently see a truncated subset). Match the project's established bounding pattern. |
-| Filter / predicate | Required when fetching anything other than "all of this collection". Visibility-restricted reads must filter out records the caller is not allowed to see, per [application-security-requirements › access-control](../../application-security-requirements/references/access-control.md). |
+| Filter / predicate | Required when fetching anything other than "all of this collection". Visibility-restricted reads must filter out records the caller is not allowed to see, per the project's application-security requirements (access-control rules). |
 
 **Guidelines:**
 
@@ -57,7 +57,7 @@ A migration runs against production data exactly once, and a dropped or renamed 
 
 **Guidelines:**
 
-- MUST flag a Critical when a new data-layer schema migration drops a column or renames a field on a collection/table that holds production data, without a data-backfill step. Defer to the human owner per [code-review-guideline › escalation](../../code-review-guideline/references/escalation.md).
+- MUST flag a Critical when a new data-layer schema migration drops a column or renames a field on a collection/table that holds production data, without a data-backfill step. Defer to the human owner per the project's code-review guideline (escalation rules).
 - MUST flag a Major when a new field used in a filter predicate is added without an index — the storage engine will full-scan. Either add an index to the field or document the expected row count.
 
 ## Locale / Variant Handling

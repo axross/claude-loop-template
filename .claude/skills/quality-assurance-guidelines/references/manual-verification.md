@@ -1,6 +1,6 @@
 # Manual Verification Evidence
 
-Apply these rules to verify the author exercised the change in the running app before relying on the e2e suite. Manual verification is the **first line** of confirmation per [development-guidelines › verification](../../development-guidelines/references/verification.md).
+Apply these rules to verify the author exercised the change in the running app before relying on the e2e suite. Manual verification is the **first line** of confirmation per the project's development guidelines (verification rules).
 
 ## Required Manual Checks
 

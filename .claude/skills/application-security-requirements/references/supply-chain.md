@@ -8,7 +8,7 @@ A dependency is a permanent liability — maintenance, security surface, and wei
 
 **Guidelines:**
 
-- MUST flag a Major when the diff adds a new entry to the dependency manifest (runtime or dev dependencies) without a justification per [development-guidelines › change-management](../../development-guidelines/references/change-management.md). The author should have considered ≥ 2 alternatives and chosen the most popular / well-maintained / platform-agnostic option.
+- MUST flag a Major when the diff adds a new entry to the dependency manifest (runtime or dev dependencies) without a justification per the project's development guidelines (change-management rules). The author should have considered ≥ 2 alternatives and chosen the most popular / well-maintained / platform-agnostic option.
 - MUST flag a Major when a new dependency duplicates functionality already available in:
   - A package already in the manifest
   - A built-in standard-library API of the runtime
@@ -64,7 +64,7 @@ A dependency that cannot be tree-shaken ships its whole body to the browser, tax
 
 **Guidelines:**
 
-- MUST flag a Major when the new dependency lacks tree-shaking support (no ESM, no `sideEffects: false`) and is imported into a client component or shared module that gets bundled into the client. Cross-reference with [performance-and-reliability-requirements › bundle-weight](../../performance-and-reliability-requirements/references/bundle-weight.md).
+- MUST flag a Major when the new dependency lacks tree-shaking support (no ESM, no `sideEffects: false`) and is imported into a client component or shared module that gets bundled into the client. Cross-reference with the project's performance-and-reliability requirements (bundle-weight rules).
 - MUST flag a Critical when a new dependency is added to the app framework's "externalize from the server bundle" list without justification — entries there are typically native or stream-based packages incompatible with the bundler.
 
 ## Transitive CVEs
