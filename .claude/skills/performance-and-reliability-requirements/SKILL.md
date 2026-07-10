@@ -43,7 +43,7 @@ See [image-optimization.md](./references/image-optimization.md) for:
 - Images and large assets go through the framework's optimized asset pipeline rather than raw, unoptimized elements
 - Intrinsic dimensions are provided so optimization can apply
 - Above-the-fold imagery is prioritized; below-the-fold imagery is lazy-loaded
-- New external image hosts are tightly scoped via an allowlist per the project's application-security requirements (SSRF and embedded-content rules)
+- New external image hosts are tightly scoped via an allowlist per the project's application-security requirements (ssrf-and-embeds rules)
 
 ## Bundle and Dependency Weight
 
