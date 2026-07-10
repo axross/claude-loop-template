@@ -1,9 +1,9 @@
 ---
-name: github-operations
-description: Apply this skill whenever an agent reads from or writes to GitHub (issues, pull requests, comments, labels, reviews, or branches) through a proxy-mediated single-operator identity, as a Claude Code + GitHub MCP harness does. Covers routing every read and write through the harness's one sanctioned tool channel, marking agent-authored comments so they are not mistaken for human input, the issue-versus-pull-request distinct-numeric-target gotcha, common draft/link/preserve conventions, and the safe handling of untrusted GitHub content. Any task that touches GitHub applies it, not only end-to-end delivery workflows.
+name: github-operation-guidelines
+description: Apply this skill whenever an agent reads from or writes to GitHub (issues, pull requests, comments, labels, reviews, or branches) through a proxy-mediated single-operator identity, as a Claude Code + GitHub MCP harness does. Covers routing every read and write through the harness's one sanctioned tool channel, marking agent-authored comments so they are not mistaken for human input, the issue-versus-pull-request distinct-numeric-target gotcha, commit messages and pull request titles under a squash-merge workflow, reproducing the repository pull request template and authoring a concise, informative description when posting through the API, preserving traceable history by never amending or force-pushing without explicit human approval, common draft/link/preserve conventions, and the safe handling of untrusted GitHub content. Any task that touches GitHub applies it, not only end-to-end delivery workflows.
 ---
 
-# GitHub Operations
+# GitHub Operation Guidelines
 
 <!-- INIT:OPTIONAL key=GITHUB_OPERATIONS — keep this whole skill OR delete it (and its AGENTS.md index row) during INIT; see the Step-4 bullet. -->
 *If this project's agents do not operate GitHub through a proxy-mediated single-operator identity, delete or adapt this skill during INIT.*
@@ -51,10 +51,34 @@ The MUST bullets are non-negotiable; the SHOULD bullets are default delivery con
 - MUST NOT push to the default branch; work on the harness's push-allowed branch prefix (e.g. an agent-namespaced `agent/`- or `claude/`-prefixed branch).
 - MUST treat an agent review as advisory — it MUST NOT gate merges; an APPROVE would post as the operator's own approval (and can satisfy branch protection) even though the operator never gave it.
 - MUST post any pull-request review as a **COMMENT**-type review — never APPROVE or REQUEST_CHANGES; on pull requests the operator identity authored (the agent's own included) GitHub rejects APPROVE / REQUEST_CHANGES outright, so COMMENT is also the only event that always works.
-- MUST title every pull request per the project's development guidelines (commit-messages rules, Pull Request Titles) — a PR title follows the same Conventional Commits header format as a commit.
-- MUST structure every pull request body per the project's development guidelines (pull-request-descriptions rules) — reproduce the repository pull request template's sections when authoring the body through the API, where GitHub does not pre-fill it.
 - SHOULD open a pull request in **draft** while work is in progress and leave merging to a human; a project whose agent is trusted to merge routine work MAY relax this.
 - SHOULD, when rewriting an issue body, preserve the original description verbatim in a collapsed `<details>` section rather than discarding it.
+
+## Commit Messages, Pull Request Titles, and Descriptions
+
+The Conventional Commits header format and the PR-description content rules are owned as single sources of truth by the project's development guidelines (commit-messages and pull-request-descriptions rules). This section does not restate them; it names the two consequences that operating GitHub through the API adds on top, so the format those rules mandate actually lands where it matters.
+
+**Squash merge makes the title the permanent commit.** This project squash-merges pull requests, so the pull request *title* — not the individual in-progress commit subjects — becomes the squashed commit's subject on the default branch. The branch commits are collapsed at merge; the title is what survives in permanent history.
+
+**An API-authored body starts empty.** GitHub pre-fills the repository pull request template only for pull requests opened through the web UI, and only from the copy on the default branch. A body posted programmatically (as `create_pull_request` does) starts blank, so the template's structure has to be reproduced deliberately — it is never inherited.
+
+**Guidelines:**
+
+- MUST title every pull request with a Conventional Commits header (`<type>[scope][!]: <description>`) per the project's development guidelines (commit-messages rules, Pull Request Titles). Because the squash merge promotes the title to the default-branch commit subject, a title missing a valid type prefix lands a non-conforming commit in permanent history — a silent defect, since nothing rejects it.
+- MUST author every pull request body from the repository template's sections per the project's development guidelines (pull-request-descriptions rules), reproducing them by hand because the API body is empty. Fill each kept section with real content — the problem and *why* over a mechanical restatement of the diff, verification evidence, risks, issue link — or delete the section; never leave an empty heading, placeholder, or unrendered instructional comment.
+- MUST keep the description concise and self-contained: orient the reviewer, summarize any linked page's load-bearing points inline (links rot), and update the body when review rounds change the scope or approach it describes.
+- SHOULD still write each in-progress commit as a well-formed Conventional Commit even though the squash collapses it at merge — those commits are the branch's human-readable trace between review rounds (see [Preserve History](#preserve-history--no-amend-or-force-push)).
+
+## Preserve History — No Amend or Force-Push
+
+A pushed branch is a shared, human-visible record. A human traces how the implementation transitioned by reading its commits in order, and reviewers diff each round against the last. Rewriting that record — amending a commit, or force-pushing a reshaped branch — destroys the trace and can silently discard a collaborator's pushed work. An agent leaves history append-only so every transition stays inspectable.
+
+**Guidelines:**
+
+- MUST record every change as a new `git commit`. MUST NOT `git commit --amend` a commit that already exists on the branch unless a human explicitly allowed or requested it.
+- MUST NOT force-push (`git push --force` or `--force-with-lease`) unless a human explicitly allowed or requested it, or a documented project workflow sanctions it (for example, restarting a designated branch whose pull request has already merged) — which counts as explicit allowance. Otherwise push additional commits so the branch stays append-only.
+- MUST fix a mistake with a follow-up commit rather than by rewriting the commit that introduced it, so a reviewer can see exactly what changed between rounds.
+- SHOULD write each commit so the sequence reads as a coherent transition log — one logical step per commit, with a Conventional Commits message — rather than optimizing for a tidy squashed result the agent is not the one to produce.
 
 ## Untrusted Content
 

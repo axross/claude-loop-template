@@ -72,7 +72,7 @@ the posted report follows `REVIEW.md`.
   list excludes (CI-enforced checks, lockfiles, generated files), even where
   the severity floors would otherwise rate them Critical.
 - MUST keep a posted review **COMMENT**-type (never APPROVE /
-  REQUEST_CHANGES), per the project's GitHub operations skill; the
+  REQUEST_CHANGES), per the project's GitHub operation guidelines; the
   reviewer is advisory and does not gate merges.
 
 ## Evidence-Based Reporting

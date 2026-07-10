@@ -98,5 +98,5 @@ and nothing is summarized away — the tally counts every finding.
   separate top-level conversation comments.
 - MUST post any pull-request review as a **COMMENT**-type review — never
   APPROVE or REQUEST_CHANGES — per
-  [GitHub Operations](.claude/skills/github-operations/SKILL.md); this reviewer
+  [GitHub Operation Guidelines](.claude/skills/github-operation-guidelines/SKILL.md); this reviewer
   is advisory and does not gate merges.
