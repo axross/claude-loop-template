@@ -392,7 +392,7 @@ apply to the **skip** path.
     keep the bullet but fold the rule inline — "errors are rethrown or
     reported, never swallowed" — instead of linking the rethrow rule.
 - **Agents do not operate GitHub through a proxied single-operator identity**
-  → delete `.claude/skills/github-operations/` and its `AGENTS.md` skill-index
+  → delete `.claude/skills/github-operation-guidelines/` and its `AGENTS.md` skill-index
   row. If they do (e.g. a Claude Code session using the GitHub MCP server),
   keep the skill, delete its `<!-- INIT:OPTIONAL -->` marker and the italic
   "_delete or adapt_" note, replace the example tool-channel, marker, and
@@ -427,7 +427,7 @@ apply to the **skip** path.
     review trigger phrase";
   - replace the `@<maintainer>`, agent-comment-marker, and branch-prefix
     examples in `.claude/commands/address.md` with the project's real values
-    per `github-operations`;
+    per `github-operation-guidelines`;
   - the `{{INSTALL_CMD}}` / `{{LINT_CMD}}` / `{{UNIT_TEST_CMD}}` run commands
     in `merge-checks.yaml` are substituted by `./init.sh apply` like every
     other token; only the toolchain setup (setup-node, `.nvmrc`, the npm

@@ -33,7 +33,7 @@ it, with the working agreement kept in `AGENTS.md` and loaded through
     │   ├── code-review-guideline/
     │   ├── development-guidelines/
     │   ├── e2e-testing-guidelines/
-    │   ├── github-operations/
+    │   ├── github-operation-guidelines/
     │   ├── maintainable-code-guidelines/
     │   ├── observability-guidelines/
     │   ├── performance-and-reliability-requirements/

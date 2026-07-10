@@ -72,7 +72,7 @@ the posted report follows `REVIEW.md`.
   list excludes (CI-enforced checks, lockfiles, generated files), even where
   the severity floors would otherwise rate them Critical.
 - MUST keep a posted review **COMMENT**-type (never APPROVE /
-  REQUEST_CHANGES), per [github-operations](../github-operations/SKILL.md); the
+  REQUEST_CHANGES), per [github-operation-guidelines](../github-operation-guidelines/SKILL.md); the
   reviewer is advisory and does not gate merges.
 
 ## Evidence-Based Reporting
