@@ -61,8 +61,8 @@ Apply these keywords consistently in this document and the documents linked from
 
 ### Workflow Entry Points
 
-<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep the Address row if the project keeps the independent-review capability, else delete it (and this whole subsection once no entry-point skill remains); see the INIT.md Step-4 bullet. -->
-<!-- INIT:OPTIONAL key=SESSION_HANDOFF — keep the Handoff row if the project keeps /handoff; it depends on /address for its take-over side. -->
+<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — Fixed: the /address and /handoff skills are fixed infrastructure (INIT.md Step 4), so KEEP this subsection and both rows; just delete this marker and the key=SESSION_HANDOFF one below. -->
+<!-- INIT:OPTIONAL key=SESSION_HANDOFF — Fixed: the Handoff row stays with the fixed /handoff skill; its take-over side lives in /address. Just delete this marker. -->
 Unlike the guideline skills above, these skills are runnable workflows: a human launches one as `/<name>` (or the agent invokes it when its `when_to_use` matches), so they carry `user-invocable: true` and an `argument-hint` per [Agent Skills Best Practices](.claude/skills/agent-skills-best-practices/SKILL.md).
 
 | Skill | What it drives |
@@ -134,8 +134,8 @@ A single agent cannot provide true independent review. This project compensates 
 - MUST perform a second-pass re-review after fixing any blocking self-review finding.
 - MUST report verification evidence before completion: commands run, manual checks, failures, skipped checks, and residual risk.
 - MUST escalate high-risk changes to user review, CI/PR review, or an explicitly requested secondary review before calling them merge-ready.
-<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep the next bullet if the project adopts the independent-review capability (REVIEW.md at the repo root) OR delete it; see the INIT.md Step-4 bullet. -->
-- SHOULD route that escalation through the project's independent-review channel — the posted-review policy in [REVIEW.md](./REVIEW.md) — when the project adopts one.
+<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — Fixed: the independent-review channel is fixed infrastructure (INIT.md Step 4), so KEEP the next bullet; just delete this marker. -->
+- SHOULD route that escalation through the project's independent-review channel — the posted-review policy in [REVIEW.md](./REVIEW.md).
 - SHOULD treat auth, access control, injection/output-encoding, SSRF/outbound fetching, data-layer migrations, public route/API contracts, production config, data-loss risk, and large refactors as high-risk.
 
 ### Verification

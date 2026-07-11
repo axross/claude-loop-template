@@ -6,7 +6,7 @@ argument-hint: <issue-or-pr number/URL | free-form prompt | continue>
 user-invocable: true
 ---
 
-<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — Claude Code + GitHub MCP harness binding EXAMPLE for the independent-review capability. Keep (and adapt: replace `@<maintainer>` with the connected operator's real handle, confirm the agent-comment marker and push-allowed branch prefix recorded in github-operation-guidelines, and swap the harness-specific tool names for your harness's equivalents) OR delete this file with the capability; see the INIT.md Step-4 bullet. -->
+<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — Fixed Claude Code + GitHub MCP workflow entry-point skill driving the independent-review delivery loop. INIT KEEPS this file (never deletes it): the /address and /handoff skills are fixed infrastructure, see INIT.md Step 4. Just delete this marker and adapt the binding — replace `@<maintainer>` with the connected operator's real handle, confirm the agent-comment marker and push-allowed branch prefix recorded in github-operation-guidelines, and swap the harness-specific tool names for the harness's equivalents. -->
 
 You are the `/address` driver. Take one unit of work — a GitHub issue, a pull request, or a free-form prompt — from intake to a review-ready pull request inside this single continuing session.
 

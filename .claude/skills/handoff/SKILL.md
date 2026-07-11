@@ -6,7 +6,7 @@ argument-hint: (takes no arguments)
 user-invocable: true
 ---
 
-<!-- INIT:OPTIONAL key=SESSION_HANDOFF — Claude Code harness binding for cross-session work handoff. No token to fill and no Step-1 decision — keep it as-is (swapping the named Claude Code tools, e.g. `AskUserQuestion` and `SendUserFile`, for your harness's equivalents if they differ) OR delete this file if the project doesn't want the /handoff capability. The take-over side lives in `/address continue` ([the address skill](../address/SKILL.md)), so this skill depends on the INDEPENDENT_REVIEW capability: if the project deletes /address, either delete this file too or point the resume instructions at a replacement take-over entry point. -->
+<!-- INIT:OPTIONAL key=SESSION_HANDOFF — Fixed Claude Code workflow entry-point skill for cross-session work handoff. INIT KEEPS this file (never deletes it): the /address and /handoff skills are fixed infrastructure, see INIT.md Step 4. No token to fill and no keep-or-delete decision — just delete this marker, and swap the named Claude Code tools (e.g. `AskUserQuestion`, `SendUserFile`) for the harness's equivalents if they differ. The take-over side lives in `/address continue` ([the address skill](../address/SKILL.md)), which is also fixed. -->
 
 You are the `/handoff` driver. This skill suspends one unit of in-progress work at a session boundary: the outgoing session freezes its state into a self-contained package the human can download. Taking the work over is **not** this skill's job — a fresh-context session, with zero shared context, rebuilds that state and continues the work when the human attaches the package there and sends `/address continue` (see [the address skill](../address/SKILL.md)).
 

@@ -7,8 +7,8 @@ user-invocable: false
 
 # GitHub Operation Guidelines
 
-<!-- INIT:OPTIONAL key=GITHUB_OPERATIONS — keep this whole skill OR delete it (and its AGENTS.md index row) during INIT; see the Step-4 bullet. -->
-*If this project's agents do not operate GitHub through a proxy-mediated single-operator identity, delete or adapt this skill during INIT.*
+<!-- INIT:OPTIONAL key=GITHUB_OPERATIONS — Fixed skill: INIT KEEPS it (never deletes it), see INIT.md Step 4. Just delete this marker and the italic note below, and adapt the example tool-channel, marker, and branch-prefix names to the project's real values. A project doing no GitHub automation leaves the rules dormant rather than removing the skill. -->
+*Adapt this skill's tool-channel, agent-comment marker, and branch-prefix examples to the project's real values during INIT.*
 
 How an agent reads and writes GitHub from inside a harness that proxies access as a single connected operator — the model a Claude Code session using the GitHub MCP server operates under. These conventions are workflow-agnostic: any task that touches an issue, pull request, comment, label, review, or branch applies them. The examples name the `mcp__github__*` tools provided by the connected GitHub MCP server; on a different agent that operates GitHub the same way, substitute its equivalent sanctioned channel.
 

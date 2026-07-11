@@ -52,7 +52,7 @@ detailed skills under [`.claude/skills/`](./.claude/skills). Human and agent
 contributors follow the same loop: plan → implement → self-review → verify →
 report.
 
-<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep the workflow subsections below if the project keeps the independent-review capability (REVIEW.md + /address); delete them otherwise and describe the project's own PR flow instead. -->
+<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — Fixed: the independent-review channel and `/address` are fixed infrastructure (INIT.md Step 4), so KEEP the workflow subsections below; just delete this marker (and adapt the copy to the project's stack). -->
 ### `/address` — deliver a unit of work end-to-end
 
 [`/address`](./.claude/skills/address/SKILL.md) is the main delivery entry point.
@@ -105,7 +105,7 @@ evidence and concrete fixes, posted as inline comments by the CI reviewer
 pre-merge check on a hand-written change or a second opinion before merging; the
 same review runs automatically against `/address` pull requests.
 
-<!-- INIT:OPTIONAL key=SESSION_HANDOFF — delete this subsection if the project dropped /handoff. -->
+<!-- INIT:OPTIONAL key=SESSION_HANDOFF — Fixed: `/handoff` is fixed infrastructure (INIT.md Step 4), so KEEP this subsection; just delete this marker. -->
 ### `/handoff` — suspend work for another session
 
 [`/handoff`](./.claude/skills/handoff/SKILL.md) packages in-progress work — goal,
