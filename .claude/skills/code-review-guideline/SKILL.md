@@ -1,6 +1,8 @@
 ---
 name: code-review-guideline
-description: Apply this skill at the start of EVERY review task, including post-implementation self-review. Covers reviewer-mode reset, diff scoping with `git status`/`git diff`, severity labels, file-line evidence, fix snippets, verification evidence, second-pass re-review after fixes, escalation for high-risk changes, and topic-specific lenses for maintainability, QA, security, performance, observability, and e2e tests. Use for "review", "PR", "audit", "check this change", or self-review prompts.
+description: The review methodology for every review task, including post-implementation self-review. Covers reviewer-mode reset, diff scoping with `git status`/`git diff`, severity labels, file-line evidence, fix snippets, verification evidence, second-pass re-review after fixes, escalation for high-risk changes, and topic-specific lenses for maintainability, QA, security, performance, observability, and e2e tests.
+when_to_use: Apply at the start of EVERY review task — "review", "PR", "audit", "check this change", or a self-review of your own diff before claiming completion.
+user-invocable: false
 ---
 
 # Code Review Guideline

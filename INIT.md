@@ -6,7 +6,9 @@ project built on an `AGENTS.md`-driven skill system. It ships:
 - `AGENTS.md` — the master routing index + working agreement (the shared entry
   point each agent binding routes through).
 - `CLAUDE.md` — a one-line binding (`@AGENTS.md`) so Claude Code loads `AGENTS.md`.
-- `.claude/skills/**` — a generic, cross-project **skill core** (12 skills).
+- `.claude/skills/**` — a generic, cross-project **skill core** (12 guideline
+  skills), plus optional workflow entry-point skills (`/address`, `/handoff`)
+  kept or deleted with their capabilities in Step 4.
 - `.claude/**` — an **example** Claude Code harness binding (hooks + settings).
 - `README.template.md` — a seed for the initialized project's own README
   (summary, tech stack, getting started, development workflow, testing,
@@ -400,18 +402,21 @@ apply to the **skip** path.
   section's SHOULD bullets against your project's policy.
 - **No independent-review channel** (no posted-review policy, CI reviewer, or
   agent delivery loop) → delete every `INIT:OPTIONAL key=INDEPENDENT_REVIEW`
-  target: `REVIEW.md`, `.claude/commands/address.md`,
+  target: `REVIEW.md`, `.claude/skills/address/SKILL.md`,
   `.github/workflows/claude-review.yaml`,
   `.github/workflows/merge-checks.yaml`, the "Repository Review Policy Overlay"
   section in `code-review-guideline/SKILL.md`, the marked posted-review bullets
   in `code-review-guideline/references/severity.md` and
   `references/evidence.md`, the posted-review parenthetical in
   `references/escalation.md`, the marked SHOULD bullet in `AGENTS.md`'s
-  Review Independence Gates, and the marked `/address` / `/handoff`
-  command subsections in `README.template.md`'s Development workflow section
-  (replace them with a description of the project's own PR flow). Mind the knock-on: `.claude/commands/handoff.md`
+  Review Independence Gates, the marked Address row in `AGENTS.md`'s Workflow
+  Entry Points subsection (and that whole subsection once no entry-point skill
+  remains), and the marked `/address` / `/handoff`
+  skill subsections in `README.template.md`'s Development workflow section
+  (replace them with a description of the project's own PR flow). Mind the knock-on: `.claude/skills/handoff/SKILL.md`
   (`key=SESSION_HANDOFF`) resumes suspended work via `/address continue`, so on
-  this delete path also delete `handoff.md` or point its resume instructions at
+  this delete path also delete the handoff skill (with its `AGENTS.md` row and
+  `README.template.md` subsection) or point its resume instructions at
   a replacement take-over entry point (its own marker says the same). If the
   project **does** adopt it (it requires the
   GitHub-operations capability — keep both or neither), keep all of the above,
@@ -420,14 +425,15 @@ apply to the **skip** path.
     actually enforces (the `merge-checks.yaml` jobs), and review its mandatory
     checks against the project's `AGENTS.md` skill index;
   - set the review trigger phrase and reviewer identity across
-    `claude-review.yaml` and the `.claude/commands/` files. The trigger phrase
+    `claude-review.yaml` and the address skill
+    (`.claude/skills/address/SKILL.md`). The trigger phrase
     is functional and dangerous in prose: a comment-triggered workflow matches
     it **anywhere** in a comment body, so the literal phrase belongs ONLY in
-    the workflow and command files — everywhere else refer to it as "the
-    review trigger phrase";
+    the workflow and entry-point skill files — everywhere else refer to it as
+    "the review trigger phrase";
   - replace the `@<maintainer>`, agent-comment-marker, and branch-prefix
-    examples in `.claude/commands/address.md` with the project's real values
-    per `github-operation-guidelines`;
+    examples in `.claude/skills/address/SKILL.md` with the project's real
+    values per `github-operation-guidelines`;
   - the `{{INSTALL_CMD}}` / `{{LINT_CMD}}` / `{{UNIT_TEST_CMD}}` run commands
     in `merge-checks.yaml` are substituted by `./init.sh apply` like every
     other token; only the toolchain setup (setup-node, `.nvmrc`, the npm

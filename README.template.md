@@ -52,10 +52,10 @@ detailed skills under [`.claude/skills/`](./.claude/skills). Human and agent
 contributors follow the same loop: plan → implement → self-review → verify →
 report.
 
-<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep the command subsections below if the project keeps the independent-review capability (REVIEW.md + /address); delete them otherwise and describe the project's own PR flow instead. -->
+<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep the workflow subsections below if the project keeps the independent-review capability (REVIEW.md + /address); delete them otherwise and describe the project's own PR flow instead. -->
 ### `/address` — deliver a unit of work end-to-end
 
-[`/address`](./.claude/commands/address.md) is the main delivery entry point.
+[`/address`](./.claude/skills/address/SKILL.md) is the main delivery entry point.
 It takes one unit of work — a GitHub issue, a pull request, or a free-form
 prompt — from intake to a merge-ready pull request in a single continuing
 session:
@@ -108,7 +108,7 @@ same review runs automatically against `/address` pull requests.
 <!-- INIT:OPTIONAL key=SESSION_HANDOFF — delete this subsection if the project dropped /handoff. -->
 ### `/handoff` — suspend work for another session
 
-[`/handoff`](./.claude/commands/handoff.md) packages in-progress work — goal,
+[`/handoff`](./.claude/skills/handoff/SKILL.md) packages in-progress work — goal,
 current state, remaining to-dos, uncommitted changes — into a downloadable
 `handoff-<epoch>.md` (plus an optional zip of supporting files). Use it when a
 session is running low on context, or to park work for later; a fresh session

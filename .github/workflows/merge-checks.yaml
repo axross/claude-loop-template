@@ -2,12 +2,13 @@ name: Merge Checks
 
 # INIT:OPTIONAL key=INDEPENDENT_REVIEW — EXAMPLE workflow, GitHub-Actions-
 # specific. Part of the independent-review capability: delete this file (with
-# claude-review.yaml, REVIEW.md, and the .claude/commands/ entry points) if the
-# project does not adopt it; see the INIT.md Step-4 bullet.
+# claude-review.yaml, REVIEW.md, and the entry-point skills under
+# .claude/skills/) if the project does not adopt it; see the INIT.md Step-4
+# bullet.
 #
 # The project's own CI: lint and unit tests that gate merges to the default
-# branch. This is the CI the /address command's tail polls after a push (see
-# .claude/commands/address.md). Keep REVIEW.md's do-not-report list in sync
+# branch. This is the CI the /address skill's tail polls after a push (see
+# .claude/skills/address/SKILL.md). Keep REVIEW.md's do-not-report list in sync
 # with exactly what these jobs enforce.
 #
 # The tokenized run commands below are substituted by `./init.sh apply` along

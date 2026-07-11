@@ -1,6 +1,8 @@
 ---
 name: maintainable-code-guidelines
-description: Use this skill when reviewing maintainability and design of changed code. Covers naming and file organization, route-local vs shared abstraction boundaries, complexity/readability limits, magic-number and dead-code discipline, scope control, and SOLID/DRY/KISS/YAGNI judgment across the project's modules and data/content layer. This is the reviewer's lens on top of the project's development, structure, and any project-defined component/routing rules. Use for "readable", "too long", "refactor", "abstraction", or "should this live elsewhere".
+description: The reviewer's maintainability lens on changed code, on top of the project's development, structure, and any project-defined component/routing rules. Covers naming and file organization, route-local vs shared abstraction boundaries, complexity/readability limits, magic-number and dead-code discipline, scope control, and SOLID/DRY/KISS/YAGNI judgment across the project's modules and data/content layer.
+when_to_use: Use when reviewing maintainability or design of changed code — "readable", "too long", "refactor", "abstraction", or "should this live elsewhere".
+user-invocable: false
 ---
 
 # Maintainable Code Guidelines

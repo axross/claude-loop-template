@@ -1,6 +1,8 @@
 ---
 name: development-guidelines
-description: Apply this skill at the start of EVERY task in this project. Covers the format/lint loop, scoped change management, current-docs lookup triggers, run-script commands, type-safety discipline, source-comment and doc-comment conventions, verification requirements, data-layer/migration handling, end-to-end test expectations, Conventional Commits, and pull request descriptions. Use even when the user does not mention formatting, linting, testing, type casts, comments, doc-comments, dependencies, migrations, docs, commands, commit wording, or pull request bodies.
+description: The project's baseline working rules. Covers the format/lint loop, scoped change management, current-docs lookup triggers, run-script commands, type-safety discipline, source-comment and doc-comment conventions, verification requirements, data-layer/migration handling, end-to-end test expectations, Conventional Commits, and pull request descriptions.
+when_to_use: Apply at the start of EVERY task in this project, even when the user does not mention formatting, linting, testing, type casts, comments, doc-comments, dependencies, migrations, docs, commands, commit wording, or pull request bodies.
+user-invocable: false
 ---
 
 # Development Guidelines

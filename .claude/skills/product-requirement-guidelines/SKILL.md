@@ -1,6 +1,8 @@
 ---
 name: product-requirement-guidelines
-description: Apply this skill when writing, refining, or reviewing a product requirement, feature spec, or issue description — including any plan-writing or issue-drafting step of a delivery workflow. Covers framing the problem/outcome before the solution, separating "what" from "how", explicit non-goals and assumptions, right-sizing scope to the change, testable acceptance criteria, and — for view-affected or architecturally broad changes — framing a spec's UI design and system-design/architecture sections. Use for "write a PRD", "refine this issue", "write acceptance criteria", "what's the scope of this change", "is this requirement testable", or "does this need a UI design / architecture section".
+description: How to write a product requirement, feature spec, or issue description. Covers framing the problem/outcome before the solution, separating "what" from "how", explicit non-goals and assumptions, right-sizing scope to the change, testable acceptance criteria, and — for view-affected or architecturally broad changes — framing a spec's UI-design and system-design/architecture sections.
+when_to_use: Apply when writing, refining, or reviewing a requirement or spec, including any plan-writing or issue-drafting step of a delivery workflow — "write a PRD", "refine this issue", "write acceptance criteria", "what's the scope of this change", "is this requirement testable", or "does this need a UI design / architecture section".
+user-invocable: false
 ---
 
 # Product Requirement Guidelines

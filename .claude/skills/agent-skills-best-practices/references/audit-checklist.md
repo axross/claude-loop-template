@@ -8,10 +8,11 @@ A useful audit moves from inventory to mechanics to judgment. Mechanical checks 
 
 1. Inventory skills and reference files.
 2. Verify the master index and parent `SKILL.md` links.
-3. Check parent routing-section format, section anatomy, and RFC-2119 guideline bullets.
-4. Check relative links outside code fences resolve, and that cross-skill references are name-based rather than path links into another skill.
-5. Review content ownership and project fit.
-6. Report prioritized improvement items.
+3. Check frontmatter against the [frontmatter-and-naming](./frontmatter-and-naming.md) policy.
+4. Check parent routing-section format, section anatomy, and RFC-2119 guideline bullets.
+5. Check relative links outside code fences resolve, and that cross-skill references are name-based rather than path links into another skill.
+6. Review content ownership and project fit.
+7. Report prioritized improvement items.
 
 **Guidelines:**
 
@@ -33,6 +34,8 @@ find .claude/skills -name '*.md' -print | sort
 
 **Guidelines:**
 
+- MUST check that every skill's frontmatter parses as YAML, its `name` matches its directory, and it carries both a `description` and a `when_to_use` within the length caps (1,024 for `description`; 1,536 combined), per [frontmatter-and-naming.md](./frontmatter-and-naming.md).
+- MUST check the invocation-control policy: guideline skills carry `user-invocable: false`; workflow entry-point skills carry `user-invocable: true` plus an `argument-hint`, and declare `arguments` only for discrete single-token parameters.
 - MUST check that every parent `SKILL.md` reference-routing section uses `## Section/Topic Name`, `See [file.md](./references/file.md) for:`, and descriptive bullets without RFC-2119-style requirement keywords.
 - MUST check that every substantive rule section has a `**Guidelines:**` block after its explanation or demonstration.
 - MUST check that every guideline bullet begins with an RFC-2119 keyword.

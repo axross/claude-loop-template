@@ -1,6 +1,8 @@
 ---
 name: agent-skills-best-practices
-description: Apply this skill whenever creating, refining, restructuring, renaming, or auditing an agent skill under the host project's skill root (e.g., `.claude/skills/`) - drafting a `SKILL.md`, splitting a skill into reference files, tightening a `description`, or deciding where a new rule belongs. Covers agentskills.io frontmatter, host-project harness fields, kebab-case naming, description writing for discovery, section anatomy with concise examples plus RFC-2119 guideline bullets, progressive disclosure, name-based cross-references, archetype skeletons for the INIT-created project skills (structure, component, UI/design), audit checks, and keeping the host project's master skill index in sync.
+description: The authoring discipline for agent skills under the host project's skill root (e.g., `.claude/skills/`) — agentskills.io format, frontmatter management and invocation-control fields, kebab-case naming, description and when_to_use writing for discovery, section anatomy with concise examples plus RFC-2119 guideline bullets, progressive disclosure into reference files, name-based cross-references, archetype skeletons for the INIT-created project skills (structure, component, UI/design), audit checks, and keeping the host project's master skill index in sync.
+when_to_use: Apply whenever creating, refining, restructuring, splitting, consolidating, renaming, deleting, or auditing an agent skill — drafting a `SKILL.md`, editing frontmatter, tightening a `description`, deciding where a new rule belongs, or updating the skill index. Use for "add a skill", "split this skill", "audit skills", or any change to `SKILL.md` files or their references.
+user-invocable: false
 ---
 
 # Agent Skills Best Practices
@@ -22,6 +24,7 @@ See [scoping-and-mece.md](./references/scoping-and-mece.md) for:
 See [frontmatter-and-naming.md](./references/frontmatter-and-naming.md) for:
 
 - creating or editing discovery-critical `SKILL.md` frontmatter
+- setting the invocation-control fields (`when_to_use`, `argument-hint`, `arguments`, `user-invocable`, `disable-model-invocation`) by skill archetype — guideline skill vs workflow entry point
 - choosing the skill directory name and keeping it aligned with the `name` field
 - porting or preserving host-project harness fields
 
@@ -29,8 +32,8 @@ See [frontmatter-and-naming.md](./references/frontmatter-and-naming.md) for:
 
 See [description-writing.md](./references/description-writing.md) for:
 
-- drafting, trimming, or auditing the `description` field
-- making discovery metadata say both what the skill covers and when to apply it
+- drafting, trimming, or auditing the `description` and `when_to_use` fields
+- splitting what the skill covers (`description`) from when to apply it (`when_to_use`), within the length caps
 - adding likely user phrasings and symptom-based triggers without over-broadening the skill
 
 ## Body Content Style

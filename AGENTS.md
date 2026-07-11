@@ -59,6 +59,17 @@ Apply these keywords consistently in this document and the documents linked from
 | [UI Design Principles](.claude/skills/ui-design-principles/SKILL.md) | Deciding how a surface should look — color roles, elevation, control selection, modal patterns, spacing/typography, responsive behavior, copy, accessibility, theming |
 -->
 
+### Workflow Entry Points
+
+<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep the Address row if the project keeps the independent-review capability, else delete it (and this whole subsection once no entry-point skill remains); see the INIT.md Step-4 bullet. -->
+<!-- INIT:OPTIONAL key=SESSION_HANDOFF — keep the Handoff row if the project keeps /handoff; it depends on /address for its take-over side. -->
+Unlike the guideline skills above, these skills are runnable workflows: a human launches one as `/<name>` (or the agent invokes it when its `when_to_use` matches), so they carry `user-invocable: true` and an `argument-hint` per [Agent Skills Best Practices](.claude/skills/agent-skills-best-practices/SKILL.md).
+
+| Skill | What it drives |
+| ----- | -------------- |
+| [Address](.claude/skills/address/SKILL.md) | Delivering one unit of work — an issue, a pull request, or a free-form prompt — end-to-end: plan, human approval, code, independent review, address findings; `continue` resumes a paused run or takes over a handoff package |
+| [Handoff](.claude/skills/handoff/SKILL.md) | Suspending in-progress work into a downloadable package that a fresh-context session takes over with `/address continue` |
+
 ## Response Approach
 
 Use this workflow for single-agent work in this project. The agent owns planning, implementation, investigation, verification, review, and reporting directly.
