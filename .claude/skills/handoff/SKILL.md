@@ -68,7 +68,7 @@ Create a single comprehensive markdown document in a working location outside th
 ### Deliver and stop
 
 - MUST provide the markdown document — and the zip, when one was created — to the human as downloadable files via the harness's file-delivery tool (in Claude Code, `SendUserFile`). If the harness has no such tool, print the absolute paths and how to retrieve them.
-- Tell the human how to resume: start a new agent session, attach or upload the file(s), and send `/address continue` — the take-over flow in [address.md](../address/SKILL.md) rebuilds the state from the package and continues the work.
+- Tell the human how to resume: start a new agent session, attach or upload the file(s), and send `/address continue` — the take-over flow in [the address skill](../address/SKILL.md) rebuilds the state from the package and continues the work.
 - Then end the turn. The work is suspended; do not resume it in this session unless the human asks.
 
 ## Asking the Human
