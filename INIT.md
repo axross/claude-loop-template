@@ -424,7 +424,7 @@ apply to the **skip** path.
 - **GitHub operations** → `.claude/skills/github-operation-guidelines/` is
   **fixed — keep it** (this template drives GitHub through Claude Code + the
   GitHub MCP server, and the independent-review channel depends on it). Delete
-  its `<!-- INIT:OPTIONAL -->` marker and the italic "_delete or adapt_" note,
+  its `<!-- INIT:OPTIONAL -->` marker and the italic note below it,
   replace the example tool-channel, marker, and branch-prefix names with the
   project's real ones, and review its Conventions section's SHOULD bullets
   against the project's policy. A project that genuinely does no GitHub

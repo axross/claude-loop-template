@@ -40,6 +40,7 @@ See [severity.md](./references/severity.md) for:
 ## Repository Review Policy Overlay
 
 <!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — Fixed: the posted-review channel (REVIEW.md) is fixed infrastructure (INIT.md Step 4), so KEEP this section (and the marked bullets in ./references/severity.md, ./references/evidence.md, and ./references/escalation.md); just delete this marker and the italic note below. -->
+*This section is fixed — the posted-review channel is always present; adapt it during INIT rather than deleting it.*
 
 When the review output is a **posted** pull-request review — the CI
 reviewer or a managed review product —
