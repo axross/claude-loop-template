@@ -1,13 +1,14 @@
 # INIT — Adapting this template to a project
 
-This repository is a **reusable, framework-agnostic template** for a Claude Code
-project built on an `AGENTS.md`-driven skill system. It ships:
+This repository is a **reusable, framework-agnostic template** for a **Claude
+Code** project built on an `AGENTS.md`-driven skill system. It ships:
 
-- `AGENTS.md` — the master routing index + working agreement (the shared entry
-  point each agent binding routes through).
+- `AGENTS.md` — the master routing index + working agreement (the entry point
+  Claude Code routes through via `CLAUDE.md`).
 - `CLAUDE.md` — a one-line binding (`@AGENTS.md`) so Claude Code loads `AGENTS.md`.
-- `.claude/skills/**` — a generic, cross-project **skill core** (12 skills).
-- `.claude/**` — an **example** Claude Code harness binding (hooks + settings).
+- `.claude/skills/**` — the fixed, cross-project **skill core** (12 skills).
+- `.claude/commands/**` — the fixed **slash commands** `/address` and `/handoff`.
+- `.claude/**` — the **Claude Code** harness binding (example hooks + settings).
 - `README.template.md` — a seed for the initialized project's own README
   (summary, tech stack, getting started, development workflow, testing,
   related links), finalized into `README.md` in Step 7.
@@ -15,6 +16,16 @@ project built on an `AGENTS.md`-driven skill system. It ships:
 Everything project-specific has been replaced with `{{TOKEN}}` placeholders or
 neutral prose. This file tells an AI agent how to turn the template into a
 working setup for one concrete project.
+
+> **Fixed vs. configured — do not ask about these.** This template targets
+> **Claude Code specifically**: there is no "which agent?" choice. The 12 skills
+> under `.claude/skills/**` and the `/address` and `/handoff` slash commands under
+> `.claude/commands/**` are **fixed infrastructure** — INIT *configures* them to
+> the project's stack and, for a capability the project does not yet have, marks
+> the affected sections **dormant**; it **never asks whether to keep a bundled
+> skill or slash command, and never deletes one.** What INIT adapts is limited to
+> stack specifics (language, framework, tool names, commands) and the
+> capability-specific *sections within* those kept skills.
 
 > **You are the agent running INIT.** Follow the steps in order. Do not skip
 > Step 0 or Step 1 — the rest depends on their answers. Make changes only inside
@@ -158,40 +169,59 @@ component / UI-design skills). Ask each area that applies:
 
 ### 1d — Optional capabilities
 
-13. **For each, decide _have / add / skip_.** Do **not**
-    assume these exist. A freshly scaffolded app usually has none of them, so
-    the honest default is often "add" or "skip", not "delete". For each one
-    ask: does the project already have it, do you want to **add** it now, or
-    skip it? For **have** and **add**, the answer MUST name the tool — "we
-    have unit tests" without a framework name is not a recorded decision.
-    - **Unit tests** (e.g. Vitest, Jest, pytest)
-    - **E2E tests** (e.g. Playwright, Cypress, Detox, Maestro)
+13. **Optional capabilities — decide _have / add / skip_ to *configure*, never
+    to remove a skill or command.** Do **not** assume these exist. A freshly
+    scaffolded app usually has none of them, so the honest default is often
+    "add" or "skip", not "have". For each, ask: does the project already
+    **have** it, do you want to **add** it now, or **skip** it for now? For
+    **have** and **add**, the answer MUST name the tool — "we have unit tests"
+    without a framework name is not a recorded decision.
+
+    Every one of the 12 bundled skills and both slash commands (`/address`,
+    `/handoff`) is **fixed** (see the "Fixed vs. configured" note at the top of
+    this file). For the six capabilities below, each backed by such a fixed
+    skill or command, the decision drives only *how* it is configured — never
+    *whether* it survives:
+
+    - **Unit tests** (e.g. Vitest, Jest, pytest) — backs `unit-test-guidelines`
+    - **E2E tests** (e.g. Playwright, Cypress, Detox, Maestro) — backs `e2e-testing-guidelines`
+    - **Error tracker** (e.g. Sentry, Rollbar) — backs `observability-guidelines`
+    - **Structured logger** (e.g. Pino, Winston) — backs `observability-guidelines`
+    - **GitHub operations** (agents read/write GitHub through a proxied single-operator identity, e.g. Claude Code + GitHub MCP) — backs `github-operation-guidelines`
+    - **Independent review channel** (a posted-review policy `REVIEW.md`, a CI reviewer, and the end-to-end delivery loop; requires GitHub operations) — backs the `/address` and `/handoff` commands, `REVIEW.md`, and the `.github/workflows/*.yaml`
+
+    For each of these six, **have/add** → configure the skill/command to the
+    named tool (fill its tokens; **add** also scaffolds the tool in Step 5);
+    **skip** → keep the skill/command but mark its capability-specific sections
+    **dormant** (Step 4) so they self-restore when the tool lands. The skill or
+    command itself is kept either way — INIT never deletes it.
+
+    The remaining capabilities are **section-level**: they toggle sections, rows,
+    or a single token *within* kept skills, so here **skip** may delete just that
+    section — never a whole skill or command:
+
     - **E2E scenario coverage** (a journey-catalog coverage metric over the e2e suite — which user journeys the tests assert; requires E2E tests)
-    - **Error tracker** (e.g. Sentry, Rollbar)
-    - **Structured logger** (e.g. Pino, Winston)
     - **Data / content layer** (e.g. Prisma, Drizzle, Payload CMS, a REST API — the engine and ORM/wrapper picked in 1c, when the project has one)
     - **Hosting platform** (e.g. Vercel, AWS, Fly.io)
-    - **GitHub operations** (agents read/write GitHub through a proxied single-operator identity, e.g. Claude Code + GitHub MCP)
-    - **Independent review channel** (a posted-review policy `REVIEW.md` plus a CI reviewer, a local review command, and an end-to-end delivery loop, e.g. GitHub Actions + Claude Code; requires GitHub operations)
 
-    Record each as **have → _tool_**, **add → _tool_**, or **skip**. This
-    single answer drives both the token fill (Step 3) and the keep-or-delete
-    decision for every `<!-- INIT:OPTIONAL -->` section (Step 4): **have** and
-    **add** keep the section (fill the token; **add** also scaffolds the tool
-    in Step 5); **skip** deletes it — or, for infrastructure the project will
-    plausibly add later, marks it **dormant** (see Step 4). (Not every marked
-    section has a token: GitHub operations, the independent review channel,
-    and E2E scenario coverage have Step-4 bullets instead of a token fill, and
-    a few smaller marked sections — typed-language type safety, the
-    unit-coverage gate, the backend/API test helpers — carry their
-    keep-or-delete instruction in the marker itself. The Step-4 grep walk
-    resolves them all; decide the smaller ones from the project's own shape
-    rather than a Step-1 answer.)
+    Record each as **have → _tool_**, **add → _tool_**, or **skip**. This single
+    answer drives both the token fill (Step 3) and the Step-4 resolution of every
+    `<!-- INIT:OPTIONAL -->` marker: for the six skill/command-backed
+    capabilities, **skip** means *dormant*, never *delete*; for the section-level
+    capabilities, **skip** deletes just the marked section. (Not every marked
+    section maps to a Step-1 answer — a few smaller ones, e.g. typed-language type
+    safety, the unit-coverage gate, the backend/API test helpers, images, and the
+    bundler, carry their keep-or-delete instruction in the marker itself; decide
+    those from the project's own shape. The Step-4 grep walk resolves them all.)
 
-### 1e — Agents
+### 1e — Agent (fixed: Claude Code)
 
-14. **Which agents** will use this repo (Claude Code, Cursor, Copilot,
-    others)? This decides which harness bindings to keep (see Step 6).
+14. **Agent — do not ask.** This template targets **Claude Code**, and only
+    Claude Code; the harness binding is fixed (see Step 6). There is no "which
+    agents?" question — record the agent as `Claude Code` in the Stack Decision
+    Record and move on. (If a project also wants to drive these same
+    `AGENTS.md` + `.claude/skills/**` files from another agent, that is a
+    post-INIT addition the project makes itself, not an INIT choice.)
 
 ### Stack Decision Record
 
@@ -209,9 +239,12 @@ skills) all consume it. `Source` is one of `answered`, `delegated
 
 If the project already has a manifest/lockfile/config, you SHOULD read it to
 confirm the answers instead of relying solely on the user — confirmation
-supplements the interview; it never replaces asking. **Prefer adding a missing
-capability over silently dropping it** — deleting a whole testing or
-observability skill should be a deliberate choice the user made, not a default.
+supplements the interview; it never replaces asking. **A bundled skill or
+command is never dropped** — the 12 skills and the `/address` / `/handoff`
+commands are fixed (see the "Fixed vs. configured" note at the top). When a
+project lacks a capability, INIT configures the matching skill's sections as
+**dormant** rather than removing the skill; only section-level, stack-specific
+content (a data layer, images, a bundler, …) is ever deleted.
 
 ---
 
@@ -273,14 +306,17 @@ stack not listed.
 
 ### Optional integrations
 
-If the project does not use one of these, **delete** the matching skill /
-section instead of filling the token (see Step 4). When kept, fill the token.
+When the project has the capability, fill the token. When it does not: for the
+**skill-backed** capabilities (E2E, error tracker, logger) mark the affected
+sections **dormant** rather than deleting them — those skills are fixed (see
+Step 4); for the **section-level** ones (data layer, hosting) delete just the
+marked section or token.
 
 | Token | Fill with | Example values | If absent |
 | ----- | --------- | -------------- | --------- |
-| `{{E2E_TEST_FRAMEWORK}}` | E2E test framework | `Playwright` · `Cypress` · `Detox` | delete `e2e-testing-guidelines` |
-| `{{ERROR_TRACKER}}` | Error-reporting service | `Sentry` · `Rollbar` · `Bugsnag` · `Honeybadger` | delete the error-tracking sections of `observability-guidelines` |
-| `{{LOGGER}}` | Structured logger | `Pino` · `Winston` · `structlog` · `zap` | delete the logging section of `observability-guidelines` |
+| `{{E2E_TEST_FRAMEWORK}}` | E2E test framework | `Playwright` · `Cypress` · `Detox` | mark `e2e-testing-guidelines` dormant (do not delete) |
+| `{{ERROR_TRACKER}}` | Error-reporting service | `Sentry` · `Rollbar` · `Bugsnag` · `Honeybadger` | mark the error-tracking sections of `observability-guidelines` dormant |
+| `{{LOGGER}}` | Structured logger | `Pino` · `Winston` · `structlog` · `zap` | mark the logging section of `observability-guidelines` dormant |
 | `{{CMS_OR_DATA_LAYER}}` | Data / content layer | `Payload CMS` · `Prisma` · `Drizzle` · `SQLAlchemy` · `a REST API` | delete the data-layer sections (marked optional) |
 | `{{HOSTING_PLATFORM}}` | Hosting / deploy platform | `Vercel` · `AWS` · `Fly.io` · `Cloudflare` · `self-hosted` | leave generic or delete the mention |
 
@@ -310,7 +346,7 @@ for `{{` to confirm none remain (the completion checklist does this).
 
 ---
 
-## Step 4 — Resolve optional capabilities (add or remove)
+## Step 4 — Resolve optional capabilities (configure, dormant, or trim)
 
 The skill core is intentionally broad. Every capability-specific block is wrapped
 with a greppable marker so you can find them all:
@@ -319,6 +355,16 @@ with a greppable marker so you can find them all:
 grep -rn 'INIT:OPTIONAL' .claude .github AGENTS.md REVIEW.md README.template.md   # every optional section, with a key
 ```
 
+**Fixed skills and commands are never deleted here.** The 12 bundled skills and
+the `/address` / `/handoff` commands are permanent (see the "Fixed vs.
+configured" note at the top of this file). For the six skill/command-backed
+capabilities — unit tests, e2e tests, the error tracker, the logger, GitHub
+operations, and the independent-review channel — a **skip** decision means *mark
+the affected sections dormant*, never *delete the skill or command*. Only
+**section-level** markers (data layer, auth, images, bundler, scenario coverage,
+…) may be deleted, and then only the marked section — never the skill that
+contains it.
+
 For **each** marked section, apply the Step 1 decision for that capability:
 
 - **have** / **add** → keep the section and fill its token. For **add**, also
@@ -326,8 +372,10 @@ For **each** marked section, apply the Step 1 decision for that capability:
   token) so the kept rules describe something real. Then delete the
   `<!-- INIT:OPTIONAL ... -->` comment and the italic "_delete during INIT_"
   note, leaving the content.
-- **skip** → delete the whole marked section (and, for a whole skill, follow the
-  removal list below). Remove the marker, the note, and every inbound link.
+- **skip** → for a **section-level** marker, delete just that marked section
+  (remove the marker, the note, and every inbound link to it). For a
+  **skill/command-backed** capability, do **not** delete — take the **dormant**
+  path below instead; the skill or command always stays.
 - **dormant** (a middle path) → keep the section, but replace its
   `<!-- INIT:OPTIONAL ... -->` marker and italic note with a **visible**
   one-line banner, so the rule self-restores instead of vanishing:
@@ -341,81 +389,54 @@ For **each** marked section, apply the Step 1 decision for that capability:
   (e.g. "the project's error tracker") and delete the token's row from
   `tokens.json` (and `init.values.json`, if already generated) — `./init.sh
   apply` refuses to run while any manifest-listed token has no value, whether
-  or not it still occurs in the tree. Prefer
-  **dormant** over **skip** for service-shaped capabilities the project is
-  likely to acquire (an error tracker, server-side caching, a data layer): the
-  rules are already correct and only their infrastructure is missing. Prefer
-  **skip** for capability-shaped sections that would be re-authored anyway when
-  adopted (a whole test framework, the review channel) — a dormant copy of
-  those only rots.
+  or not it still occurs in the tree. The six skill/command-backed capabilities
+  (unit tests, e2e, the error tracker, the logger, GitHub operations, and the
+  review channel with its `/address` / `/handoff` commands) are **always
+  dormant when absent, never deleted** — they are fixed infrastructure, and a
+  dormant copy keeps the already-correct rules ready for when the tool lands.
+  Reserve outright deletion for **section-level** markers whose content is
+  genuinely stack-specific and would be re-authored from scratch when adopted
+  (e.g. a framework's RSC-streaming section in a non-React project).
 
 Do not leave a section half-resolved: a kept section MUST have its token (if any)
-filled; a skipped section MUST be gone along with its links; a dormant section
-MUST carry its banner and no unfilled token. The detailed removal lists below
-apply to the **skip** path.
+filled; a skipped **section-level** marker MUST be gone along with its links; a
+dormant section MUST carry its banner and no unfilled token; and no bundled skill
+or command is ever removed. The detailed lists below cover each capability.
 
-- **No error tracker AND no structured logger** → the
-  `.claude/skills/observability-guidelines/` skill MAY be deleted (or
-  dormant-marked per the dormant path above, when the project will plausibly
-  add either tool). If only one of the two is missing, instead trim the
-  sections marked `key=ERROR_TRACKER` / `key=LOGGER` inside the skill. On the
-  delete path, resolve every inbound link:
-  - the Observability Guidelines row of the `AGENTS.md` skill index, and the
-    word "observability" in the review-lenses MUST bullet of `AGENTS.md`'s
-    Review Independence Gates;
-  - the "Error handling and structured logging" row of the
-    developer-facing-skills table in `code-review-guideline/SKILL.md`;
-  - the "Error handling, error-reporting, and logging" row of the topic table
-    in `development-guidelines/SKILL.md`;
-  - the `{{ERROR_TRACKER}} config and {{LOGGER}} setup` row of the
-    output-surface table in `development-guidelines/references/verification.md`;
-  - the `{{ERROR_TRACKER}}` row and refresh bullet in
-    `development-guidelines/references/current-docs.md` (marked
-    `key=ERROR_TRACKER`);
-  - the `logger.info()` / `logger.warn()` phrasing in the secret-interpolation
-    bullet of `application-security-requirements/references/secret-handling.md`
-    (reword to "any log/console output" when the logger is dropped);
-  - in `performance-and-reliability-requirements/SKILL.md` and its
-    `references/error-and-observability.md`, the rules survive as the
-    reviewer's checklist: drop each `per [observability-guidelines › …]` /
-    "Defer the developer-facing rules to …" citation and fold the cited rule
-    inline (e.g. "…not in nested helpers, so errors propagate to the root call
-    site"; "the project routes errors through `reportError(...)`");
-  - the start/complete log-pair SHOULD bullet in
-    `performance-and-reliability-requirements/references/caching-correctness.md`
-    (delete the bullet);
-  - the logging-module label sub-bullet in
-    `maintainable-code-guidelines/references/naming-and-organization.md`
-    (delete it);
-  - the empty-`try`/`catch` bullet in
-    `maintainable-code-guidelines/references/complexity-and-readability.md`:
-    keep the bullet but fold the rule inline — "errors are rethrown or
-    reported, never swallowed" — instead of linking the rethrow rule.
-- **Agents do not operate GitHub through a proxied single-operator identity**
-  → delete `.claude/skills/github-operation-guidelines/` and its `AGENTS.md` skill-index
-  row. If they do (e.g. a Claude Code session using the GitHub MCP server),
-  keep the skill, delete its `<!-- INIT:OPTIONAL -->` marker and the italic
-  "_delete or adapt_" note, replace the example tool-channel, marker, and
-  branch-prefix names with your harness's real ones, and review its Conventions
-  section's SHOULD bullets against your project's policy.
-- **No independent-review channel** (no posted-review policy, CI reviewer, or
-  agent delivery loop) → delete every `INIT:OPTIONAL key=INDEPENDENT_REVIEW`
-  target: `REVIEW.md`, `.claude/commands/address.md`,
-  `.github/workflows/claude-review.yaml`,
+- **No error tracker and/or no structured logger** →
+  `.claude/skills/observability-guidelines/` is **fixed — keep it**, along with
+  its `AGENTS.md` index row and every inbound link. Fill `{{ERROR_TRACKER}}` /
+  `{{LOGGER}}` for whichever tool the project has; for a tool it lacks, mark that
+  section **dormant** — the `key=ERROR_TRACKER` section in
+  `references/error-tracking.md`, the `key=LOGGER` section in
+  `references/logging.md` — with the dormant banner, and replace the unfilled
+  token with neutral prose (e.g. "the project's error tracker"). When both are
+  absent, mark both sections dormant. No skill, index row, review-lens mention,
+  or inbound link is removed on this path.
+- **GitHub operations** → `.claude/skills/github-operation-guidelines/` is
+  **fixed — keep it** (this template drives GitHub through Claude Code + the
+  GitHub MCP server, and the independent-review channel depends on it). Delete
+  its `<!-- INIT:OPTIONAL -->` marker and the italic "_delete or adapt_" note,
+  replace the example tool-channel, marker, and branch-prefix names with the
+  project's real ones, and review its Conventions section's SHOULD bullets
+  against the project's policy. A project that genuinely does no GitHub
+  automation leaves the skill's rules dormant rather than deleting the skill.
+- **Independent-review channel** → the `/address` and `/handoff` commands,
+  `REVIEW.md`, and the `.github/workflows/*.yaml` are **fixed — keep them all.**
+  This is the template's Claude delivery loop, and it requires the
+  GitHub-operations capability (also fixed — keep both). Delete the
+  `key=INDEPENDENT_REVIEW` and `key=SESSION_HANDOFF` markers and their italic
+  notes across `REVIEW.md`, `.claude/commands/address.md`,
+  `.claude/commands/handoff.md`, `.github/workflows/claude-review.yaml`,
   `.github/workflows/merge-checks.yaml`, the "Repository Review Policy Overlay"
-  section in `code-review-guideline/SKILL.md`, the marked posted-review bullets
-  in `code-review-guideline/references/severity.md` and
-  `references/evidence.md`, the posted-review parenthetical in
-  `references/escalation.md`, the marked SHOULD bullet in `AGENTS.md`'s
-  Review Independence Gates, and the marked `/address` / `/handoff`
-  command subsections in `README.template.md`'s Development workflow section
-  (replace them with a description of the project's own PR flow). Mind the knock-on: `.claude/commands/handoff.md`
-  (`key=SESSION_HANDOFF`) resumes suspended work via `/address continue`, so on
-  this delete path also delete `handoff.md` or point its resume instructions at
-  a replacement take-over entry point (its own marker says the same). If the
-  project **does** adopt it (it requires the
-  GitHub-operations capability — keep both or neither), keep all of the above,
-  delete the markers and italic notes, and:
+  section and marked posted-review bullets in `code-review-guideline`
+  (`SKILL.md`, `references/severity.md`, `references/evidence.md`,
+  `references/escalation.md`), the marked SHOULD bullet in `AGENTS.md`'s Review
+  Independence Gates, and the marked `/address` / `/handoff` subsections in
+  `README.template.md`'s Development workflow section — leaving the content in
+  place — and then configure it (a project that wants no automated loop disables
+  the workflow triggers and leaves the commands dormant rather than deleting
+  them):
   - fill `REVIEW.md`'s do-not-report list with the checks the project's CI
     actually enforces (the `merge-checks.yaml` jobs), and review its mandatory
     checks against the project's `AGENTS.md` skill index;
@@ -438,30 +459,20 @@ apply to the **skip** path.
     their real steps (and pass) while `INIT.md` exists; deleting the INIT
     tooling in Step 7 is what arms them, so a green Merge Checks before
     that point does not mean lint/tests ran.
-- **No e2e framework** → delete `.claude/skills/e2e-testing-guidelines/` and
-  its index row, then remove every inbound link to it:
-  - `quality-assurance-guidelines/references/e2e-coverage.md` (delete the file)
-    and its pointer in `quality-assurance-guidelines/SKILL.md`;
-  - the `../e2e-testing-guidelines/SKILL.md` link in
-    `quality-assurance-guidelines/SKILL.md`;
-  - the `../../e2e-testing-guidelines/SKILL.md` link in
-    `unit-test-guidelines/references/testing-scope.md`;
-  - the `../e2e-testing-guidelines/SKILL.md` link in
-    `product-requirement-guidelines/SKILL.md`;
-  - the e2e row of the topic table in `development-guidelines/SKILL.md`;
-  - the e2e row of the developer-facing-skills table in
-    `code-review-guideline/SKILL.md`;
-  - the `../../e2e-testing-guidelines/SKILL.md` link in
-    `performance-and-reliability-requirements/references/server-client-boundary.md`;
-  - the e2e-authoring pointer in
-    `development-guidelines/references/verification.md`;
-  - the `{{E2E_TEST_CMD}}` bullet in the `AGENTS.md` Verification section;
-  - the marked e2e rows in `README.template.md`'s Tech stack and Testing
-    tables.
-
-  Deleting the e2e skill also removes every `key=SCENARIO_COVERAGE` site (next
-  bullet) — the two that live outside `e2e-testing-guidelines/` are inside
-  `quality-assurance-guidelines` files deleted or trimmed above.
+- **No e2e framework** → `.claude/skills/e2e-testing-guidelines/` is **fixed —
+  keep it**, along with its `AGENTS.md` index row and every inbound link. Mark
+  the skill **dormant**: add the dormant banner near the top of its `SKILL.md`,
+  replace `{{E2E_TEST_FRAMEWORK}}` / `{{E2E_TEST_CMD}}` / `{{TEST_DIR}}` with
+  neutral prose, and drop those token rows from `tokens.json`. In the `AGENTS.md`
+  Verification section, neutralize — do not delete — the `{{E2E_TEST_CMD}}`
+  bullet so it reads as "the e2e suite, once the project adds one." (The e2e rows
+  in `README.template.md` describe the *project's* actual stack, not the skill —
+  delete them per that file's own markers when the project truly has no e2e
+  suite.) Every inbound link to the skill stays valid because the skill stays.
+  (Scenario coverage — a
+  `key=SCENARIO_COVERAGE` section within this skill — is still resolved by the
+  next bullet; when the e2e skill is dormant, mark the scenario-coverage sections
+  dormant too rather than deleting them.)
 - **E2E suite kept, but no scenario-coverage catalog** → delete every
   `INIT:OPTIONAL key=SCENARIO_COVERAGE` site:
   - `e2e-testing-guidelines/references/scenario-coverage.md` (delete the file)
@@ -476,15 +487,16 @@ apply to the **skip** path.
   `scenarios.md` in `{{TEST_DIR}}`), pick the tag syntax
   `{{E2E_TEST_FRAMEWORK}}` supports, and build the coverage reporter and gate
   script — the template ships the convention only, no implementation.
-- **No unit test framework** → delete `.claude/skills/unit-test-guidelines/`
-  and its index row, then remove every inbound link to it:
-  - the `../unit-test-guidelines/SKILL.md` link in
-    `product-requirement-guidelines/SKILL.md`;
-  - the unit-test row of the developer-facing-skills table in
-    `code-review-guideline/SKILL.md`;
-  - the `{{UNIT_TEST_CMD}}` bullet in the `AGENTS.md` Verification section;
-  - the marked unit-test rows in `README.template.md`'s Tech stack and
-    Testing tables.
+- **No unit test framework** → `.claude/skills/unit-test-guidelines/` is
+  **fixed — keep it**, along with its `AGENTS.md` index row and every inbound
+  link. Mark the skill **dormant**: add the dormant banner near the top of its
+  `SKILL.md`, replace `{{UNIT_TEST_FRAMEWORK}}` / `{{UNIT_TEST_CMD}}` with
+  neutral prose, and drop those token rows from `tokens.json`. In the `AGENTS.md`
+  Verification section, neutralize — do not delete — the `{{UNIT_TEST_CMD}}`
+  bullet so it reads as "the unit suite, once the project adds one." (The
+  unit-test rows in `README.template.md` describe the *project's* actual stack,
+  not the skill — delete them per that file's own markers when the project truly
+  has no unit suite.)
 - **No data/content layer** → delete every `key=DATA_LAYER` site (the Step-4
   grep finds them all): the marked sections in `development-guidelines`
   (`dev-commands.md`, `change-management.md`, plus the `current-docs.md` row
@@ -578,10 +590,11 @@ Confirm each added command actually runs before relying on the `check.sh` /
 
 ---
 
-## Step 6 — Set up the agent harness binding(s)
+## Step 6 — Set up the Claude Code harness binding
 
-`AGENTS.md` + `.claude/skills/**` are the portable substance. Each agent
-reads them through its own binding:
+`AGENTS.md` + `.claude/skills/**` are the portable substance. This template
+targets **Claude Code** (fixed — Step 1e), which reads them through the
+`.claude/` binding:
 
 - **Claude Code** — `CLAUDE.md` (`@AGENTS.md`) plus the `.claude/` directory:
   - `.claude/skills/**` is also discovered natively by Claude Code, so each
@@ -600,13 +613,11 @@ reads them through its own binding:
     `application-security` skill assumes they are gitignored) — keep those entries
     and merge the rest of the project's ignores into it. If the project keeps its
     own `.gitignore` elsewhere, move these entries there instead.
-- **Other agents** (Cursor, Copilot, Aider, etc.) — point them at `AGENTS.md`
-  via their own mechanism (e.g. a rules file that imports/links `AGENTS.md`).
-  Add that binding file and, if the agent has no hook system, drop
-  `.claude/hooks/` and the `settings*.json` files — but keep `.claude/skills/`,
-  which `AGENTS.md` links into.
-
-Keep only the bindings for the agents named in Step 1.
+The Claude Code binding is the only one to set up — there is no per-agent choice
+to make. A project that later wants to also drive the same
+`AGENTS.md` + `.claude/skills/**` from another agent (Cursor, Copilot, Aider, …)
+adds that binding itself, outside INIT, by pointing the agent at `AGENTS.md` via
+its own mechanism; the portable substance already supports it.
 
 ---
 
@@ -658,11 +669,15 @@ Keep only the bindings for the agents named in Step 1.
 - [ ] No dangling relative skill links:
       `.claude/skills/agent-skills-best-practices/scripts/check-links.sh`
       (checks the `.claude/` tree a `glob('**/*.md')` sweep would skip).
-- [ ] `AGENTS.md` skill index matches the directories under `.claude/skills/`.
-- [ ] Removed skills have no remaining inbound links.
+- [ ] `AGENTS.md` skill index still lists all 12 skills and matches the
+      directories under `.claude/skills/` — no skill is removed by INIT.
+- [ ] No inbound skill/command links dangle: because every skill and both
+      commands are kept (fixed), `check-links.sh` passes; dormant-marking a
+      capability keeps its links intact.
 - [ ] The conditional hedges are resolved — in every bullet hedged with a
       "when the project has …" clause, delete the clause when the capability
-      was kept and the whole bullet when it was skipped. They live in
+      was configured (**have/add**), and soften the bullet to conditional prose
+      (do NOT delete it) when the capability was marked dormant. They live in
       `AGENTS.md`'s Verification section (the `{{UNIT_TEST_CMD}}`,
       `{{E2E_TEST_CMD}}`, and `{{BUILD_CMD}}` bullets) **and** outside it:
       `development-guidelines/references/dev-commands.md` (build, unit, e2e
@@ -670,19 +685,21 @@ Keep only the bindings for the agents named in Step 1.
       `references/verification.md` (the e2e-suite bullet), and
       `unit-test-guidelines/references/review-checklist.md` (the typecheck
       clause). Grep for `when the project has` to catch them all.
-- [ ] Skipped capabilities no longer appear in prose: grep the tree for each
-      skipped tool's name and for generic phrases like "data layer",
-      "structured logger", or "error tracker" in skill descriptions and
-      `AGENTS.md` index rows, and reword or delete the stragglers.
-- [ ] Every skill removed in Step 4 is also gone from the review-lenses MUST
-      bullet in `AGENTS.md`'s Review Independence Gates (e.g. drop
-      "observability" when `observability-guidelines` was deleted).
+- [ ] Section-level skipped capabilities (data layer, auth, images, …) no longer
+      appear in prose: grep the tree for each and for generic phrases like "data
+      layer" in skill descriptions and `AGENTS.md` index rows, and reword or
+      delete the stragglers. Skill-backed capabilities marked **dormant** (unit,
+      e2e, error tracker, logger, review loop) intentionally remain, as neutral
+      prose under a dormant banner — do not strip those.
+- [ ] The review-lenses MUST bullet in `AGENTS.md`'s Review Independence Gates
+      still names every lens (observability, e2e, etc.) — no skill is removed, so
+      none is dropped from it.
 - [ ] Added capabilities have a working command (the `check.sh` / `format.sh`
       hooks actually run).
-- [ ] If `merge-checks.yaml` was kept: its jobs actually run the lint/test
+- [ ] `merge-checks.yaml` is kept (fixed): its jobs actually run the lint/test
       steps instead of skipping them — the guard steps disarm once `INIT.md`
       is deleted, so check a post-INIT run's log shows the steps executing.
-- [ ] Harness binding for each Step-1 agent is filled in and runnable.
+- [ ] The Claude Code harness binding is filled in and runnable.
 - [ ] A `.gitignore` excludes `settings.local.json` and `.env.local` (or the
       project's equivalent local-state/secret files).
 - [ ] `INIT.md` and template scaffolding notes/tooling are deleted — including

@@ -1,7 +1,7 @@
 # Error Tracking
 
-<!-- INIT:OPTIONAL key=ERROR_TRACKER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
-*If this project has no {{ERROR_TRACKER}} (error-reporting service), delete or adapt this section during INIT.*
+<!-- INIT:OPTIONAL key=ERROR_TRACKER — keep & fill the token (add the tool, INIT Step 5) OR, if the project has no error tracker yet, mark this section DORMANT (banner + neutral prose) rather than deleting it; observability-guidelines is a fixed skill (INIT.md Step 4). -->
+*If this project has no {{ERROR_TRACKER}} (error-reporting service) yet, mark this section dormant during INIT (do not delete the skill).*
 
 Apply these rules when writing, reviewing, or modifying {{ERROR_TRACKER}} setup, error event capture, instrumentation files, or error context.
 

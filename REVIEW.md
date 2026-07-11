@@ -1,7 +1,7 @@
 # Review Instructions
 
-<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep this file if the project adopts a posted-review channel OR delete it together with every other key=INDEPENDENT_REVIEW site; the INIT.md Step-4 bullet is the authoritative deletion list. -->
-*If this project posts no independent reviews — no managed review product, no CI reviewer, no local review command — delete this file and the rest of the independent-review capability during INIT.*
+<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — Fixed: INIT KEEPS this file (the independent-review channel is fixed infrastructure, see INIT.md Step 4). Just delete this marker and the italic note below, then configure it — fill the do-not-report list with the checks CI enforces and review the mandatory checks against the AGENTS.md skill index. A project that wants no automated review loop disables the workflow triggers rather than deleting this file. -->
+*Configure this policy during INIT: fill the do-not-report list with the project's CI-enforced checks and review the mandatory checks against the AGENTS.md skill index.*
 
 Review **policy** for this repository — the highest-priority, review-only
 instructions. Every reviewer entry point reads this file: a managed review

@@ -21,12 +21,12 @@ it, with the working agreement kept in `AGENTS.md` and loaded through
 ├── .gitignore               # ignores settings.local.json + .env.local (see INIT Step 6)
 ├── AGENTS.md                # master routing index + working agreement
 ├── CLAUDE.md                # @AGENTS.md — Claude Code's binding to AGENTS.md
-├── REVIEW.md                # optional: posted-review policy for the independent-review capability
+├── REVIEW.md                # fixed: posted-review policy for the independent-review channel (configured, never removed)
 ├── .github/
-│   └── workflows/           # optional: example CI reviewer + merge checks (GitHub Actions + Claude Code);
+│   └── workflows/           # fixed: CI reviewer + merge checks (GitHub Actions + Claude Code);
 │                            # plus template-checks.yaml, this repo's own link-check CI (deleted during INIT)
 └── .claude/
-    ├── commands/            # optional: /address + /handoff entry points (Claude Code examples)
+    ├── commands/            # fixed: /address + /handoff entry points (Claude Code)
     ├── skills/              # the generic, cross-project skill core (12 skills)
     │   ├── agent-skills-best-practices/  # ships scripts/check-links.sh (relative-link integrity)
     │   ├── application-security-requirements/
@@ -52,11 +52,12 @@ observability, and QA evidence. Project-specific skills
 (structure, components, routing, UI, domain) are intentionally **not** shipped —
 you add them during adaptation.
 
-An optional **independent-review capability** ships alongside the core:
-`REVIEW.md` (the posted-review policy), the `/address` entry point
-in `.claude/commands/`, and the example `.github/workflows/`. Keep and adapt
-it, or delete it — INIT Step 4 covers both paths. Its CI reviewer needs a
-one-time secret setup before it runs — see [Getting started](#getting-started).
+A fixed **independent-review channel** ships alongside the core: `REVIEW.md`
+(the posted-review policy), the `/address` entry point in `.claude/commands/`,
+and the `.github/workflows/`. INIT configures and adapts it — it is never
+removed (a project that wants no automated loop leaves it dormant); INIT Step 4
+covers the configuration. Its CI reviewer needs a one-time secret setup before
+it runs — see [Getting started](#getting-started).
 A **`/handoff`** command also
 ships in `.claude/commands/`: it suspends in-progress work into a downloadable
 handoff package (a `handoff-<unix epoch>.md` plus an optional zip of supporting
@@ -92,17 +93,19 @@ it rather than cloning it.
    generated (e.g. an existing `AGENTS.md`), interviews you about the project
    kind, frameworks, architecture (directory structure, business-logic
    structure, state management, database layer, styling, theming), and goal,
-   then fills the `{{TOKENS}}` via `./init.sh`. For
-   each optional capability — unit tests, e2e, observability — it asks whether to
-   **add** it (and with which tool) or skip it, rather than assuming it should be
-   deleted, and it adds project-specific skills.
+   then fills the `{{TOKENS}}` via `./init.sh`. The 12 bundled skills and the
+   `/address` + `/handoff` commands are **fixed** — INIT never asks whether to
+   keep them and never deletes one; for each capability (unit tests, e2e,
+   observability, …) it asks only whether the project **has** it (and with which
+   tool) so it can configure the matching skill or, when the tool is absent, mark
+   that skill's sections **dormant**. INIT also adds project-specific skills.
 3. When adaptation is complete, INIT finalizes `README.template.md` into your
    project's `README.md` — a README covering the project summary, tech stack,
-   getting started, the development workflow (`/address`, when the
-   independent-review capability is kept), testing strategy and commands, and
-   related links — replacing this template README, and deletes `INIT.md`.
-4. **Enable the CI reviewer (optional).** If you keep the independent-review
-   capability, its GitHub Actions reviewer
+   getting started, the development workflow (`/address`), testing strategy and
+   commands, and related links — replacing this template README, and deletes
+   `INIT.md`.
+4. **Enable the CI reviewer.** The fixed independent-review channel's GitHub
+   Actions reviewer
    ([`claude-review.yaml`](./.github/workflows/claude-review.yaml)) needs a
    one-time operator setup before it runs: install the
    [Claude GitHub App](https://github.com/apps/claude) and add a

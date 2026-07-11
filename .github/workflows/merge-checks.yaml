@@ -1,9 +1,10 @@
 name: Merge Checks
 
-# INIT:OPTIONAL key=INDEPENDENT_REVIEW — EXAMPLE workflow, GitHub-Actions-
-# specific. Part of the independent-review capability: delete this file (with
-# claude-review.yaml, REVIEW.md, and the .claude/commands/ entry points) if the
-# project does not adopt it; see the INIT.md Step-4 bullet.
+# INIT:OPTIONAL key=INDEPENDENT_REVIEW — Fixed GitHub-Actions workflow, part of
+# the fixed independent-review channel. INIT KEEPS this file (never deletes it),
+# see INIT.md Step 4. Just delete this marker and configure it — the run
+# commands are substituted by ./init.sh apply; replace the toolchain setup
+# (setup-node/.nvmrc) with the project's own by hand.
 #
 # The project's own CI: lint and unit tests that gate merges to the default
 # branch. This is the CI the /address command's tail polls after a push (see
