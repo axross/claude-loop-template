@@ -1,13 +1,14 @@
 # INIT — Adapting this template to a project
 
-This repository is a **reusable, framework-agnostic template** for a Claude Code
-project built on an `AGENTS.md`-driven skill system. It ships:
+This repository is a **reusable, framework-agnostic template** for a **Claude
+Code** project built on an `AGENTS.md`-driven skill system. It ships:
 
-- `AGENTS.md` — the master routing index + working agreement (the shared entry
-  point each agent binding routes through).
+- `AGENTS.md` — the master routing index + working agreement (the entry point
+  Claude Code routes through via `CLAUDE.md`).
 - `CLAUDE.md` — a one-line binding (`@AGENTS.md`) so Claude Code loads `AGENTS.md`.
 - `.claude/skills/**` — a generic, cross-project **skill core** (12 skills).
-- `.claude/**` — an **example** Claude Code harness binding (hooks + settings).
+- `.claude/commands/**` — the fixed **slash commands** `/address` and `/handoff`.
+- `.claude/**` — the **Claude Code** harness binding (example hooks + settings).
 - `README.template.md` — a seed for the initialized project's own README
   (summary, tech stack, getting started, development workflow, testing,
   related links), finalized into `README.md` in Step 7.
@@ -15,6 +16,17 @@ project built on an `AGENTS.md`-driven skill system. It ships:
 Everything project-specific has been replaced with `{{TOKEN}}` placeholders or
 neutral prose. This file tells an AI agent how to turn the template into a
 working setup for one concrete project.
+
+> **Fixed vs. configured — do not ask about these.** This template targets
+> **Claude Code specifically**: there is no "which agent?" choice. The `/address`
+> and `/handoff` slash commands under `.claude/commands/**`, together with the
+> **independent-review loop** they drive (`REVIEW.md`, the `.github/workflows/`,
+> and the `github-operation-guidelines` skill), are **fixed infrastructure** —
+> INIT *configures and adapts* them but **never asks whether to keep them, and
+> never deletes them.** The rest of the skill core is resolved per capability in
+> Steps 1 and 4: most of the 12 skills are always-present cross-project guidance,
+> and a few (unit tests, e2e, observability) are added or skipped to match the
+> project's stack.
 
 > **You are the agent running INIT.** Follow the steps in order. Do not skip
 > Step 0 or Step 1 — the rest depends on their answers. Make changes only inside
@@ -171,27 +183,35 @@ component / UI-design skills). Ask each area that applies:
     - **Structured logger** (e.g. Pino, Winston)
     - **Data / content layer** (e.g. Prisma, Drizzle, Payload CMS, a REST API — the engine and ORM/wrapper picked in 1c, when the project has one)
     - **Hosting platform** (e.g. Vercel, AWS, Fly.io)
-    - **GitHub operations** (agents read/write GitHub through a proxied single-operator identity, e.g. Claude Code + GitHub MCP)
-    - **Independent review channel** (a posted-review policy `REVIEW.md` plus a CI reviewer, a local review command, and an end-to-end delivery loop, e.g. GitHub Actions + Claude Code; requires GitHub operations)
 
-    Record each as **have → _tool_**, **add → _tool_**, or **skip**. This
-    single answer drives both the token fill (Step 3) and the keep-or-delete
-    decision for every `<!-- INIT:OPTIONAL -->` section (Step 4): **have** and
-    **add** keep the section (fill the token; **add** also scaffolds the tool
-    in Step 5); **skip** deletes it — or, for infrastructure the project will
-    plausibly add later, marks it **dormant** (see Step 4). (Not every marked
-    section has a token: GitHub operations, the independent review channel,
-    and E2E scenario coverage have Step-4 bullets instead of a token fill, and
-    a few smaller marked sections — typed-language type safety, the
-    unit-coverage gate, the backend/API test helpers — carry their
-    keep-or-delete instruction in the marker itself. The Step-4 grep walk
-    resolves them all; decide the smaller ones from the project's own shape
-    rather than a Step-1 answer.)
+    **Not on this list — fixed, do not ask:** GitHub operations
+    (`github-operation-guidelines`) and the independent-review loop (the
+    `/address` / `/handoff` commands, `REVIEW.md`, and the `.github/workflows/`)
+    are **fixed infrastructure** (see the "Fixed vs. configured" note at the top).
+    INIT configures and adapts them but never offers them up for deletion; record
+    them as kept, and resolve their markers as "keep + adapt" in Step 4.
 
-### 1e — Agents
+    Record each of the seven capabilities above as **have → _tool_**, **add →
+    _tool_**, or **skip**. This single answer drives both the token fill (Step 3)
+    and the keep-or-delete decision for every `<!-- INIT:OPTIONAL -->` section
+    (Step 4): **have** and **add** keep the section (fill the token; **add** also
+    scaffolds the tool in Step 5); **skip** deletes it — or, for infrastructure
+    the project will plausibly add later, marks it **dormant** (see Step 4). (Not
+    every marked section has a token: E2E scenario coverage has a Step-4 bullet
+    instead of a token fill, and a few smaller marked sections — typed-language
+    type safety, the unit-coverage gate, the backend/API test helpers — carry
+    their keep-or-delete instruction in the marker itself. The Step-4 grep walk
+    resolves them all; decide the smaller ones from the project's own shape rather
+    than a Step-1 answer.)
 
-14. **Which agents** will use this repo (Claude Code, Cursor, Copilot,
-    others)? This decides which harness bindings to keep (see Step 6).
+### 1e — Agent (fixed: Claude Code)
+
+14. **Agent — do not ask.** This template targets **Claude Code**, and only
+    Claude Code; the harness binding is fixed (see Step 6). There is no "which
+    agents?" question — record the agent as `Claude Code` in the Stack Decision
+    Record and move on. (If a project also wants to drive these same
+    `AGENTS.md` + `.claude/skills/**` files from another agent, that is a
+    post-INIT addition the project makes itself, not an INIT choice.)
 
 ### Stack Decision Record
 
@@ -212,6 +232,9 @@ confirm the answers instead of relying solely on the user — confirmation
 supplements the interview; it never replaces asking. **Prefer adding a missing
 capability over silently dropping it** — deleting a whole testing or
 observability skill should be a deliberate choice the user made, not a default.
+(The `/address` / `/handoff` commands, `REVIEW.md`, the CI workflows, and
+`github-operation-guidelines` are the exception — they are fixed and never
+dropped; see the "Fixed vs. configured" note.)
 
 ---
 
@@ -319,6 +342,13 @@ with a greppable marker so you can find them all:
 grep -rn 'INIT:OPTIONAL' .claude .github AGENTS.md REVIEW.md README.template.md   # every optional section, with a key
 ```
 
+**The loop machinery is fixed — never deleted here.** The `/address` /
+`/handoff` commands, `REVIEW.md`, the `.github/workflows/`, and
+`github-operation-guidelines` are permanent (see the "Fixed vs. configured" note
+at the top of this file): resolve their `INIT:OPTIONAL` markers as "keep +
+adapt", never as a deletion. Every *other* marked capability is resolved by its
+Step-1 decision below.
+
 For **each** marked section, apply the Step 1 decision for that capability:
 
 - **have** / **add** → keep the section and fill its token. For **add**, also
@@ -328,6 +358,7 @@ For **each** marked section, apply the Step 1 decision for that capability:
   note, leaving the content.
 - **skip** → delete the whole marked section (and, for a whole skill, follow the
   removal list below). Remove the marker, the note, and every inbound link.
+  (The fixed loop machinery above is never skipped.)
 - **dormant** (a middle path) → keep the section, but replace its
   `<!-- INIT:OPTIONAL ... -->` marker and italic note with a **visible**
   one-line banner, so the rule self-restores instead of vanishing:
@@ -346,8 +377,7 @@ For **each** marked section, apply the Step 1 decision for that capability:
   likely to acquire (an error tracker, server-side caching, a data layer): the
   rules are already correct and only their infrastructure is missing. Prefer
   **skip** for capability-shaped sections that would be re-authored anyway when
-  adopted (a whole test framework, the review channel) — a dormant copy of
-  those only rots.
+  adopted (a whole test framework) — a dormant copy of those only rots.
 
 Do not leave a section half-resolved: a kept section MUST have its token (if any)
 filled; a skipped section MUST be gone along with its links; a dormant section
@@ -391,31 +421,30 @@ apply to the **skip** path.
     `maintainable-code-guidelines/references/complexity-and-readability.md`:
     keep the bullet but fold the rule inline — "errors are rethrown or
     reported, never swallowed" — instead of linking the rethrow rule.
-- **Agents do not operate GitHub through a proxied single-operator identity**
-  → delete `.claude/skills/github-operation-guidelines/` and its `AGENTS.md` skill-index
-  row. If they do (e.g. a Claude Code session using the GitHub MCP server),
-  keep the skill, delete its `<!-- INIT:OPTIONAL -->` marker and the italic
-  "_delete or adapt_" note, replace the example tool-channel, marker, and
-  branch-prefix names with your harness's real ones, and review its Conventions
-  section's SHOULD bullets against your project's policy.
-- **No independent-review channel** (no posted-review policy, CI reviewer, or
-  agent delivery loop) → delete every `INIT:OPTIONAL key=INDEPENDENT_REVIEW`
-  target: `REVIEW.md`, `.claude/commands/address.md`,
-  `.github/workflows/claude-review.yaml`,
+- **GitHub operations** → `.claude/skills/github-operation-guidelines/` is
+  **fixed — keep it** (this template drives GitHub through Claude Code + the
+  GitHub MCP server, and the independent-review channel depends on it). Delete
+  its `<!-- INIT:OPTIONAL -->` marker and the italic note below it,
+  replace the example tool-channel, marker, and branch-prefix names with the
+  project's real ones, and review its Conventions section's SHOULD bullets
+  against the project's policy. A project that genuinely does no GitHub
+  automation leaves the skill's rules dormant rather than deleting the skill.
+- **Independent-review channel** → the `/address` and `/handoff` commands,
+  `REVIEW.md`, and the `.github/workflows/*.yaml` are **fixed — keep them all.**
+  This is the template's Claude delivery loop, and it requires the
+  GitHub-operations capability (also fixed — keep both). Delete the
+  `key=INDEPENDENT_REVIEW` and `key=SESSION_HANDOFF` markers and their italic
+  notes across `REVIEW.md`, `.claude/commands/address.md`,
+  `.claude/commands/handoff.md`, `.github/workflows/claude-review.yaml`,
   `.github/workflows/merge-checks.yaml`, the "Repository Review Policy Overlay"
-  section in `code-review-guideline/SKILL.md`, the marked posted-review bullets
-  in `code-review-guideline/references/severity.md` and
-  `references/evidence.md`, the posted-review parenthetical in
-  `references/escalation.md`, the marked SHOULD bullet in `AGENTS.md`'s
-  Review Independence Gates, and the marked `/address` / `/handoff`
-  command subsections in `README.template.md`'s Development workflow section
-  (replace them with a description of the project's own PR flow). Mind the knock-on: `.claude/commands/handoff.md`
-  (`key=SESSION_HANDOFF`) resumes suspended work via `/address continue`, so on
-  this delete path also delete `handoff.md` or point its resume instructions at
-  a replacement take-over entry point (its own marker says the same). If the
-  project **does** adopt it (it requires the
-  GitHub-operations capability — keep both or neither), keep all of the above,
-  delete the markers and italic notes, and:
+  section and marked posted-review bullets in `code-review-guideline`
+  (`SKILL.md`, `references/severity.md`, `references/evidence.md`,
+  `references/escalation.md`), the marked SHOULD bullet in `AGENTS.md`'s Review
+  Independence Gates, and the marked `/address` / `/handoff` subsections in
+  `README.template.md`'s Development workflow section — leaving the content in
+  place — and then configure it (a project that wants no automated loop disables
+  the workflow triggers and leaves the commands dormant rather than deleting
+  them):
   - fill `REVIEW.md`'s do-not-report list with the checks the project's CI
     actually enforces (the `merge-checks.yaml` jobs), and review its mandatory
     checks against the project's `AGENTS.md` skill index;
@@ -578,10 +607,11 @@ Confirm each added command actually runs before relying on the `check.sh` /
 
 ---
 
-## Step 6 — Set up the agent harness binding(s)
+## Step 6 — Set up the Claude Code harness binding
 
-`AGENTS.md` + `.claude/skills/**` are the portable substance. Each agent
-reads them through its own binding:
+`AGENTS.md` + `.claude/skills/**` are the portable substance. This template
+targets **Claude Code** (fixed — Step 1e), which reads them through the
+`.claude/` binding:
 
 - **Claude Code** — `CLAUDE.md` (`@AGENTS.md`) plus the `.claude/` directory:
   - `.claude/skills/**` is also discovered natively by Claude Code, so each
@@ -600,13 +630,11 @@ reads them through its own binding:
     `application-security` skill assumes they are gitignored) — keep those entries
     and merge the rest of the project's ignores into it. If the project keeps its
     own `.gitignore` elsewhere, move these entries there instead.
-- **Other agents** (Cursor, Copilot, Aider, etc.) — point them at `AGENTS.md`
-  via their own mechanism (e.g. a rules file that imports/links `AGENTS.md`).
-  Add that binding file and, if the agent has no hook system, drop
-  `.claude/hooks/` and the `settings*.json` files — but keep `.claude/skills/`,
-  which `AGENTS.md` links into.
-
-Keep only the bindings for the agents named in Step 1.
+The Claude Code binding is the only one to set up — there is no per-agent choice
+to make. A project that later wants to also drive the same
+`AGENTS.md` + `.claude/skills/**` from another agent (Cursor, Copilot, Aider, …)
+adds that binding itself, outside INIT, by pointing the agent at `AGENTS.md` via
+its own mechanism; the portable substance already supports it.
 
 ---
 
@@ -623,9 +651,8 @@ Keep only the bindings for the agents named in Step 1.
   capabilities, and fill Related links (or delete that section) — and delete
   every `<!-- INIT… -->` comment in it. The finished README MUST cover: a
   quick summary, the tech stack, getting started, the development workflow
-  (including `/address` when the independent-review capability
-  is kept), the testing strategy and its commands, and related links (when
-  applicable).
+  (including `/address`, which is fixed infrastructure), the testing strategy
+  and its commands, and related links (when applicable).
 - Run `./init.sh check` and resolve everything it reports.
 - Walk the completion checklist below **while the INIT tooling still exists** —
   several items run `./init.sh check`, and checking them after the deletion
@@ -659,7 +686,9 @@ Keep only the bindings for the agents named in Step 1.
       `.claude/skills/agent-skills-best-practices/scripts/check-links.sh`
       (checks the `.claude/` tree a `glob('**/*.md')` sweep would skip).
 - [ ] `AGENTS.md` skill index matches the directories under `.claude/skills/`.
-- [ ] Removed skills have no remaining inbound links.
+- [ ] Removed skills have no remaining inbound links (the fixed loop machinery —
+      `/address`, `/handoff`, `REVIEW.md`, the workflows, `github-operation-guidelines` —
+      is never removed).
 - [ ] The conditional hedges are resolved — in every bullet hedged with a
       "when the project has …" clause, delete the clause when the capability
       was kept and the whole bullet when it was skipped. They live in
@@ -679,10 +708,10 @@ Keep only the bindings for the agents named in Step 1.
       "observability" when `observability-guidelines` was deleted).
 - [ ] Added capabilities have a working command (the `check.sh` / `format.sh`
       hooks actually run).
-- [ ] If `merge-checks.yaml` was kept: its jobs actually run the lint/test
+- [ ] `merge-checks.yaml` is kept (fixed): its jobs actually run the lint/test
       steps instead of skipping them — the guard steps disarm once `INIT.md`
       is deleted, so check a post-INIT run's log shows the steps executing.
-- [ ] Harness binding for each Step-1 agent is filled in and runnable.
+- [ ] The Claude Code harness binding is filled in and runnable.
 - [ ] A `.gitignore` excludes `settings.local.json` and `.env.local` (or the
       project's equivalent local-state/secret files).
 - [ ] `INIT.md` and template scaffolding notes/tooling are deleted — including

@@ -44,7 +44,7 @@ These categories use fixed minimum severities, regardless of perceived "smallnes
 
 - MUST classify each listed category at no lower than its minimum severity.
 - MAY raise severity above the floor when the concrete impact is worse than the table's minimum.
-<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep the next bullet if the project adopts the posted-review channel (REVIEW.md) OR delete it; see the INIT.md Step-4 bullet. -->
+<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — Fixed: the posted-review channel is fixed infrastructure (INIT.md Step 4), so KEEP the next bullet; just delete this marker. -->
 - MUST NOT surface CI-enforced rows — any category the project's posted-review policy excludes as CI-enforced, such as the lint-error row — in a **posted** PR review; the policy's do-not-report list excludes them (see the [Repository Review Policy Overlay](../SKILL.md#repository-review-policy-overlay)). The severity floors above govern only internal self-review triage.
 
 ## Verdict Mapping
@@ -58,7 +58,7 @@ The reviewer MUST emit one of these three verdicts in the report Summary, derive
 **Guidelines:**
 
 - MUST derive the review verdict from the severity counts exactly as mapped above.
-<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — keep the next bullet if the project adopts the posted-review channel (REVIEW.md) OR delete it; see the INIT.md Step-4 bullet. -->
+<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — Fixed: the posted-review channel is fixed infrastructure (INIT.md Step 4), so KEEP the next bullet; just delete this marker. -->
 - SHOULD, for a **posted** PR review, replace this three-verdict output with the posted-review policy's one-line Important/Nit tally per the [Repository Review Policy Overlay](../SKILL.md#repository-review-policy-overlay).
 
 ## When in Doubt
