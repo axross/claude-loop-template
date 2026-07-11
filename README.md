@@ -93,12 +93,12 @@ it rather than cloning it.
    generated (e.g. an existing `AGENTS.md`), interviews you about the project
    kind, frameworks, architecture (directory structure, business-logic
    structure, state management, database layer, styling, theming), and goal,
-   then fills the `{{TOKENS}}` via `./init.sh`. The 12 bundled skills and the
-   `/address` + `/handoff` commands are **fixed** — INIT never asks whether to
-   keep them and never deletes one; for each capability (unit tests, e2e,
-   observability, …) it asks only whether the project **has** it (and with which
-   tool) so it can configure the matching skill or, when the tool is absent, mark
-   that skill's sections **dormant**. INIT also adds project-specific skills.
+   then fills the `{{TOKENS}}` via `./init.sh`. The `/address` + `/handoff`
+   commands and the independent-review loop (`REVIEW.md`, the workflows,
+   `github-operation-guidelines`) are **fixed** — INIT never asks whether to keep
+   them. For each *other* optional capability — unit tests, e2e, observability —
+   it asks whether to **add** it (and with which tool) or skip it, rather than
+   assuming it should be deleted, and it adds project-specific skills.
 3. When adaptation is complete, INIT finalizes `README.template.md` into your
    project's `README.md` — a README covering the project summary, tech stack,
    getting started, the development workflow (`/address`), testing strategy and

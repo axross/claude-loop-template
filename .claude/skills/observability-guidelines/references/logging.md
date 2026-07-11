@@ -1,7 +1,7 @@
 # Logging
 
-<!-- INIT:OPTIONAL key=LOGGER — keep & fill the token (add the tool, INIT Step 5) OR, if the project has no structured logger yet, mark this section DORMANT (banner + neutral prose) rather than deleting it; observability-guidelines is a fixed skill (INIT.md Step 4). -->
-*If this project has no {{LOGGER}} (structured logger) yet, mark this section dormant during INIT (do not delete the skill).*
+<!-- INIT:OPTIONAL key=LOGGER — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
+*If this project has no {{LOGGER}} (structured logger), delete or adapt this section during INIT.*
 
 Apply these rules when writing, reviewing, or modifying any code that emits log output.
 
