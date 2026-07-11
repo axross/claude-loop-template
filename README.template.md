@@ -73,7 +73,7 @@ session:
    reviewer, a separate bot session, so the code's author never certifies its
    own work.
 4. **Address** — fixes review findings and CI failures, tying each resolved
-   thread to the resolving commit, for up to four rounds.
+   thread to the resolving commit, for up to eight rounds.
 5. **Ready** — flips the pull request to ready once CI is green and the review
    is clean. Merging always stays a human decision.
 

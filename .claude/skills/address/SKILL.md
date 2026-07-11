@@ -116,7 +116,7 @@ Review is **not** done by you. It runs as a separate agent session on separate i
 - When the independent review's comments land, read them (their author is the review bot, not you and not a human) together with the CI status of the merge-checks workflow.
 - Address and resolve each blocking finding (Important, or whatever the posted-review policy marks merge-blocking) and every unmet acceptance criterion, pushing fixes to the same branch and re-running the relevant verification after each batch.
 - For every review comment a commit resolves, reply on that comment's thread with a marked comment (the project's marker line, then a line beginning **`Resolved in <short-hash>`** — the 7-character hash of the commit that fixed it — followed by a one-sentence summary of what changed), then resolve the thread. When one commit resolves several comments, reference that same hash on each. This ties each resolution to the exact commit for the reviewer and for `/address continue`. (These review-thread replies are the run's only comments besides the review request — they are not status or attention pings.)
-- Re-request review by posting the review trigger phrase again after a batch of fixes, and repeat up to the 4-round cap (see [Termination Guard](#termination-guard)).
+- Re-request review by posting the review trigger phrase again after a batch of fixes, and repeat up to the 8-round cap (see [Termination Guard](#termination-guard)).
 - Keep the branch mergeable into its base. When the base branch has moved and the pull request conflicts (GitHub marks it not mergeable, or an update/rebase fails), bring the base branch into the branch and resolve the conflicts, then re-run the verification the touched surface requires and note it in the pull request. Resolve mechanical conflicts yourself — imports, independent or adjacent edits, regenerated lockfiles — but when the correct resolution is genuinely unclear (both sides changed the same logic on purpose, or keeping both sides matters and how to reconcile them is a judgment call), ask `@<maintainer>` how to reconcile it through the dedicated question UI (see [Asking the Human](#asking-the-human)) rather than guessing.
 - Escalate through the dedicated question UI (see [Asking the Human](#asking-the-human)) when a finding or human comment is ambiguous or needs a product or architecture decision, rather than guessing.
 - Gate the draft→ready flip on a **clean independent review** (no blocking findings) plus green CI — never on your own assessment of your code. On convergence, flip the pull request to ready for review, update the status block, and state the ready-for-review outcome in the turn output. Merging remains the human's decision.
@@ -142,7 +142,7 @@ State lives in this running session; GitHub carries a thin, **human-invisible** 
 
 ## Termination Guard
 
-- Cap the address↔review loop at **4** rounds; on non-convergence, record what still fails in the status block, state the summary in the turn output, end the turn, and wait for `/address continue`.
+- Cap the address↔review loop at **8** rounds; on non-convergence, record what still fails in the status block, state the summary in the turn output, end the turn, and wait for `/address continue`.
 - Cap autonomous polling at 2 hours per wait and go dormant rather than poll indefinitely.
 - End the turn (never loop-block) whenever waiting on a human — the plan-approval gate, a stuck machine event, or a dormancy cap — so an idle run consumes nothing.
 
