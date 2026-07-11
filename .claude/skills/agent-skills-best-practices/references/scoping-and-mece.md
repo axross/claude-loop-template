@@ -62,7 +62,7 @@ flowchart TD
 
 - SHOULD split a skill when `SKILL.md` exceeds about 500 lines or 5,000 tokens.
 - SHOULD split when one section grows past ten guideline bullets.
-- SHOULD split when the description cannot cover what and when in 1024 characters.
+- SHOULD split when the `description` and `when_to_use` together cannot cover what and when within the discovery length caps (see [frontmatter-and-naming.md](./frontmatter-and-naming.md)).
 - SHOULD NOT split a small, cohesive skill only to match neighboring file layouts.
 
 ## When to Consolidate

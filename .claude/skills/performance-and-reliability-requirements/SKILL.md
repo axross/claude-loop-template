@@ -1,6 +1,8 @@
 ---
 name: performance-and-reliability-requirements
-description: Use this skill when reviewing runtime cost or failure-mode behavior of a code change. Covers data-access efficiency and N+1 risk, server/client boundary cost and async waterfalls, deferred/streamed loading splits, caching correctness (lifetime, scope, invalidation), asset/image optimization, client bundle and dependency weight, and error-handling/observability hooks. This is the reviewer's lens. Use for "fast", "cache", "scale", "slow", "bundle", or "what happens when this fails".
+description: The reviewer's lens on runtime cost and failure-mode behavior. Covers data-access efficiency and N+1 risk, server/client boundary cost and async waterfalls, deferred/streamed loading splits, caching correctness (lifetime, scope, invalidation), asset/image optimization, client bundle and dependency weight, and error-handling/observability hooks.
+when_to_use: Use when reviewing runtime cost or failure-mode behavior of a code change — "fast", "cache", "scale", "slow", "bundle", or "what happens when this fails".
+user-invocable: false
 ---
 
 # Performance and Reliability Requirements

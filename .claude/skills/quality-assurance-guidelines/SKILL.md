@@ -1,6 +1,8 @@
 ---
 name: quality-assurance-guidelines
-description: Use this skill when reviewing whether a change has adequate verification evidence. Covers format/lint proof, e2e coverage for new routes/features/surfaces, required test-id hooks, intentional snapshot updates, flaky-test investigation, manual checks for non-default content and not-found states, skipped checks, and residual risk. This is the reviewer's QA lens on top of development verification and e2e testing rules. Use for "are tests good", "did this break anything", or "should I bump snapshots".
+description: The reviewer's QA lens on verification evidence, on top of development verification and e2e testing rules. Covers format/lint proof, e2e coverage for new routes/features/surfaces, required test-id hooks, intentional snapshot updates, flaky-test investigation, manual checks for non-default content and not-found states, skipped checks, and residual risk.
+when_to_use: Use when reviewing whether a change has adequate verification evidence — "are tests good", "did this break anything", or "should I bump snapshots".
+user-invocable: false
 ---
 
 # Quality Assurance Guidelines

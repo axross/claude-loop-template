@@ -1,6 +1,8 @@
 ---
 name: observability-guidelines
-description: Use this skill whenever writing, reviewing, or modifying code that throws, catches, reports, or logs — including `try`/`catch` placement, error-reporting capture calls, top-level error boundaries, structured-logger usage and module child loggers, log-level choice (`info` / `warn`; `error` reserved for projects without a dedicated error tracker), and "Started / Completed" structured-log messages. Use even when the user only mentions an error tracker, a logger, capturing an exception, error boundaries, log levels, or debugging an unhandled exception in this project.
+description: Error-handling and logging conventions — `try`/`catch` placement, error-reporting capture calls, top-level error boundaries, structured-logger usage and module child loggers, log-level choice (`info` / `warn`; `error` reserved for projects without a dedicated error tracker), and "Started / Completed" structured-log messages.
+when_to_use: Use whenever writing, reviewing, or modifying code that throws, catches, reports, or logs — even when the user only mentions an error tracker, a logger, capturing an exception, error boundaries, log levels, or debugging an unhandled exception in this project.
+user-invocable: false
 ---
 
 # Observability Guidelines

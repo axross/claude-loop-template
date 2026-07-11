@@ -6,8 +6,9 @@ Code** project built on an `AGENTS.md`-driven skill system. It ships:
 - `AGENTS.md` — the master routing index + working agreement (the entry point
   Claude Code routes through via `CLAUDE.md`).
 - `CLAUDE.md` — a one-line binding (`@AGENTS.md`) so Claude Code loads `AGENTS.md`.
-- `.claude/skills/**` — a generic, cross-project **skill core** (12 skills).
-- `.claude/commands/**` — the fixed **slash commands** `/address` and `/handoff`.
+- `.claude/skills/**` — a generic, cross-project **skill core** (12 guideline
+  skills) plus the fixed **workflow entry-point skills** `/address` and
+  `/handoff`.
 - `.claude/**` — the **Claude Code** harness binding (example hooks + settings).
 - `README.template.md` — a seed for the initialized project's own README
   (summary, tech stack, getting started, development workflow, testing,
@@ -19,7 +20,7 @@ working setup for one concrete project.
 
 > **Fixed vs. configured — do not ask about these.** This template targets
 > **Claude Code specifically**: there is no "which agent?" choice. The `/address`
-> and `/handoff` slash commands under `.claude/commands/**`, together with the
+> and `/handoff` workflow entry-point skills under `.claude/skills/**`, together with the
 > **independent-review loop** they drive (`REVIEW.md`, the `.github/workflows/`,
 > and the `github-operation-guidelines` skill), are **fixed infrastructure** —
 > INIT *configures and adapts* them but **never asks whether to keep them, and
@@ -186,7 +187,7 @@ component / UI-design skills). Ask each area that applies:
 
     **Not on this list — fixed, do not ask:** GitHub operations
     (`github-operation-guidelines`) and the independent-review loop (the
-    `/address` / `/handoff` commands, `REVIEW.md`, and the `.github/workflows/`)
+    `/address` / `/handoff` skills, `REVIEW.md`, and the `.github/workflows/`)
     are **fixed infrastructure** (see the "Fixed vs. configured" note at the top).
     INIT configures and adapts them but never offers them up for deletion; record
     them as kept, and resolve their markers as "keep + adapt" in Step 4.
@@ -232,7 +233,7 @@ confirm the answers instead of relying solely on the user — confirmation
 supplements the interview; it never replaces asking. **Prefer adding a missing
 capability over silently dropping it** — deleting a whole testing or
 observability skill should be a deliberate choice the user made, not a default.
-(The `/address` / `/handoff` commands, `REVIEW.md`, the CI workflows, and
+(The `/address` / `/handoff` skills, `REVIEW.md`, the CI workflows, and
 `github-operation-guidelines` are the exception — they are fixed and never
 dropped; see the "Fixed vs. configured" note.)
 
@@ -343,7 +344,7 @@ grep -rn 'INIT:OPTIONAL' .claude .github AGENTS.md REVIEW.md README.template.md 
 ```
 
 **The loop machinery is fixed — never deleted here.** The `/address` /
-`/handoff` commands, `REVIEW.md`, the `.github/workflows/`, and
+`/handoff` skills, `REVIEW.md`, the `.github/workflows/`, and
 `github-operation-guidelines` are permanent (see the "Fixed vs. configured" note
 at the top of this file): resolve their `INIT:OPTIONAL` markers as "keep +
 adapt", never as a deletion. Every *other* marked capability is resolved by its
@@ -429,33 +430,35 @@ apply to the **skip** path.
   project's real ones, and review its Conventions section's SHOULD bullets
   against the project's policy. A project that genuinely does no GitHub
   automation leaves the skill's rules dormant rather than deleting the skill.
-- **Independent-review channel** → the `/address` and `/handoff` commands,
+- **Independent-review channel** → the `/address` and `/handoff` skills,
   `REVIEW.md`, and the `.github/workflows/*.yaml` are **fixed — keep them all.**
   This is the template's Claude delivery loop, and it requires the
   GitHub-operations capability (also fixed — keep both). Delete the
   `key=INDEPENDENT_REVIEW` and `key=SESSION_HANDOFF` markers and their italic
-  notes across `REVIEW.md`, `.claude/commands/address.md`,
-  `.claude/commands/handoff.md`, `.github/workflows/claude-review.yaml`,
+  notes across `REVIEW.md`, `.claude/skills/address/SKILL.md`,
+  `.claude/skills/handoff/SKILL.md`, `.github/workflows/claude-review.yaml`,
   `.github/workflows/merge-checks.yaml`, the "Repository Review Policy Overlay"
   section and marked posted-review bullets in `code-review-guideline`
   (`SKILL.md`, `references/severity.md`, `references/evidence.md`,
   `references/escalation.md`), the marked SHOULD bullet in `AGENTS.md`'s Review
-  Independence Gates, and the marked `/address` / `/handoff` subsections in
+  Independence Gates, the marked Workflow Entry Points subsection in
+  `AGENTS.md`'s Skill Index, and the marked `/address` / `/handoff` subsections in
   `README.template.md`'s Development workflow section — leaving the content in
   place — and then configure it (a project that wants no automated loop disables
-  the workflow triggers and leaves the commands dormant rather than deleting
+  the workflow triggers and leaves the skills dormant rather than deleting
   them):
   - fill `REVIEW.md`'s do-not-report list with the checks the project's CI
     actually enforces (the `merge-checks.yaml` jobs), and review its mandatory
     checks against the project's `AGENTS.md` skill index;
   - set the review trigger phrase and reviewer identity across
-    `claude-review.yaml` and the `.claude/commands/` files. The trigger phrase
+    `claude-review.yaml` and the address skill
+    (`.claude/skills/address/SKILL.md`). The trigger phrase
     is functional and dangerous in prose: a comment-triggered workflow matches
     it **anywhere** in a comment body, so the literal phrase belongs ONLY in
-    the workflow and command files — everywhere else refer to it as "the
+    the workflow and entry-point skill files — everywhere else refer to it as "the
     review trigger phrase";
   - replace the `@<maintainer>`, agent-comment-marker, and branch-prefix
-    examples in `.claude/commands/address.md` with the project's real values
+    examples in `.claude/skills/address/SKILL.md` with the project's real values
     per `github-operation-guidelines`;
   - the `{{INSTALL_CMD}}` / `{{LINT_CMD}}` / `{{UNIT_TEST_CMD}}` run commands
     in `merge-checks.yaml` are substituted by `./init.sh apply` like every

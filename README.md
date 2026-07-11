@@ -6,7 +6,7 @@ structured working agreement and a library of skills.
 It is extracted from a production setup and stripped of stack-specific detail,
 leaving a generic core you adapt to any project — web, mobile, CLI, library, or
 service. The system is built for Claude Code: the skill core, the `/address`
-and `/handoff` commands, and the example GitHub Actions all target
+and `/handoff` skills, and the example GitHub Actions all target
 it, with the working agreement kept in `AGENTS.md` and loaded through
 `CLAUDE.md`.
 
@@ -26,14 +26,15 @@ it, with the working agreement kept in `AGENTS.md` and loaded through
 │   └── workflows/           # fixed: CI reviewer + merge checks (GitHub Actions + Claude Code);
 │                            # plus template-checks.yaml, this repo's own link-check CI (deleted during INIT)
 └── .claude/
-    ├── commands/            # fixed: /address + /handoff entry points (Claude Code)
-    ├── skills/              # the generic, cross-project skill core (12 skills)
+    ├── skills/              # skill core (12 guideline skills) + fixed /address + /handoff entry points
+    │   ├── address/         # fixed: /address delivery entry point (Claude Code)
     │   ├── agent-skills-best-practices/  # ships scripts/check-links.sh (relative-link integrity)
     │   ├── application-security-requirements/
     │   ├── code-review-guideline/
     │   ├── development-guidelines/
     │   ├── e2e-testing-guidelines/
     │   ├── github-operation-guidelines/
+    │   ├── handoff/         # fixed: /handoff session-suspend entry point (rides with /address)
     │   ├── maintainable-code-guidelines/
     │   ├── observability-guidelines/
     │   ├── performance-and-reliability-requirements/
@@ -53,13 +54,13 @@ observability, and QA evidence. Project-specific skills
 you add them during adaptation.
 
 A fixed **independent-review channel** ships alongside the core: `REVIEW.md`
-(the posted-review policy), the `/address` entry point in `.claude/commands/`,
+(the posted-review policy), the `/address` entry-point skill in `.claude/skills/`,
 and the `.github/workflows/`. INIT configures and adapts it — it is never
 removed (a project that wants no automated loop leaves it dormant); INIT Step 4
 covers the configuration. Its CI reviewer needs a one-time secret setup before
 it runs — see [Getting started](#getting-started).
-A **`/handoff`** command also
-ships in `.claude/commands/`: it suspends in-progress work into a downloadable
+A **`/handoff`** skill also
+ships in `.claude/skills/`: it suspends in-progress work into a downloadable
 handoff package (a `handoff-<unix epoch>.md` plus an optional zip of supporting
 files) that a fresh session takes over with `/address continue` — so it rides
 along with the `/address` entry point rather than standing alone.

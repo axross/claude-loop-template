@@ -1,6 +1,8 @@
 ---
 name: unit-test-guidelines
-description: Apply this skill when writing, refactoring, reviewing, or running {{UNIT_TEST_FRAMEWORK}} unit tests in this project. Covers test framework configuration, explicit test-API imports, colocated test files, describe/case naming and grouping conventions, behavior-focused test design, fixture quality, AHA test abstraction, mocks and fakes, async assertions, snapshot discipline, schema/codec tests, type-only modules, the optional coverage gate (thresholds and ignore pragmas), and when unit tests should yield to integration or e2e coverage.
+description: Conventions for {{UNIT_TEST_FRAMEWORK}} unit tests. Covers test framework configuration, explicit test-API imports, colocated test files, describe/case naming and grouping conventions, behavior-focused test design, fixture quality, AHA test abstraction, mocks and fakes, async assertions, snapshot discipline, schema/codec tests, type-only modules, the optional coverage gate (thresholds and ignore pragmas), and when unit tests should yield to integration or e2e coverage.
+when_to_use: Apply when writing, refactoring, reviewing, or running unit tests — including mocks/fakes, fixtures, schema tests, coverage questions, or behavior-focused assertion design.
+user-invocable: false
 ---
 
 # Unit Test Guidelines
