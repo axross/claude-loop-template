@@ -86,7 +86,7 @@ it rather than cloning it.
    - **Existing repository** — copy the template's files into it: the
      adaptation tooling (`INIT.md`, `init.sh`, `tokens.json`), the README seed
      (`README.template.md`), the working agreement, skills, and ignore rules
-     (`AGENTS.md`, `CLAUDE.md`, `.claude/`, `.gitignore`), and the optional
+     (`AGENTS.md`, `CLAUDE.md`, `.claude/`, `.gitignore`), and the fixed
      `.github/` and `REVIEW.md`.
 2. Open **[INIT.md](./INIT.md)** and follow it — or hand the repo to Claude Code
    and ask it to "run INIT". INIT reconciles any files a scaffold already
