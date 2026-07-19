@@ -30,6 +30,7 @@ Manual verification is the first line of confirmation. Run it before the automat
 - MUST start the development server (`{{DEV_CMD}}`) and navigate to the affected route/view after every change that touches an output surface.
 - MUST verify any non-default content state the data layer supports (e.g., a draft/preview state, if the project has one) in addition to the default state, when the surface displays data-layer-managed content.
 - MUST verify the not-found / error state renders when the change affects routing or error handling (e.g., navigate to a non-existent record).
+- SHOULD use a pull request's stable preview link (the preview URL, or the install link for a mobile build) to verify the change's behavior in a deployed context during review — the link stays constant across pushes and always serves the newest build. <!-- INIT:OPTIONAL key=PREVIEW_ENVIRONMENTS — keep this bullet when the project has per-PR preview environments OR delete it. -->
 
 ## Automated Verification
 

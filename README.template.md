@@ -114,6 +114,17 @@ current state, remaining to-dos, uncommitted changes — into a downloadable
 session is running low on context, or to park work for later; a fresh session
 (yours or a teammate's) takes the package over with `/address continue`.
 
+<!-- INIT:OPTIONAL key=PREVIEW_ENVIRONMENTS — keep & adapt this subsection when the project has per-PR preview environments (INIT Step 1d) OR delete it. -->
+### Preview environments — review every PR live
+
+Each pull request gets its own preview environment with a **stable per-PR
+link** — a preview URL for a web project, an installable build's distribution
+link for a mobile app — posted to the PR as a fresh comment on every deploy
+(each recording the deployed commit) and torn down when the PR closes. The
+pipeline is inert until its hosting/distribution secrets are configured; see
+[preview-environments](./.claude/skills/development-guidelines/references/preview-environments.md)
+for the setup and rules.
+
 Changes made without an agent follow the same bar: branch, implement, run the
 checks below, open a pull request, and get it reviewed before merge.
 
