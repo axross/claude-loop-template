@@ -57,6 +57,7 @@ See [dev-commands.md](./references/dev-commands.md) for:
 ## Preview Environments
 
 <!-- INIT:OPTIONAL key=PREVIEW_ENVIRONMENTS — keep this section when the project has (or adds) per-PR preview environments OR delete it (and the reference file) with every inbound link. -->
+*If this project has no per-PR preview environments, delete this section during INIT.*
 
 See [preview-environments.md](./references/preview-environments.md) for:
 

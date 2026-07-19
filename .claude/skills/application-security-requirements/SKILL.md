@@ -44,6 +44,7 @@ See [privacy-and-exposure.md](./references/privacy-and-exposure.md) for:
 - Public media/asset URLs expose only intentionally public assets and do not reveal private storage tokens or internal identifiers
 - Analytics and error-reporting changes do not capture unnecessary PII, secrets, private content, or internal fields
 - Client-exposed environment variables, analytics event properties, and error context are intentionally public
+- Preview environments never receive production data or credentials, hold fixture-seeded per-PR data behind distinct preview-scoped secrets, and prune their resources on teardown <!-- INIT:OPTIONAL key=PREVIEW_ENVIRONMENTS — keep this bullet when the project has per-PR preview environments OR delete it. -->
 
 ## Injection in Rendered Untrusted Content
 

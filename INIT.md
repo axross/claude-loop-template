@@ -486,18 +486,21 @@ apply to the **skip** path.
     tooling in Step 7 is what arms them, so a green Merge Checks before
     that point does not mean lint/tests ran.
 - **Per-PR preview environments** → resolve every `key=PREVIEW_ENVIRONMENTS`
-  site (the Step-4 grep finds them all) per the Step-1 decision. The five
+  site (the Step-4 grep finds them all) per the Step-1 decision. The six
   sites: `development-guidelines/references/preview-environments.md` (the whole
   file), its "Preview Environments" routing section in
   `development-guidelines/SKILL.md`, the stable-preview-link bullet in
   `development-guidelines/references/verification.md`, the "Preview Environment
   Exposure" section in
-  `application-security-requirements/references/privacy-and-exposure.md`, and
-  the marked subsection in `README.template.md`'s Development workflow.
-  - **have** / **add** → keep all five sites: delete the markers and italic
+  `application-security-requirements/references/privacy-and-exposure.md`, the
+  preview-environments routing bullet in
+  `application-security-requirements/SKILL.md`'s Privacy and Exposure Control
+  section, and the marked subsection in `README.template.md`'s Development
+  workflow.
+  - **have** / **add** → keep all six sites: delete the markers and italic
     notes, replace the illustrative tool names with the project's real
     hosting/distribution stack, and author the concrete workflow in Step 5.
-  - **skip** → delete all five sites, plus the "per-PR preview environments" /
+  - **skip** → delete all six sites, plus the "per-PR preview environments" /
     "preview environments" phrases in `development-guidelines/SKILL.md`'s
     frontmatter `description` and `when_to_use`.
   - **dormant** fits this capability well when the project will plausibly

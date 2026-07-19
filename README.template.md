@@ -117,6 +117,9 @@ session is running low on context, or to park work for later; a fresh session
 <!-- INIT:OPTIONAL key=PREVIEW_ENVIRONMENTS — keep & adapt this subsection when the project has per-PR preview environments (INIT Step 1d) OR delete it. -->
 ### Preview environments — review every PR live
 
+*If this project has no per-PR preview environments, delete this subsection
+during INIT.*
+
 Each pull request gets its own preview environment with a **stable per-PR
 link** — a preview URL for a web project, an installable build's distribution
 link for a mobile app — posted to the PR as a fresh comment on every deploy
