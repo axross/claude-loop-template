@@ -459,7 +459,11 @@ apply to the **skip** path.
     review trigger phrase";
   - replace the `@<maintainer>`, agent-comment-marker, and branch-prefix
     examples in `.claude/skills/address/SKILL.md` with the project's real values
-    per `github-operation-guidelines`;
+    per `github-operation-guidelines`, and replace the generic visual-surface
+    examples in `.claude/skills/address/SKILL.md` and
+    `.claude/skills/address/references/visual-design-options.md` (public site
+    appearance, application UI, an admin surface) with the project's real
+    human-facing surfaces;
   - the `{{INSTALL_CMD}}` / `{{LINT_CMD}}` / `{{UNIT_TEST_CMD}}` run commands
     in `merge-checks.yaml` are substituted by `./init.sh apply` like every
     other token; only the toolchain setup (setup-node, `.nvmrc`, the npm
