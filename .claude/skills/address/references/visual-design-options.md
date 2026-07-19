@@ -23,7 +23,7 @@ Every design round is either an **options round** or a **confirmation round**, a
 
 - MUST classify a round as options-or-confirmation by what the human asked for: a request to compare candidates, examples, options, or alternatives at a fidelity or axis not yet decided is an options round (at least three candidates), regardless of whether a direction was already chosen at a lower fidelity.
 - MUST treat a round as a confirmation only when it renders the exact already-approved direction and no new fidelity or comparison decision is on the table.
-- **When in doubt whether a round is options or confirmation, present at least three candidates.** A superfluous option costs minutes; a missing one costs a round.
+- SHOULD, when in doubt whether a round is options or confirmation, present at least three candidates: a superfluous option costs minutes; a missing one costs a round.
 
 ## Constructing the Options
 
