@@ -33,9 +33,9 @@ Per-PR preview environments are reachable beyond the team — a web preview URL 
 
 **Guidelines:**
 
-- MUST flag a Major when a change would route production data-store credentials to a preview, copy or branch production data into a preview's backing resources, or otherwise let a preview reach a production system.
-- MUST flag a Major when a preview's storage/media credentials point at a production store instead of a dedicated preview store or a per-PR-isolated namespace.
-- MUST keep every preview-scoped secret (seed/test-account credentials, session/signing secrets) distinct from its production counterpart, and flag a Major when one value serves both — a reachable preview login must never unlock production.
+- MUST flag a Critical when a change would route production data-store credentials to a preview, copy or branch production data into a preview's backing resources, or otherwise let a preview reach a production system.
+- MUST flag a Critical when a preview's storage/media credentials point at a production store instead of a dedicated preview store or a per-PR-isolated namespace.
+- MUST keep every preview-scoped secret (seed/test-account credentials, session/signing secrets) distinct from its production counterpart, and flag a Critical when one value serves both — a reachable preview login must never unlock production.
 - SHOULD verify per-PR resources stay isolated from one another (per-PR naming or namespacing) and are destroyed or pruned on teardown.
 
 ## Analytics and Error Reporting Exposure
