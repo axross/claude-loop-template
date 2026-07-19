@@ -1,6 +1,6 @@
 # Visual Design Options
 
-Apply this reference during `/address` Phase 1 whenever the run's work is UI-bearing. It defines how the plan's UI design section presents visual presentation options for the human to choose from, how the design record lives in the tracking issue, and how the chosen design stays findable through code review and preview-environment debugging. The spec-level *content* of a UI design section — hierarchy, states, accessibility, responsive intent — stays owned by [Product Requirement Guidelines](../../product-requirement-guidelines/SKILL.md), and visual tone plus design-system vocabulary stay owned by the project's own UI/design skill (created during INIT); this reference owns only the options exhibit and its lifecycle.
+Apply this reference during `/address` Phase 1 whenever the run's work is UI-bearing. It defines how the plan's UI design section presents visual presentation options for the human to choose from, how the design record lives in the tracking issue, and how the chosen design stays findable through code review and preview-environment debugging. The spec-level *content* of a UI design section — hierarchy, states, accessibility, responsive intent — stays owned by the project's product requirement guidelines, and visual tone plus design-system vocabulary stay owned by the project's own UI/design skill (created during INIT); this reference owns only the options exhibit and its lifecycle.
 
 ## When the Exhibit Is Required
 
@@ -48,7 +48,7 @@ Trade-offs: … (what it costs relative to Options A and C)
 - MUST ground every option in the project's own UI/design skill (created during INIT) — visual identity, color tokens, spacing, motion, and theme behavior; an option that violates the design system is not a valid choice.
 - MUST NOT pad the exhibit with a straw-man; every option must be one the run could genuinely implement.
 - SHOULD keep each option compact enough to compare side by side — a heading, a sketch, and a handful of sentences.
-- SHOULD note per option any accessibility or responsive implication that materially distinguishes it; the full accessibility and responsive intent is written for the chosen direction per [Product Requirement Guidelines](../../product-requirement-guidelines/SKILL.md) once the choice lands.
+- SHOULD note per option any accessibility or responsive implication that materially distinguishes it; the full accessibility and responsive intent is written for the chosen direction per the project's product requirement guidelines once the choice lands.
 
 ## Presenting Designs as Artifacts
 
