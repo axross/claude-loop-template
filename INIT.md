@@ -121,9 +121,32 @@ dribbling them out over many rounds. The interview is strict:
 
    Does it have a user-facing UI surface?
 
+3. **Application identifier(s)** *(if the project ships an installable or
+   distributable artifact whose identity is a durable reverse-DNS identifier —
+   a mobile app, a desktop app, a browser extension, or a published package
+   that carries one)*. This is a **MUST-ask**; never infer it.
+   - Ask for the reverse-DNS **base identifier** (e.g. `app.axross.payload`)
+     and derive the per-platform ids from it — the Android `applicationId` /
+     package and the iOS `bundleIdentifier` — or ask for each explicitly when
+     they must differ. Capture any store / distribution app IDs the artifact
+     needs, and the deep-link **scheme** (a related-but-separate identifier)
+     for an app that registers one.
+   - **Why human-confirmed, never invented:** app identity is durable and
+     expensive to change once published — store listings, distribution apps
+     (e.g. Firebase), signing configs, and the deep-link scheme all key off it,
+     so a post-release rename is a cross-cutting, costly migration. Consistent
+     with the "MUST NOT infer a default" rule above, an agent MUST NOT invent
+     it — here, or later when Step 5 scaffolds app/native config. Record the
+     answer in the Stack Decision Record; like the 1c architecture decisions it
+     fills no `{{TOKEN}}` (Step 5 reads it from there).
+   - Record it *not applicable* for a surface-less kind that ships no such
+     artifact — a headless service, a CLI, or a library whose only identity is
+     its package name (already captured by `{{PROJECT_NAME}}`) — so those
+     projects are not prompted.
+
 ### 1b — Core toolchain (always present)
 
-3. **Always-present tooling.** Which does the project use for each of:
+4. **Always-present tooling.** Which does the project use for each of:
    - **App framework / runtime** — examples per application type: web
      (Next.js, Remix, …), mobile (Expo, Flutter, …), server (Hono, NestJS,
      Apollo, Express, …), or `none (plain runtime)`
@@ -140,38 +163,38 @@ These answers fill no `{{TOKEN}}`; they live in the Stack Decision Record and
 are consumed by Step 2 (Project Overview) and Step 5 (the structure /
 component / UI-design skills). Ask each area that applies:
 
-4. **Directory structure** (worth deciding early, especially for smaller
+5. **Directory structure** (worth deciding early, especially for smaller
    apps):
    - by feature (domain A, domain B, …)
    - by purpose/type (components, hooks, persistence, …)
-5. **Business-logic structure:**
+6. **Business-logic structure:**
    - React hooks and context-based
    - Bloc (or a similar event/state pattern)
    - Clean Architecture model-based
    - none / ad-hoc
-6. **State management** *(if the app holds client-side or shared state)*:
+7. **State management** *(if the app holds client-side or shared state)*:
    - client state (e.g. Zustand, Jotai, Redux)
    - server cache (e.g. TanStack Query, Apollo Client)
    - Bloc, or another pattern-supplied store
-7. **Database layer** *(if the app persists data — mobile and
+8. **Database layer** *(if the app persists data — mobile and
    server/full-stack apps especially)*: PostgreSQL, MySQL, Firebase
    Firestore, libSQL/SQLite, … Whether the project has, adds, or skips a
    data/content layer at all is decided in 1d; this records *which* engine.
-8. **ORM / db-wrapper library** *(if the app persists data and a database
-   layer was picked in item 7 — mobile and server/full-stack apps
+9. **ORM / db-wrapper library** *(if the app persists data and a database
+   layer was picked in item 8 — mobile and server/full-stack apps
    especially)*: Drizzle, Prisma, … — or none (raw driver/SQL).
-9. **Interface / validation & sanitization** *(if the project parses external
-   input — API payloads, forms, env)*: zod, valibot, …
-10. **Styling** *(if the project renders UI)*: CSS Modules, Tailwind,
+10. **Interface / validation & sanitization** *(if the project parses external
+    input — API payloads, forms, env)*: zod, valibot, …
+11. **Styling** *(if the project renders UI)*: CSS Modules, Tailwind,
     Emotion, …
-11. **Theming** *(if the project renders UI)*: CSS variables + Radix color
+12. **Theming** *(if the project renders UI)*: CSS variables + Radix color
     system, React Native Unistyles, …
-12. **Headless component library** *(if the project renders UI)*: Base UI,
+13. **Headless component library** *(if the project renders UI)*: Base UI,
     Radix UI, none (hand-rolled), …
 
 ### 1d — Optional capabilities
 
-13. **For each, decide _have / add / skip_.** Do **not**
+14. **For each, decide _have / add / skip_.** Do **not**
     assume these exist. A freshly scaffolded app usually has none of them, so
     the honest default is often "add" or "skip", not "delete". For each one
     ask: does the project already have it, do you want to **add** it now, or
@@ -207,7 +230,7 @@ component / UI-design skills). Ask each area that applies:
 
 ### 1e — Agent (fixed: Claude Code)
 
-14. **Agent — do not ask.** This template targets **Claude Code**, and only
+15. **Agent — do not ask.** This template targets **Claude Code**, and only
     Claude Code; the harness binding is fixed (see Step 6). There is no "which
     agents?" question — record the agent as `Claude Code` in the Stack Decision
     Record and move on. (If a project also wants to drive these same
@@ -225,6 +248,7 @@ skills) all consume it. `Source` is one of `answered`, `delegated
 | Area | Decision | Source |
 | ---- | -------- | ------ |
 | Application type | full-stack web app | answered |
+| Application identifier | `app.axross.payload` (→ Android package + iOS bundle id) | answered |
 | State management | Zustand | delegated (assumption) |
 | Theming | — (headless REST API) | not applicable |
 
@@ -611,6 +635,16 @@ are not aspirational:
 
 Confirm each added command actually runs before relying on the `check.sh` /
 `format.sh` hooks that call it.
+
+**Application identifier(s) — use the confirmed answer, never invent one.** When
+the Stack Decision Record records an application identifier (§1a, item 3),
+every generated app, native, or distribution config MUST take the identifier
+verbatim from that recorded answer and MUST NOT invent one: Expo `app.json`
+(`android.package` / `ios.bundleIdentifier`), any `AndroidManifest.xml` /
+`Info.plist`-shaping config, a Fastlane `Appfile`, the store / distribution app
+IDs, the deep-link scheme, and e2e `appId` selectors must all agree — app
+identity is expensive to change once published (see §1a). A surface-less kind
+recorded the area *not applicable*, so none of this applies to it.
 
 ---
 
