@@ -1,7 +1,7 @@
 ---
 name: development-guidelines
-description: The project's baseline working rules. Covers the format/lint loop, scoped change management, current-docs lookup triggers, run-script commands, type-safety discipline, source-comment and doc-comment conventions, verification requirements, data-layer/migration handling, end-to-end test expectations, Conventional Commits, and pull request descriptions.
-when_to_use: Apply at the start of EVERY task in this project, even when the user does not mention formatting, linting, testing, type casts, comments, doc-comments, dependencies, migrations, docs, commands, commit wording, or pull request bodies.
+description: The project's baseline working rules. Covers the format/lint loop, scoped change management, current-docs lookup triggers, run-script commands, type-safety discipline, source-comment and doc-comment conventions, verification requirements, data-layer/migration handling, per-PR preview environments, end-to-end test expectations, Conventional Commits, and pull request descriptions.
+when_to_use: Apply at the start of EVERY task in this project, even when the user does not mention formatting, linting, testing, type casts, comments, doc-comments, dependencies, migrations, preview environments, docs, commands, commit wording, or pull request bodies.
 user-invocable: false
 ---
 
@@ -53,6 +53,17 @@ See [dev-commands.md](./references/dev-commands.md) for:
 - End-to-end test command and snapshot update flow
 - Data-layer / migration commands (if the project has a data layer)
 - Format and lint commands
+
+## Preview Environments
+
+<!-- INIT:OPTIONAL key=PREVIEW_ENVIRONMENTS — keep this section when the project has (or adds) per-PR preview environments OR delete it (and the reference file) with every inbound link. -->
+*If this project has no per-PR preview environments, delete this section during INIT.*
+
+See [preview-environments.md](./references/preview-environments.md) for:
+
+- The per-PR preview-environment pipeline: a stable per-PR link (a preview URL for web client/server projects, an installable build's distribution link for mobile apps), fresh deploy comments, and teardown on close
+- Preflight inert-until-configured gating and per-PR data isolation
+- The web (stable alias URL) and mobile (tester-channel install link) pipeline shapes the INIT-authored workflow follows
 
 ## Commit Messages
 

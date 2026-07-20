@@ -24,6 +24,20 @@ Values sent to the browser/client are public. The framework's public/client-expo
 - MUST verify `process.env.*` access remains limited to the env-access files allowed by [secret-handling](./secret-handling.md).
 - SHOULD ask for a narrower public value when a client component only needs a derived boolean or public identifier.
 
+## Preview Environment Exposure
+
+<!-- INIT:OPTIONAL key=PREVIEW_ENVIRONMENTS — keep this section when the project has per-PR preview environments OR delete it. -->
+*If this project has no per-PR preview environments, delete this section during INIT.*
+
+Per-PR preview environments are reachable beyond the team — a web preview URL is publicly reachable, and a distributed preview build installs on testers' devices — so a preview must hold fixture/seed data only. The pipeline rules live in the project's development guidelines (preview-environments rules); the exposure to guard here is a regression that reintroduces production data or credentials into a preview, not the steady state.
+
+**Guidelines:**
+
+- MUST flag a Critical when a change would route production data-store credentials to a preview, copy or branch production data into a preview's backing resources, or otherwise let a preview reach a production system.
+- MUST flag a Critical when a preview's storage/media credentials point at a production store instead of a dedicated preview store or a per-PR-isolated namespace.
+- MUST keep every preview-scoped secret (seed/test-account credentials, session/signing secrets) distinct from its production counterpart, and flag a Critical when one value serves both — a reachable preview login must never unlock production.
+- SHOULD verify per-PR resources stay isolated from one another (per-PR naming or namespacing) and are destroyed or pruned on teardown.
+
 ## Analytics and Error Reporting Exposure
 
 <!-- INIT:OPTIONAL key=ERROR_TRACKER_OR_ANALYTICS — keep & fill the token (add the tool, INIT Step 5) OR delete this section. -->
