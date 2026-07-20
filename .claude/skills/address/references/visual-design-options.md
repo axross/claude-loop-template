@@ -114,7 +114,7 @@ The issue is the single design record. Anyone — the maintainer, the independen
 
 **Guidelines:**
 
-- MUST record the outcome in the UI design section when the human approves: mark the chosen option (`**Chosen:** Option B — <name>`) and keep its embedded sketch or attached render as the section's current design, with the round's Artifact URL referenced beside it.
+- MUST record the outcome of **each** design round in the UI design section as the human approves it — not only the final one: mark that round's chosen option (`**Chosen:** Option B — <name>`) and keep its embedded sketch or attached render as the section's current design, with that round's Artifact URL referenced beside it, so both the wireframe selection and the high-fidelity selection stay on the record.
 - MUST update the UI design section in place on every design revision during the plan phase, so the section always shows the current design state.
 - MUST move superseded options and rounds into one collapsed `<details>` subsection titled `Design history` inside the UI design section, labeled by round (`Round 1 — wireframes`, `Round 2 — high fidelity`), and MUST NOT delete them.
 - MUST keep the run's status block current with the pending design state (for example, `awaiting plan approval (design round 2: high fidelity)` or `awaiting attachment (design round 2)`).
@@ -127,6 +127,6 @@ Code review checks the diff against the intended design; preview-environment deb
 
 **Guidelines:**
 
-- MUST link the chosen design from the pull request description when the plan presented the options exhibit: the tracking issue's UI design section, the chosen option's current attachment URL(s), and its Artifact URL. A plan whose exhibit was legitimately omitted has no design to link, and this section does not apply.
+- MUST link the chosen design from the pull request description when the plan presented the options exhibit: the tracking issue's UI design section, the chosen option's current attachment URL(s), and the design Artifact URLs for **both** the wireframe round and the high-fidelity round the exhibit ran (a single round when the wireframe was skipped). A plan whose exhibit was legitimately omitted has no design to link, and this section does not apply.
 - MUST name the chosen option in the pull request body (for example, `Implements Option B — <name> from #<issue>`) so the reviewer knows which direction to hold the diff against.
 - MUST update those links whenever a later design revision changes the chosen design after the pull request exists.
