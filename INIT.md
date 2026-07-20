@@ -207,6 +207,17 @@ component / UI-design skills). Ask each area that applies:
     - **Structured logger** (e.g. Pino, Winston)
     - **Data / content layer** (e.g. Prisma, Drizzle, Payload CMS, a REST API — the engine and ORM/wrapper picked in 1c, when the project has one)
     - **Hosting platform** (e.g. Vercel, AWS, Fly.io)
+    - **Per-PR preview environments** (a pipeline giving each pull request a
+      stable preview link — a stable URL for a web client/server project, a
+      signed installable tester-channel build for a mobile app; the rules live
+      in `development-guidelines/references/preview-environments.md`). For
+      **have**/**add**, name the hosting/distribution target it deploys
+      through (e.g. Vercel, Fly.io, Firebase App Distribution, TestFlight).
+      For a project with a deployable or installable surface, prefer **add**
+      over skip: the scaffolded pipeline is preflight-gated and inert (a
+      green no-op) until its accounts are configured, so adding it costs
+      nothing up front. Record it *not applicable* for a project with no such
+      surface (a library, a CLI).
 
     **Not on this list — fixed, do not ask:** GitHub operations
     (`github-operation-guidelines`) and the independent-review loop (the
@@ -215,7 +226,7 @@ component / UI-design skills). Ask each area that applies:
     INIT configures and adapts them but never offers them up for deletion; record
     them as kept, and resolve their markers as "keep + adapt" in Step 4.
 
-    Record each of the seven capabilities above as **have → _tool_**, **add →
+    Record each of the eight capabilities above as **have → _tool_**, **add →
     _tool_**, or **skip**. This single answer drives both the token fill (Step 3)
     and the keep-or-delete decision for every `<!-- INIT:OPTIONAL -->` section
     (Step 4): **have** and **add** keep the section (fill the token; **add** also
@@ -498,6 +509,28 @@ apply to the **skip** path.
     their real steps (and pass) while `INIT.md` exists; deleting the INIT
     tooling in Step 7 is what arms them, so a green Merge Checks before
     that point does not mean lint/tests ran.
+- **Per-PR preview environments** → resolve every `key=PREVIEW_ENVIRONMENTS`
+  site (the Step-4 grep finds them all) per the Step-1 decision. The six
+  sites: `development-guidelines/references/preview-environments.md` (the whole
+  file), its "Preview Environments" routing section in
+  `development-guidelines/SKILL.md`, the stable-preview-link bullet in
+  `development-guidelines/references/verification.md`, the "Preview Environment
+  Exposure" section in
+  `application-security-requirements/references/privacy-and-exposure.md`, the
+  preview-environments routing bullet in
+  `application-security-requirements/SKILL.md`'s Privacy and Exposure Control
+  section, and the marked subsection in `README.template.md`'s Development
+  workflow.
+  - **have** / **add** → keep all six sites: delete the markers and italic
+    notes, replace the illustrative tool names with the project's real
+    hosting/distribution stack, and author the concrete workflow in Step 5.
+  - **skip** → delete all six sites, plus the "per-PR preview environments" /
+    "preview environments" phrases in `development-guidelines/SKILL.md`'s
+    frontmatter `description` and `when_to_use`.
+  - **dormant** fits this capability well when the project will plausibly
+    deploy later: the pipeline the reference describes is preflight-gated and
+    inert by design, so the kept rules cost nothing until the infrastructure
+    exists.
 - **No e2e framework** → delete `.claude/skills/e2e-testing-guidelines/` and
   its index row, then remove every inbound link to it:
   - `quality-assurance-guidelines/references/e2e-coverage.md` (delete the file)
@@ -630,6 +663,20 @@ are not aspirational:
   sections.
 - **Error tracker / logger** → add the dependency and its init, fill
   `{{ERROR_TRACKER}}` / `{{LOGGER}}`. Keep `observability-guidelines`.
+- **Per-PR preview environments** → author the concrete pipeline for the
+  project's actual stack per
+  `development-guidelines/references/preview-environments.md`. For a web
+  client/server project: a `.github/workflows/preview-deploy.yaml` that
+  provisions the PR's isolated backing resources, deploys the preview,
+  re-points a deterministic stable alias (`<prefix>-pr-<n>`) at the newest
+  deployment, comments the stable URL with the deployed short SHA, and tears
+  everything down on close. For a mobile app: a dispatched preview-build
+  workflow that produces a signed build, distributes it through the tester
+  channel (e.g. Firebase App Distribution, TestFlight), and comments the
+  install link on the PR. Either way, follow the reference's core rules
+  (preflight inert gating, per-PR data isolation, a fresh comment per deploy,
+  fail-loud stable link) and document the required secrets/vars in the
+  project README so the maintainer can complete the one-time account setup.
 - **Formatter** → add it (e.g. Prettier/Biome), add a `format` script, fill
   `{{FORMATTER}}` / `{{FORMAT_CMD}}`.
 
@@ -752,6 +799,11 @@ its own mechanism; the portable substance already supports it.
 - [ ] `merge-checks.yaml` is kept (fixed): its jobs actually run the lint/test
       steps instead of skipping them — the guard steps disarm once `INIT.md`
       is deleted, so check a post-INIT run's log shows the steps executing.
+- [ ] Per-PR preview environments are resolved: kept scaffolding has an
+      authored workflow that is preflight-gated (it merges green before any
+      account setup) with its required secrets/vars documented in the README;
+      a skipped capability leaves no `key=PREVIEW_ENVIRONMENTS` site, inbound
+      link, or prose straggler behind.
 - [ ] The Claude Code harness binding is filled in and runnable.
 - [ ] A `.gitignore` excludes `settings.local.json` and `.env.local` (or the
       project's equivalent local-state/secret files).
