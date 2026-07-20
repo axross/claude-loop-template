@@ -29,28 +29,28 @@ This skill deliberately does not own everything a plan contains. It owns the str
 
 ## Problem Framing and Scope
 
-See [problem-and-scope.md](./references/problem-and-scope.md) for the **Summary**, **Background** (with **Goals**, **Non-goals**, **Assumptions**), and **Open questions** sections:
+See [problem-and-scope.md](./references/problem-and-scope.md) for:
 
-- writing the one-paragraph standalone Summary
-- stating background context and framing Goals as concrete, checkable outcomes
-- writing explicit non-goals and out-of-scope bullets
-- separating stated assumptions from open questions, and collecting the latter into the Open questions section
-- right-sizing the sections to the size of the change
+- writing the one-paragraph standalone **Summary**
+- framing the **Background** context and its **Goals** as concrete, checkable outcomes
+- writing explicit **Non-goals** and out-of-scope bullets
+- separating stated **Assumptions** from open questions, and collecting the latter into the **Open questions** section
+- right-sizing these sections to the size of the change
 - replacing vague quality adjectives with concrete, checkable statements
 
 ## Functional Requirements Framing
 
-See [functional-requirements.md](./references/functional-requirements.md) for the **Functional requirements** section:
+See [functional-requirements.md](./references/functional-requirements.md) for:
 
-- when the section applies (observable behavior delta) and when to omit it
+- when the **Functional requirements** section applies (observable behavior delta) and when to omit it
 - stating each requirement as an observable capability, atomic and ordered by the user-facing flow
 - how the **UI design** and **System design** subsections nest under it, and when each is included
 
 ## UI Design Section Framing
 
-See [ui-design-framing.md](./references/ui-design-framing.md) for the **UI design** subsection (nested under Functional requirements):
+See [ui-design-framing.md](./references/ui-design-framing.md) for:
 
-- when a plan needs a UI design subsection at all (view-affected changes only) and at what fidelity
+- when a plan needs a **UI design** subsection (nested under Functional requirements) at all — view-affected changes only — and at what fidelity
 - describing hierarchy and layout intent in spec terms, not implementation
 - enumerating interaction states (default, disabled, loading, error, empty)
 - stating accessibility intent as testable, WCAG-referencing criteria
@@ -58,18 +58,18 @@ See [ui-design-framing.md](./references/ui-design-framing.md) for the **UI desig
 
 ## Architecture Overview Framing
 
-See [architecture-overview-framing.md](./references/architecture-overview-framing.md) for the **System design** subsection (nested under Functional requirements) and the **Non-functional requirements** section:
+See [architecture-overview-framing.md](./references/architecture-overview-framing.md) for:
 
-- when a plan needs a system-design subsection (the disjunctive breadth-or-mechanics trigger — either suffices alone)
+- when a plan needs a **System design** subsection (nested under Functional requirements) — the disjunctive breadth-or-mechanics trigger, either suffices alone
 - describing data flow and module boundaries at spec level, not implementation
 - recording alternatives considered and why they were rejected
-- stating non-functional requirements as measurable targets
+- stating the **Non-functional requirements** section as measurable targets
 
 ## Acceptance Criteria Craft
 
-See [acceptance-criteria.md](./references/acceptance-criteria.md) for the **Acceptance criteria** section:
+See [acceptance-criteria.md](./references/acceptance-criteria.md) for:
 
-- writing criteria a reviewer can verify independently, without reading implementation code
+- writing **Acceptance criteria** a reviewer can verify independently, without reading implementation code
 - preferring concrete, checkable phrasing over adjectives
 - covering the happy path, edge/error/empty states, and explicit non-effects
 - right-sizing the checklist and keeping verification gates in the Verification strategy section instead
@@ -77,9 +77,9 @@ See [acceptance-criteria.md](./references/acceptance-criteria.md) for the **Acce
 
 ## Verification Strategy Framing
 
-See [verification-strategy.md](./references/verification-strategy.md) for the **Verification strategy** section:
+See [verification-strategy.md](./references/verification-strategy.md) for:
 
-- distinguishing the verification method from the acceptance-criteria outcomes it establishes
+- distinguishing the **Verification strategy** method from the acceptance-criteria outcomes it establishes
 - naming the automated gates the changed surface requires (format/lint, unit, e2e, build)
 - deferring test-coverage design to the project's end-to-end testing and unit-test guidelines
 - naming focused manual checks and committing to recorded verification evidence
