@@ -15,21 +15,20 @@ already free.
 
 One test, applied to every reference `docs/` can contain:
 
-| Reference                  | Does structure already encode it?                               | Verdict                                                  |
-| -------------------------- | --------------------------------------------------------------- | -------------------------------------------------------- |
-| `index.md` → each document | No — reachability lives nowhere else                            | **Link.** This is how the index invariant is implemented |
-| `index.md` → `decisions/`  | —                                                               | **One link to the directory**, never one per record      |
-| `glossary.md` → `specs/`   | Yes — the heading a term sits under names its spec              | No link                                                  |
-| Within `glossary.md`       | The file is small enough to read whole                          | No link; bold marks a defined term                       |
-| `specs/` → `specs/`        | No — a dependency between domains is written nowhere else       | **Link**, for a genuine dependency                       |
-| `specs/` → `decisions/`    | No — a decision exists only when its rationale is unrecoverable | **Link**                                                 |
-| `decisions/` → anything    | —                                                               | No outbound links                                        |
+| Reference                  | Does structure already encode it?                         | Verdict                                                  |
+| -------------------------- | --------------------------------------------------------- | -------------------------------------------------------- |
+| `index.md` → each document | No — reachability lives nowhere else                      | **Link.** This is how the index invariant is implemented |
+| `glossary.md` → `specs/`   | Yes — the heading a term sits under names its spec        | No link                                                  |
+| Within `glossary.md`       | The file is small enough to read whole                    | No link; bold marks a defined term                       |
+| `specs/` → `specs/`        | No — a dependency between domains is written nowhere else | **Link**, for a genuine dependency                       |
+| A constraint → its reason  | Yes — the reason is the prose beside the constraint       | No link                                                  |
 
-The two cases that earn a link are the two the structure genuinely cannot
-express. A dependency between domains appears in no directory listing and in no
-index line. And a behaviour's rationale is, by the existence condition for a
-decision record, unrecoverable from the code — which is precisely why the record
-was written, and why the behaviour must be able to point at it.
+One case earns a link that the index does not already carry, and it is the one
+the structure genuinely cannot express: a dependency between domains appears in
+no directory listing and in no index line. A constraint's reasoning is not a
+second case, because it is not somewhere else — it is written into the document
+that states the constraint, where a reader meets it without deciding whether to
+follow anything.
 
 **Guidelines:**
 
@@ -57,61 +56,45 @@ the glossary is for.
 - SHOULD state the dependency in the sentence rather than leaving a bare link,
   so a reader learns what the other domain contributes without opening it.
 
-## From a Spec to a Decision
+## Why a Constraint Does Not Link Out
 
-This is the most durable reference in `docs/` and the one most worth having.
-The target filename never changes, so the link does not break — and that
-stability is what lets a check find the failure that matters: a link that
-still resolves while the rationale behind it has been replaced.
+A reader asking "why is it done this way?" is reading the rule when the question
+occurs to them, and a link answers it by sending them somewhere else to find out.
+The reasoning goes in the sentences around the rule instead — which is also what
+keeps the two in step, since a change that overturns the rule is editing the
+paragraph the reasoning sits in.
+
+The cost this avoids is the one a separate rationale document always charges: a
+link that still resolves while what it points at no longer holds. Nothing
+resolves, so nothing can resolve staler than the prose around it.
 
 **Guidelines:**
 
-- MUST link the behaviour to the decision that constrains it wherever a reader
-  would otherwise ask "why is it done this way?" and find no answer in the code.
-- MUST repoint such a link when its target is superseded, as part of the change
-  that supersedes it.
+- MUST write a constraint's reasoning into the document that states the
+  constraint, next to it, rather than linking out to a document that holds
+  reasoning.
+- MUST NOT restate a constraint in a second document and link the two; the
+  document that governs the subject states it once, and the other refers to that
+  document in prose if it must.
 
 ## Co-located Bodies
 
 Once `docs/` also holds `conventions/` or `operations/` —
 [the shape documentation-structure.md names](./documentation-structure.md) —
 a link can point into either without changing the rule that decides whether
-one belongs. The no-outbound-links rule in
-[Out of a Decision](#out-of-a-decision) is unaffected: a decision record still
-links nothing, whichever body would have received it.
+one belongs.
 
-| Reference                                                  | Does structure already encode it?                                                                 | Verdict                                                                                                          |
-| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `specs/` or `decisions/` → `conventions/` or `operations/` | —                                                                                                 | Governed by [The Rule](#the-rule) alone; this capability adds no dependency condition for a body it does not own |
-| `conventions/` or `operations/` → `decisions/`             | No — a decision exists only when its rationale is unrecoverable from the code, same as for a spec | **Link**, under the same condition as [From a Spec to a Decision](#from-a-spec-to-a-decision)                    |
+| Reference                                  | Does structure already encode it? | Verdict                                                                                                          |
+| ------------------------------------------ | --------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `specs/` → `conventions/` or `operations/` | —                                 | Governed by [The Rule](#the-rule) alone; this capability adds no dependency condition for a body it does not own |
+| `conventions/` ↔ `operations/`             | —                                 | Governed by [The Rule](#the-rule) alone, the same way                                                            |
 
 **Guidelines:**
 
-- MUST apply the condition in
-  [From a Spec to a Decision](#from-a-spec-to-a-decision) to a document under
-  `conventions/` or `operations/` exactly as to a spec, when it cites the
-  decision that constrains it.
-- MUST NOT state a dependency condition for a link from `specs/` or
-  `decisions/` into `conventions/` or `operations/`; [The Rule](#the-rule)
+- MUST NOT state a dependency condition for a link from `specs/` into
+  `conventions/` or `operations/`, or between those two; [The Rule](#the-rule)
   alone decides it, and this capability owns no further condition for a body
   it does not own.
-
-## Out of a Decision
-
-A decision record carries no outbound links at all.
-
-A record is append-only: it is superseded rather than rewritten, so that the
-reasoning available at the time stays legible. A link out of one would create a
-standing obligation to edit it — every time a spec is renamed, split, or
-retired — which is exactly the editing the append-only rule exists to prevent.
-Adding a supersede pointer is the single sanctioned change to an existing
-record.
-
-**Guidelines:**
-
-- MUST NOT link from a decision record to a spec, to the index, or to another
-  document; the reference runs from the behaviour to the decision, never back.
-- MAY name a related decision in prose by its filename, which is stable, rather
-  than as a link.
-- MUST NOT edit an existing record's substance to reflect a later change; write
-  a new record and mark the old one superseded.
+- MUST apply [Why a Constraint Does Not Link Out](#why-a-constraint-does-not-link-out)
+  to a document under `conventions/` or `operations/` exactly as to a spec: its
+  rules carry their own reasoning, and neither body links out to find any.

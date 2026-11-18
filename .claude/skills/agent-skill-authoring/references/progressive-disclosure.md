@@ -10,7 +10,7 @@ This test subsumes, rather than competes with, the load-bearing test and the unc
 
 ### Where a Body-Resident Rule Goes
 
-A rule that passes the contract's test takes one of two positions relative to the section's routing list, and both leave the routing list's own `**Guidelines:**` block — where one exists — carrying nothing but that reference's read obligations.
+A rule that passes the contract's test takes one of two positions relative to the section's routing list. Its substantive `**Guidelines:**` block remains separate from routing; the routing list has no block of its own.
 
 **Before the routing list**, when the rule stands on its own:
 
@@ -25,11 +25,7 @@ A rule that passes the contract's test takes one of two positions relative to th
 
 See [topic.md](./references/topic.md) for:
 
-- what the reference covers
-
-**Guidelines:**
-
-- MUST read [topic.md](./references/topic.md) before <narrow condition>.
+- situations in which the reference applies
 ```
 
 **After the routing list**, when the rule reads better once the reference's scope is already in view. The paragraph in between is not decoration — it is the justification the unconditional-scope carve-out already requires an author to state, saying why the rule below stands in the body rather than behind a pointer:
@@ -37,11 +33,7 @@ See [topic.md](./references/topic.md) for:
 ```markdown
 See [topic.md](./references/topic.md) for:
 
-- what the reference covers
-
-**Guidelines:**
-
-- MUST read [topic.md](./references/topic.md) before <narrow condition>.
+- situations in which the reference applies
 
 <a paragraph saying why the rule below stands in the body rather than behind a pointer>
 
@@ -50,34 +42,33 @@ See [topic.md](./references/topic.md) for:
 - MUST … (the body-resident rule)
 ```
 
-What both shapes rule out is the rule folded in among the read obligations themselves, where a reader looking for "what do I open, and when" finds a requirement instead:
+Neither shape attaches a `**Guidelines:**` block to routing. Even a block that only repeats when to read the reference is rejected:
 
 ```markdown
 See [topic.md](./references/topic.md) for:
 
-- what the reference covers
+- doing the narrow thing
 
 **Guidelines:**
 
-- MUST read [topic.md](./references/topic.md) before <narrow condition>.
-- MUST … (anything that is not a read obligation) ← rejected
+- MUST read [topic.md](./references/topic.md) before doing the narrow thing.
 ```
 
-A **read obligation** is an RFC-2119 bullet whose keyword is followed by `read` and a link to a reference file — the shape `MUST read [name.md](./references/name.md) before …`. Anything else inside the `**Guidelines:**` block a routing list introduces is a rejection: the body-prose validator (`check-skill-body.mjs`) checks exactly that block, and fails the build on it.
+The body-prose validator (`check-skill-body.mjs`) rejects the Guidelines label introduced by the routing list, regardless of the block's contents. Fenced examples are not actual routing. A separate substantive block before routing, or after explanatory prose or a new heading, remains valid.
 
 ## The Load-Bearing Test
 
-`SKILL.md` states the test itself, as a rule — which is where the test belongs, so this section elaborates it rather than repeating it. The table still sorts a topic's content into two sides, but both sides now live in the reference: a load-bearing rule's presence is what earns that reference a conditional MUST-read obligation in `SKILL.md`, worded to the condition under which missing the rule would produce wrong output.
+`SKILL.md` states the test itself, as a rule, so this section elaborates it rather than repeating it. Both sides of the table live in the reference. The parent routing names the conditions under which missing a load-bearing rule would produce wrong output, without repeating those conditions as normative read obligations.
 
-| Load-bearing — earns a conditional MUST-read obligation in `SKILL.md` | Elaboration — stays in the reference, covered by the same obligation     |
-| --------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| the rule statement itself, and its RFC-2119 bullets                   | worked examples, and the code that shows the rule applied                |
-| a fixed order, list, or closed set the output must match              | rationale, and what was rejected                                         |
-| a constraint whose violation is not self-evident from the output      | edge cases, platform adapters, and per-option tables consulted on demand |
+| Load-bearing — its selection conditions belong in routing        | Elaboration — stays in the reference under the same selection conditions |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| the rule statement itself, and its RFC-2119 bullets              | worked examples, and the code that shows the rule applied                |
+| a fixed order, list, or closed set the output must match         | rationale, and what was rejected                                         |
+| a constraint whose violation is not self-evident from the output | edge cases, platform adapters, and per-option tables consulted on demand |
 
 ## The Unconditional-Scope Carve-Out
 
-A conditional read obligation costs a read only when its condition fires. A rule whose condition is unconditional within its own skill's scope — true on every turn that skill governs, never narrower — gains nothing from moving to a reference: the pointer would fire every time, costing a read while shaking nothing that staying in `SKILL.md` would not already have shaken.
+A conditional route costs a read only when its condition applies. A rule whose condition is unconditional within its own skill's scope — true on every turn that skill governs, never narrower — gains nothing from moving to a reference: the pointer would apply every time, costing a read while shaking nothing that staying in `SKILL.md` would not already have shaken.
 
 **Guidelines:**
 
@@ -87,7 +78,7 @@ A conditional read obligation costs a read only when its condition fires. A rule
 
 ## References Directory Pattern
 
-Progressive disclosure keeps discovery cheap and detail available. The standard split layout is a parent `SKILL.md` plus Markdown topic files directly under a `references/` subdirectory. The parent routes agents to the right reference and carries the conditional obligation to read it; each reference carries a load-bearing rule's own statement together with what elaborates it — worked examples, edge cases, rationale — per the test above.
+Progressive disclosure keeps discovery cheap and detail available. The standard split layout is a parent `SKILL.md` plus Markdown topic files directly under a `references/` subdirectory. The parent routes agents through descriptive selection conditions; each reference carries a load-bearing rule's own statement together with what elaborates it — worked examples, edge cases, rationale — per the test above.
 
 ```
 skill-name/
@@ -102,8 +93,8 @@ skill-name/
 - MUST use either a single `SKILL.md` or a short `SKILL.md` plus one-level-deep topic references under `references/`.
 - MUST use `references/` as the subdirectory name for split Markdown topic files unless the host project explicitly establishes a different convention.
 - MUST keep reference files directly under `references/`; do not create deeper reference nesting such as `references/security/input-validation.md`.
-- SHOULD keep parent `SKILL.md` focused on scope, routing, and the conditional obligation to read each reference.
-- MUST move a topic's full content — both sides of the load-bearing test above — into reference files once progressive disclosure is introduced; `SKILL.md` states no rule's content of its own, only the obligation to read it, except under the carve-out above.
+- SHOULD keep parent `SKILL.md` focused on scope, unconditional rules, and descriptive reference routing.
+- MUST move a topic's full content — both sides of the load-bearing test above — into reference files once progressive disclosure is introduced; the parent names selection conditions rather than stating the rule, except under the carve-out above.
 - SHOULD keep examples, edge cases, lengthy checklists, and topic-specific procedures in reference files rather than in the parent `SKILL.md`.
 
 ## Size Thresholds
@@ -131,7 +122,7 @@ Splitting adds indirection. A small skill that is easy to scan should stay singl
 
 ## Wiring Reference Files from the Index
 
-The index should let the agent decide what to load without opening every reference. In a split skill, each reference-routing section in `SKILL.md` should use a predictable shape: a topic heading, one `See [file.md](./references/file.md) for:` line, plain descriptive bullets that name situations, practical use cases, or specific conditions, and — where the reference holds a load-bearing rule — a `**Guidelines:**` block carrying the obligation to read it.
+The index lets the agent decide what to load without opening every reference. Each reference route has a topic heading, a `See [file.md](./references/file.md) for:` or `See [file.md](./references/file.md) when:` line, and descriptive bullets naming situations, practical use cases, or specific conditions. The bullets supply the selection information once; there is no trailing Guidelines block.
 
 **Example:**
 
@@ -143,19 +134,15 @@ See [input-validation.md](./references/input-validation.md) for:
 - changing input schemas or URL decoding
 - tracing untrusted input fields into metadata, UI, and links
 - checking source URL protocol filtering and length limits
-
-**Guidelines:**
-
-- MUST read [input-validation.md](./references/input-validation.md) before changing an input schema, decoding a URL, or tracing an untrusted input field into metadata, UI, or a link.
 ```
 
 **Guidelines:**
 
-- MUST use the `## Section/Topic Name` + `See [file.md](./references/file.md) for:` + descriptive bullet-list format for reference-routing sections in `SKILL.md`.
+- MUST use the descriptive-only routing contract stated in `SKILL.md`; `See ... when:` is an alternative lead-in to `See ... for:` under the same contract.
 - MUST use a stable leading-dot relative link that resolves from the parent file, such as `./references/input-validation.md`.
 - MUST use the reference file name as the link label in parent routing sections, such as `[input-validation.md](./references/input-validation.md)`.
 - MUST keep parent routing bullets descriptive; do not use RFC-2119-style requirement keywords such as MUST, SHOULD, MAY, REQUIRED, RECOMMENDED, or OPTIONAL in these routing bullets.
-- MUST place a load-bearing rule's own statement and its RFC-2119 bullets in the reference file, never in `SKILL.md`'s routing bullet list — the `See […] for:` line and the bullets under it — nor loose in `SKILL.md` outside a `**Guidelines:**` block. `SKILL.md`'s `**Guidelines:**` block, placed after that routing list, carries the obligation to read the reference instead — one bullet per reference, naming the reference and a triggering condition narrow enough to be skippable; a condition reading "before any work" or its equivalent is a defect, not a safety margin.
+- MUST preserve any distinct selection condition from a removed read-obligation block in descriptive routing bullets, rather than moving that obligation into prose or another Guidelines block.
 - SHOULD name reference files in kebab-case.
 - SHOULD order parent sections by likely consultation order.
 
@@ -195,6 +182,6 @@ Anti-patterns are useful when they name the failure mode and the cost. They shou
 **Guidelines:**
 
 - MUST NOT split a skill for visual symmetry alone.
-- MUST NOT state the same normative rule in both the index and a reference file — name which side wins rather than allowing both. A rule is stated once, in the reference that governs it; `SKILL.md`'s `**Guidelines:**` block states only the obligation to read that reference, never the rule itself. The one exception is the unconditional-scope carve-out above, where the rule is stated once in `SKILL.md` and the reference does not restate it.
+- MUST NOT state the same normative rule in both the index and a reference file — name which side wins rather than allowing both. A rule is stated once, in the reference that governs it. The one exception is the unconditional-scope carve-out above, where the rule is stated once in `SKILL.md` and the reference does not restate it.
 - MUST NOT create nested reference directories unless the host project has explicitly adopted that structure.
 - SHOULD remove or merge over-fragmented references before adding more.

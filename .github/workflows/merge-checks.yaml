@@ -1,30 +1,6 @@
 name: Merge Checks
 
-# INIT:OPTIONAL key=INDEPENDENT_REVIEW — Fixed GitHub-Actions workflow, part of
-# the fixed independent-review channel. INIT KEEPS this file (never deletes it),
-# see INIT.md Step 4. Just delete this marker and configure it — the run
-# commands are substituted by ./init.sh apply; replace the toolchain setup
-# (setup-node/.nvmrc) with the project's own by hand.
-#
-# The project's own CI: lint and unit tests that gate merges to the default
-# branch. This is the CI loop-engineering's tail polls after a push (see
-# .claude/skills/loop-engineering/SKILL.md). Keep REVIEW.md's do-not-report list in sync
-# with exactly what these jobs enforce.
-#
-# The tokenized run commands below are substituted by `./init.sh apply` along
-# with the rest of the template (the tokens are quoted because a YAML plain
-# scalar cannot start with `{`). The toolchain setup is NOT a token: during
-# INIT, replace it with the project's own (setup-node, .nvmrc, and the npm
-# cache are examples, not requirements). The template ships no .nvmrc — even a
-# project keeping the npm-flavored setup must create one (or switch to
-# `node-version:`), or Setup Node fails on every run. Drop the test job if
-# the project has no unit-test suite.
-#
-# While the template is un-adapted, none of that can work — so each job's real
-# steps are gated on a guard that checks for INIT.md. INIT Step 7 deletes
-# INIT.md, which arms the steps in adapted projects automatically; until then
-# the jobs skip them (with a notice) and conclude green, keeping the template
-# repo's own CI meaningful instead of permanently red.
+# INIT.md keeps project commands dormant until the template is adapted.
 
 on:
   pull_request:
@@ -42,6 +18,16 @@ permissions:
   contents: read
 
 jobs:
+  docs:
+    name: Documentation and Links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: bash .github/scripts/check-documentation.sh
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
@@ -65,10 +51,12 @@ jobs:
           cache: npm
       - name: Dependency Installation
         if: steps.adapted.outputs.run == 'true'
-        run: "{{INSTALL_CMD}}"
+        run: |
+          {{INSTALL_CMD}}
       - name: Lint
         if: steps.adapted.outputs.run == 'true'
-        run: "{{LINT_CMD}}"
+        run: |
+          {{LINT_CMD}}
 
   test:
     name: Unit Tests
@@ -93,7 +81,9 @@ jobs:
           cache: npm
       - name: Dependency Installation
         if: steps.adapted.outputs.run == 'true'
-        run: "{{INSTALL_CMD}}"
+        run: |
+          {{INSTALL_CMD}}
       - name: Unit Test Run
         if: steps.adapted.outputs.run == 'true'
-        run: "{{UNIT_TEST_CMD}}"
+        run: |
+          {{UNIT_TEST_CMD}}

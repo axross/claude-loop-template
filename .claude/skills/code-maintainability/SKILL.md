@@ -26,48 +26,35 @@ See [naming-and-organization.md](./references/naming-and-organization.md) for:
 - Following the project's own routing convention, if it defines one, and co-locating a route's required sibling files (props/types, not-found, social-image)
 - Matching identifier names and casing to the conventions in and around the changed file
 - The fallback identifier vocabulary for a name nothing else governs, and how it yields to a project convention, an owning capability, or a platform/host API the value crosses into
-
-**Guidelines:**
-
-- MUST read [naming-and-organization.md](./references/naming-and-organization.md) before naming a file, placing a module in a directory tier, adding a route's co-located sibling files, or naming an identifier that no project convention, owning capability, or platform API already governs.
+- Naming an identifier at risk of an undisambiguated domain-specific meaning, even under an established project convention: the living-project-documentation capability's closest-composing naming principle, its locality carve-out, and what still holds when that capability is absent
 
 ## Abstraction Boundaries
 
 See [abstraction-boundaries.md](./references/abstraction-boundaries.md) for:
 
-- Deciding what belongs inside one function, class, or module, and why the cohesion scale is non-linear — functional far stronger than the rest, coincidental and logical far weaker than the intermediate levels
+- Deciding or reviewing what belongs inside one function, class, or module, and why the cohesion scale is non-linear — functional far stronger than the rest, coincidental and logical far weaker than the intermediate levels
 - Placing new shared logic at the lowest tier that has more than one caller (route-local before group-shared before global)
 - Splitting the server / client boundary per the project's own component convention, if it defines one
 - Keeping a domain-specific pipeline (such as a content-rendering chain) behind its single owning module, per the project's own domain convention, if it defines one
 - Keeping tier imports pointed the right way, so shared code never depends on route-local code
 
-**Guidelines:**
-
-- MUST read [abstraction-boundaries.md](./references/abstraction-boundaries.md) before deciding what belongs inside one function, class, or module, or before judging where a change put it.
-
 ## Complexity and Readability
 
 See [complexity-and-readability.md](./references/complexity-and-readability.md) for:
 
-- Staying within the project's configured linter and complexity budget instead of silently bypassing it
+- Staying within the project's configured linter and complexity or length budget, including assessing a function that exceeds it
 - Giving magic numbers and strings a named constant or design token, reserving an inline lint-suppression directive (with a justifying comment) for the rare justified case
-- Removing dead code (unused imports, unreachable branches, commented-out blocks)
-- Why a comment is the fallback rather than the plan, and why a unit, a nullability, or a bound's inclusivity belongs in the type or the name before it belongs in a comment
+- Deciding whether to remove or keep apparently dead code (unused imports, unreachable branches, commented-out blocks)
+- Why an explanatory comment and a doc-comment are both the last resort rather than the plan — the best version of a passage carries none — why a doc-comment that exists because the exported name or the exported set is unclear is a boundary defect before it is a documentation task, and why a unit, a nullability, or a bound's inclusivity belongs in the type or the name before either
+- The ordered remedy set tried before a comment is admissible — the name and the type, then the interface, then how the unit is divided — and re-examining that division, citing [abstraction-boundaries.md](./references/abstraction-boundaries.md)'s cohesion judgment, before accepting a comment neither the type nor the name could remove
 - Why a boundary doc-comment that has to describe implementation details signals a shallow interface, not a well-documented one
 - Deferring doc-comment, restating-comment, and comment-voice rules to the project's development conventions, and extracting a repeated inline type into a named alias in a statically-typed language
-
-**Guidelines:**
-
-- MUST read [complexity-and-readability.md](./references/complexity-and-readability.md) before adding a literal constant, a comment, or a doc-comment on a module or domain boundary, before leaving a function past the project's configured complexity or length budget, and before removing or keeping code that looks dead.
 
 ## Scope Discipline
 
 See [scope-discipline.md](./references/scope-discipline.md) for:
 
-- Keeping the change matched to its stated goal — no drive-by refactors, per the project's development conventions
+- Keeping the change matched to its stated goal, including assessing a file the goal does not name — no drive-by refactors, per the project's development conventions
 - Flagging pre-existing problems separately instead of bundling them into this change
-- Justifying a new abstraction with two or more concrete call sites (YAGNI), and consolidating repeated logic only when it is truly the same concern (DRY without coupling unrelated callers)
-
-**Guidelines:**
-
-- MUST read [scope-discipline.md](./references/scope-discipline.md) before adding a new helper, prop, configuration option, or generic type parameter, before extracting or consolidating duplicated logic, and before touching a file the change's stated goal does not name.
+- Assessing a new helper, prop, configuration option, or generic type parameter for speculative scope
+- Justifying a new abstraction with two or more concrete call sites (YAGNI), and extracting or consolidating repeated logic only when it is truly the same concern (DRY without coupling unrelated callers)

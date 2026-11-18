@@ -39,6 +39,17 @@ describe("findRecordById()", () => {
 - SHOULD assert stable error contracts, not every word of a third-party formatter unless the exact text is part of this project's API.
 - SHOULD keep one primary act per scenario; split tests when they call different methods, trigger different events, or verify unrelated outcomes.
 
+## Exact Values at a Public Boundary
+
+An exact assertion is not automatically an implementation-detail test. If an external specification or the project's public API promises a value, changing that value breaks the contract. Conversely, copying a private design literal into an expectation merely pins today's choice; exporting it solely to justify the assertion does not make it a caller requirement.
+
+For example, a public geometry API promising normalized coordinates maps point (150, 20) on a 200 × 80 surface to (0.75, 0.25). An asymmetric input distinguishes swapped axes. A promised renderer configuration is also observable at its public boundary when pixels are unavailable, but asserts only the configuration, not the renderer's output; apply [the renderer-unavailable scope](./testing-scope.md#when-the-renderer-is-unavailable).
+
+**Guidelines:**
+
+- MAY assert exact values required by an external specification or a project-promised public contract, deriving expectations from that contract rather than copying implementation literals.
+- SHOULD prefer distinguishing relationships or boundary properties when the particular literal is only an internal choice.
+
 ## Arrange Act Assert
 
 AAA is useful when it keeps tests readable, but do not turn it into noisy comments. The test body should have clear phases even when comments are unnecessary.

@@ -11,11 +11,11 @@ shape is what to propose in the absence of a convention, never what to impose
 over one.
 
 That default is not the same as an accident. A `docs/` directory naming
-`conventions/` or `operations/` as siblings of `specs/` and `decisions/`, with
-an index that says as much, is
+`conventions/` or `operations/` as siblings of `specs/`, with an index that
+says as much, is
 [the shape documentation-structure.md names](./documentation-structure.md)
 when adopted on purpose, and detecting it means detecting all of `docs/`
-rather than stopping at `specs/` and `decisions/` alone.
+rather than stopping at `specs/` alone.
 
 **Guidelines:**
 
@@ -31,10 +31,12 @@ rather than stopping at `specs/` and `decisions/` alone.
 - MUST ask before relocating or restructuring anything that already exists.
   Where `docs/` lives is a project decision with consequences for links,
   bookmarks, and tooling nobody in the session can see.
-- SHOULD adopt an existing decision-record convention rather than converting it,
-  even when it numbers records sequentially. A conversion invalidates every
-  reference that already points at them, which is a cost with no matching
-  benefit.
+- MUST leave an existing decision log — `adr/`, `decisions/`, however it is
+  named or numbered — exactly where it is. This capability writes no such body
+  and converting one invalidates every reference already pointing into it,
+  which is a cost with no matching benefit; a constraint settled after
+  adoption goes to the document that governs it, per
+  [Settled Decisions](../SKILL.md#settled-decisions), rather than to the log.
 
 ## The Smallest `docs/` Worth Having
 
@@ -51,7 +53,9 @@ Write in this order:
    the part people disagree about, so it is worth settling in the first spec
    rather than deferred to a document written later.
 3. **`glossary.md`** — seeded from that spec's own vocabulary.
-4. **`decisions/`** — from the next decision made, not backfilled.
+4. **`conventions/` or `operations/`** — from the first rule or procedure a
+   contributor actually needs, not backfilled from what the project imagines
+   it does.
 
 **Guidelines:**
 
@@ -60,9 +64,10 @@ Write in this order:
 - MUST NOT scaffold empty files or heading-only documents. An empty document is
   indistinguishable from a subject nobody has considered, and it makes the index
   claim coverage `docs/` does not have.
-- MUST NOT backfill decision records for choices already made. Reconstructed
-  rationale is a guess presented as history, and the existence condition rules
-  out most of what would be written.
+- MUST NOT backfill rationale for choices already made. Reconstructed
+  reasoning is a guess presented as history; a constraint whose reason nobody
+  in the room can state is written as the constraint alone, and the gap is
+  left visible rather than filled in.
 - SHOULD grow `docs/` one domain at a time, as changes touch each area, rather
   than in a single documentation push that nobody has a reason to keep
   current.
@@ -90,12 +95,12 @@ reconciling it, not inventing it.
 | README, setup, commands, deployment runbooks | Contributor documentation; belongs under `conventions/` or `operations/` if the project adopts that shape, never `specs/` |
 | Roadmap, upcoming work, deprecation plans    | A spec is the present tense; a plan owns the future                                                                       |
 | API reference generated from source          | Generated output goes stale differently and is better regenerated than restated                                           |
-| Meeting notes, incident timelines            | History, not steady state; a decision record captures the part that constrains                                            |
+| Meeting notes, incident timelines            | History, not steady state; the governing document carries the part that still constrains                                  |
 
 **Guidelines:**
 
 - MUST keep a spec to the present tense of the product. Anything describing
   what will change belongs to a plan.
-- SHOULD extract the constraint from an incident or a long discussion into a
-  decision record when it meets the existence condition, and leave the narrative
-  where it is.
+- SHOULD extract the constraint an incident or a long discussion settled into
+  the document that governs its subject, with the reason it holds, and leave
+  the narrative where it is.

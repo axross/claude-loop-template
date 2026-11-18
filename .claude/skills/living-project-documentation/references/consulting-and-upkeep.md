@@ -13,9 +13,10 @@ unnecessary.
 
 - MUST read `index.md` first, and open only the documents whose one-line
   descriptions match the area the change touches.
-- MUST follow a spec's dependency and decision links when the change alters
-  behaviour that spec describes. A decision the change would violate is the
-  single most expensive thing to discover after implementation.
+- MUST follow a spec's dependency links, and read the reasoning stated beside
+  each rule the change touches, when the change alters behaviour that spec
+  describes. A settled constraint the change would violate is the single most
+  expensive thing to discover after implementation.
 - MUST stop after the index when nothing matches, and say so. A `docs/` tree
   that covers none of the change is a fact worth stating in the plan, not a
   reason to read it all.
@@ -35,9 +36,9 @@ first thing dropped under time pressure.
   invalidate, or state that it invalidates none.
 - MUST treat that list as provisional. Implementation reveals invalidations the
   plan could not see; the list is a scope signal, not a contract.
-- SHOULD name a decision the change would overturn as a decision to supersede,
-  which is a scope question a human should answer before implementation, not
-  after.
+- SHOULD name a constraint the change would overturn, and the document that
+  states it, as a scope question a human should answer before implementation,
+  not after — overturning one is a decision, whatever the change was called.
 
 ## What a Change Invalidates
 
@@ -47,11 +48,11 @@ first thing dropped under time pressure.
 | Adds, renames, or retires a domain concept                | `glossary.md`, and the spec that owns it                 |
 | Adds a whole area of behaviour                            | A new spec, its glossary heading, and an `index.md` line |
 | Changes what the product is for, or its boundary          | The spec that bounds it, and the README                  |
-| Overturns a constraint a record established               | A new decision record, and the old one's status          |
+| Overturns a constraint a document states                  | That rule and the reasoning written beside it            |
 | Adds a dependency between domains                         | The depending spec's cross-reference                     |
 | Renames or moves a document                               | Every inbound reference, and `index.md`                  |
 
-This table stops at `specs/` and `decisions/`. A change that alters a
+This table stops at `specs/`. A change that alters a
 convention or a procedure invalidates its document under `conventions/` or
 `operations/` the same way, once a project has adopted
 [this shape](./conventions-and-operations.md#upkeep-for-a-co-located-body),
@@ -82,24 +83,29 @@ into the other is a rewrite, never a copy.
 - MUST NOT link `docs/` back to the plan, the issue, or the change that
   produced it. Those are the history of how the product got here; `docs/` is
   what it is now, and the two decay on different schedules.
-- SHOULD write a decision record for a trade-off the plan resolved whose
-  rationale would otherwise be lost, applying the existence condition rather
-  than recording every choice the plan made.
+- SHOULD write a trade-off the plan resolved into the document that governs
+  its subject — the constraint that now holds, and the reason it does — where
+  the reasoning would otherwise be lost, rather than absorbing every choice
+  the plan made.
 
 ## After a Change to docs/
 
-Two of the corrections above leave nothing visibly wrong behind: a renamed
-document breaks references in files nobody opened, and a supersede leaves links
-that still resolve. Both are caught mechanically. The two qualities that are not
-checkable are checked by re-reading.
+One of the corrections above leaves nothing visibly wrong behind: a renamed or
+deleted document breaks references in files nobody opened, and that is caught
+mechanically. The qualities that are not checkable are checked by re-reading —
+including the one this shape depends on, that a rule the change rewrote still
+carries a reason that matches it.
 
 **Guidelines:**
 
 - MUST run the bundled validators over `docs/` and fix what they report
   before calling the change done.
-- MUST repoint every reference a rename or supersede left stale, in the same
-  change; a resolving link to superseded rationale is invisible to everything
-  except the check written for it.
+- MUST repoint every reference a rename or a deletion left stale, in the same
+  change.
+- MUST rewrite a rule's reasoning together with the rule whenever a change
+  overturns it; a reason left standing beside a rule it no longer explains is
+  worse than none, because it reads as current.
 - SHOULD re-read the changed document once as a reader who does not know the
-  change, since the self-sufficiency of a glossary entry and the present tense of
-  a spec are the two things nothing mechanical can check.
+  change, since the self-sufficiency of a glossary entry, the present tense of
+  a spec, and whether a stated reason still explains its rule are the things
+  nothing mechanical can check.

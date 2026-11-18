@@ -1,152 +1,28 @@
 # Agent Sessions
 
-How a Claude Code session starts in this project, the hooks that run during
-one, the subagents it can spawn, and the one setting that cannot be verified
-from inside a session at all.
+Use Claude Code from the project root. The [working agreement](../../AGENTS.md) enters through the `CLAUDE.md` import. It defines project rules, not the host's instruction hierarchy or tool capabilities.
 
-## The Session-Start Hook
+## Session startup
 
-In a cloud session, [`.claude/hooks/session-start.sh`](../../.claude/hooks/session-start.sh)
-provisions the toolchain, copies `.env.example` to `.env.local` if one does not
-exist, materializes the opt-in quality hooks, installs dependencies, and echoes
-a pointer to [`AGENTS.md`](../../AGENTS.md) so every session carries the working
-agreement into its context.
+[Shared settings](../../.claude/settings.json) configure default effort, telemetry labels and [SessionStart](../../.claude/hooks/session-start.sh). The script only provisions when `CLAUDE_CODE_REMOTE=true`: it uses the available toolchain, prepares an absent `.env.local` from `.env.example`, and installs dependencies. It never creates or replaces private Claude Code settings. Only set the remote flag locally in a disposable fixture; it selects the script branch, not a cloud session.
 
-It exits immediately unless `CLAUDE_CODE_REMOTE=true`, because a local session
-manages its own toolchain and should not have one installed under it. Set that
-variable by hand to exercise the hook locally.
+Claude Code's [cloud settings contract](https://code.claude.com/docs/en/settings#settings-in-cloud-sessions) differs by surface. An ordinary single-repository session outside Projects can read supported keys from committed `.claude/settings.json`. Multi-repository Anthropic-hosted sessions only read repository plugin settings; Projects cloud threads do not load repository hooks, permissions or `env` from that file. Cloud sessions do not read `.claude/settings.local.json`. Verify loaded sources with `/status` and observe each event on the actual launch surface before relying on a hook. A direct invocation or an edited settings file proves neither loading nor firing.
 
-The toolchain block activates a version manager only when one is **already**
-present. It MUST NOT be changed to install one unconditionally: an image that
-already ships a usable runtime does not need one, and a hard `curl | sh` turns
-a transient network failure into a failed session start — a failure that
-surfaces as every later command missing its tools rather than as an install
-error.
+## Opt-in quality hooks
 
-The hook is wired in [`.claude/settings.json`](../../.claude/settings.json),
-which also sets the session's default reasoning effort — `effortLevel`, shipped
-as `xhigh`. Both are read at session start, so a change to either reaches only
-the next session.
+Locally, merge only the desired hook entries from [the example](../../.claude/settings.local-example.json) into the gitignored `.claude/settings.local.json`. Preserve existing hooks, permissions and preferences; copy the example only when the destination does not exist and is not a symlink. Opting in for supported cloud sessions is a separate team decision to add the selected bindings to shared settings. Do not write permissions or schedules just to make tools available; see the [development workflow](./development-workflow.md) for authorization.
 
-The reminder it echoes names `AGENTS.md` rather than `CLAUDE.md` on purpose.
-`CLAUDE.md` is an `@AGENTS.md` import, which is a Claude Code mechanism; a host
-that does not resolve imports would read the literal import line instead of the
-working agreement.
+Both quality hooks need `jq` and Git 2.31 or later. `CLAUDE_PROJECT_DIR` locates the script in the launch checkout; the event's `cwd` selects the active checkout. The hooks only operate in worktrees that share the launch checkout's Git common directory. Check actual bindings after switching worktrees as well as at startup.
 
-## The Opt-In Quality Hooks
+- **PostToolUse:** [format.sh](../../.claude/hooks/format.sh) handles one file from Edit, Write or MultiEdit. It rejects outside paths, symlinks, foreign Git roots, ignored files, generated skill copies, and common build and dependency paths. Extend the protected paths for this project. Each selected command must itself accept one trailing literal `./`-relative file, respect tool-specific ignores, and never bootstrap a tool or repair other files. An appended argument cannot narrow a project-wide formatter; run that separately. Prove the setup with two defective files and verify only the selected one changes. Rejected input or failed repair does not block a turn or count as verification.
+- **Stop:** [check.sh](../../.claude/hooks/check.sh) runs only non-mutating lint for matching worktree, index, untracked, or branch changes. It does not run unit tests or apply fixes. A detected lint failure returns exit 2. If the toolchain is missing, the hook reports that lint did not run; it uses `jq` to recognize a continuation so that the missing executable does not block Stop again. An unbound, skipped, or successful hook does not replace contributor verification or CI.
 
-Format-on-edit and check-before-stop are **opt-in**. They live in
-[`.claude/settings.local-example.json`](../../.claude/settings.local-example.json),
-which the session-start hook copies to the gitignored `settings.local.json` in a
-cloud session; Claude Code hot-reloads them for that session. A local session
-skips the hook entirely, so opting in there stays a manual copy.
-
-That example file also pre-approves `send_later` and `delete_trigger`. Those are
-not a convenience: `loop-engineering` schedules its own wake with them while
-waiting on CI and the independent review, and without the grant every wait
-raises a permission prompt that an unattended session cannot answer.
-
-Format-on-edit fires only for a file changed through `Edit`, `Write`, or
-`MultiEdit` — the `PostToolUse` matcher's scope, deliberately not widened — so
-a file changed another way (a Bash heredoc, `sed -i`) reaches `Stop`
-uncorrected regardless of which check below would have repaired it.
-
-A blocking `Stop` check fires only after the agent believes the task is
-finished, so a failure there costs a whole main turn: read the failure,
-re-plan, fix, stop again. That cost is why the placement question exists at
-all, and it is answered the same way for every check this project runs:
-whether a check belongs at `Stop` or earlier at `PostToolUse` turns on whether
-its repair needs an authoring decision or is purely mechanical.
-
-- Where the project keeps `format.sh`'s per-file lint-autofix step, the
-  linter's violations that the autofix repairs are **non-blocking**, because
-  `format.sh` reaches the file first — see
-  [`format.sh`](../../.claude/hooks/format.sh). The hook's file filter admits
-  the union of the whole-project formatter's own file set and the autofix's
-  file set: the formatter takes no file argument and reformats the whole
-  project regardless of which file changed, so narrowing the filter to the
-  formatter's file set alone would skip the formatter for a file that only
-  the autofix cares about. The autofix step itself then runs only for a file
-  that also falls in its own file set and lives under the project root,
-  before the whole-project formatter runs — its alternative in the filter
-  carries that same project-root anchor, while the formatter's alternative
-  does not, since the formatter's reach outside the project root is
-  pre-existing, unrelated behaviour. Each file set is a shell `case` pattern:
-  where one lists alternatives, each needs its own `"$PROJECT_DIR"/` prefix,
-  because a `case` pattern does not distribute a prefix across `|`-joined
-  alternatives — see [`tokens.json`](../../tokens.json).
-- The linter's violations that the autofix cannot repair — or, for a project
-  that drops the autofix step, all of the linter's violations — are
-  **blocking**, because the correct repair is an authoring decision no hook
-  can make.
-- Where the project keeps a unit test run, it is **blocking** for the same
-  reason: a failing test has no mechanical repair.
-- The change-in-flight reminder below is **already non-blocking**, and MUST
-  stay so, since a false positive that halts an agent mid-delivery costs more
-  than the reminder saves.
-
-[`check.sh`](../../.claude/hooks/check.sh) never attempts a repair itself, by
-design rather than oversight: a repair applied at `Stop` can land in the working
-tree after the agent has already committed and pushed, so the pushed commit
-would keep the violation while the hook reported success. It blocks completion
-on a failing lint run and, where the project keeps one, a failing unit test run,
-and separately emits a non-blocking reminder when the branch has commits ahead
-of the default branch that are **all pushed** and the tree is clean. That state
-is what a change loop looks like when it stopped between the push and the pull
-request, and the hook's own change gate would otherwise read it as "nothing
-pending". The hook cannot ask GitHub whether a pull request exists, so it
-reminds rather than blocks.
+For committed changes, Stop compares from the merge base of the active head and the selected ref. It tries `origin/HEAD`, remote or local `main` or `master`, then the branch's upstream. Override that order with a repository-local setting, for example `git config --local claude-loop.lintBase refs/heads/trunk`. If Git cannot compare and there are no known pending code changes, Stop reports that lint did not run. It does not search inherited history or infer whether a PR was opened.
 
 ## Subagents
 
-[`.claude/agents/`](../../.claude/agents/) holds three definitions, and it is
-the only home for any of them: an agent definition is not a skill, so the
-skills CLI never carries it, and it never appears in `skills-lock.json`.
+[The Claude Code definitions](../../.claude/agents/) cover implementation, investigation, and advisory pre-flight. Qualify the role and its allowed tools each time. The advisory reader cannot publish independent review; use the route in the [development workflow](./development-workflow.md) for that checkpoint. Keep one writer and do not pass the implementation conversation to a fresh reviewer.
 
-`implementer.md` is the worker `loop-engineering` delegates Code and Verify to.
-It pins a lower-cost model, because a worker inheriting the session's model runs
-at the main actor's cost and defeats the point of delegating. It states its
-delivery boundary — commits stay local, pushing and publishing belong to
-whoever asked — in its own prose rather than by withdrawing a tool.
+## Telemetry
 
-`reviewer.md` is the reader for the advisory pre-flight review. It denies
-exactly two things, editing and spawning, and nothing else. Widening that
-deny-list is the tempting mistake and MUST be resisted: judging a change means
-confirming what was asked and not only what was written, which reaches the
-issue, the plan's artifacts, and the documentation behind a factual claim. A
-reviewer that cannot reach one of those does not fail to start — it returns a
-report short by exactly those checks, and an under-equipped review reads exactly
-like a clean one.
-
-`investigator.md` is the reader for a payload the main actor needs only one
-conclusion from — a log, a long thread, a wide search across files or history,
-a file tree — so that payload never enters the main actor's own context. It
-returns a conclusion and a locator precise enough to go back to the source,
-never the payload itself, which is what keeps the read cheap on the caller's
-side. Like the reviewer, it denies editing and spawning; it decides nothing the
-material does not itself settle, sending an unresolved judgment call back to
-whoever asked.
-
-Deleting any of the three files degrades gracefully rather than breaking the
-loop. Without the implementer, the loop delegates to a generic agent or runs
-single-agent; without the reviewer, the pre-flight stage is skipped rather than
-performed by the main actor, which is what keeps it from collapsing into
-self-review; without the investigator, the main actor reads the payload itself,
-per read, paying in its own context what delegating the read would otherwise
-have saved.
-
-## Telemetry Tagging
-
-[`.claude/settings.json`](../../.claude/settings.json) carries an `env` block
-stamping the repository name and the session's launch surface onto the
-OpenTelemetry resource attributes Claude Code exports, so this project's usage
-separates from every other repository sharing an account or a cloud
-environment. It configures nothing else — no endpoint, no credential, no
-`CLAUDE_CODE_ENABLE_TELEMETRY` — so a contributor who has never set telemetry
-up sees no behavior change from it.
-
-Verifying a change to that block is the catch: Claude Code does not pass `OTEL_*`
-variables to the subprocesses it spawns, so `echo $OTEL_RESOURCE_ATTRIBUTES`
-inside a session prints nothing even when the exporter holds the value. Confirm
-it in the metrics backend instead, against a session started **after** the
-change — an already-running session read its configuration at startup.
+The shared settings label telemetry with the repository name and entry point when the host exports it. They configure no exporter, credentials, or opt-in. Verify a change in the metrics backend with a newly started session, not by assuming a subprocess receives the same variables.

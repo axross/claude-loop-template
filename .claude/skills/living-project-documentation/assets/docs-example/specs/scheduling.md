@@ -30,10 +30,20 @@ definition once more.
 Both a firing schedule and a manual run produce the same record, and nothing
 distinguishes them afterwards except the job's `trigger` field.
 
-A new job is queued rather than started where it was created, so a burst of schedules
-firing in the same minute does not start more work than the workers can run. The
-reasoning is in
-[decisions/2026-03-14-move-scheduling-to-a-queue.md](../decisions/2026-03-14-move-scheduling-to-a-queue.md).
+A new job is queued rather than started where it was created, and a fixed pool of
+workers consumes the queue, so peak concurrency is a number someone chooses rather
+than the number the schedules happen to add up to. Starting a run inline, on the timer
+thread that noticed its schedule fire, is what once let forty templates sharing a 09:00
+schedule exhaust the database connection pool and take the API down with them.
+Rate-limiting that thread is not the alternative it looks like — the coupling between
+scheduling and execution turned the burst into an outage, not the rate — and a
+per-template concurrency cap bounds one template at a time while leaving the total,
+which is the number that actually ran out, unbounded.
+
+The queue costs a job its immediate start: a job created while the pool is saturated
+waits, and the product cannot tell a caller for how long. A worker's claim is
+idempotent, because a queue between the two halves can lose a job in a way an inline
+start could not.
 
 ## States
 

@@ -41,6 +41,8 @@ It also reads `description` as the **YAML scalar** it is, which is a distinct fa
 
 Across each skill's **prose documents** — its `SKILL.md` and every `references/*.md`, but not `scripts/` or `assets/`, which carry payload rather than rules — it further verifies that no `##`+ heading is separated from its `**Guidelines:**` block by nothing but blank lines (a fenced block, table, list, or paragraph all count as the demonstration); that every top-level bullet inside a `**Guidelines:**` block opens with an RFC-2119 keyword, nested bullets exempt; that every relative link resolves inside its own skill directory; and that every `#fragment` matches a heading in its target file, using GitHub's slug rules. A fragment whose target file does not resolve is left to `check-links.mjs` rather than reported twice.
 
+In `SKILL.md`, the body validator also rejects any `**Guidelines:**` block introduced by a reference-routing list, including empty blocks and read-obligation-only blocks. Both `See ... for:` and `See ... when` are routing lead-ins. Fenced examples are ignored, and independent substantive blocks before routing or after explanatory prose or a new heading remain valid.
+
 It exits 0 when every skill passes, 1 when any check fails, and 2 on a bad invocation or an unrecognized option.
 
 A host-specific frontmatter extension such as Claude Code's `when_to_use` or `user-invocable` is neither required nor rejected: the Agent Skills specification defines neither, so requiring one would fail a correct skill on every host that ignores it. Whether a skill carries them is a project's own convention to enforce, not this validator's.
@@ -86,7 +88,7 @@ It exits 0 when no link was confirmed dead, 1 when one was, and 2 on a bad invoc
 
 ## Structural Checks
 
-Structural checks should be repeatable. The bundled validator above automates the frontmatter, naming, reference-linkage, routing-keyword, section-intro, guideline-bullet, link-scope, and anchor checks, and `check-links.mjs` resolves every relative link. Run both first, then use the list below for what they still cannot decide — whether frontmatter is valid YAML beyond the minimal `key: value` subset the validator parses, which `user-invocable` value an archetype takes, whether a routing section uses the expected heading-and-`See` shape at all, whether a section that states rules carries a `**Guidelines:**` block, whether a nested bullet is really a rule in disguise, whether an in-skill cross-reference is topic-based rather than merely well-formed, and whether a stale plain label outside the three the `labels:` advisory matches has crept in — and when auditing by hand. All checks should ignore fenced code blocks so embedded examples do not create false positives.
+Structural checks should be repeatable. The bundled validator above automates the frontmatter, naming, reference-linkage, routing-keyword, section-intro, guideline-bullet, link-scope, and anchor checks, and `check-links.mjs` resolves every relative link. Run both first, then use the list below for what they still cannot decide — whether frontmatter is valid YAML beyond the minimal `key: value` subset the validator parses, whether host extensions match the applicable project policy, whether a routing section uses the expected heading-and-`See` shape at all, whether a section that states rules carries a `**Guidelines:**` block, whether a nested bullet is really a rule in disguise, whether an in-skill cross-reference is topic-based rather than merely well-formed, and whether a stale plain label outside the three the `labels:` advisory matches has crept in — and when auditing by hand. All checks should ignore fenced code blocks so embedded examples do not create false positives.
 
 **Example:**
 
@@ -97,8 +99,8 @@ find .claude/skills -name '*.md' -print | sort  # or .agents/skills
 **Guidelines:**
 
 - MUST check that every skill's frontmatter parses as YAML.
-- MUST check the invocation-control policy: guideline skills carry `user-invocable: false`; workflow entry-point skills carry `user-invocable: true` plus an `argument-hint`, and declare `arguments` only for discrete single-token parameters.
-- MUST check that every parent `SKILL.md` reference-routing section uses `## Section/Topic Name`, `See [file.md](./references/file.md) for:`, and descriptive bullets without RFC-2119-style requirement keywords.
+- MUST assess any invocation-control fields under [frontmatter-and-naming.md](./frontmatter-and-naming.md#invocation-control-and-discovery-fields); missing host extensions are not portable-format failures.
+- MUST check parent reference routes against the descriptive-only contract in `SKILL.md`: a topic heading, a `See ... for:` or `See ... when` link, descriptive bullets without RFC-2119-style requirement keywords, and no routing Guidelines block.
 - MUST check that every substantive rule section has a `**Guidelines:**` block after its explanation or demonstration.
 - MUST check that every guideline bullet begins with an RFC-2119 keyword.
 - MUST check that relative Markdown links outside fenced code blocks resolve; this skill's `scripts/check-links.mjs` automates the check (see [cross-referencing.md](./cross-referencing.md)).
@@ -107,7 +109,7 @@ find .claude/skills -name '*.md' -print | sort  # or .agents/skills
 
 ## Content Review
 
-Content review asks whether each skill owns one coherent responsibility and gives the agent project-specific information it would not reliably infer.
+Content review asks whether each skill owns one coherent responsibility and supplies information the agent would not reliably infer. A portable capability does not need project-specific commands to earn its place.
 
 **Review Questions:**
 
@@ -126,6 +128,24 @@ Content review asks whether each skill owns one coherent responsibility and give
 - SHOULD flag generic advice that does not add project-specific value.
 - SHOULD prefer a topic-based cross-reference over copied doctrine when another skill owns the detailed rule.
 - SHOULD note where examples, tables, diagrams, or command snippets would make abstract guidance easier to apply.
+
+## Ownership and Portability Checklist
+
+Apply this checklist to the changed capability and the routes it changes, not as a mandate to migrate every neighboring skill. Record the inspected passages and dispositions with the review evidence; a checklist result is a static assessment, not proof that a host loaded or executed a skill.
+
+The checklist asks the following questions, each governed by its linked owner:
+
+- Can a judgment rule, a project gate choice, a scheduler API instruction, and an installation step be assigned to distinct [content owners](./scoping-and-mece.md#portable-meaning-project-choices-and-host-execution)?
+- Does the [migration mapping](./scoping-and-mece.md#classify-before-migrating) account for mixed paragraphs, preserved safeguards, and explicitly excluded conflicts rather than treating a rename as separation?
+- Do [conditional routes](./cross-referencing.md#optional-owners-and-host-guidance) reach one detailed owner without project-specific paths, mandatory circular loading, or unrelated host reads, including when an optional owner is absent?
+- Does the [metadata guidance](./frontmatter-and-naming.md) distinguish required standard fields, optional standard fields, and host extensions without inferring support from one parser?
+- Does the [description](./description-writing.md) still advertise the changed scope while leaving installation and active-load confirmation to skill management?
+
+**Guidelines:**
+
+- MUST apply this checklist when reviewing a change to skill ownership, cross-owner routing, or metadata portability.
+- MUST report identified conflicts with their source passages and dispositions, distinguishing an in-scope correction from a sibling migration left unresolved.
+- MUST distinguish this static review from actual host loading and execution evidence; neither a checklist nor a structural pass establishes whole-host compatibility.
 
 ## Report Shape
 

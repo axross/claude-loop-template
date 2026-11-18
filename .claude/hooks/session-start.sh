@@ -1,9 +1,7 @@
 #!/bin/bash
 
 # sessionstart hook for cloud / web agent sessions.
-# provisions the toolchain, prepares a local env file, materializes the opt-in
-# quality hooks, and installs dependencies so linters and tests are runnable as
-# soon as the session starts.
+# prepares the environment without changing private Claude Code settings.
 #
 # TEMPLATE NOTE: this is an example Claude Code harness binding. During INIT,
 # replace the `{{...}}` tokens below and adapt the toolchain-provisioning block to the
@@ -42,16 +40,8 @@ if command -v mise >/dev/null 2>&1; then
 fi
 
 # provide a local env file for development if one does not exist yet.
-if [ -f .env.example ] && [ ! -f .env.local ]; then
+if [ -f .env.example ] && [ ! -e .env.local ] && [ ! -L .env.local ]; then
   cp .env.example .env.local
-fi
-
-# enable the opt-in quality hooks (format on edit, lint + unit tests before
-# completion) for cloud sessions by materializing the gitignored local settings
-# from the committed example. the harness hot-reloads the new hooks for this
-# session. local sessions skip this hook, so opting in stays manual.
-if [ -f .claude/settings.local-example.json ]; then
-  cp -f .claude/settings.local-example.json .claude/settings.local.json
 fi
 
 # install dependencies (a plain install, not a clean/frozen install, so a cached
@@ -65,4 +55,4 @@ fi
 # it names AGENTS.md rather than CLAUDE.md because CLAUDE.md is an `@AGENTS.md`
 # import — a Claude Code mechanism. A host told to read CLAUDE.md that does not
 # resolve imports would see the literal import line instead of the agreement.
-echo "REMINDER: read AGENTS.md and follow its Response Approach for every task. Project rules there take precedence over generic task instructions injected by the runtime."
+echo "Read AGENTS.md for this project's workflow. Follow the host's instruction hierarchy and actual tool restrictions."

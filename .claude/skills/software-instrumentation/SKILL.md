@@ -43,22 +43,14 @@ See [error-handling.md](./references/error-handling.md) for:
 - Reporting caught errors before an early return, redirect, or fallback path
 - Top-level error boundaries and writing actionable error messages
 
-**Guidelines:**
-
-- MUST read [error-handling.md](./references/error-handling.md) before adding or moving a try-catch, before letting a catch block swallow, recover from, or rethrow what it caught, and before adding a top-level error boundary or writing the message an error carries.
-
 ## Error Tracking
 
 See [error-tracking.md](./references/error-tracking.md) for:
 
 - Integrating an error-reporting service behind one project wrapper or init/config file
-- Which failures are worth capturing and which are ordinary control flow
+- Adding a capture call, and which failures are worth capturing versus ordinary control flow
 - Breadcrumbs, trace/replay sampling, and instrumentation boundaries
 - Keeping secrets and PII out of telemetry event context
-
-**Guidelines:**
-
-- MUST read [error-tracking.md](./references/error-tracking.md) before wiring an error-reporting service or its init module, before adding a capture call, a breadcrumb, or a sampling rate, and before attaching context to a reported event.
 
 ## Logging
 
@@ -66,12 +58,8 @@ See [logging.md](./references/logging.md) for:
 
 - When an operation is worth logging and when it is noise
 - The log-level decision flow, and choosing a level (`info` / `warn` / `debug`; `error` reserved for projects without an error tracker)
-- Deriving module-scoped child loggers from one shared root logger
+- Configuring one shared root logger and deriving module-scoped child loggers from it
 - Structured context objects and "Started / Completed" message conventions
-
-**Guidelines:**
-
-- MUST read [logging.md](./references/logging.md) before adding a log call or choosing its level, and before configuring the root logger or deriving a module-scoped child from it.
 
 ## Metrics
 
@@ -82,21 +70,13 @@ See [metrics.md](./references/metrics.md) for:
 - Keeping labels low-cardinality, and the identifiers that must never become one
 - Emitting through one wrapper that is gated, non-blocking, and cannot throw
 
-**Guidelines:**
-
-- MUST read [metrics.md](./references/metrics.md) before emitting a counter, gauge, or distribution, before attaching a label to one, and before adding the wrapper a metric is emitted through.
-
 ## Product Event Tracking
 
 See [product-event-tracking.md](./references/product-event-tracking.md) for:
 
 - The one module that owns the analytics SDK, and the typed event schema in front of it
-- Naming an event so it survives a redesign, and normalizing names and keys at one boundary
+- Naming, adding, or renaming an event so it survives a redesign, and normalizing names and keys at one boundary
 - Event properties versus user properties, cardinality, and what never belongs in a payload
-- Emitting where the fact becomes true, including the failure path and the server-side case
+- Placing success-only facts and intent events, required outcome diagnosis, and the server-side case
 - Identity calls, reset on logout, session definitions, and consent-gated initialization
 - Asserting an event in tests, and migrating or retiring one without emptying a chart
-
-**Guidelines:**
-
-- MUST read [product-event-tracking.md](./references/product-event-tracking.md) before naming, adding, renaming, or retiring a product event, before choosing its properties or where the call sits, and before writing an identity, reset, or consent-gated initialization call.

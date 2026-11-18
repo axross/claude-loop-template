@@ -36,6 +36,8 @@ A review that wanders into pre-existing code loses track of what the current cha
 - MUST establish that diff mechanically before reading any file: `git diff <base>..HEAD` for a branch, `git diff` for an uncommitted working tree, or the PR diff for a pull request. Do not reconstruct the change set from memory.
 - MUST also inspect untracked files surfaced by `git status`; a newly added file is part of the change even though no diff hunk precedes it.
 
+Once the diff is established, consult the project's development baseline's responsibility-based topic-selection practices, where available, before substantive assessment under applicable rules. When that optional capability is absent, this skill's own scoping, matching-rule and boundary checks still govern the review; its absence is not permission to skip required guidance.
+
 ## Reading Surrounding Context
 
 Correctness lives in context: a hunk that reads correctly on its own can still break the control flow, the boundaries, or the callers that surround it.

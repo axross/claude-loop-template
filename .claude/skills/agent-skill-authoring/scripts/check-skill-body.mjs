@@ -13,10 +13,9 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import { FENCE_RE, scanLines, unterminatedFenceLine } from "./commonmark.mjs";
+import { closesParagraph, columnWidth, extractProse, FENCE_RE, htmlBlockEnd, isThematicBreak, linkDefinitionLineCount, scanLines, startsBlock, unterminatedFenceLine } from "./commonmark.mjs";
 import {
   GUIDELINES_RE,
-  RFC2119_RE,
   ROUTING_LINE_RE,
   scanGuidelines,
 } from "./guidelines.mjs";
@@ -163,56 +162,9 @@ function guidelineKeywordFailures(body, file, offset) {
 }
 
 /**
- * a read obligation: an RFC-2119 bullet whose keyword is followed immediately
- * by "read" and a link to a reference file — `MUST read
- * [name.md](./references/name.md) before …`, the shape every genuine read
- * obligation across the corpus already takes. Recognized structurally — the
- * word right after the keyword, and a link into `./references/` somewhere in
- * the bullet — rather than by testing for the substring "read" anywhere in
- * the text.
- *
- * the word is matched literally, not against every RFC-2119-adjacent synonym
- * a bullet could use ("REQUIRED reading of …" and the like) — a deliberate
- * narrowing, not an oversight. every read obligation in the corpus already
- * writes `read`, and broadening the match to catch a synonym that does not
- * exist yet would also admit looser phrasings this rule exists to reject;
- * tighten this only against a real bullet the corpus actually needs.
- *
- * @param {string} rule the bullet's trimmed text
- * @param {string} keyword the RFC-2119 keyword `rule` opens with
- * @returns {boolean}
- */
-function isReadObligation(rule, keyword) {
-  const rest = rule.slice(keyword.length).trimStart();
-  return (
-    /^read\b/i.test(rest) &&
-    /\[[^\]]+\.md\]\(\.\/references\/[^)]+\)/.test(rule)
-  );
-}
-
-/**
- * the `**Guidelines:**` block a routing list introduces — SKILL.md only,
- * since a routing list is a SKILL.md construct — must carry read obligations
- * and nothing else. This is the contract `progressive-disclosure.md` states:
- * a body-resident rule may stand before a routing list, or after it behind a
- * paragraph explaining why, but never folded in among the list's own read
- * obligations, where a reader looking for "what do I open, and when" would
- * find a requirement instead.
- *
- * the routing list's own boundary — the `See […](./references/…) for:` line
- * — is shared from guidelines.mjs's `ROUTING_LINE_RE`, the same one
- * check-skill-references.mjs's `routingBullets` keys on, so the two
- * validators cannot disagree about where a routing list starts. Finding
- * which `**Guidelines:**` block (if any) that list introduces — no
- * intervening `#` heading, no intervening prose paragraph, where a blank
- * line, a routing bullet, and an indented continuation are none of them
- * prose — is this rule's own, since only check-skill-body.mjs asks it.
- *
- * a fenced block encountered while looking for that guidelines block is
- * skipped rather than treated as the prose that would rule one out — the same
- * choice guidelines.mjs's own block-boundary makes, for the same reason: an
- * author interleaving an illustrative fence should not silently stop this
- * rule from reaching the block after it.
+ * reject a Guidelines label introduced by reference routing in SKILL.md.
+ * prose or a heading separates a substantive block from routing; blanks,
+ * list continuations, HTML comments, link definitions, and fenced examples do not.
  *
  * @param {string} body
  * @param {string} file
@@ -221,94 +173,85 @@ function isReadObligation(rule, keyword) {
  */
 function routingBlockFailures(body, file, offset) {
   const failures = [];
-  const lines = [...scanLines(body)];
+  const source = body.replace(/\r/g, "").split("\n");
+  const lines = extractProse(body).lines;
+  let inRouting = false;
+  let seenBullet = false;
+  let paragraphBreak = false;
+  let listIndent = 0;
+  let htmlEnd = null;
 
-  let i = 0;
-  while (i < lines.length) {
-    const { text, fence } = lines[i];
-    if (fence || !ROUTING_LINE_RE.test(text)) {
-      i += 1;
+  for (let index = 0; index < lines.length; index += 1) {
+    const { line, text } = lines[index];
+    const indent = columnWidth(source[line - 1].match(/^[ \t]*/)[0]);
+    if (htmlEnd && source[line - 1].trim() !== "" && indent < listIndent) htmlEnd = null;
+    if (htmlEnd) {
+      if (htmlEnd.test(source[line - 1])) htmlEnd = null;
+      paragraphBreak = true;
       continue;
     }
-
-    // walk past the routing list itself: bullets, and the blank lead-in gap
-    // before the first one. anything else — including a blank line once
-    // bullets have started — ends it.
-    let j = i + 1;
-    let seenBullet = false;
-    while (j < lines.length) {
-      const cur = lines[j];
-      if (cur.fence) {
-        j += 1;
-        continue;
-      }
-      if (/^#{1,6}\s+/.test(cur.text)) break;
-      if (/^-\s+/.test(cur.text)) {
-        seenBullet = true;
-        j += 1;
-        continue;
-      }
-      if (cur.text.trim() === "" && !seenBullet) {
-        j += 1;
-        continue;
-      }
-      break;
-    }
-
-    // from there, look for the `**Guidelines:**` block this list introduces.
-    let k = j;
-    let blockIndex = null;
-    while (k < lines.length) {
-      const cur = lines[k];
-      if (cur.fence) {
-        k += 1;
-        continue;
-      }
-      if (cur.text.trim() === "" || /^-\s+/.test(cur.text) || /^\s/.test(cur.text)) {
-        k += 1;
-        continue;
-      }
-      if (/^#{1,6}\s+/.test(cur.text)) break; // no block introduced
-      if (GUIDELINES_RE.test(cur.text)) blockIndex = k;
-      break; // either the block found, or a prose paragraph ruling one out
-    }
-
-    if (blockIndex === null) {
-      i = j;
+    if (ROUTING_LINE_RE.test(text)) {
+      inRouting = true;
+      seenBullet = false;
+      paragraphBreak = false;
+      listIndent = 0;
       continue;
     }
-
-    let m = blockIndex + 1;
-    while (m < lines.length) {
-      const cur = lines[m];
-      if (cur.fence) {
-        m += 1;
-        continue;
-      }
-      if (/^#{1,6}\s+/.test(cur.text)) break;
-      if (cur.text.trim() === "" || GUIDELINES_RE.test(cur.text)) {
-        m += 1;
-        continue;
-      }
-      const bullet = cur.text.match(/^-\s+(.*)$/);
-      if (bullet) {
-        const rule = bullet[1].trim();
-        const keyword = rule.match(RFC2119_RE);
-        if (keyword && !isReadObligation(rule, keyword[0])) {
-          failures.push(
-            `routing-block: ${file}:${cur.line + offset} guidelines block introduced by a routing list carries a bullet that is not a read obligation: "${rule.slice(0, 60)}…"`,
-          );
-        }
-        m += 1;
-        continue;
-      }
-      if (/^\s/.test(cur.text)) {
-        m += 1;
-        continue;
-      }
-      break;
+    if (!inRouting) continue;
+    if (GUIDELINES_RE.test(text)) {
+      failures.push(
+        `routing-block: ${file}:${line + offset} reference routing must not introduce a \`**Guidelines:**\` block; keep selection conditions in descriptive routing bullets.`,
+      );
+      inRouting = false;
+      continue;
     }
-    i = m;
+    if (text.trim() === "") {
+      paragraphBreak = true;
+      continue;
+    }
+    if ((!seenBullet || paragraphBreak) && /^ {0,3}\[/.test(text)) {
+      // keep definition URLs in the shared extractor for the link audit.
+      const count = linkDefinitionLineCount(source.slice(index).join("\n"));
+      if (count > 0) {
+        index += count - 1;
+        continue;
+      }
+    }
+    if (isThematicBreak(source[line - 1], listIndent)) {
+      if (!seenBullet || indent < listIndent) inRouting = false;
+      paragraphBreak = true;
+      continue;
+    }
+    const block = startsBlock(source[line - 1], listIndent, !paragraphBreak) && !/^[ \t]*-(?:[ \t]|$)/.test(source[line - 1]);
+    if (block) {
+      if (!seenBullet || indent < listIndent) inRouting = false;
+      if (closesParagraph(source[line - 1], listIndent)) {
+        htmlEnd = indent < listIndent + 4 ? htmlBlockEnd(source[line - 1].trimStart()) : null;
+        if (htmlEnd?.test(source[line - 1])) htmlEnd = null;
+        paragraphBreak = true;
+        continue;
+      }
+    }
+    if (!inRouting) {
+      continue;
+    }
+    const bullet = source[line - 1].match(/^([ \t]*-)([ \t]+|$)(.*)$/);
+    if (bullet && (seenBullet || indent <= 3)) {
+      if (!seenBullet || indent < listIndent) {
+        const markerWidth = columnWidth(bullet[1]);
+        const padding = columnWidth(bullet[1] + bullet[2]) - markerWidth;
+        listIndent = markerWidth + (padding > 4 || bullet[3].trim() === "" ? 1 : padding);
+      }
+      seenBullet = true;
+      paragraphBreak = bullet[3].trim() === "";
+      continue;
+    }
+    if (seenBullet ? indent >= listIndent : indent > 0) {
+      paragraphBreak = false;
+      continue;
+    }
+    if (seenBullet && !paragraphBreak) continue;
+    inRouting = false;
   }
 
   return failures;
@@ -526,10 +469,10 @@ Check the document-body rules across a skill's SKILL.md and every
 references/*.md: an unclosed fenced block (fatal — every check below it is
 silently skipped otherwise), a section that states requirements with nothing
 demonstrating the topic first, and a guidelines bullet that does not open with
-an RFC-2119 keyword. In SKILL.md only, also check that the \`**Guidelines:**\`
-block a routing list introduces carries read obligations — \`MUST read
-[file.md](...) before …\` — and nothing else; an ordinary rule folded in
-among them is a failure, naming the file, the line, and the offending bullet.
+an RFC-2119 keyword. In SKILL.md only, reject any \`**Guidelines:**\` block
+introduced by reference routing (\`See ... for:\` or \`See ... when\`), even
+when it is empty or contains only read obligations. Separate substantive blocks
+remain valid. A failure names the file and the Guidelines label's line.
 Advisories cover size, section length, bullet placement, stale label and
 fence style, hedging, and a version claim with nothing to check it against.
 Run it after editing prose.
