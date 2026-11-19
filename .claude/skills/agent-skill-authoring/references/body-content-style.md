@@ -31,7 +31,7 @@ External links from untrusted input can become clickable UI, so validation is a 
 - MUST make every substantive rule section demonstrate its topic before listing requirements, regardless of heading depth.
 - SHOULD write each section intro as rationale — why the rule exists — rather than a restatement of its first guideline bullet.
 - MUST put RFC-2119 guideline bullets after the description, usually under a `**Guidelines:**` label.
-- MUST NOT apply the `**Guidelines:**` requirement to parent `SKILL.md` reference-routing sections; those sections use `See [file.md](./references/file.md) for:` with descriptive bullets.
+- MUST distinguish substantive rule sections from reference routing: substantive sections use description-then-guidelines, while routing uses the descriptive-only contract in `SKILL.md` and [progressive-disclosure.md](./progressive-disclosure.md).
 - MAY use H3, H4, or deeper headings when hierarchy improves readability.
 - SHOULD use standard Markdown syntax such as prose, ordered lists, unordered lists, blockquotes, tables, code snippets, or Mermaid diagrams when that format explains the topic better than plain prose.
 - SHOULD keep the demonstration short enough that the guideline bullets remain easy to scan.

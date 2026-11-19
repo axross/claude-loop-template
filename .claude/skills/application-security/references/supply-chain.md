@@ -16,6 +16,19 @@ Every dependency is a permanent liability and an entry point for someone else's 
 - SHOULD run the audit command (e.g., `npm audit`) after a lockfile change and resolve or explicitly defer `high` and `critical` findings.
 - SHOULD inline the logic instead of adding a dependency that is a thin wrapper around a single function used once.
 
+## CI Action Identity and Exposure
+
+A pinned action can still fetch executable code or influence a later privileged job through its outputs. Review the selected wrapper and the capabilities it receives separately. No explicit token input is not proof of no credential: actions can access the workflow token through their context, checkout can persist Git credentials, and artifact services use separate runtime credentials. A container on a self-hosted runner also shares a host boundary; it is not equivalent to a fresh virtual machine.
+
+Verified against [GitHub's secure-use guidance](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions): version tags are a practical choice when the creator is trusted, but remain mutable. Full commit SHAs provide immutable action selection, not proof of safe downstream downloads or artifacts.
+
+**Guidelines:**
+
+- MAY use version tags such as `@v3` for remote actions from trusted publishers, including GitHub's official actions; a full commit SHA and tag-to-SHA evidence are not required for that choice.
+- SHOULD select a full commit SHA when publisher trust has not been established or immutable action identity is required; verify it in the original action repository and retain the release label for deliberate updates.
+- MUST assess the action's actual job exposure: context and persisted credentials, secrets, OIDC, writable workspace, runner access and outputs consumed downstream. Neither `permissions: {}` nor absence of an explicit token proves isolation.
+- MUST distinguish action-code identity from fetched executable dependencies and artifact/cache trust; a pin or passing repository checks do not establish the origin or safety of transferred content. Concrete admission and update procedures belong to the consuming project's CI operations.
+
 ## Dependency Justification
 
 A dependency is a permanent liability — maintenance, security surface, and weight — that outlives the task that introduced it, so admitting one is never a free decision.

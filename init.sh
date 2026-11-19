@@ -1,197 +1,162 @@
 #!/usr/bin/env bash
-#
-# init.sh — scripted, metacharacter-safe token substitution for this template.
-#
-# This automates the mechanical half of INIT (Step 3): replacing every {{TOKEN}}
-# with the project's value. It does NOT make the judgement calls — interviewing
-# the user, choosing which skills to install, resolving the remaining optional
-# sections, and writing docs/ are still done by following INIT.md. Run this
-# AFTER you have the answers.
-#
-# Why a script instead of `sed`: four tokens ({{CODE_FILE_GLOB}},
-# {{CODE_FILE_REGEX}}, {{LINT_FIX_FILE_GLOB}}, {{LINT_FIX_CMD}}) can contain
-# shell/regex metacharacters ( | * ( ) \ $ ), which break a naive
-# `sed s|...|...|` sweep when they do. A project's own value may carry none,
-# but a sweep does not know that in advance. This script substitutes literally.
-#
-# Usage:
-#   ./init.sh init     # write init.values.json (a fill-in-the-blanks template)
-#   ./init.sh apply    # substitute tokens from init.values.json, then verify
-#   ./init.sh check    # just run the gate + link check, change nothing
-#
-set -euo pipefail
-
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$ROOT"
-VALUES="init.values.json"
-MANIFEST="tokens.json"
-
-command -v python3 >/dev/null 2>&1 || { echo "python3 is required" >&2; exit 1; }
-
+set -eu
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
 case "${1:-}" in
-  init)
-    if [ -f "$VALUES" ]; then
-      echo "$VALUES already exists; edit it, then run: ./init.sh apply" >&2
-      exit 1
-    fi
-    python3 - "$MANIFEST" "$VALUES" <<'PY'
-import json, sys
-manifest, out = sys.argv[1], sys.argv[2]
-data = json.load(open(manifest))
-obj = {}
-for t in data["tokens"]:
-    tag = "  # OPTIONAL: " if t["optional"] else "  # "
-    obj[t["name"]] = ""  # value to fill
-# Emit with description comments alongside each key.
-lines = ["{"]
-items = data["tokens"]
-for i, t in enumerate(items):
-    comma = "," if i < len(items) - 1 else ""
-    opt = "(optional) " if t["optional"] else ""
-    lines.append(f'  "{t["name"]}": ""{comma}'
-                 f'  // {opt}{t["description"]} e.g. {t["example"]}')
-lines.append("}")
-open(out, "w").write("\n".join(lines) + "\n")
-PY
-    echo "Wrote $VALUES — fill in each value (// comments are stripped on apply),"
-    echo "then run: ./init.sh apply"
-    ;;
-
-  apply)
-    [ -f "$VALUES" ] || { echo "$VALUES not found; run: ./init.sh init" >&2; exit 1; }
-    python3 - "$MANIFEST" "$VALUES" <<'PY'
-import json, os, sys
-
-manifest, values = sys.argv[1], sys.argv[2]
-tokens = [t["name"] for t in json.load(open(manifest))["tokens"]]
-
-# Tolerant JSON read: strip // line comments the user may leave in the
-# template. A comment starts at the first // that sits OUTSIDE a quoted
-# string (tracked with quote/escape state), so a VALUE containing // — a
-# URL, a "value // note", anything — is never touched.
-def strip_line_comments(text):
-    out = []
-    for line in text.split("\n"):
-        in_string = escaped = False
-        cut = None
-        for i, ch in enumerate(line):
-            if escaped:
-                escaped = False
-            elif ch == "\\":
-                escaped = True
-            elif ch == '"':
-                in_string = not in_string
-            elif ch == "/" and not in_string and line[i : i + 2] == "//":
-                cut = i
-                break
-        if cut is not None:
-            line = line[:cut].rstrip()
-        out.append(line)
-    return "\n".join(out)
-
-vals = json.loads(strip_line_comments(open(values).read()))
-
-missing = [t for t in tokens if not vals.get(t, "").strip()]
-if missing:
-    sys.stderr.write("Refusing to apply — these tokens have no value in %s:\n  %s\n"
-                     % (values, ", ".join(missing)))
-    sys.stderr.write("Fill them, or delete the section that uses an optional one "
-                     "(see INIT.md Step 4) and remove its row from tokens.json.\n")
-    sys.exit(1)
-
-SKIP = {".git", "node_modules", ".next", "dist", "build", "out", "coverage", ".venv", "tools"}
-SKIP_FILES = {"tokens.json", "init.values.json", "init.sh", "INIT.md", "README.md"}
-
-def replace_literal(text):
-    for name in tokens:
-        text = text.replace("{{%s}}" % name, vals[name])  # literal, metachar-safe
-    return text
-
-changed = 0
-for dirpath, dirnames, filenames in os.walk("."):
-    dirnames[:] = [d for d in dirnames if d not in SKIP]
-    for fn in filenames:
-        if fn in SKIP_FILES:
-            continue
-        if not fn.endswith((".md", ".sh", ".json", ".yaml", ".yml")):
-            continue
-        path = os.path.join(dirpath, fn)
-        src = open(path, encoding="utf-8").read()
-        new = replace_literal(src)
-        if new != src:
-            open(path, "w", encoding="utf-8").write(new)
-            changed += 1
-print("Substituted tokens in %d files." % changed)
-PY
-    echo
-    "$ROOT/init.sh" check
-    ;;
-
-  check)
-    echo "== Gate: any {{TOKEN}} left in authored files? =="
-    # Match the UPPER_CASE token shape (digits included: E2E_TEST_CMD), not
-    # bare '{{': GitHub Actions ${{ ... }} expressions in .github/ contain
-    # '{{' but are lowercase, so workflows can be scanned for leftover tokens
-    # without false positives.
-    if grep -rnE '\{\{[A-Z][A-Z0-9_]*\}\}' . \
-        --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=.next \
-        --exclude-dir=dist --exclude-dir=build --exclude-dir=out \
-        --exclude-dir=coverage \
-        --exclude=tokens.json --exclude=init.values.json --exclude=init.sh \
-        --exclude=INIT.md --exclude=README.md 2>/dev/null; then
-      echo "  ^ tokens remain — fill them or remove the owning section."
-    else
-      echo "  none remain."
-    fi
-    echo
-    echo "== Optional sections still present (decide ADD vs DELETE — INIT Step 4) =="
-    grep -rn 'INIT:OPTIONAL' . \
-      --exclude-dir=.git --exclude-dir=node_modules \
-      --exclude=INIT.md --exclude=init.sh --exclude=README.md --exclude=tokens.json 2>/dev/null \
-      || echo "  none remain."
-    echo
-    echo "== README seed (INIT.md Step 7) =="
-    # README.md itself is excluded from the token gate above: pre-finalize it
-    # is the template's own README, whose prose legitimately mentions the
-    # {{TOKEN}} convention. The seed (README.template.md) IS covered by the
-    # gate; once it is renamed over README.md, scan the result here instead.
-    if [ -f README.template.md ]; then
-      echo "  README.template.md still present — finalize it into README.md."
-    elif [ -f README.md ] && grep -nE '\{\{[A-Z][A-Z0-9_]*\}\}|<!-- INIT' README.md; then
-      echo "  ^ leftover tokens / INIT comments in README.md — finish the Step-7 finalize."
-    else
-      echo "  finalized."
-    fi
-    echo
-    echo "== Relative-link integrity =="
-    # The checker ships inside the installed agent-skill-authoring skill and
-    # survives adaptation; it needs Node, which refreshing skills needs anyway.
-    if command -v node >/dev/null 2>&1; then
-      # `|| true`: check reports every section rather than aborting on the
-      # first failing one, so one run shows the whole remaining worklist.
-      node "$ROOT/.claude/skills/agent-skill-authoring/scripts/check-links.mjs" || true
-    else
-      echo "  SKIPPED — node not found. Relative links were NOT checked."
-    fi
-    echo
-    echo "== docs/ validators =="
-    # Five single-purpose validators, one per kind of change; there is no
-    # run-all script by design. All five exit 0 while docs/index.md is absent,
-    # so this section is inert until the project adopts docs/ (INIT Step 5).
-    if command -v node >/dev/null 2>&1; then
-      docs_failed=0
-      for check in "$ROOT"/.claude/skills/living-project-documentation/scripts/check-*.mjs; do
-        node "$check" || docs_failed=1
-      done
-      # same reason as above: report, do not abort the run.
-      [ "$docs_failed" -eq 0 ] || echo "  ^ fix the findings above."
-    else
-      echo "  SKIPPED — node not found. docs/ was NOT checked."
-    fi
-    ;;
-
-  *)
-    sed -n '3,33p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
-    exit 1
-    ;;
+  init|apply|check) ;;
+  *) echo 'Usage: ./init.sh {init|apply|check}' >&2; exit 2 ;;
 esac
+
+status=0
+if command -v python3 >/dev/null; then
+  python3 - "$1" <<'PY' || status=1
+import json
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+MANIFEST = Path('tokens.json')
+VALUES = Path('init.values.json')
+TOKEN = re.compile(r'\{\{([A-Z][A-Z0-9_]*)\}\}')
+MARKER = re.compile(r'<!--\s*INIT\b|\bINIT:OPTIONAL\b')
+
+
+def read(path):
+    if path.is_symlink() or not path.is_file():
+        raise ValueError(f'{path}: expected a regular, non-symlink file')
+    return path.read_bytes().decode('utf-8')
+
+
+def owned_path(name):
+    path = Path(name)
+    if path.is_absolute() or '..' in path.parts or path.as_posix() != name:
+        raise ValueError(f'{name}: expected a normalized repository-relative path')
+    if (path.parts[0:1] in {('.git',), ('.amp',), ('docs',)}
+            or path.parts[0:2] == ('.claude', 'skills')
+            or path == Path('.claude/settings.local.json')):
+        raise ValueError(f'{name}: path is outside the template substitution scope')
+    if any(parent.is_symlink() for parent in (path, *path.parents)):
+        raise ValueError(f'{name}: symlink in selected path')
+    if path.is_file() and path.stat().st_nlink != 1:
+        raise ValueError(f'{name}: multiply linked file')
+    return path
+
+
+def inputs(files, names):
+    config = json.loads(read(VALUES))
+    if not isinstance(config, dict):
+        raise ValueError('expected an object in init.values.json')
+    selected = config.get('files')
+    omitted = config.get('omit', [])
+    for label, items in [('files', selected), ('omit', omitted)]:
+        if (not isinstance(items, list) or not all(isinstance(item, str) for item in items)
+                or len(set(items)) != len(items)):
+            raise ValueError(f'{label}: expected an array of distinct strings')
+    if not selected or set(selected) - files:
+        raise ValueError('files: select only reconciled template inputs listed in tokens.json')
+    unknown = config.keys() - {'files', 'omit'} - names.keys()
+    if unknown:
+        raise ValueError(f'unknown values: {", ".join(sorted(unknown))}')
+    for name in omitted:
+        if not names.get(name, {}).get('optional') or config.get(name, '') != '':
+            raise ValueError(f'{name}: only empty optional values can be omitted')
+    for name in names.keys() - set(omitted):
+        value = config.get(name)
+        if not isinstance(value, str) or not value.strip() or any(c in value for c in '\r\n\0'):
+            raise ValueError(f'{name}: enter a nonempty single-line value, or explicitly omit if optional')
+    if 'CODE_FILE_REGEX' in names and 'CODE_FILE_REGEX' not in omitted:
+        result = subprocess.run(['bash', '-c', '[[ "" =~ $1 ]]', 'check-regex', config['CODE_FILE_REGEX']])
+        if result.returncode not in (0, 1):
+            raise ValueError('CODE_FILE_REGEX: expected a valid Bash extended regular expression')
+    return config, selected, set(omitted)
+
+
+def check(files, selected):
+    failed = False
+    if Path('README.template.md').exists() or Path('README.template.md').is_symlink():
+        print('README not finalized: reconcile the seed into README.md first.', file=sys.stderr)
+        failed = True
+    retained = {name for name in files if Path(name).exists() or Path(name).is_symlink()}
+    for name in sorted((retained | set(selected) | {'README.md'}) - {'README.template.md'}):
+        try:
+            text = read(owned_path(name))
+        except ValueError as error:
+            print(error, file=sys.stderr)
+            failed = True
+            continue
+        for number, line in enumerate(text.splitlines(), 1):
+            if TOKEN.search(line) or MARKER.search(line):
+                print(f'{name}:{number}: unresolved token or INIT marker', file=sys.stderr)
+                failed = True
+    return int(failed)
+
+
+def main(mode):
+    manifest = json.loads(read(MANIFEST))
+    names = {row['name']: row for row in manifest['tokens']}
+    files = manifest['files']
+    if mode == 'init':
+        with VALUES.open('x', encoding='utf-8') as out:
+            json.dump({'files': files, 'omit': [], **dict.fromkeys(names, '')}, out, indent=2)
+            out.write('\n')
+        print(f'Wrote {VALUES}. Reconcile files, fill values, and run ./init.sh apply.')
+        return 0
+    if mode == 'check':
+        try:
+            _, selected, omitted = inputs(set(files), names)
+        except (ValueError, OSError) as error:
+            print(f'{VALUES}: {error}', file=sys.stderr)
+            check(files, [])
+            return 1
+        status = check(files, selected)
+        if status == 0 and omitted:
+            print(f'Not applicable (explicit omissions): {", ".join(sorted(omitted))}.')
+        return status
+
+    config, selected, omitted = inputs(set(files), names)
+    updates = {}
+    for name in selected:
+        path = owned_path(name)
+        src = read(path)
+
+        def substitute(match):
+            key = match.group(1)
+            if key not in names or key in omitted:
+                raise ValueError(f'{path}: unexpected or omitted token {key} is still present')
+            value = config[key]
+            if path.suffix == '.json':
+                return json.dumps(value, ensure_ascii=False)[1:-1]
+            if key == 'CODE_FILE_REGEX' and path.suffix == '.sh':
+                return value.replace("'", "'\"'\"'")
+            return value
+
+        new = TOKEN.sub(substitute, src)
+        if path.suffix == '.json':
+            json.loads(new)
+        if src != new:
+            updates[path] = new
+    for path, text in updates.items():
+        path.write_bytes(text.encode('utf-8'))
+    print(f'Substituted tokens in {len(updates)} files. Run ./init.sh check after reconciliation.')
+    return 0
+
+
+try:
+    sys.exit(main(sys.argv[1]))
+except (ValueError, OSError) as error:
+    sys.exit(str(error))
+PY
+else
+  echo 'Initialization unverified: python3 not found.' >&2
+  status=1
+fi
+
+if [ "$1" = check ]; then
+  if [ ! -f .github/scripts/check-documentation.sh ]; then
+    echo 'Documentation unverified: .github/scripts/check-documentation.sh is missing.' >&2
+    status=1
+  else
+    bash .github/scripts/check-documentation.sh || status=1
+  fi
+fi
+exit "$status"

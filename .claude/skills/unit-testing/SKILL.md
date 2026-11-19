@@ -23,6 +23,8 @@ See [testing-scope.md](./references/testing-scope.md) for:
 - deciding whether a behavior belongs in unit, integration, or e2e coverage, with a decision diagram
 - keeping pure helper tests small while routing browser, data-layer, and framework behavior to broader tests
 - recognizing when a unit test would be lower confidence than an integration or e2e check
+- preserving relevant intermediate states and completion ordering in frame-dependent test doubles, without native-evidence claims
+- public geometry/configuration checks when a renderer is unavailable, without replacement production UI or pixel-evidence claims
 
 ## Spec Structure and Naming
 
@@ -40,6 +42,7 @@ See [behavior-and-implementation-details.md](./references/behavior-and-implement
 - avoiding tests that overfit private helpers, dependency internals, callback mechanics, or call shapes
 - keeping assertions focused on exported behavior from a caller's point of view
 - deciding when an implementation detail is actually part of the public contract
+- exact values promised by external specifications or project public contracts versus copied private literals
 
 ## Fixtures, Fakes, and AHA
 

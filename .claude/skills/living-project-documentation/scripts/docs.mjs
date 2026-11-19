@@ -1,7 +1,7 @@
 // shared docs reading for the specification validators beside this file.
 //
 // deliberately carries no shebang: this is a module, not a command. a tool that
-// identifies a CLI by its shebang would otherwise count it as a sixth validator.
+// identifies a CLI by its shebang would otherwise count it as a fourth validator.
 //
 // everything here is standard-library Node. the validators ship inside a skill
 // that installs into arbitrary projects, so they take no dependencies and assume
@@ -18,8 +18,6 @@ export const VALIDATORS = [
   ["check-index.mjs", "every document is listed in the index"],
   ["check-references.mjs", "every relative link resolves"],
   ["check-glossary.mjs", "every spec has a vocabulary entry"],
-  ["check-decision-naming.mjs", "every decision filename sorts and stays stable"],
-  ["check-decision-supersede.mjs", "the supersede chain is sound and nothing cites stale rationale"],
 ];
 
 /**
@@ -164,31 +162,6 @@ export function slug(value) {
     .replace(/^-+|-+$/g, "");
 }
 
-/**
- * parse a leading YAML frontmatter block into flat string values. only the flat
- * `key: value` shape is supported, which is all a decision record uses; a
- * document with no frontmatter yields an empty object.
- *
- * @param {string} text
- * @returns {{ data: Record<string, string>, present: boolean }}
- */
-export function parseFrontmatter(text) {
-  if (!text.startsWith("---\n")) return { data: {}, present: false };
-  const end = text.indexOf("\n---", 3);
-  if (end === -1) return { data: {}, present: false };
-
-  const data = {};
-  for (const line of text.slice(4, end).split("\n")) {
-    const match = line.match(/^([A-Za-z_][\w-]*)\s*:\s*(.*)$/);
-    if (!match) continue;
-    let value = match[2].trim();
-    value = value.replace(/\s+#.*$/, "").trim();
-    value = value.replace(/^["'](.*)["']$/, "$1");
-    data[match[1]] = value;
-  }
-  return { data, present: true };
-}
-
 async function collectMarkdown(dir, root, out) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
     const full = join(dir, entry.name);
@@ -214,7 +187,6 @@ async function collectMarkdown(dir, root, out) {
  *   root: string,
  *   documents: { path: string, relative: string, text: string }[],
  *   hasSpecs: boolean,
- *   hasDecisions: boolean,
  * }>}
  */
 export async function loadDocs(dir) {
@@ -235,23 +207,7 @@ export async function loadDocs(dir) {
     root,
     documents,
     hasSpecs: await isDirectory(join(root, "specs")),
-    hasDecisions: await isDirectory(join(root, "decisions")),
   };
-}
-
-/**
- * every decision record under docs/, sorted by filename — which, given the
- * naming rule, is chronological.
- *
- * @param {{ documents: { relative: string }[] }} docs
- */
-export function decisionRecords(docs) {
-  return docs.documents.filter((doc) => doc.relative.startsWith("decisions/"));
-}
-
-/** every document that is not a decision record. */
-export function nonDecisionDocuments(docs) {
-  return docs.documents.filter((doc) => !doc.relative.startsWith("decisions/"));
 }
 
 /**
@@ -296,7 +252,7 @@ export function report(subject, findings, passSummary) {
  * @param {{
  *   usage: string,
  *   argv: string[],
- *   needs?: "specs" | "decisions",
+ *   needs?: "specs",
  *   absent: string,
  *   run: (docs: object) => { category: string, message: string }[] | Promise<{ category: string, message: string }[]>,
  *   pass: (docs: object) => string,
@@ -325,11 +281,6 @@ export async function main({ usage, argv, needs, absent, run, pass }) {
     console.log(`No specs/ under ${parsed.dir}. ${absent}`);
     return 0;
   }
-  if (needs === "decisions" && !docs.hasDecisions) {
-    console.log(`No decisions/ under ${parsed.dir}. ${absent}`);
-    return 0;
-  }
-
   return report(parsed.dir, await run(docs), pass(docs));
 }
 

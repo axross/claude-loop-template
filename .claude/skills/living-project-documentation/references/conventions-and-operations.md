@@ -21,9 +21,8 @@ scopes out of this capability's own domain — repository-structure
 conventions and contributor documentation, respectively. Adopting the shape
 in [documentation-structure.md](./documentation-structure.md) gives each a
 named home instead of leaving every project to invent one, without pulling
-either under `specs/` or `decisions/`'s own rules: a document here earns no
-spec, no glossary heading, and no decision record merely by sitting under
-`docs/`.
+either under `specs/`'s own rules: a document here earns no spec and no
+glossary heading merely by sitting under `docs/`.
 
 The sibling placement itself —
 [the shape documentation-structure.md names](./documentation-structure.md) —
@@ -31,10 +30,9 @@ is a shared rule, not restated here.
 
 **Guidelines:**
 
-- MUST NOT give a document under `conventions/` or `operations/` a spec, a
-  glossary heading, or a decision record merely because it sits under
-  `docs/`; those stay earned exactly as `specs/`, `glossary.md`, and
-  `decisions/` already require.
+- MUST NOT give a document under `conventions/` or `operations/` a spec or a
+  glossary heading merely because it sits under `docs/`; those stay earned
+  exactly as `specs/` and `glossary.md` already require.
 
 ## Proposing the Shape
 
@@ -127,37 +125,36 @@ a sentence with nothing left for it to say.
   only what nothing outside this project could know — its own directory
   tiers, its own release order, its own on-call procedure.
 
-## `decisions/` Beside All Four Bodies
+## A Decision About a Convention or a Procedure
 
-`decisions/`'s existence condition —
-[a decision constrains future work and its rationale is unrecoverable from
-the code](./decision-records.md#when-a-record-exists) — never depended on
-the constrained subject being the product. A decision about a convention or
-a procedure meets the same test the same way: choosing to enqueue rather
-than rate-limit is a product decision; choosing to keep two packages in one
-repository rather than split them, or to deploy code before running a
-migration rather than after, is exactly as constraining and exactly as
-undocumented by the code that followed from it.
+A settled decision lands in the document that governs its subject —
+[Settled Decisions](../SKILL.md#settled-decisions) — and that rule never
+depended on the subject being the product. Choosing to enqueue rather than
+rate-limit is a product decision and lands in the spec; choosing to keep two
+packages in one repository rather than split them, or to deploy code before
+running a migration rather than after, is exactly as constraining, and lands
+in `conventions/directory-structure.md` and `operations/deployment.md`
+respectively.
 
-Such a decision is recorded in `decisions/`, under the same
-`YYYY-MM-DD-<decision-in-kebab-case>.md` filename and the same supersede
-protocol as a product decision — one log, not one per body, because the
-question a reader brings to it ("why does this constrain us?") does not
-change with the subject.
+What the reader gets is the same in all three cases: the rule and the reason
+it holds, in the document they were already reading. The question they bring
+("why does this constrain us?") does not change with the subject, so neither
+does where it is answered.
 
 **Guidelines:**
 
-- MUST record a decision about a convention or a procedure in `decisions/`,
-  under the filename and supersede rules
-  [decision-records.md](./decision-records.md) states in full, exactly as
-  for a product decision.
-- MUST NOT keep a second decision log under `conventions/` or `operations/`;
-  `decisions/` is the one log every body links into.
+- MUST write a decision about a convention or a procedure into the document
+  under `conventions/` or `operations/` that governs it, in the present
+  tense with its rationale beside it, exactly as a product decision is
+  written into its spec.
+- MUST NOT open a rationale document, a log, or an `adr/` directory under
+  `conventions/` or `operations/`; a body that separates a rule from its
+  reason is what this shape does without.
 
 ## Upkeep for a Co-located Body
 
 The upkeep obligation — correct what a change invalidated, in the same
-change — has no reason to stop at `specs/` and `decisions/`. A change that
+change — has no reason to stop at `specs/`. A change that
 alters a convention or a procedure leaves `conventions/` or `operations/`
 exactly as wrong as an uncorrected spec leaves the rest of `docs/`.
 
@@ -189,24 +186,22 @@ discovery to surface `index.md` first.
 
 ## What the Validators See
 
-The five validators were written for `specs/` and `decisions/`, and holding
-`conventions/` and `operations/` under the same `docs/` changes nothing about
-what any of them checks. Two of the five never read either body at all; the
-rest walk all of `docs/` and already see whatever sits under either.
+The three validators were written for `specs/`, and holding `conventions/`
+and `operations/` under the same `docs/` changes nothing about what any of
+them checks. Two walk all of `docs/` and already see whatever sits under
+either; the third reads `specs/` alone.
 
-| Validator                      | Sees a document under `conventions/` or `operations/`?                                                                                         |
-| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `check-index.mjs`              | Yes — it walks all of `docs/`, so a document left off `index.md` is reported like any unlisted spec                                            |
-| `check-references.mjs`         | Yes — it is body-agnostic; a broken relative link fails wherever it is written                                                                 |
-| `check-decision-supersede.mjs` | Yes — a document under either directory that still links a superseded decision is reported, the same as a stale spec reference                 |
-| `check-glossary.mjs`           | No — it pairs `specs/` against `glossary.md` only; a heading with no matching spec, including one for development vocabulary, is already legal |
-| `check-decision-naming.mjs`    | No — it reads only the `decisions/` directory listing                                                                                          |
+| Validator              | Sees a document under `conventions/` or `operations/`?                                                                                         |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `check-index.mjs`      | Yes — it walks all of `docs/`, so a document left off `index.md` is reported like any unlisted spec                                            |
+| `check-references.mjs` | Yes — it is body-agnostic; a broken relative link fails wherever it is written                                                                 |
+| `check-glossary.mjs`   | No — it pairs `specs/` against `glossary.md` only; a heading with no matching spec, including one for development vocabulary, is already legal |
 
 **Guidelines:**
 
-- MUST run `check-index.mjs`, `check-references.mjs`, and
-  `check-decision-supersede.mjs` after a change to a document under
-  `conventions/` or `operations/`, exactly as after a change to a spec.
-- MUST NOT expect `check-glossary.mjs` or `check-decision-naming.mjs` to
-  report anything about `conventions/` or `operations/`; neither reads those
-  directories, and that is not a gap to file.
+- MUST run `check-index.mjs` and `check-references.mjs` after a change to a
+  document under `conventions/` or `operations/`, exactly as after a change
+  to a spec.
+- MUST NOT expect `check-glossary.mjs` to report anything about
+  `conventions/` or `operations/`; it does not read those directories, and
+  that is not a gap to file.

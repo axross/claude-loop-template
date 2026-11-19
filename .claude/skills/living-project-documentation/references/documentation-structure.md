@@ -3,7 +3,7 @@
 Apply this reference when creating a document under `docs/`, deciding which
 document a fact belongs in, or judging whether an existing `docs/` tree is
 shaped correctly. It states what is true of **every** document in the tree,
-whichever of the four bodies holds it; what is true of `conventions/` and
+whichever of the three bodies holds it; what is true of `conventions/` and
 `operations/` alone is in
 [conventions-and-operations.md](./conventions-and-operations.md).
 
@@ -14,7 +14,6 @@ docs/
   index.md                # the only entry point read unconditionally
   glossary.md              # the vocabulary, grouped by domain
   specs/<domain>.md        # how the product behaves now, one file per domain
-  decisions/YYYY-MM-DD-<decision-in-kebab-case>.md
   conventions/<surface>.md # the rules and habits a change must satisfy
   operations/<surface>.md  # the procedures someone executes
 ```
@@ -23,15 +22,14 @@ docs/
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
 | `index.md`                 | One line per document, naming what it covers, and which body answers which question                                                                                   | Any fact of its own                |
 | `glossary.md`              | What each term means and how it relates to the others                                                                                                                 | Cardinality, invariants, lifecycle |
-| `specs/<domain>.md`        | Triggers, rules, state transitions, error and edge behaviour, for one product domain                                                                                  | Vocabulary definitions; rationale  |
-| `decisions/…`              | Why a constraint exists, and what was traded away                                                                                                                     | What currently is                  |
+| `specs/<domain>.md`        | Triggers, rules, state transitions, error and edge behaviour, for one product domain, and why each constraint among them holds                                        | Vocabulary definitions             |
 | `conventions/<surface>.md` | The rules and habits a change must satisfy — see [conventions-and-operations.md](./conventions-and-operations.md#what-each-body-holds)                                | —                                  |
 | `operations/<surface>.md`  | The procedures someone executes, and what to watch for while running them — see [conventions-and-operations.md](./conventions-and-operations.md#what-each-body-holds) | —                                  |
 
-`conventions/` and `operations/` sit beside `specs/` and `decisions/` as
-siblings, never nested inside either, and — like every other document here —
-are written only when there is something to put in them: a `docs/` tree with
-only `specs/` and `decisions/` is exactly as valid as one with all four.
+`conventions/` and `operations/` sit beside `specs/` as siblings, never nested
+inside it, and — like every other document here — are written only when there
+is something to put in them: a `docs/` tree with only `specs/` is exactly as
+valid as one with all three.
 
 **Guidelines:**
 
@@ -46,9 +44,12 @@ only `specs/` and `decisions/` is exactly as valid as one with all four.
 - MUST write every spec in the **present tense**, describing what the product
   does — not what it will do, should do, or once did.
 - MUST hold `conventions/` and `operations/`, wherever a project keeps either,
-  as siblings of `specs/` and `decisions/` rather than nested inside one —
-  the directory itself is what marks a fact's placement, not a judgment
-  remade at every write.
+  as siblings of `specs/` rather than nested inside it — the directory itself
+  is what marks a fact's placement, not a judgment remade at every write.
+- MUST carry a constraint's reasoning in the document that states the
+  constraint, in the prose beside it, rather than in a document written to
+  hold reasoning — that is invariant 1 again, read against a body `docs/`
+  does not have.
 
 ## The Invariants
 
@@ -59,20 +60,19 @@ only `specs/` and `decisions/` is exactly as valid as one with all four.
 2. **One fact lives in exactly one document.** Two copies diverge; the
    reader cannot tell which is current, and neither can a reviewer.
 3. **What is not reachable from `index.md` does not exist** — every document
-   except an individual decision record, which the log itself carries.
-4. **A decision is superseded by a new record, never rewritten in place.**
-   The old rationale is what makes the new one legible.
+   in the tree, with no exempt body.
+4. **A constraint that stopped holding is replaced where it is stated**, in
+   the same change that stopped it holding, rather than left standing beside
+   its replacement for a reader to choose between.
 5. **The diff belongs to the plan; the steady state belongs here.**
 6. **Only `index.md` is read unconditionally.** Every other document is
    fetched because a task touched it.
 
-Invariant 6 is why the index carries one line per document and nothing else.
-It is also why an individual decision record is not indexed: the log is
-append-only, so a `docs/` tree that listed each record would grow the one
-file that is always read, without bound, until reading it cost more than it
-saved.
+Invariant 6 is why the index carries one line per document and nothing else:
+a line that summarizes costs every session that did not need the document,
+and an entry that grows with the tree eventually costs more than it saves.
 
-Invariant 1 is why only two documents sit above the four bodies rather than
+Invariant 1 is why only two documents sit above the three bodies rather than
 three. `index.md` carries reachability, which is written nowhere else — the
 one fact no other document holds. `glossary.md` carries meaning — what a term
 means — where a spec, a convention, or a procedure carries behaviour; the
@@ -88,8 +88,6 @@ document that already owns it.
 
 - MUST link each document from `index.md` with a one-line statement of what
   it covers, so a reader can decide not to open it.
-- MUST NOT index individual decision records; `index.md` links `decisions/`
-  once, as a directory.
 - MUST NOT create a document whose content is entirely restated from
   elsewhere in `docs/` or from the README — that is invariant 1, and no
   validator can see it violated.
@@ -105,9 +103,8 @@ run, whichever of those a `docs/` tree actually holds — and links
 `glossary.md` from that same opening prose, since the vocabulary every body
 uses belongs to no single one of them. After the opening, `index.md` lists
 every document under one heading per body it holds, in this order:
-`## Specifications`, `## Conventions`, `## Operations`, `## Decisions` —
-present only for a body the tree actually has — with `decisions/` linked
-once under its heading, as a directory, never one line per record.
+`## Specifications`, `## Conventions`, `## Operations` — present only for a
+body the tree actually has.
 
 Where a project spells rule strength with a keyword vocabulary — RFC 2119 or
 its own plain imperatives — `index.md` is where that choice is declared,
@@ -121,8 +118,8 @@ task touches.
 - MUST link `glossary.md` from that opening prose rather than under a
   heading of its own.
 - MUST list a document under the heading for the body it belongs to —
-  `## Specifications`, `## Conventions`, `## Operations`, `## Decisions` —
-  and MUST NOT add a heading for a body the tree does not hold.
+  `## Specifications`, `## Conventions`, `## Operations` — and MUST NOT add a
+  heading for a body the tree does not hold.
 - SHOULD declare, in `index.md`'s own prose, whichever rule-strength
   vocabulary the project's documents under `conventions/` and `operations/`
   use, once, rather than leaving it to be inferred document by document.

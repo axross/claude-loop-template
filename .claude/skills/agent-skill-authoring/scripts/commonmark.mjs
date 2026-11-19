@@ -38,6 +38,45 @@
  */
 export const FENCE_RE = /^[ \t]*(`{3,}|~{3,})(.*)$/;
 
+/** thematic-break syntax at the document margin or within the current list. */
+export function isThematicBreak(line, listIndent) {
+  const indent = columnWidth(line.match(/^[ \t]*/)[0]);
+  return /^[ \t]*(?:(?:\*[ \t]*){3,}|(?:-[ \t]*){3,}|(?:_[ \t]*){3,})$/.test(line) &&
+    (indent <= 3 || (listIndent > 0 && indent >= listIndent && indent <= listIndent + 3));
+}
+
+const HTML_BLOCK_RE = /^<(?:\/?(?:address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h[1-6]|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|nav|noframes|ol|optgroup|option|p|param|search|section|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul)(?=[\s/>]|$)|(?:script|pre|style|textarea)(?=[\s>]|$))/i;
+
+/** HTML-block terminators; comments retain the extractor's last-pass policy. */
+export function htmlBlockEnd(content) {
+  if (/^<(?:script|pre|style|textarea)(?=[\s>]|$)/i.test(content)) return /<\/(?:script|pre|style|textarea)>/i;
+  if (/^<!--/.test(content)) return /-->/;
+  if (/^<\?/.test(content)) return /\?>/;
+  if (/^<!\[CDATA\[/.test(content)) return /\]\]>/;
+  if (/^<![A-Za-z]/.test(content)) return />/;
+  return HTML_BLOCK_RE.test(content) ? /^[ \t]*$/ : null;
+}
+
+/** block starts without a paragraph that could receive lazy continuation. */
+export function closesParagraph(line, listIndent = 0) {
+  const content = line.trimStart();
+  return columnWidth(line.match(/^[ \t]*/)[0]) >= listIndent + 4 ||
+    /^(?:#{1,6}(?:[ \t]|$)|(?:>[ \t]*)+$|(?:[-+*]|\d{1,9}[.)])[ \t]*$)/.test(content) ||
+    htmlBlockEnd(content) !== null;
+}
+
+/** block starts at the margin or inside a list, respecting paragraph laziness. */
+export function startsBlock(line, listIndent = 0, paragraphOpen = true) {
+  const prefix = line.match(/^[ \t]*/)[0];
+  const indent = columnWidth(prefix);
+  if (!paragraphOpen && indent >= listIndent + 4 && line.trim() !== "") return true;
+  if (indent > 3 && !(listIndent > 0 && indent >= listIndent && indent <= listIndent + 3)) return false;
+  const content = line.slice(prefix.length);
+  return /^(?:#{1,6}(?:[ \t]|$)|>|[-+*][ \t]+\S|0{0,8}1[.)][ \t]+\S)/.test(content) ||
+    (!paragraphOpen && /^(?:[-+*]|\d{1,9}[.)])(?:[ \t]|$)/.test(content)) ||
+    htmlBlockEnd(content) !== null;
+}
+
 /**
  * per CommonMark, a fence closes only on a marker of the same character, at
  * least as long as the opener, carrying no info string. that is what lets a
@@ -70,6 +109,7 @@ export function closesFence(marker, char, length) {
  * @param {string} body
  * @returns {{
  *   lines: Array<{ line: number, text: string, fence: boolean }>,
+ *   fenceBoundaries: Array<{ line: number, text: string }>,
  *   unterminatedAt: number | null,
  * }} `lines` holds every line outside a fence plus each fence's opening line
  *   marked `fence: true`; `unterminatedAt` is the 1-based line of a fence still
@@ -80,13 +120,18 @@ function scanDocument(body) {
   let fenceLength = 0; // and its length — a closer must be at least this long
   let fenceOpenedAt = 0;
   const lines = [];
+  const fenceBoundaries = [];
   const source = body.split("\n");
 
   for (let index = 0; index < source.length; index += 1) {
     const text = source[index];
     const marker = text.match(FENCE_RE);
+    const boundary = marker ? { line: index + 1, text: text.slice(0, text.length - marker[2].length) } : null;
     if (fenceChar !== null) {
-      if (closesFence(marker, fenceChar, fenceLength)) fenceChar = null;
+      if (closesFence(marker, fenceChar, fenceLength)) {
+        fenceChar = null;
+        fenceBoundaries.push(boundary);
+      }
       continue;
     }
     if (marker) {
@@ -94,12 +139,13 @@ function scanDocument(body) {
       fenceLength = marker[1].length;
       fenceOpenedAt = index + 1;
       lines.push({ line: index + 1, text, fence: true });
+      fenceBoundaries.push(boundary);
       continue;
     }
     lines.push({ line: index + 1, text, fence: false });
   }
 
-  return { lines, unterminatedAt: fenceChar === null ? null : fenceOpenedAt };
+  return { lines, fenceBoundaries, unterminatedAt: fenceChar === null ? null : fenceOpenedAt };
 }
 
 /**
@@ -139,11 +185,99 @@ export function unterminatedFenceLine(body) {
 }
 
 /**
- * an inline code span: a run of backticks, at least one character that is not a
- * backtick, then a closing run. text inside one is being shown, not used — a
- * link or a comment opener written there is an example, not the real thing.
+ * inline code uses maximal, equal-length backtick strings. differing runs can
+ * occur inside the span; unmatched strings remain literal prose.
  */
-const CODE_SPAN_RE = /`+[^`]+`+/g;
+const CODE_SPAN_RE = /(`+)(?!`)[\s\S]*?(?<!`)\1(?!`)/;
+const ESCAPE_RE = /\\[!-/:-@\[-`{-~]/;
+const RAW_HTML_RE = /<(?:[A-Za-z][A-Za-z0-9-]*(?:(?:[ \t]+(?:\n[ \t]*)?|\n[ \t]*)[A-Za-z_:][A-Za-z0-9_.:-]*(?:[ \t]*(?:\n[ \t]*)?=[ \t]*(?:\n[ \t]*)?(?:[^ \t\n\r"'=<>`]+|'[^']*'|"[^"]*"))?)*[ \t]*(?:\n[ \t]*)?\/?>|\/[A-Za-z][A-Za-z0-9-]*[ \t]*(?:\n[ \t]*)?>|!--(?:>|->|[\s\S]*?-->)|\?[\s\S]*?\?>|![A-Za-z][^>]*>|!\[CDATA\[[\s\S]*?\]\]>)/;
+const AUTOLINK_RE = /<[A-Za-z][A-Za-z0-9+.-]{1,31}:[^<>\x00-\x20]*>/;
+const LINK_TITLE_RE = /(?:"(?:\\[^\n]|[^"\\])*"|'(?:\\[^\n]|[^'\\])*'|\((?:\\[^\n]|[^()\\])*\))/;
+const LINK_SPACE_RE = /^[ \t]*(?:\n[ \t]*)?/;
+const INLINE_TOKEN_RE = new RegExp([ESCAPE_RE.source, CODE_SPAN_RE.source, RAW_HTML_RE.source, AUTOLINK_RE.source, "`+", "\\[|\\]"].join("|"), "g");
+
+/** validated destination length, or -1; inline tails end at an unmatched ')'. */
+function linkDestinationLength(source, inline = false) {
+  if (source.startsWith("<")) return source.match(/^<(?:\\[^\n]|[^<>\\\n])*>/)?.[0].length ?? -1;
+  let depth = 0;
+  let index = 0;
+  for (; index < source.length; index += 1) {
+    const character = source[index];
+    if (/\s/.test(character)) break;
+    if (/[<>\x00-\x1f\x7f]/.test(character)) return -1;
+    if (character === "\\" && ESCAPE_RE.test(source.slice(index, index + 2))) {
+      index += 1;
+      continue;
+    }
+    if (character === "(") depth += 1;
+    if (character === ")") {
+      if (depth === 0) return inline ? index : -1;
+      depth -= 1;
+    }
+  }
+  return depth === 0 ? index : -1;
+}
+
+/** the complete '(destination title)' tail after an inline label, or zero. */
+function inlineLinkTailLength(source) {
+  if (!source.startsWith("(")) return 0;
+  let index = 1 + source.slice(1).match(LINK_SPACE_RE)[0].length;
+  const destinationLength = linkDestinationLength(source.slice(index), true);
+  if (destinationLength < 0) return 0;
+  index += destinationLength;
+  const space = source.slice(index).match(LINK_SPACE_RE)[0];
+  index += space.length;
+  if (source[index] === ")") return index + 1;
+  if (!space) return 0;
+  const title = source.slice(index).match(new RegExp(`^${LINK_TITLE_RE.source}`))?.[0];
+  if (!title || /\n[ \t]*\n/.test(title)) return 0;
+  index += title.length;
+  index += source.slice(index).match(LINK_SPACE_RE)[0].length;
+  return source[index] === ")" ? index + 1 : 0;
+}
+
+/** blank inline examples without hiding unmatched literal backtick strings. */
+export function stripCodeSpans(text) {
+  let stripped = "";
+  let copiedUntil = 0;
+  let labelDepth = 0;
+  INLINE_TOKEN_RE.lastIndex = 0;
+  let match;
+  while ((match = INLINE_TOKEN_RE.exec(text)) !== null) {
+    if (match[1]) {
+      stripped += text.slice(copiedUntil, match.index) + newlinesOf(match[0]);
+      copiedUntil = INLINE_TOKEN_RE.lastIndex;
+    } else if (match[0] === "[") labelDepth += 1;
+    else if (match[0] === "]" && labelDepth > 0) {
+      labelDepth -= 1;
+      INLINE_TOKEN_RE.lastIndex += inlineLinkTailLength(text.slice(INLINE_TOKEN_RE.lastIndex));
+    }
+  }
+  return stripped + text.slice(copiedUntil);
+}
+
+/** the width of source indentation or list-marker padding in tab-stop columns. */
+export function columnWidth(prefix) {
+  return [...prefix].reduce(
+    (column, character) => column + (character === "\t" ? 4 - column % 4 : 1),
+    0,
+  );
+}
+
+/** the source-line span of a valid link-reference definition, or zero. */
+export function linkDefinitionLineCount(source) {
+  const definition = source.match(/^ {0,3}\[((?:\\[^\n]|[^\[\]\\]){1,999})\]:[ \t]*(?:\n[ \t]*)?(<(?:\\[^\n]|[^<>\\\n])*>|(?:\\[^\s]|[^\s<>\\\x00-\x1f\x7f])+)/);
+  if (!definition || !/\S/.test(definition[1]) || /\n[ \t]*\n/.test(definition[1])) return 0;
+  if (linkDestinationLength(definition[2]) !== definition[2].length) return 0;
+
+  let length = definition[0].length;
+  const tail = source.slice(length);
+  const title = tail.match(new RegExp(`^(?:[ \\t]+(?:\\n[ \\t]*)?|\\n[ \\t]*)(${LINK_TITLE_RE.source})[ \\t]*(?=\\n|$)`));
+  if (title && !/\n[ \t]*\n/.test(title[1])) length += title[0].length;
+  else if (!/^[ \t]*(?:\n|$)/.test(tail)) return 0;
+
+  return 1 + (source.slice(0, length).match(/\n/g) ?? []).length;
+}
 
 /**
  * a string of just the newlines in `text`, so a removed span leaves the lines
@@ -210,6 +344,9 @@ function stripHtmlComments(content) {
  *
  * @param {string} body raw file content; `\r` is normalised away here so no
  *   caller has to remember to
+ * @param {{ preserveFenceBoundaries?: boolean }} [options] keep actual opening
+ *   and closing markers with their indentation for block-boundary checks; info
+ *   strings, fenced content and HTML comments remain blanked.
  * @returns {{
  *   lines: Array<{ line: number, text: string }>,
  *   unterminatedFenceAt: number | null,
@@ -218,20 +355,105 @@ function stripHtmlComments(content) {
  *   file, or null. both come from a single walk, so a caller can never observe
  *   the two disagreeing.
  */
-export function extractProse(body) {
+export function extractProse(body, { preserveFenceBoundaries = false } = {}) {
   const source = body.replace(/\r/g, "");
-  const { lines, unterminatedAt } = scanDocument(source);
+  const sourceLines = source.split("\n");
+  const { lines, fenceBoundaries, unterminatedAt } = scanDocument(source);
 
-  // scanDocument omits fenced content entirely and marks each opening fence, so
-  // a line it does not yield is blanked here by absence.
   const byLine = [];
-  for (const { line, text, fence } of lines) {
-    byLine[line] = fence ? "" : text.replace(CODE_SPAN_RE, "");
+  let paragraph = [];
+  let listIndent = 0;
+  let htmlEnd = null;
+  let htmlQuoteDepth = 0;
+  let htmlListIndent = 0;
+  const flush = () => {
+    const prose = stripCodeSpans(paragraph.map(({ text }) => text).join("\n")).split("\n");
+    paragraph.forEach(({ line }, index) => { byLine[line] = prose[index]; });
+    paragraph = [];
+  };
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const { line, text, fence } = lines[index];
+    const previous = paragraph.at(-1);
+    const quote = text.match(/^(?: {0,3}>[ \t]?)+/)?.[0] ?? "";
+    const previousQuote = paragraph[0]?.text.match(/^(?: {0,3}>[ \t]?)+/)?.[0] ?? "";
+    const content = text.slice(quote.length);
+    const quoteDepth = quote.replace(/[^>]/g, "").length;
+    const itemIndent = columnWidth(content.match(/^[ \t]*/)[0]);
+    if (htmlEnd && (quoteDepth < htmlQuoteDepth || (content.trim() !== "" && itemIndent < htmlListIndent))) htmlEnd = null;
+    if (!htmlEnd && paragraph.length === 0 && content.trim() !== "" && itemIndent < listIndent) listIndent = 0;
+    const indented = !fence && !htmlEnd && paragraph.length === 0 && itemIndent >= listIndent + 4;
+    if (indented) {
+      byLine[line] = stripCodeSpans(text);
+      continue;
+    }
+    const bullet = content.match(/^([ \t]*(?:[-+*]|\d{1,9}[.)]))([ \t]+|$)(.*)$/);
+    const newItem = bullet && listIndent > 0 && itemIndent < listIndent;
+    const boundary = startsBlock(content, listIndent, paragraph.length > 0) || newItem ||
+      (quote && quote.replace(/[^>]/g, "").length !== previousQuote.replace(/[^>]/g, "").length);
+    let blockContent = content;
+    if (!htmlEnd && !fence && bullet && (boundary || paragraph.length === 0) && !isThematicBreak(content, listIndent)) {
+      flush();
+      const markerWidth = columnWidth(bullet[1]);
+      const padding = columnWidth(bullet[1] + bullet[2]) - markerWidth;
+      listIndent = markerWidth + (padding > 4 ? 1 : padding);
+      blockContent = " ".repeat(padding > 4 ? padding - 1 : 0) + bullet[3];
+    }
+    const blockIndent = blockContent === content ? listIndent : 0;
+    if (!htmlEnd && !fence && columnWidth(blockContent.match(/^[ \t]*/)[0]) < blockIndent + 4 && startsBlock(blockContent, blockIndent, paragraph.length > 0)) {
+      htmlEnd = htmlBlockEnd(blockContent.trimStart());
+      htmlQuoteDepth = quoteDepth;
+      htmlListIndent = listIndent;
+    }
+    if (htmlEnd) {
+      flush();
+      byLine[line] = text;
+      if (htmlEnd.test(blockContent)) htmlEnd = null;
+      continue;
+    }
+    if (!fence && paragraph.length === 0 && blockContent.trimStart().startsWith("[") && columnWidth(blockContent.match(/^[ \t]*/)[0]) < blockIndent + 4) {
+      const definitionLines = [blockContent.trimStart()];
+      for (const continuation of sourceLines.slice(line)) {
+        const continuationQuote = continuation.match(/^(?: {0,3}>[ \t]?)+/)?.[0] ?? "";
+        const continuationContent = continuation.slice(continuationQuote.length);
+        if (continuationQuote.replace(/[^>]/g, "").length !== quoteDepth ||
+          (continuationContent.trim() !== "" && columnWidth(continuationContent.match(/^[ \t]*/)[0]) < listIndent)) break;
+        definitionLines.push(continuationContent.trimStart());
+      }
+      const count = linkDefinitionLineCount(definitionLines.join("\n"));
+      if (count > 0) {
+        while (index < lines.length && lines[index].line < line + count) {
+          if (!lines[index].fence) byLine[lines[index].line] = lines[index].text;
+          index += 1;
+        }
+        index -= 1;
+        continue;
+      }
+    }
+    const heading = /^[ \t]*#{1,6}(?:[ \t]|$)/.test(content) && startsBlock(content, listIndent);
+    const thematic = isThematicBreak(content, listIndent);
+    const setext = paragraph.length > 0 && /^ {0,3}(?:=+|-+)[ \t]*$/.test(content);
+    if (fence || content.trim() === "" || (previous && line !== previous.line + 1) || boundary || thematic || setext) flush();
+    if (fence) continue;
+    if (content.trim() === "") {
+      byLine[line] = text;
+      continue;
+    }
+    if (thematic || setext) {
+      byLine[line] = text;
+      continue;
+    }
+
+    paragraph.push({ line, text });
+    if (heading) flush();
+  }
+  flush();
+  if (preserveFenceBoundaries) {
+    for (const { line, text } of fenceBoundaries) byLine[line] = text;
   }
 
-  const lineCount = source.split("\n").length;
   const blanked = Array.from(
-    { length: lineCount },
+    { length: sourceLines.length },
     (_, index) => byLine[index + 1] ?? "",
   ).join("\n");
 

@@ -30,21 +30,31 @@ is no related issue, say so here instead of deleting the section.
 
 Closes #
 
+## Acceptance criteria
+
+Canonical plan and approved revision: <!-- Link the issue plan and its approval revision. -->
+
+Omitted criteria: <!-- Count and reason, including zero. -->
+
+<!-- Replace the example with one entry per applicable diff-inspectable or
+required external criterion. Copy its approved text verbatim; add the current
+status. For external criteria, link observed evidence or state pending.
+If there is no plan on an existing issue-less PR, state that limitation. -->
+- **Pending** — `<verbatim criterion>` <!-- External evidence: pending, or locator. -->
+
 ## Verification
 
 <!--
-Evidence, not assertion: the commands run and their observed results, manual
-checks performed, and any required check that was skipped and why. When the
-linked issue lists acceptance criteria, state each criterion's status. For
-user-visible changes, add before/after screenshots or a recording.
+Link relevant check runs and manual evidence. Put required external evidence
+beside its criterion. Keep command transcripts in the contributor handoff,
+not here. For user-visible changes, add before/after evidence to the criterion.
 -->
 
 ## Risks and breaking changes
 
 <!--
-Breaking changes (what breaks, who is affected, the migration path), risky
-areas to scrutinize, and rollback notes. Delete this section if there are
-none.
+Name any required check skipped and why. Describe breaking changes, who is
+affected, migration, and rollback. Delete this section if none apply.
 -->
 
 ## Notes for reviewers

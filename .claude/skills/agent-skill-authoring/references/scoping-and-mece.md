@@ -34,6 +34,55 @@ Mutual exclusivity prevents drift. When two skills need the same guidance, choos
 - SHOULD sharpen neighboring skill boundaries when readers are likely to pick the wrong skill.
 - MUST NOT duplicate rule wording across skills for convenience.
 
+## Portable Meaning, Project Choices, and Host Execution
+
+A rule's owner follows what can make it change. A decision about whether evidence is sufficient is not a command for obtaining that evidence. A project's choice to require independent review is not the host API that starts a reviewer. Combining these in one paragraph makes a tool change look like a policy change.
+
+Use the following ownership map when a capability crosses these boundaries:
+
+| Content                                                                                              | Detailed owner                                                      |
+| ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Uncertainty, question content, non-code deliverable review, judgment, and reporting                  | Common conduct capability                                           |
+| Approval state, phase transitions, required evidence contracts, and recovery meaning                 | Change-loop capability                                              |
+| Project-specific delivery gates, external code-review independence, branch choices, and local limits | Project policy                                                      |
+| Tools, actor selection, workspaces, communication, waits, and runtime operations                     | Applicable host execution guidance                                  |
+| Requirements and acceptance criteria                                                                 | Requirements-authoring capability                                   |
+| Implementation and verification evidence generation                                                  | Development capability                                              |
+| Change assessment and evidence sufficiency                                                           | Code-review and QA capabilities, respectively                       |
+| Technical rules for a domain                                                                         | That domain's capability                                            |
+| Content boundaries and metadata interpretation                                                       | Skill-authoring capability                                          |
+| Source, installation, drift, and active-load confirmation                                            | Skill-management capability; project commands in project operations |
+
+A portable capability may define quality-completion requirements: what must be checked before its output is relied on. Conduct owns bounded advisory review of non-code deliverables. Project policy still chooses delivery gates and external code-review independence. Host guidance selects eligible actors and tools under actual instructions; a portable default grants no unavailable or prohibited mechanism.
+
+For example, asking which decision a human must make belongs to conduct; delivering that question through a particular tool belongs to host execution. A handoff's required evidence belongs to the change loop; moving its files between workspaces belongs to host execution. Installation and confirmation of the loaded source belong to skill management, not to authoring a discovery description.
+
+Host entry guidance explains how the active host's instruction hierarchy applies to project policy; it does not define or override that hierarchy. An instruction's actual source and priority determine how a conflict is resolved, not a project's description of it as generic framing.
+
+**Guidelines:**
+
+- MUST classify cross-boundary content using the ownership map before placing its detailed rules.
+- MUST split a mixed paragraph into separately owned statements rather than moving the whole paragraph under a new filename.
+- MUST keep specialist responsibilities distinct; a change loop coordinates their results rather than absorbing requirements, development, review, QA, or domain rules.
+- MUST NOT turn a project's gate choices or a host's execution instructions into universal prerequisites for a portable capability.
+- MUST keep host guidance within the active host's instruction hierarchy and tool usage conditions; project policy cannot give itself higher instruction priority or grant permissions those conditions withhold.
+- MUST make host-specific conflict guidance explain how to apply the actual hierarchy and report any project gate that cannot be satisfied within higher-priority instructions and tool conditions.
+- MUST consult skill-management practices when deciding whether material needs skill discovery at all or belongs in project documentation, and when distributing or confirming the loaded source of a skill.
+
+## Classify Before Migrating
+
+A filename change does not demonstrate responsibility separation. A migration needs a small mapping from each affected paragraph or reference to its meaning and destination. That mapping also makes a dropped safeguard visible.
+
+For each affected passage, record its current locator, content class, detailed owner, and disposition: retained, split, moved, reduced to a conditional reference, or excluded from this change with a reason. Keep this record with the change's review evidence; no new permanent registry or machine-readable schema is required.
+
+**Guidelines:**
+
+- MUST classify the affected paragraphs and reference routes before migrating them, including mixed passages that need splitting.
+- MUST preserve each moved safeguard's meaning and any policy values unless a separate approved decision changes them.
+- MUST remove the migrated detailed rule from its old location once its new owner is available, leaving only applicable routing under [cross-referencing.md](./cross-referencing.md).
+- MUST record an out-of-scope conflict without implementing its owner's migration or calling the conflict resolved.
+- MUST NOT create an orchestration framework, a host-specific duplicate skill set, or mandatory adapter files merely to express these boundaries.
+
 ## Portable Source Exception
 
 A self-contained skill authored for installation into other projects (a `skills/`-sourced skill) is a sanctioned exception to strict mutual exclusivity: it MAY restate a rule another skill owns, because it must stand alone where that owner is absent. The exception is bounded — the restating skill still defers to the owner when one is present, and it is not a license to duplicate freely.

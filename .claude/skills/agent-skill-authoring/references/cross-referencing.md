@@ -43,6 +43,21 @@ A cross-skill reference should tell the agent when to consult the neighbor. This
 - MUST NOT use a bare "See also" reference without a routing condition.
 - SHOULD put cross-skill references near the section where the adjacent topic arises.
 
+## Optional Owners and Host Guidance
+
+A portable capability cannot assume that its author's project layout travels with it. "Read the project's applicable host execution guidance before transferring work" describes a conditional need; requiring a particular repository's host-document path makes the skill unusable elsewhere. Loading every host's guide instead does not solve that dependency.
+
+For an optional specialist, the reference names both the triggering task and what happens when that specialist is absent. A bounded standalone summary can serve that case under the [Portable Source Exception](./scoping-and-mece.md#portable-source-exception). Absence of a mandatory capability or required evidence is different: a summary cannot make an unmet gate pass.
+
+**Guidelines:**
+
+- MUST route to project policy or host operations by responsibility, not by a path belonging to the authoring repository or a downstream project.
+- MUST condition host-operation reads on the active host and the operation needed; unrelated hosts remain skippable.
+- MUST state the absent-owner behavior for an optional cross-skill dependency, using a bounded fallback or an explicit limitation rather than an invented owner.
+- MUST use the current permitted tool contracts and official host documentation when applicable project host guidance is absent; report a blocker if required capability or authorization cannot be established.
+- MUST NOT waive a required gate because an owner, host document, or execution tool is missing.
+- MUST trace changed routes through their destinations to detect mandatory circular loading; a destination must not require reloading the caller merely to resolve the same question.
+
 ## Skill Discovery and Optional Index Sync
 
 Native discovery is the routing authority: each skill advertises when it applies through its own `description`, and the agent loads a skill when the task matches that trigger. If a skill's discovery metadata is stale or missing, discovery fails before skill content can help. Some hosts additionally maintain a written index (e.g. an `AGENTS.md` table); where one exists, keep it in sync, but a skill must stay discoverable without it.

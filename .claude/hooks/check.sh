@@ -1,109 +1,88 @@
-#!/bin/bash
-
-# stop hook: before the task completes, run the checks that need an authoring
-# decision rather than a mechanical repair, whenever code changed in this
-# session. `PostToolUse`'s format.sh already repairs the mechanically-fixable
-# lint violations for a file edited through `Edit`, `Write`, or `MultiEdit`, so
-# those usually never reach this gate; a file changed another way (a Bash
-# heredoc, `sed -i`) still lands here uncorrected. This hook never repairs
-# anything itself, by design rather than oversight: a repair applied here can
-# land in the working tree after the agent has already committed and pushed,
-# so the pushed commit would keep the violation while the hook reported
-# success. See docs/operations/agent-sessions.md for the full
-# blocking/non-blocking classification. Failures here block completion and are
-# reported back on stderr so the agent addresses them before finishing.
-#
-# TEMPLATE NOTE: this is an example Claude Code harness binding. During INIT,
-# replace the `{{...}}` tokens below with the project's real values, or delete this
-# hook (and its entry in .claude/settings.local-example.json) if the project
-# has no automated checks.
+#!/usr/bin/env bash
 set -uo pipefail
 
-PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
-cd "$PROJECT_DIR"
-
-# make the project's toolchain available if a version manager is installed
-# (e.g. mise, asdf, nvm, volta). adapt or remove to match the project.
-export PATH="$HOME/.local/bin:$PATH"
-if command -v mise >/dev/null 2>&1; then
-  eval "$(mise activate bash)"
+hooks_dir=$(dirname -- "${BASH_SOURCE[0]}")
+lint_not_run() {
+  printf '{"systemMessage":"Lint was not run: %s. Run explicit verification before delivery."}\n' "$1"
+}
+if ! source "$hooks_dir/quality-context.sh" || ! quality_context "${CLAUDE_PROJECT_DIR:-$hooks_dir/../..}"; then
+  lint_not_run 'could not resolve the active project worktree'
+  exit 0
 fi
 
-# nothing to verify without the package manager.
-command -v {{PACKAGE_MANAGER}} >/dev/null 2>&1 || exit 0
-
-# only run when this session has pending code changes, either uncommitted or
-# committed but not yet on the upstream branch. avoids checking on plain
-# conversational turns. CODE_GLOB below is the CODE_FILE_REGEX token, an
-# extended-regex of source extensions, e.g. '\.(ts|tsx|js|css)$'.
-CODE_GLOB='{{CODE_FILE_REGEX}}'
-code_changed() {
-  if git status --porcelain 2>/dev/null | grep -qE "$CODE_GLOB"; then
-    return 0
-  fi
-  local upstream
-  upstream="$(git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null || true)"
-  if [ -n "$upstream" ] && git diff --name-only "$upstream...HEAD" 2>/dev/null | grep -qE "$CODE_GLOB"; then
-    return 0
-  fi
-  return 1
+source_pattern='{{CODE_FILE_REGEX}}'
+if [[ '' =~ $source_pattern ]] 2>/dev/null; then
+  :
+elif [ "$?" -eq 2 ]; then
+  lint_not_run 'invalid CODE_FILE_REGEX'
+  exit 0
+fi
+has_source() {
+  local path found=1
+  while IFS= read -r -d '' path; do
+    if [[ "$path" =~ $source_pattern ]]; then found=0; fi
+  done
+  return "$found"
 }
-# resolve the default branch instead of assuming a name, so the reminder below
-# works on a repository whose default is not `main`.
-default_branch() {
-  git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null && return 0
-  for candidate in origin/main origin/master; do
-    if git rev-parse --verify -q "$candidate" >/dev/null; then
-      printf '%s\n' "$candidate"
+
+comparison_ref() {
+  local explicit origin_default ref
+  if explicit=$(git config --local --get claude-loop.lintBase); then
+    git rev-parse --verify -q --end-of-options "$explicit^{commit}"
+    return
+  elif [ "$?" -ne 1 ]; then
+    return 1
+  fi
+  origin_default=$(git symbolic-ref -q refs/remotes/origin/HEAD 2>/dev/null) || origin_default=
+  for ref in "$origin_default" refs/remotes/origin/main refs/remotes/origin/master refs/heads/main refs/heads/master '@{upstream}'; do
+    if [ -n "$ref" ] && git rev-parse --verify -q --end-of-options "$ref^{commit}" 2>/dev/null; then
       return 0
     fi
   done
   return 1
 }
 
-# non-blocking change-loop reminder: stopping with pushed commits ahead of the
-# default branch means a change-loop run is in flight, including when the tree
-# is clean and fully pushed — the push-then-stop state the code_changed gate
-# above would otherwise skip. the hook cannot query GitHub for an open pull
-# request, so it reminds conditionally instead of blocking, via a systemMessage.
-change_in_flight() {
-  local branch base upstream
-  branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
-  base="$(default_branch)" || return 1
-  [ -n "$branch" ] && [ "$branch" != "${base#origin/}" ] || return 1
-  upstream="$(git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null || true)"
-  [ -n "$upstream" ] || return 1
-  # commits exist beyond the default branch, and every one of them is pushed.
-  [ -n "$(git rev-list "$base"..HEAD -n 1 2>/dev/null)" ] || return 1
-  [ -z "$(git rev-list "$upstream"..HEAD -n 1 2>/dev/null)" ] || return 1
-  return 0
+working_paths() {
+  git diff --no-renames --name-only -z -- &&
+    git diff --cached --no-renames --name-only -z -- &&
+    git ls-files --others --exclude-standard -z
 }
 
-emit_reminder_and_exit() {
-  if change_in_flight; then
-    printf '%s\n' '{"systemMessage": "Reminder: pushed commits are ahead of the default branch on this branch. If no pull request with an independent review exists for them, the change loop is incomplete — do not report this work as done."}'
+code_changed() {
+  local base
+  local -a results
+  working_paths 2>/dev/null | has_source
+  results=("${PIPESTATUS[@]}")
+  [ "${results[0]}" -eq 0 ] || return 2
+  [ "${results[1]}" -ne 0 ] || return 0
+
+  base=$(comparison_ref 2>/dev/null) || return 2
+  git diff --no-renames --name-only -z "$base...HEAD" -- 2>/dev/null | has_source
+  results=("${PIPESTATUS[@]}")
+  [ "${results[0]}" -eq 0 ] || return 2
+  return "${results[1]}"
+}
+
+code_changed || {
+  if [ "$?" -eq 2 ]; then
+    lint_not_run 'Git comparison is unavailable'
   fi
   exit 0
 }
-
-code_changed || emit_reminder_and_exit
-
-# run both checks, collecting output for the failure report.
-OUTPUT="$(mktemp)"
-STATUS=0
-if ! {{UNIT_TEST_CMD}} >>"$OUTPUT" 2>&1; then STATUS=1; fi
-if ! {{LINT_CMD}} >>"$OUTPUT" 2>&1; then STATUS=1; fi
-
-if [ "$STATUS" -ne 0 ]; then
-  {
-    echo "Pre-completion checks failed ({{UNIT_TEST_CMD}} / {{LINT_CMD}})."
-    echo "Fix the errors below before completing the task:"
-    echo
-    tail -n 100 "$OUTPUT"
-  } >&2
-  rm -f "$OUTPUT"
+export PATH="$HOME/.local/bin:$PATH"
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate bash)"
+fi
+if ! command -v {{PACKAGE_MANAGER}} >/dev/null 2>&1; then
+  if jq -e '.stop_hook_active == true' <<<"$hook_input" >/dev/null 2>&1; then
+    lint_not_run 'the project toolchain is unavailable'
+    exit 0
+  fi
+  echo 'Lint not run: project toolchain unavailable. Run explicit verification before delivery.' >&2
   exit 2
 fi
 
-rm -f "$OUTPUT"
-emit_reminder_and_exit
+if ! output=$({{LINT_CMD}} 2>&1); then
+  printf 'Pre-completion lint failed. Fix the findings before completing the task.\n%s\n' "$output" >&2
+  exit 2
+fi

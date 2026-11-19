@@ -47,13 +47,13 @@ export const RFC2119_RE =
 export const GUIDELINES_RE = /^\*\*Guidelines:\*\*\s*$/;
 
 /**
- * a `See […](./references/….md) for:` line that opens a routing list — the
+ * a `See […](./references/….md) for:` or `when` line that opens a routing list — the
  * boundary check-skill-references.mjs's `routingBullets` and
  * check-skill-body.mjs's routing-block rule both key on. one copy is what
  * keeps the two from disagreeing about where a routing list starts, the same
  * reason `GUIDELINES_RE` above is shared rather than duplicated.
  */
-export const ROUTING_LINE_RE = /See \[[^\]]+\.md\]\(\.\/references\/[^)]+\) for:/;
+export const ROUTING_LINE_RE = /^ {0,3}See \[[^\]]+\.md\]\(\.\/references\/[^)]+\) (?:for:|when\b)/;
 
 /**
  * walk a document's guideline structure once, yielding an event per heading and

@@ -1,113 +1,66 @@
-# Plan Document
+# Plan and Approval
 
-Apply this reference when writing the Phase 1 plan into the issue body. A plan states **what** is needed and **how completion is verified**, not how it is built. This reference is self-contained: it carries the plan's own abstraction-level rule below, so the loop stays installable and usable where the host project ships no richer guideline for it.
+Apply this reference when preparing or approving the plan. A project with richer product-requirement practices owns section craft; this compact fallback keeps the loop independently installable.
 
-## Beneficiary Framing
-
-A plan is written as the change its **beneficiary** observes, not as the file, function, line, component, internal algorithm, or other implementation vehicle that produces it, in any of its sections — though a module- or service-level ownership statement, the kind a System design section calls for, is not such a vehicle. The beneficiary is whoever the change is for: the end user when the plan is for an application feature, the developer when the plan is for a development-environment improvement.
-
-A plan that names an implementation detail has to be revised whenever the implementation shifts, which makes the plan subordinate to the work it is supposed to judge. Two exceptions are narrow and real. Where a path or an identifier **is** itself an acceptance criterion — a rule that must live in a particular file, an exported name that is part of the contract — naming it is correct, not a violation. And an illustrative snippet or diagram in a **System design** section may show the shape of a mechanism — a cache-key, a signature, a transition table — since it illustrates the mechanism the plan will be judged on rather than pre-writing the implementation the coding phase produces. Neither exception reaches a name that merely reflects where the beneficiary-observable outcome happens to be implemented today. Writing at the beneficiary's altitude raises the plan's abstraction level without lowering its concreteness: an observable outcome is a stronger requirement than an implementation step, not a vaguer one.
-
-**Guidelines:**
-
-- MUST write every section of the plan as the change its beneficiary observes, naming who the beneficiary is for the change at hand, never a file name, line number, function name, component, internal algorithm, or other implementation vehicle, except in the two cases named above — a path or identifier that is itself an acceptance criterion, and an illustrative System design snippet or diagram.
-- MUST load the project's product-requirement capability, where the host project ships one, before writing or revising the plan, and follow its fuller treatment of this rule for section craft; proceed on this reference alone where the project ships no such capability.
+Before presenting a plan for approval or each visual-option round for selection, follow [reviewing-phase-deliverables.md](./reviewing-phase-deliverables.md). That review precedes, rather than supplies, human approval.
 
 ## Canonical Structure
 
-Every plan follows this order. **Required** sections are always present; **conditional** sections are included when they apply and omitted with a one-line stated reason when they do not.
-
-1. **Summary** _(required)_ — one standalone paragraph a reader can grasp without the rest.
-2. **Todo** _(required)_ — a static list of actionable deliverables or change surfaces, written as ordinary bullets.
-3. **Background** _(required)_ — with an **Assumptions** subsection.
-4. **Goals and Non-goals** _(required)_ — one section, standardly a flat list whose opening verbs distinguish intended outcomes from deliberate exclusions.
-5. **Functional requirements** _(conditional)_ — with **UI design** and **System design** nested under it; the latter carries an **Alternatives considered** subsection when a plausible competing approach exists.
-6. **Non-functional requirements** _(conditional)_ — performance, security, accessibility, compatibility budgets that constrain the change.
-7. **Acceptance criteria** _(required)_ — the checkable list the reviewer verifies against the finished pull request.
-8. **Verification strategy** _(required)_ — which checks and manual steps prove each acceptance criterion.
-9. **Open questions** _(required, may be empty)_ — unresolved decisions and who must answer them.
+Use this order: Summary; Todo; Background with Assumptions; Goals and Non-goals; conditional Functional requirements with UI design, System design, and Alternatives considered; conditional Non-functional requirements; Acceptance criteria; Verification strategy; Open questions. Todo is a fixed plain list, not progress tracking. Acceptance criteria are plain, observable bullets covering applicable boundary states.
 
 **Guidelines:**
 
-- MUST include every required section and follow this order; omit a conditional section only with a one-line stated reason so a reader knows it was considered.
-- MUST right-size each section to the change — a one-file fix needs a paragraph per section, a cross-cutting feature needs the full treatment.
-- MUST separate stated **Assumptions** (decided, recorded) from **Open questions** (undecided, needing an answer); never leave a Must-ask decision buried as an assumption.
-- MUST write **Goals and Non-goals** as one top-level section without fixed labels or nested Goals and Non-goals sections, stating each item as a concrete, checkable outcome rather than a vague quality adjective.
-- MUST use one flat list as that section's standard form, beginning goals with affirmative imperative verbs such as "Do", "Ensure", or "Build", and non-goals with negative or avoidance verbs such as "Do not" or "Avoid".
-- MAY replace that list with a two-column Goals and Non-goals table only when the items correspond directly and the table makes the comparison easier to read; its column headers then carry the role marking the opening verbs carry, so that verb rule does not apply to its cells.
-- SHOULD add the **System design › Alternatives considered** subsection whenever a reviewer would reasonably ask "why not the other approach?".
+- MUST resolve environment facts by investigation and put every unresolved product, UX, scope, edge-case, privacy, security, platform, compatibility, persistence, or migration choice to the human before approval.
+- MUST stop after presenting a new or revised plan and obtain human approval before implementation; later gates never retroactively supply missing approval.
+- MUST preserve question strictness from the project's conduct practices and never manufacture an answer from a resume signal. Without those practices, present decisions as two to four concrete options with the default marked recommended, ask dependent decisions in order, and re-present unanswered questions; never substitute defaults for answers.
+- MUST describe beneficiary-observable outcomes, not incidental implementation details; include required sections and state a reason for each omitted conditional section. Follow the project's product-requirement capability when present.
+- MUST separate decided assumptions from open questions and keep the approved Todo fixed rather than updating it as a progress log.
+- SHOULD publish evidence gathered to settle a plan or design choice in the same durable target as the plan, outside the canonical plan content (for example in a comment on it), so publishing it does not change the plan's identity.
 
-## Todo
+## Verification Outside the Tree
 
-Todo tells the reader what will be changed or created without duplicating what the result must do or how it will be verified.
+Some approved criteria need evidence the diff cannot carry, such as a real-device result or a machine-specific measurement. Agreeing that route during planning keeps the contributor accountable without asking a code reviewer to establish the result through inspection. An in-tree test remains preferable when it can verify the same outcome.
 
-**Guidelines:**
+Designate each necessary external-verification criterion by appending `(verified out of tree: <where the evidence will be published>)` to its wording. Plan approval binds the verification method and evidence destination, not a reviewer exemption; review finding scope is a separate contract.
 
-- MUST place Todo immediately after Summary and write actionable deliverables or change surfaces as ordinary bullets, not task-list checkboxes.
-- MUST keep completed-behavior, acceptance, and verification detail out of Todo — Todo's own scope boundary, distinct from [Beneficiary Framing](#beneficiary-framing) above, which already governs naming a file, function, or other implementation detail in any section, Todo included.
-- MUST keep Todo fixed after plan approval rather than updating it as an implementation-progress tracker.
-
-## Acceptance Criteria
-
-Acceptance criteria are the contract the reviewer checks the finished pull request against. Each must be verifiable by observation, not by trusting intent.
+Verification strategy also names, for each designated criterion, who performs the check — the agent or a human — and by what route, such as a simulator, an emulator, a local web build, or a physical device. Where the project's verification practices, if present, set exceptions that may apply, write the route conditionally, for example "agent on a simulator when the host has one, otherwise a human on a physical device". Falling back along a stated condition is then not a plan change.
 
 **Guidelines:**
 
-- MUST write acceptance criteria as a plain bullet list, not GitHub `- [ ]` checkboxes — nothing checks those boxes, so they read as perpetually incomplete.
-- MUST make each criterion a single observable outcome ("an empty list renders the empty-state copy", not "handle empty lists well").
-- MUST cover the not-default paths the change touches — empty, error, loading, unauthorized, and boundary states — not only the happy path.
-- SHOULD state the criterion in terms of user- or caller-visible behavior, so it survives an implementation change.
+- SHOULD use in-tree verification when it can establish the required outcome.
+- MUST designate each criterion requiring out-of-tree verification in the plan and agree its verification method and evidence destination before implementation.
+- MUST name the executor and route for each designated criterion in Verification strategy, and MAY state the route conditionally along the verification practices' exceptions; a fallback along a stated condition needs no revision, and any other change to executor or route does.
+- MUST obtain an approved plan revision before adding or changing that designation later, then regenerate the delivery projection under the Plan Revision Identity rules below.
 
 ## Plan Revision Identity
 
-A plan that can be delegated needs a name for _which_ plan was approved. Human approval binds to that identity, and a worker checks it before editing — so an edit made after the plan moved is caught rather than discovered later in review.
-
-The **canonical plan content** is the issue body from its first section heading through the end of Open questions, excluding the status block and any archived original description. The boundary is stated in headings rather than HTML constructs because a sanitizing read removes the latter and leaves the former intact.
+The canonical plan content begins at the first plan section heading and runs through the end of Open questions. A status representation and archived original description are excluded. HTML character-reference decoding—named and numeric—is the only normalization before identity comparison.
 
 **Guidelines:**
 
-- MUST derive a stable revision for the canonical plan content — a digest of it, or another immutable identity offering equivalent guarantees — store it in the status block, bind the human's approval to it, carry it in any implementation package, and invalidate approval when the canonical content changes.
-- MUST NOT treat an issue-wide `updated_at` timestamp as that identity on its own; unrelated issue metadata moves it.
-- MUST decode HTML character references, numeric and named alike, before comparing — and apply no other normalization, since each further rule is another way for a real difference to be masked.
-- MUST stop before editing on a mismatch, whichever of its two causes applies: the plan moved, or the channel degraded the read. Distinguishing them is the main actor's job, not the reader's.
+- MUST derive an immutable identity from canonical plan content, bind approval to it, and carry it in every assignment and result governed by that plan. Read-only work outside the change loop uses its material revision instead.
+- MUST NOT use a whole-record update timestamp as plan identity or apply whitespace, line-ending, case, Unicode, or any normalization beyond HTML character-reference decoding.
+- MUST invalidate approval and stale execution or review results when canonical content changes, and stop before editing on an identity mismatch.
+- MUST name the revision that any projection of the plan's acceptance criteria onto a delivery target was taken from, regenerate that projection when canonical content changes, and treat a projection naming a superseded revision as stale rather than as evidence of what was approved.
+- MUST establish a byte-faithful read before comparing or rewriting stored content; a degraded read is not evidence that a plan or approval disappeared. Distinguish changed content from degraded transport before proceeding.
 
 ## Plan Amendment
 
-A plan amends another issue's already-approved plan when it changes text inside an umbrella plan a different, earlier run approved — most often a later step whose plan opens against decisions an earlier step recorded. Plan Revision Identity above governs a plan revising **itself**, where the run holding the plan and the run seeking approval are the same run throughout. An amendment is different in kind: the plan being changed carries an approval of its own, granted to a human who is not the one approving the amending plan, and the amending plan's own edit is what invalidates that earlier approval.
-
-The default: the amending plan's approval carries the amendment's approval too, when **all three** of these hold.
-
-- Every replacement block the amendment will write appears **verbatim**, quoted, in the amending plan — the human approving reads the exact text the write will store, not a description of it.
-- The amended plan's **resulting** revision identity — what it will be once the write lands — is named in the amending plan **before** approval.
-- The amended plan's **current** revision identity was reproduced from its stored bytes before that replacement text was drafted, so the named resulting identity is derived rather than asserted.
-
-When any one of the three fails, the amendment MUST instead take its own approval against the amended plan's own revision identity, separately from the amending plan's approval. This is not a lesser path taken only when the default is unavailable — it is what the three conditions exist to let a run skip, and only when skipping it costs the human approving nothing they would otherwise see at a separate gate.
-
-After the write, the amended plan's stored bytes MUST be re-fetched and its revision identity re-derived from them, then compared against the identity named before approval; a mismatch MUST stop the run rather than being reconciled after the fact. The amending run's status block records the amendment's target and the resulting identity alongside whatever it already carries for a revision of its own plan.
+Approval of an amending plan carries approval of its write to another approved plan only under all three existing conditions: every replacement block is quoted verbatim; the resulting identity is named before approval; and the current identity was reproduced from stored bytes before drafting the replacement.
 
 **Guidelines:**
 
-- MUST treat a plan that changes another issue's already-approved plan as an amendment, distinct from a revision of the run's own plan under Plan Revision Identity above, and identifiable without consulting either issue's history.
-- MUST let the amending plan's approval carry the amendment's approval only when all three hold: every replacement block quoted verbatim in the amending plan, the amended plan's resulting revision identity named before approval, and the amended plan's current revision identity reproduced from its stored bytes before that replacement text was drafted.
-- MUST take a separate approval against the amended plan's own revision identity whenever any one of the three conditions fails.
-- MUST re-derive the amended plan's revision identity from its stored bytes after the write, compare it against the identity named before approval, and stop the run on a mismatch rather than reconciling it after the fact.
-
-## Archiving the Original Description
-
-The original description is provenance rather than specification, and the canonical content above already excludes it. Where the body cannot spare the room, it belongs in a marked comment instead of a collapsed section — a comment is reachable through any read channel, and a collapsed section is not.
-
-**Guidelines:**
-
-- MUST NOT compose a new body from a body read back through a sanitizing channel; such a read silently drops the collapsed section, the status block, and angle-bracket text in the prose.
-- SHOULD move the original description into a marked archival comment, leaving a link to it in the body, whenever keeping it inline would leave no room for a later plan revision to rewrite the body.
+- MUST obtain separate approval against the amended plan's own identity when any of the three conditions is absent.
+- MUST fetch the amended plan after writing, re-derive its identity from stored bytes, compare it with the pre-approved resulting identity, and stop on mismatch.
 
 ## Visual Change Options
 
-Any visual change — a public surface, the application UI, or an admin view a human operates — is decided by the human at the plan-approval gate from a set of options, never from a single implied design. The visual direction is therefore never a Must-ask question; it is settled through this exhibit.
+Visual direction is part of plan approval, not an implied implementation choice. A visual change is settled over one or more **rounds**, each approved on its own rather than bundled: a low-fidelity round settles regions, layout, and hierarchy, and a high-fidelity round confirms the concrete look against what that first round fixed. Climbing the ladder in that order is what keeps a layout objection from arriving after the colour, type, and spacing work has already been built on it.
 
 **Guidelines:**
 
-- MUST, for any visual change, present the UI design section as a choice of **2–4 distinct** presentation options rather than one design, and record the human's choice in the issue as the design source of truth.
-- SHOULD climb a fidelity ladder — a low-fidelity wireframe round to settle layout and hierarchy, then a high-fidelity round to confirm the concrete look — approving one round at a time.
-- SHOULD publish each round as a rendered artifact the human can view, and link the chosen design from the pull request description so reviewers can compare the build against it.
-- MUST NOT enter Code until the final design round recorded in the issue has been approved; a plan with no visual change proceeds on plan approval alone.
+- MUST present two to four distinct visual options in each round, and obtain the human's approval of that round before opening the next.
+- MUST NOT begin implementation until the final design round recorded against the plan is approved; a plan with no visual change proceeds on plan approval alone.
+- MUST record the approved option as the design source of truth against the plan, and reference it from the delivery target so a reviewer can compare the build against it.
+- MUST preserve visual artifacts at visual fidelity; prose describing an image is not the approved image.
+- SHOULD publish each round as an artifact the human can actually view, and follow the project's own wireframe and high-fidelity design capabilities for each round's craft wherever it ships them.
