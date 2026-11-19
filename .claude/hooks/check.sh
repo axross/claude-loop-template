@@ -11,7 +11,7 @@ if ! source "$hooks_dir/quality-context.sh" || ! quality_context "${CLAUDE_PROJE
 fi
 
 source_pattern='{{CODE_FILE_REGEX}}'
-if [[ '' =~ $source_pattern ]]; then
+if [[ '' =~ $source_pattern ]] 2>/dev/null; then
   :
 elif [ "$?" -eq 2 ]; then
   lint_not_run 'invalid CODE_FILE_REGEX'
