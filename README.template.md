@@ -69,7 +69,7 @@ session and tell it to.
 5. **Ready** — flips the pull request to ready once CI is green and the
    post-push review is clean. Merging always stays a human decision.
 
-Use the [branch governance rules](./docs/operations/branch-governance.md#working-on-a-branch) for
+Use the [branch governance rules](./docs/operations/branch-governance.md) for
 the branch prefix and audit, and the [review procedure](./docs/operations/pull-request-review.md#request-the-post-push-review)
 to request a review or diagnose a missing response.
 
