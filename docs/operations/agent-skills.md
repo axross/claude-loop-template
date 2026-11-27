@@ -166,8 +166,8 @@ go stale the moment it did. An agent-authored comment is not adoption evidence.
   travels with the canonical `CLAUDE.md`.
 - **Scope:** the plan-gate confirmation only. Every other decision a run puts to
   the human follows the installed rule, in dependency order.
-- **Adopted by:** the maintainer's merge of #79, and of the pull request that
-  closes #78, which rewrote the entry.
+- **Adopted by:** the maintainer's merge of #79, and of #80, which rewrote the
+  entry.
 - **Reassess when:** the installed section changes, or `CLAUDE.md` changes the
   confirmation's questions.
 
@@ -196,8 +196,8 @@ go stale the moment it did. An agent-authored comment is not adoption evidence.
 - **Scope:** operations the host conditions on the user's explicit request, that
   is, opening the pull request and spawning a subagent. Every other effect a
   valid grant covers is carried forward as installed.
-- **Adopted by:** the maintainer's merge of #79, and of the pull request that
-  closes #78, which rewrote the entry.
+- **Adopted by:** the maintainer's merge of #79, and of #80, which rewrote the
+  entry.
 - **Reassess when:** the installed section changes, or the host changes what it
   accepts as the user's explicit request.
 
@@ -218,7 +218,7 @@ go stale the moment it did. An agent-authored comment is not adoption evidence.
 - **Scope:** the pull request activity subscription. Once watching is confirmed,
   the installed waiting rule applies as installed, including its ban on a
   scheduled check-in beside a subscription.
-- **Adopted by:** the maintainer's merge of the pull request that closes #78.
+- **Adopted by:** the maintainer's merge of #80.
 - **Reassess when:** the installed section changes, or `CLAUDE.md` changes the
   watching question.
 
@@ -248,8 +248,8 @@ go stale the moment it did. An agent-authored comment is not adoption evidence.
 - **Scope:** a project with authentication. Until the gap closes, such a project
   states these thresholds in its own `docs/conventions/security.md` and reviews
   against them there.
-- **Adopted by:** the maintainer's merge of #79, and of the pull request that
-  closes #78, which rewrote the entry.
+- **Adopted by:** the maintainer's merge of #79, and of #80, which rewrote the
+  entry.
 - **Reassess when:** the installed `application-security` changes, or a refresh
   installs a skill that states either rule. A proposal upstream follows
   `agent-skill-management` and waits on the human's go-ahead; none is recorded
