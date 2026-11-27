@@ -55,6 +55,7 @@ silence:
 ## Waiting for review
 
 Use [Claude Code's waiting procedure](../../CLAUDE.md#waiting-on-a-pull-request)
-while CI and review are outstanding. Follow Loop Engineering's ready gate
+while CI and review are outstanding. The [waiting bound](../../.claude/skills/loop-engineering/references/post-push-review.md#waiting-bound)
+sets the conditions for ending the wait. Apply the [ready gate](../../.claude/skills/loop-engineering/references/post-push-review.md#ready-gate)
 before marking the pull request ready. An unmet pre-push gate under the
 authorized-draft exception leaves that transition to the human.

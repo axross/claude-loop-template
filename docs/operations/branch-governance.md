@@ -6,6 +6,8 @@ description: How to work on a delivery branch and respond to the scheduled audit
 
 # Branch governance
 
+Use this procedure when starting a change or responding to a branch flagged by the scheduled audit.
+
 ## Working on a branch
 
 Claude Code invokes Loop Engineering when the user describes a code or

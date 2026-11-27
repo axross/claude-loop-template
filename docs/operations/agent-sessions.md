@@ -6,6 +6,8 @@ description: Routes from the original session guide to the owners of startup, qu
 
 # Agent Sessions
 
+These entries lead from the original session guide to setup, delegation and verification instructions.
+
 ## The Session-Start Hook
 
 [Bootstrap a cloud session](./session-startup.md#bootstrap-a-cloud-session).
@@ -28,7 +30,7 @@ description: Routes from the original session guide to the owners of startup, qu
 
 ### When a Definition Is Missing
 
-[Find the fallback for the missing role](./subagents.md).
+[Find the fallback for the missing role](./subagents.md#role-boundaries).
 
 ## Telemetry Tagging
 

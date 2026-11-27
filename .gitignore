@@ -6,6 +6,5 @@
 .env.local
 .env.*.local
 
-# Local environments for the documentation check.
 /.venv-okf/
 /.claude/skills/living-project-documentation/scripts/node_modules/

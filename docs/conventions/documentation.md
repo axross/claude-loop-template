@@ -6,6 +6,8 @@ description: How contributors assign a claim to its owner, route readers to it a
 
 # Documentation
 
+Use this convention when a project change creates, moves or invalidates a documented rule.
+
 ## Choose a subject
 
 Put a claim where someone has to use it. In this template, contributors use

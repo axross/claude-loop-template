@@ -529,6 +529,8 @@ Then configure the two fixed pieces:
 
 ## Step 5 — Write `docs/`
 
+Use the existing documentation as the starting point for the adopted project’s own rules and procedures.
+
 ### What ships, and what you add
 
 Start at [the documentation index](./docs/index.md). Read the installed

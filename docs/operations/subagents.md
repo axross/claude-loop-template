@@ -12,13 +12,15 @@ Keep the definitions portable across adopting repositories by referring to
 the marker in `AGENTS.md`. The skills installer and lockfile cover skills
 only, so an installer refresh does not update these definitions.
 
+## Role boundaries
+
+Choose a definition by assignment. Use its fallback if the definition is unavailable.
+
 | Assignment | Definition | If unavailable |
 | --- | --- | --- |
 | Read a large payload and return a finding with its location. The investigator returns unresolved judgments to the caller. | [investigator.md](../../.claude/agents/investigator.md) | The caller reads the material itself. |
 | Implement a bounded change and commit locally. The caller handles publication. | [implementer.md](../../.claude/agents/implementer.md) | Use a generic agent or implement in the main session. |
 | Review the plan or the local change, or perform the fallback post-push review. | [reviewer.md](../../.claude/agents/reviewer.md) | Report the affected review gate unmet. The author cannot provide independent review. |
-
-## Role boundaries
 
 Each definition selects its model explicitly to avoid inheriting the main
 session's model and cost. The investigator and implementer use high effort.

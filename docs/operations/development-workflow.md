@@ -6,9 +6,12 @@ description: Routes from the original workflow guide to branch governance, revie
 
 # Development Workflow
 
+These entries lead from the original workflow guide to the rules for each stage of delivery.
+
 ## The Change Loop
 
-[Find the change loop and branch rules](./branch-governance.md#working-on-a-branch).
+[Follow the change loop from intake to ready](../../.claude/skills/loop-engineering/SKILL.md)
+and consult the [project’s review procedure](./pull-request-review.md) at its review gates.
 
 ## Branches and Merging
 
@@ -21,7 +24,8 @@ or [interpret the local delivery reminder](./quality-hooks.md#diagnose-a-stop-ch
 
 ## The Three Reviews
 
-[Locate the review gates and the project’s review choices](./pull-request-review.md).
+[Identify the three review gates](../../.claude/skills/loop-engineering/references/review-workflow.md#review-terms)
+and [find the project’s review choices](./pull-request-review.md).
 
 ### Pre-Push Review
 

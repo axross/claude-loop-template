@@ -1,5 +1,7 @@
 # Operating the template
 
+Choose the task you are performing in the session, skill library or change workflow.
+
 ## Configure a Claude Code session
 
 Choose the procedure or role definition for the session task.
