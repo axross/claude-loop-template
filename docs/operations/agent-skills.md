@@ -268,16 +268,22 @@ installed copy, the entry says so.
   `pre-flight-review` reference) and Phase 2 — Code + Verify (installed copy
   refreshed in #67 (d5799aa); the lockfile records no upstream revision).
 - **What this project does instead:** the review of the implementation before
-  the first push is a gate rather than an advisory stage, with its own cap and
-  triage, as [Development Workflow](./development-workflow.md#pre-push-review)
-  defines it.
+  the first push is a gate rather than an advisory stage, as
+  [Development Workflow](./development-workflow.md#pre-push-review) defines it.
+  After the initial round plus 3 the run asks the human nothing and runs no
+  further round; each unresolved Critical or Major finding is disclosed by name
+  in the pull request body instead of being recorded as deferred by the human's
+  decline of another round.
 - **Why:** the maintainer's policy makes review before the first push a gate,
   where the installed stage is advisory and is skipped when no worker qualifies.
   The unresolved list in the pull request body is how the human, and the
   post-push reviewer, still see what remains.
-- **Meanwhile:** the installed skill's advisory stage and its own caps stay in
-  the skill; this project reads that advisory stage there as the pre-push
-  review defined in [Development Workflow](./development-workflow.md#pre-push-review).
+- **Meanwhile:** the installed dismissal split applies as installed: a Critical
+  or Major dismissal needs the human's confirmation, a Minor or Nit dismissal
+  needs a recorded reason, and severity is never re-graded. The installed
+  cap-and-ask step and its deferred state do not apply to the pre-push review;
+  the cap is the one
+  [Development Workflow](./development-workflow.md#pre-push-review) defines.
 - **Upstream:** at fe0dbeb the `pre-flight-review` reference applies when
   project policy selects an advisory review before delivery, and keeps its own
   round cap; re-check on refresh.

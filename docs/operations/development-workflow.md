@@ -74,9 +74,12 @@ Pre-push review runs after the initial implementation and before the first push,
 and only then. Each round is a fresh reviewer, and the review takes the initial
 round plus at most 3 more. Its findings are returned privately to the main
 agent, which triages them; they are not posted anywhere. After the initial round
-plus 3, no further round runs: the main agent triages what remains, names each
-unresolved Critical or Major finding individually in the pull request body, and
-the post-push review proceeds. A fix made after the pull request exists goes to
+plus 3, no further round runs and the human is not asked for one: the main agent
+triages what remains, names each unresolved Critical or Major finding
+individually in the pull request body, and the post-push review proceeds. That
+listing is a disclosure, not a dismissal. Dismissing a Critical or Major finding
+still needs the human's confirmation at any round, a Minor or Nit finding may be
+dismissed with a recorded reason, and no finding's severity is re-graded. A fix made after the pull request exists goes to
 post-push re-review, not back to the pre-push review.
 
 ### Post-Push Review
