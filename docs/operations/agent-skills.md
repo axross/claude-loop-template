@@ -158,10 +158,9 @@ register holding only the entries that still apply is the correct state. -->
 
 Every entry cites the installed skill's section by name, with the provenance of
 the installed copy, and does not quote the skill: the installed text changes
-with each refresh, and a quotation would go stale the moment it did. For the
-installed copy, that provenance is "refreshed in #67 (d5799aa); the lockfile
-records no upstream revision". Where `axross/skills` at `main` (fe0dbeb,
-2026-11-26) differs, the entry says so.
+with each refresh, and a quotation would go stale the moment it did. Where the
+upstream library's `main` at the revision the entry names differs from the
+installed copy, the entry says so.
 
 ### Deviation — combined plan-gate confirmation
 
@@ -266,8 +265,8 @@ records no upstream revision". Where `axross/skills` at `main` (fe0dbeb,
   The unresolved list in the pull request body is how the human, and the
   post-push reviewer, still see what remains.
 - **Meanwhile:** the installed skill's advisory stage and its own caps stay in
-  the skill; this project reads "advisory pre-flight review" there as the
-  pre-push review defined in [Development Workflow](./development-workflow.md#pre-push-review).
+  the skill; this project reads that advisory stage there as the pre-push
+  review defined in [Development Workflow](./development-workflow.md#pre-push-review).
 - **Upstream:** at fe0dbeb the `pre-flight-review` reference applies when
   project policy selects an advisory review before delivery, and keeps its own
   round cap; re-check on refresh.
