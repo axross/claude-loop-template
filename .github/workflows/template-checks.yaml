@@ -1,7 +1,9 @@
 name: Template Checks
 
-# before removing this template-only workflow in INIT Step 7, adopters can
-# copy the link and documentation checks into their own merge checks.
+# GitHub Actions runs these checks for the template repository.
+# INIT.md removes this workflow in step 7, but the installed skills keep the
+# checkers. CI in an adopted project can reuse these jobs by carrying over
+# the setup for npm, PyYAML and the pinned OKF validator.
 
 on:
   pull_request:

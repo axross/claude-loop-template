@@ -33,19 +33,20 @@ definition.
 ## Assigning the reviewer
 
 For plan and pre-push reviews, collect the reviewer's report in the main
-session. When assigning a fallback post-push review, supply:
+session. Before assigning a fallback post-push review, the main agent checks
+the run's [authorization to publish](./delivery-authorization.md). The main
+agent explicitly requests a posted review and supplies:
 
 - The pull request
 - The review round
 - The head commit to review
 - The author's checkout path
 
-Explicitly request a posted review in the assignment. The fallback reviewer
-follows these steps:
-
-1. Check [authorization to publish](./delivery-authorization.md).
-2. Use a checkout separate from the author's.
-3. Submit exactly one COMMENT-type review.
+The reviewer posts only for that explicit post-push assignment. If the
+working directory is the author's checkout, the reviewer stops without
+posting. An unresolved maintainer decision also goes back to the main agent
+without a post. Otherwise the reviewer works in its own checkout and submits
+exactly one COMMENT-type review on the named pull request.
 
 The [reviewer definition](../../.claude/agents/reviewer.md) specifies what
 the reviewer returns to the main session.
