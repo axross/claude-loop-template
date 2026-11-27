@@ -273,7 +273,8 @@ installed copy, the entry says so.
   After the initial round plus 3 the run asks the human nothing and runs no
   further round; each unresolved Critical or Major finding is disclosed by name
   in the pull request body instead of being recorded as deferred by the human's
-  decline of another round.
+  decline of another round, so the pull request opens with those findings in no
+  terminal state.
 - **Why:** the maintainer's policy makes review before the first push a gate,
   where the installed stage is advisory and is skipped when no worker qualifies.
   The unresolved list in the pull request body is how the human, and the
