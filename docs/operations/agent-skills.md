@@ -6,6 +6,11 @@ description: Install, restore or refresh the shared skills, including recovery w
 
 # Agent Skills
 
+Use this procedure to install, restore or refresh the skills in
+`.claude/skills/`. Run the commands from the project root with Node.js, npm
+and network access to the skill library. For approved exceptions to installed
+rules, consult the [skill departures register](./skill-departures.md#the-register).
+
 The template distributes a working copy of each selected
 [axross/skills](https://github.com/axross/skills) capability, so a fresh clone
 can load the skills before anyone installs Node or connects to the library.
@@ -18,8 +23,7 @@ The template adopted shared skills in [PR #65](https://github.com/axross/claude-
 
 ## Install and Refresh
 
-From the project root, use Node and a network connection to refresh the set
-in [skills-lock.json](../../skills-lock.json):
+Run this command to refresh the set in [skills-lock.json](../../skills-lock.json):
 
 ```bash
 npx skills add axross/skills --agent claude-code --yes --copy \
@@ -32,14 +36,17 @@ selected skill. A comma-separated value matches no skills. The wildcard
 this template has never adopted. If npx reports `could not determine executable
 to run`, retry the command with `npx --yes skills@latest add`.
 
-Check the CLI's installation summary for each expected copy, then compare the
-directory names in `.claude/skills/` with the lockfile and review the revision
-and content changes. Commit the generated copies and lockfile together. A
-hand-edit disappears on refresh. Follow [Changes to installed rules](../../.claude/skills/agent-skill-management/references/installed-rule-changes.md)
-to verify and route a suspected defect. Record an accepted local departure in
-the [skill departures register](./skill-departures.md#the-register).
-After installation, open a fresh Claude Code session and check `/context` to
-confirm discovery. A successful copy alone establishes only what is on disk.
+After the refresh finishes:
+
+1. Check the installation summary for each skill you selected.
+2. Compare the directories under `.claude/skills/` with the entries in `skills-lock.json`.
+3. Review the upstream revisions and the changes to the installed files.
+4. Commit the generated copies and the lockfile together.
+5. Start a fresh Claude Code session and check `/context` to confirm that Claude Code discovered the skills.
+
+A refresh overwrites hand-edits to installed skills. Follow
+[Changes to installed rules](../../.claude/skills/agent-skill-management/references/installed-rule-changes.md)
+to verify and route a suspected defect.
 
 ### Versions
 

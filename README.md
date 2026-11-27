@@ -58,8 +58,8 @@ runner layers — is chosen during adaptation, in INIT Step 4.
 Reading the installed skills works from a fresh checkout. Installing or
 refreshing them with `npx skills` requires Node and network access. Running
 the documentation check also requires npm dependencies, Python with PyYAML,
-and the pinned OKF validator. The [setup instructions](./INIT.md) cover those
-prerequisites.
+and the pinned OKF validator. See [Checking a Documentation Change](./docs/conventions/documentation.md#checking-a-documentation-change)
+for setup and verification.
 
 ### This template is the canonical source for Claude Code guidance
 
