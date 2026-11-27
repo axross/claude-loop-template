@@ -11,7 +11,10 @@ To enable the quality hooks locally, copy
 `.claude/settings.local.json`. Cloud startup installs the example
 automatically. It also pre-approves `subscribe_pr_activity` and
 `unsubscribe_pr_activity` on the Remote MCP server so an unattended run can
-wait for CI and review. Its permission list excludes scheduling tools. The run checks [its delivery authorization](./delivery-authorization.md) before subscribing. Tool availability alone cannot authorize the subscription.
+wait for CI and review. Before subscribing, check the [delivery authorization](./delivery-authorization.md)
+and the operator's watching choice for this run. If the operator declines,
+wait for the human to report the result. Leave scheduling disabled as required
+by the [waiting procedure](../../CLAUDE.md#waiting-on-a-pull-request).
 
 ## Format after an edit
 
