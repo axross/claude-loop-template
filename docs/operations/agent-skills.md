@@ -235,12 +235,25 @@ installed copy, the entry says so.
   creation or a subagent spawn on the user's explicit request, the run obtains
   that request: at the plan gate, or, for a subagent needed before the plan gate,
   once at its first need. `AGENTS.md`'s standing request names what is wanted but
-  is not treated as the explicit request itself.
+  is not treated as the explicit request itself. Three departures from the
+  installed rule of one delegation question per run, never re-presented on a
+  resume, follow from that:
+  - the subagent request can be asked twice in one run: once for the roles
+    needed before the plan gate, and again in the plan-gate confirmation for the
+    roles after it;
+  - the plan-gate confirmation, its subagent item included, is repeated with
+    every revised plan;
+  - a fresh session that resumes a run whose own conversation lacks the
+    confirmation asks it once more, even though earlier answers are recorded in
+    run state, because the host's explicit-request condition is judged in the
+    current conversation.
 - **Why:** the host decides what counts as the user's explicit request, and a
   checked-in mandate cannot be assumed to meet it. An unobtained request leaves
   the gate it serves reported unmet.
-- **Meanwhile:** every other part of the installed permission determination
-  applies as installed.
+- **Meanwhile:** the rest of the installed permission determination — running
+  it before the first spawn, its three outcomes and their evidence, the
+  fallback when no question tool exists, and not revisiting a decline within
+  the same conversation — applies as installed.
 - **Upstream:** at fe0dbeb `loop-engineering` states that it does not rank
   runtime-injected instructions against project mandates, and leaves the
   hierarchy to host entry guidance; a parallel upstream change is expected to

@@ -83,9 +83,10 @@ Three things keep it from collapsing into self-approval:
   post-push review runs as a separate session under a separate identity, so the
   author never certifies its own work.
 - **`.claude/agents/reviewer.md`** — the reader for every review round: a fresh
-  instance reads the implementation before the first push, by something other
-  than the writer. Delete it and the gate is reported unmet rather than done by
-  the author.
+  instance reviews the plan, the implementation before the first push, and,
+  where it is the selected route, the opened pull request — always something
+  other than the writer. Delete it and each review gate that routes through it
+  is reported unmet rather than done by the author.
 - **[`branch-governance-audit.yaml`](./.github/workflows/branch-governance-audit.yaml)** —
   an hourly sweep for an agent branch pushed ahead of the default branch with no
   open pull request. It runs outside the agent's session, which is the point:

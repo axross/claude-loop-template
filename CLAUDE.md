@@ -114,8 +114,9 @@ pull request activity subscription, and a delegated worker's completion
 notification.
 
 - MUST first check whether an event-subscription route exists for what the run
-  waits on, and MUST use it when one is available. While it is, scheduled
-  check-ins are prohibited, including as a backstop beside the subscription.
+  waits on, and MUST use it when one is available and watching was confirmed.
+  While a route is available, scheduled check-ins are prohibited, including as
+  a backstop beside the subscription.
 - Only when no subscription route exists and the human explicitly permitted it,
   asked through `AskUserQuestion` and recorded in run state, may a check-in be
   scheduled.

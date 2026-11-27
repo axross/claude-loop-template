@@ -172,9 +172,10 @@ brief that cannot say what shape it wants back is not ready to send.
 
 Deleting any of the three files degrades gracefully rather than breaking the
 loop. Without the implementer, the loop delegates to a generic agent or runs
-single-agent; without the reviewer, the pre-push review gate is reported unmet
-rather than performed by the main actor, which is what keeps it from collapsing
-into self-review; without the investigator, the main actor reads the payload
+single-agent; without the reviewer, each review gate that routes through it —
+plan review, pre-push review, and the fallback post-push review — is reported
+unmet rather than performed by the main actor, which is what keeps it from
+collapsing into self-review; without the investigator, the main actor reads the payload
 itself, per read, paying in its own context what delegating the read would
 otherwise have saved.
 
