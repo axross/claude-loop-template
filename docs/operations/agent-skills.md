@@ -79,7 +79,8 @@ See the [skill departures register](./skill-departures.md).
 
 ## The Register
 
-The following bookmarks lead to the maintained entries:
+See [which departures qualify and what each entry records](./skill-departures.md#the-register).
+The following bookmarks lead to individual entries:
 
 - <a id="deviation--combined-plan-gate-confirmation"></a>[Combined plan-gate confirmation](./skill-departures.md#deviation--combined-plan-gate-confirmation)
 - <a id="deviation--the-explicit-request-is-asked-again-not-carried-forward"></a>[Renewing the explicit request](./skill-departures.md#deviation--the-explicit-request-is-asked-again-not-carried-forward)
