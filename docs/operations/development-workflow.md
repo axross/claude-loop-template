@@ -16,7 +16,8 @@ description: Routes from the original workflow guide to branch governance, revie
 
 ## What Holds the Loop From Outside
 
-[Respond to a branch governance audit finding](./branch-governance.md#resolving-an-audit-finding).
+[Respond to a branch governance audit finding](./branch-governance.md#resolving-an-audit-finding)
+or [interpret the local delivery reminder](./quality-hooks.md#diagnose-a-stop-check).
 
 ## The Three Reviews
 

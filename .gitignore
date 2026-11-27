@@ -6,5 +6,6 @@
 .env.local
 .env.*.local
 
-# Installed parsers for the documentation check.
+# Local environments for the documentation check.
+/.venv-okf/
 /.claude/skills/living-project-documentation/scripts/node_modules/

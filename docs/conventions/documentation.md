@@ -51,7 +51,7 @@ are maintained with their subject.
 
 ## Checking a Documentation Change
 
-Run the repository link check from the root. For OKF, set
+Run the repository link check from the root. For Open Knowledge Format (OKF) validation, set
 `skill_dir=.claude/skills/living-project-documentation` and prepare the Node
 dependencies, Python environment and pinned validator using the installed
 [validator setup](../../.claude/skills/living-project-documentation/references/validators.md#prepare-the-installed-skill).

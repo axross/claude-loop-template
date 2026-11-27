@@ -35,8 +35,9 @@ to run`, retry the command with `npx --yes skills@latest add`.
 Check the CLI's installation summary for each expected copy, then compare the
 directory names in `.claude/skills/` with the lockfile and review the revision
 and content changes. Commit the generated copies and lockfile together. A
-hand-edit disappears on refresh. Route a defect through the
-[skill departures register](./skill-departures.md#the-register).
+hand-edit disappears on refresh. Follow [Changes to installed rules](../../.claude/skills/agent-skill-management/references/installed-rule-changes.md)
+to verify and route a suspected defect. Record an accepted local departure in
+the [skill departures register](./skill-departures.md#the-register).
 After installation, open a fresh Claude Code session and check `/context` to
 confirm discovery. A successful copy alone establishes only what is on disk.
 

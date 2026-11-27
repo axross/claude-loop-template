@@ -21,7 +21,7 @@ service.
 ├── CLAUDE.md                # the Claude Code entry: loads AGENTS.md, adds how Claude Code meets the gates
 ├── REVIEW.md                # fixed: posted-review policy for the post-push review channel
 ├── skills-lock.json         # what is installed under .claude/skills/, and from where
-├── docs/                    # this project's own knowledge — OKF v0.3 index and engineering guidance
+├── docs/                    # engineering guidance in Open Knowledge Format (OKF) v0.3
 ├── .github/
 │   └── workflows/           # fixed: CI reviewer, merge checks, branch-governance audit;
 │                            # plus template-checks.yaml, this repo's own CI (deleted during INIT)

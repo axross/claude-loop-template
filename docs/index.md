@@ -11,11 +11,11 @@ For a project rule or an operating decision, choose the question below.
 
 ## Conventions
 
-- [Where does a documentation change belong?](./conventions/documentation.md#choose-a-subject)
+See [where a documentation change belongs](./conventions/documentation.md#choose-a-subject).
 
 ## Operations
 
-- [Configure a session, maintain skills or deliver a change](./operations/index.md)
+Use the [operating guide](./operations/index.md) to configure a session, maintain skills or deliver a change.
 
 ## Decisions
 

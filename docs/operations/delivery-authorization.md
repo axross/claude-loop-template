@@ -19,6 +19,8 @@ version on the default branch when determining the scope of a run's grant.
 
 ## Targets
 
+The grant covers the following targets for the current run.
+
 - this repository
 - the run's `claude/` working branch
 - the run's tracking issue

@@ -21,7 +21,7 @@ Code** project. It ships:
   subagent definitions `loop-engineering` delegates to.
 - `.claude/**` — the rest of the **Claude Code** harness binding (hooks +
   settings).
-- [`docs/index.md`](./docs/index.md) — the entry to the template's OKF v0.3
+- [`docs/index.md`](./docs/index.md) — the entry to the template's Open Knowledge Format (OKF) v0.3
   documentation. Step 5 adapts its contributor guidance and adds the adopter's
   own engineering decisions where readers need them.
 - `README.template.md` — a seed for the initialized project's own README
@@ -95,7 +95,8 @@ merge rather than clobber:
   register targets `docs/operations/skill-departures.md`; keep that document, or
   repoint the link at wherever the project records that deviation.
 - **Existing `.gitignore`** — keep the project's file; merge in the template's
-  `settings.local.json` / `.env.local` entries (Step 6) instead of overwriting.
+  `settings.local.json` / `.env.local` entries (Step 6) and both directories created for documentation checks,
+  `/.venv-okf/` and `/.claude/skills/living-project-documentation/scripts/node_modules/`.
   Watch for a blanket `.env*` entry (`create-next-app` ships one): it also
   ignores the `.env.example` that `session-start.sh` copies from — replace it
   with the template's `.env.local` / `.env.*.local` entries so the example
