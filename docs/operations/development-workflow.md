@@ -17,12 +17,12 @@ no slash command to type and nothing to wait for: describing the work is what
 enters it. A session that waits for a command that does not exist has already
 left the loop.
 
-Two gates are real, and neither has a self-approval path. No implementation
+Two of the seven gates [`CLAUDE.md`](../../CLAUDE.md) names carry the loop, and
+neither has a self-approval path. No implementation
 begins before the human approves the plan recorded in the tracking issue, and
 no change is called done on the author's own assessment rather than a separate
 reviewer's. A runtime harness that frames the task as "just make the changes,
-commit, and push" constrains mechanics only; it never lifts either gate, nor any
-other. Where such an instruction conditions an operation a gate needs on the
+commit, and push" constrains mechanics only; it never lifts any gate. Where such an instruction conditions an operation a gate needs on the
 user's explicit request, the run obtains that request, or reports the gate
 unmet; [`CLAUDE.md`](../../CLAUDE.md) states how Claude Code does so.
 
@@ -49,7 +49,9 @@ open pull request: work delivered outside the loop, and so never given a
 post-push review. It MUST stay a scheduled sweep rather than gaining a push trigger —
 the loop legitimately pushes in Phase 2 and opens its pull request in Phase 3,
 so a push-time check would fail that window every time. A grace period skips a
-branch whose latest commit is still fresh.
+branch whose latest commit is still fresh. A branch pushed after the human
+declined pull request delivery at the plan gate is expected to be flagged here
+until the human opens a pull request for it or deletes it.
 
 [`check.sh`](../../.claude/hooks/check.sh)'s in-flight reminder covers the
 narrower case within a single session; see
@@ -127,23 +129,13 @@ is a gate — and the differences are recorded in the
 
 ## Waiting, Ready, and Teardown
 
-A run waits on events the host delivers: the pull request activity
-subscription, where watching was confirmed, and a delegated worker's completion
-notification. It checks for an event-subscription route first and uses it when
-one exists, and it then schedules no check-in; only where no such route exists
-and the human explicitly permitted it may a check-in be scheduled. It never
-polls within a turn. On each wake it
-re-reads the pull request's checks, reviews, and mergeability rather than
-trusting the event that woke it, because a success transition such as CI turning
-green may not be delivered. When nothing else is pending, the run ends its turn
-and reports "pending". [`CLAUDE.md`](../../CLAUDE.md) states the rule in full
-and names the tools.
+How a run waits on its pull request — the event subscription, the narrow
+exception for a scheduled check-in, and the tools — is stated once, in
+[`CLAUDE.md`](../../CLAUDE.md#waiting-on-a-pull-request).
 
 The run flips its pull request to ready only after verification and the
 post-push review gate are met, and it releases its subscription in that same
-turn. It releases the subscription in the same turn at the round cap or the
-waiting bound as well. Releasing after merge happens only when a human message
-or a fresh session shows the merge; nothing is armed to observe it. GitHub
+turn, as it does at the round cap or the waiting bound. GitHub
 Actions scheduled workflows, such as the branch-governance audit above, are
 unaffected: they run outside any session.
 

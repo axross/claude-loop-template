@@ -498,8 +498,8 @@ Then configure the two fixed pieces:
 - **`claude-review.yaml`** — set the review trigger phrase and the reviewer
   identity. The phrase is functional and dangerous in prose: a
   comment-triggered workflow matches it **anywhere** in a comment body, so the
-  literal phrase belongs only in the workflow file, the `AGENTS.md` post-push
-  override block, and the heading of the README seed that Step 7 finalizes.
+  literal phrase belongs only in the places the header comment of
+  `claude-review.yaml` lists.
   Everywhere else — including `docs/operations/development-workflow.md` — refer
   to it as "the review trigger phrase". A project that disables this workflow's
   triggers also deletes the `AGENTS.md` override block (key

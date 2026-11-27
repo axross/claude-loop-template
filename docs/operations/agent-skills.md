@@ -209,14 +209,10 @@ installed copy, the entry says so.
 - **Installed skill:** `loop-engineering` › Execution Model, and Phase 3 —
   Request Independent Review with its CI and review tail (installed copy
   refreshed in #67 (d5799aa); the lockfile records no upstream revision).
-- **What this project does instead:** the run schedules no wake while an
-  event-subscription route exists. It waits on host-delivered events — the pull
-  request activity subscription and a delegated worker's completion
-  notification — re-reads state on each wake, and ends the turn reporting
-  "pending" when nothing else is pending. Only where no subscription route
-  exists and the human explicitly permitted it may a check-in be scheduled, and
-  it never polls within a turn. `CLAUDE.md` states the rule, names the
-  scheduling tools it covers, and names the two subscription tools.
+- **What this project does instead:** the run waits through an
+  event subscription whenever one exists and schedules no wake beside it; the
+  rule and its narrow exception are stated in
+  [`CLAUDE.md`](../../CLAUDE.md#waiting-on-a-pull-request).
 - **Why:** the maintainer's policy is that an agent uses an event-subscription
   route whenever one exists and schedules a check-in only with the human's
   explicit permission when none does.
@@ -258,11 +254,9 @@ installed copy, the entry says so.
   `pre-flight-review` reference) and Phase 2 — Code + Verify (installed copy
   refreshed in #67 (d5799aa); the lockfile records no upstream revision).
 - **What this project does instead:** the review of the implementation before
-  the first push is a gate rather than an advisory stage, run by a fresh reviewer
-  per round, with findings returned privately and triaged by the main agent.
-  After the initial round plus 3, no further round runs: the main agent triages
-  what remains and names each unresolved Critical or Major finding individually
-  in the pull request body.
+  the first push is a gate rather than an advisory stage, with its own cap and
+  triage, as [Development Workflow](./development-workflow.md#pre-push-review)
+  defines it.
 - **Why:** the maintainer's policy makes review before the first push a gate,
   where the installed stage is advisory and is skipped when no worker qualifies.
   The unresolved list in the pull request body is how the human, and the

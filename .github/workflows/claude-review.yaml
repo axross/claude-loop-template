@@ -17,10 +17,13 @@ name: Claude Code Review
 # AGENTS.md names as its override: the run posts the trigger phrase after
 # opening a PR and then addresses the findings this workflow leaves.
 #
-# Changing the phrase means changing it in the `contains(...)` check below, in
-# the post-push override block in AGENTS.md, and in the phrase loop-engineering
-# itself posts, which lives in its installed (never hand-edited) SKILL.md —
-# route that change upstream per docs/operations/agent-skills.md. Every other
+# This is the one list of where the literal phrase appears; changing the phrase
+# means changing it in each: the `contains(...)` check below, the post-push
+# override block in AGENTS.md, the heading and the body sentence of the review
+# subsection in README.template.md (the README seed), and the phrase
+# loop-engineering itself posts, which lives in its installed (never
+# hand-edited) SKILL.md — route that change upstream per
+# docs/operations/agent-skills.md. Every other
 # document refers to it as "the review trigger phrase" rather than spelling it
 # out, because a comment-triggered workflow matches the literal string ANYWHERE
 # in a comment body: a second spelling in a plan or a summary fires a duplicate
