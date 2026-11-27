@@ -16,10 +16,14 @@ interview — what the project is, who it serves, and its current goal. -->
 ## Getting started
 
 1. Install dependencies: `{{INSTALL_CMD}}`
-2. Start developing: `{{DEV_CMD}}`
+2. Copy the agent settings once:
+   `cp -n .claude/settings.example.json .claude/settings.json`. The copy is
+   gitignored; [Agent Sessions](./docs/operations/agent-sessions.md#the-settings-file)
+   says what it wires.
+3. Start developing: `{{DEV_CMD}}`
    <!-- INIT: for a project without a dev server (CLI, library), reword this
    step to the project's run/watch equivalent. -->
-3. Production build and start: `{{BUILD_CMD}}`, then `{{START_CMD}}`
+4. Production build and start: `{{BUILD_CMD}}`, then `{{START_CMD}}`
    <!-- INIT:OPTIONAL key=BUILD_STEP — keep and fill OR delete this step if the project has no build step. -->
 
 <!-- INIT: add the real prerequisites — runtime/toolchain version, `.env.local`

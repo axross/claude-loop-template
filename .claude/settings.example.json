@@ -1,4 +1,9 @@
 {
+	"effortLevel": "xhigh",
+	"env": {
+		"OTEL_METRICS_INCLUDE_ENTRYPOINT": "true",
+		"OTEL_RESOURCE_ATTRIBUTES": "repository={{PROJECT_NAME}}"
+	},
 	"permissions": {
 		"allow": [
 			"mcp__claude-code-remote__subscribe_pr_activity",
@@ -6,6 +11,16 @@
 		]
 	},
 	"hooks": {
+		"SessionStart": [
+			{
+				"hooks": [
+					{
+						"type": "command",
+						"command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.sh"
+					}
+				]
+			}
+		],
 		"PostToolUse": [
 			{
 				"matcher": "Edit|Write|MultiEdit",

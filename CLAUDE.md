@@ -161,13 +161,20 @@ outside the session.
 
 ## Settings and Hooks
 
-- `.claude/settings.json` is shared by every session: the startup hook wiring,
-  the default reasoning effort, and telemetry tagging.
-- `.claude/settings.local-example.json` is an opt-in example. It grants only the
-  two pull request activity subscription tools named above and enables the
-  quality hooks, format on edit and checks before stop.
-- The startup hook only bootstraps the environment and prints a pointer to
-  `AGENTS.md`.
+- `.claude/settings.example.json` is the one committed settings file. It holds
+  the startup hook wiring, the default reasoning effort, telemetry tagging, the
+  two pull request activity subscription grants named above, and the quality
+  hooks, format on edit and checks before stop. The startup hook only
+  bootstraps the environment and prints a pointer to `AGENTS.md`.
+- A session reads it as the gitignored `.claude/settings.json`. A cloud
+  environment's setup script copies the example into place; a local session
+  copies it by hand.
+- It takes effect only where `.claude/settings.json` exists and is read: a local
+  session, or a single-repository cloud session outside a project's threads.
+- Without the copy, a session has no startup hook, default effort, telemetry
+  tagging, subscription grants, or quality hooks.
+  [Agent Sessions](./docs/operations/agent-sessions.md#the-settings-file) says how
+  to check for the copy and how to make it.
 
 [Agent Sessions](./docs/operations/agent-sessions.md) describes the hooks, the
 settings, and the three subagents in full.
