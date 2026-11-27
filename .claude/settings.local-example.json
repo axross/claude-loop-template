@@ -1,8 +1,8 @@
 {
 	"permissions": {
 		"allow": [
-			"mcp__Claude_Code_Remote__send_later",
-			"mcp__Claude_Code_Remote__delete_trigger"
+			"mcp__claude-code-remote__subscribe_pr_activity",
+			"mcp__claude-code-remote__unsubscribe_pr_activity"
 		]
 	},
 	"hooks": {

@@ -17,35 +17,37 @@ service.
 ├── tokens.json              # machine-readable manifest of every {{TOKEN}}
 ├── README.template.md       # seed for the initialized project's README (finalized in INIT Step 7)
 ├── .gitignore               # ignores settings.local.json + .env.local (see INIT Step 6)
-├── AGENTS.md                # working agreement + the Routing a Change table
-├── CLAUDE.md                # nothing but the @AGENTS.md import
-├── REVIEW.md                # fixed: posted-review policy for the independent-review channel
+├── AGENTS.md                # host-neutral routing skeleton + the Routing a Change table
+├── CLAUDE.md                # the Claude Code entry: loads AGENTS.md, adds how Claude Code meets the gates
+├── REVIEW.md                # fixed: posted-review policy for the post-push review channel
 ├── skills-lock.json         # what is installed under .claude/skills/, and from where
 ├── docs/                    # this project's own knowledge — index, conventions, operations, decisions
 ├── .github/
 │   └── workflows/           # fixed: CI reviewer, merge checks, branch-governance audit;
 │                            # plus template-checks.yaml, this repo's own CI (deleted during INIT)
 └── .claude/
-    ├── skills/              # 17 skills INSTALLED from axross/skills — generated, never hand-edited
-    ├── agents/              # implementer + reviewer + investigator subagent definitions
+    ├── skills/              # skills INSTALLED from axross/skills — generated, never hand-edited
+    ├── agents/              # implementer + reviewer + investigator, shared subagent definitions
     ├── hooks/               # session-start (always on), format + check (opt-in)
     ├── settings.json        # SessionStart hook, default effort level, telemetry tagging
-    └── settings.local-example.json  # opt-in: copied to settings.local.json by session-start
+    └── settings.local-example.json  # opt-in: quality hooks + the two PR-subscription tools, copied to settings.local.json by session-start
 ```
 
 ### The skills are installed, not authored here
 
 Every directory under `.claude/skills/` comes from
 [axross/skills](https://github.com/axross/skills) via the
-[vercel-labs/skills](https://github.com/vercel-labs/skills) CLI, pinned by
-`skills-lock.json`. They are generated artifacts: a hand-edit is silently
-discarded by the next install, so a change goes upstream as an issue or pull
-request there. [docs/operations/agent-skills.md](./docs/operations/agent-skills.md)
+[vercel-labs/skills](https://github.com/vercel-labs/skills) CLI;
+`skills-lock.json` records what is installed and from where. The template does
+not pin them to a version: a refresh takes the latest upstream, and nothing
+updates them automatically. They are generated artifacts: a hand-edit is
+silently discarded by the next install, so a change goes upstream as an issue or
+pull request there. [docs/operations/agent-skills.md](./docs/operations/agent-skills.md)
 holds the refresh command and the register for a rule that turns out to be
 wrong or to collide with your project.
 
-The template installs the 17 that apply to any project whatever its stack —
-conduct, the change loop, baseline development, commits, GitHub operation,
+The template installs the core set that applies to any project whatever its
+stack — conduct, the change loop, baseline development, commits, GitHub operation,
 review, QA, maintainability, security, instrumentation, unit and e2e testing,
 requirements, technical writing, the docs tree, and skill authoring and
 management. The stack-specific rest of the library — framework, UI, vendor, and
@@ -56,21 +58,35 @@ Node and network access to install or refresh. The installed skills themselves
 are plain Markdown, so nothing at run time needs Node — only refreshing does,
 plus the two checkers `init.sh check` calls.
 
+### This template is the canonical source for Claude Code guidance
+
+`CLAUDE.md`, the `AGENTS.md` skeleton, `.claude/agents/`, the hooks, and the
+settings example are maintained here as the canonical source. A repository
+adopts them once, by hand — by creating it from this template or by aligning an
+existing repository to it through INIT — and there is no automatic sync
+afterwards: a change made here reaches an adopter only when someone copies it
+across.
+
 ### The loop, and what holds it in place
 
 `loop-engineering` drives every change through **plan → approve → code → verify
-→ independent review → address → ready**. It is model-invoked: there is no
-slash command, and describing the work is what enters it.
+→ push and open a draft pull request → address → ready**, with three named
+reviews along the way: **plan review** of every deliverable before approval,
+**pre-push review** of the implementation before the first push, and
+**post-push review** of the opened pull request. It is model-invoked: there is
+no slash command, and describing the work is what enters it.
 
 Three things keep it from collapsing into self-approval:
 
 - **`REVIEW.md` plus the CI reviewer**
-  ([`claude-review.yaml`](./.github/workflows/claude-review.yaml)) — the review
-  runs as a separate session under a separate identity, so the author never
-  certifies its own work.
-- **`.claude/agents/reviewer.md`** — an advisory pre-flight read before the pull
-  request opens, by something other than the writer. Delete it and the stage is
-  skipped rather than done by the author.
+  ([`claude-review.yaml`](./.github/workflows/claude-review.yaml)) — the
+  post-push review runs as a separate session under a separate identity, so the
+  author never certifies its own work.
+- **`.claude/agents/reviewer.md`** — the reader for every review round: a fresh
+  instance reviews the plan, the implementation before the first push, and,
+  where it is the selected route, the opened pull request — always something
+  other than the writer. Delete it and each review gate that routes through it
+  is reported unmet rather than done by the author.
 - **[`branch-governance-audit.yaml`](./.github/workflows/branch-governance-audit.yaml)** —
   an hourly sweep for an agent branch pushed ahead of the default branch with no
   open pull request. It runs outside the agent's session, which is the point:
@@ -117,7 +133,7 @@ it rather than cloning it.
    stack-specific skills your stack needs, and writes `docs/`.
 3. When adaptation is complete, INIT finalizes `README.template.md` into your
    project's `README.md`, replacing this one, and deletes the INIT tooling.
-4. **Enable the CI reviewer.** The independent-review channel's GitHub Actions
+4. **Enable the CI reviewer.** The post-push review channel's GitHub Actions
    reviewer needs a one-time operator setup before it runs: install the
    [Claude GitHub App](https://github.com/apps/claude) and add a
    `CLAUDE_CODE_OAUTH_TOKEN` repository secret — generate it locally with

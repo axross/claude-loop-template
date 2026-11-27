@@ -4,7 +4,7 @@ name: Branch Governance Audit
 # (.claude/skills/loop-engineering/SKILL.md). it surfaces one failure
 # signature: an agent branch (claude/*) pushed to origin with commits ahead of
 # the default branch and no open pull request at all — work delivered outside
-# the loop, and so never independently reviewed.
+# the loop, and so never given a post-push review.
 #
 # it exists because the prose guardrails cannot reach this case. AGENTS.md and
 # the loop skill are read inside the agent's own session, which is exactly
@@ -101,7 +101,7 @@ jobs:
                 "Ungoverned agent branch(es) — pushed with commits but no open pull request:\n" +
                   flagged.map((f) => `  - ${f}`).join("\n") +
                   "\n\nEach is work done outside the change loop. Open a draft pull " +
-                  "request (Closes #<issue>) and request the independent review, or delete the branch.",
+                  "request (Closes #<issue>) and request the post-push review, or delete the branch.",
               );
             } else {
               core.info(`No ungoverned ${AGENT_PREFIX}* branches. Checked ${agentBranches.length}.`);

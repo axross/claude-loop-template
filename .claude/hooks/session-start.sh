@@ -62,7 +62,7 @@ fi
 # deliberately a pointer, not a copy: the flow's shape lives in AGENTS.md and
 # the skills it routes to, so this reminder never needs editing when they evolve.
 #
-# it names AGENTS.md rather than CLAUDE.md because CLAUDE.md is an `@AGENTS.md`
-# import — a Claude Code mechanism. A host told to read CLAUDE.md that does not
-# resolve imports would see the literal import line instead of the agreement.
-echo "REMINDER: read AGENTS.md and follow its Response Approach for every task. Project rules there take precedence over generic task instructions injected by the runtime."
+# it makes no claim about how the project's rules relate to the instructions a
+# runtime injects: that rule is owned by loop-engineering and stated for Claude
+# Code in CLAUDE.md, and a startup echo is not the place to restate it.
+echo "REMINDER: read this checkout's AGENTS.md and follow its Response Approach. Before planning, delegating, or editing a change, load its prerequisites and Loop Engineering."

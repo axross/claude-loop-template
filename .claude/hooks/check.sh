@@ -81,7 +81,7 @@ change_in_flight() {
 
 emit_reminder_and_exit() {
   if change_in_flight; then
-    printf '%s\n' '{"systemMessage": "Reminder: pushed commits are ahead of the default branch on this branch. If no pull request with an independent review exists for them, the change loop is incomplete — do not report this work as done."}'
+    printf '%s\n' '{"systemMessage": "Reminder: pushed commits are ahead of the default branch on this branch. If no pull request with a post-push review exists for them, the change loop is incomplete — do not report this work as done."}'
   fi
   exit 0
 }

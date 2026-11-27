@@ -3,16 +3,19 @@
 This repository is a **reusable, framework-agnostic template** for a **Claude
 Code** project. It ships:
 
-- `AGENTS.md` — the working agreement plus the **Routing a Change** table that
-  points at `docs/`. It carries no skill index: installed skills route on their
-  own `description`, and a second list would only be a ledger to keep in sync.
-- `CLAUDE.md` — `@AGENTS.md`, and nothing else: the working agreement lives
-  entirely in `AGENTS.md`, host-neutral.
-- `.claude/skills/**` — **17 skills installed from
-  [axross/skills](https://github.com/axross/skills)**, pinned by
-  `skills-lock.json`. They are generated artifacts, not template content: a
-  hand-edit is discarded by the next install. Step 4 adds the stack-specific
-  ones.
+- `AGENTS.md` — the host-neutral working-agreement skeleton: the canonical
+  bootstrap lines, the repository facts an adopter fills in, and the **Routing a
+  Change** table that points at `docs/`. It carries no skill index: installed
+  skills route on their own `description`, and a second list would only be a
+  ledger to keep in sync.
+- `CLAUDE.md` — the Claude Code entry. It loads `AGENTS.md` and holds everything
+  specific to Claude Code: how the host meets the project's gates, the plan-gate
+  confirmation, waiting on a pull request, and the settings and hooks notes.
+- `.claude/skills/**` — **the core set of skills installed from
+  [axross/skills](https://github.com/axross/skills)**, recorded in
+  `skills-lock.json`, with no upstream version fixed. They are generated artifacts,
+  not template content: a hand-edit is discarded by the next install. Step 4
+  adds the stack-specific ones.
 - `.claude/agents/` — the `implementer`, `reviewer`, and `investigator`
   subagent definitions `loop-engineering` delegates to.
 - `.claude/**` — the rest of the **Claude Code** harness binding (hooks +
@@ -31,11 +34,11 @@ working setup for one concrete project.
 
 > **Fixed vs. configured — do not ask about these.** This template targets
 > **Claude Code specifically**: there is no "which agent?" choice. The change
-> loop (`loop-engineering`) and the **independent-review channel** it drives
+> loop (`loop-engineering`) and the **post-push review channel** it drives
 > (`REVIEW.md`, the `.github/workflows/`, and the `github-operation` skill) are
 > **fixed infrastructure** — INIT *configures and adapts* them but **never asks
-> whether to keep them, and never deletes them.** The 17 installed skills are
-> the cross-project core and all stay; what Step 1 and Step 4 resolve is which
+> whether to keep them, and never deletes them.** The installed core skills are
+> the cross-project set and all stay; what Step 1 and Step 4 resolve is which
 > *additional*, stack-specific skills to install beside them.
 
 > **You are the agent running INIT.** Follow the steps in order. Do not skip
@@ -79,8 +82,13 @@ merge rather than clobber:
   one rule is load-bearing — Next.js 16 has breaking changes and ships its own
   docs in `node_modules/next/dist/docs/`; fold that into the Project Overview
   and the current-docs table, don't drop it.
-- **Existing `CLAUDE.md`** — if it is already just `@AGENTS.md`, keep it. If it
-  holds other instructions, append `@AGENTS.md` rather than replacing them.
+- **Existing `CLAUDE.md`** — take the template's `CLAUDE.md`: it is the
+  canonical Claude Code entry and already loads `AGENTS.md`. Move the old file's
+  repository facts to `AGENTS.md` or `docs/`, where every host reads them, and
+  keep only what is specific to Claude Code and to this project, appended to the
+  template's file under a project heading of its own. Its link to the deviation
+  register targets `docs/operations/agent-skills.md`; keep that document, or
+  repoint the link at wherever the project records that deviation.
 - **Existing `.gitignore`** — keep the project's file; merge in the template's
   `settings.local.json` / `.env.local` entries (Step 6) instead of overwriting.
   Watch for a blanket `.env*` entry (`create-next-app` ships one): it also
@@ -233,7 +241,7 @@ component / UI-design skills). Ask each area that applies:
 
     **Not on this list — fixed, do not ask:** GitHub operations
     (`github-operation`), the change loop (`loop-engineering`), and the
-    independent-review channel (`REVIEW.md` and the `.github/workflows/`) are
+    post-push review channel (`REVIEW.md` and the `.github/workflows/`) are
     **fixed infrastructure** (see the "Fixed vs. configured" note at the top).
     INIT configures and adapts them but never offers them up for deletion;
     record them as kept, and resolve their markers as "keep + adapt" in Step 4.
@@ -407,7 +415,7 @@ for `{{` to confirm none remain (the completion checklist does this).
 
 ### 4a — Install the skills the project needs
 
-The template ships a **core set of 17** installed skills — the ones that apply
+The template ships a **core set** of installed skills — the ones that apply
 to any project whatever its stack. Leave them in place. The rest of the
 library is stack-specific, and this is where you choose from it, using the
 Stack Decision Record (Step 1).
@@ -490,9 +498,13 @@ Then configure the two fixed pieces:
 - **`claude-review.yaml`** — set the review trigger phrase and the reviewer
   identity. The phrase is functional and dangerous in prose: a
   comment-triggered workflow matches it **anywhere** in a comment body, so the
-  literal phrase belongs ONLY in the workflow file. Everywhere else — including
-  `docs/operations/development-workflow.md` — refer to it as "the review
-  trigger phrase".
+  literal phrase belongs only in the places the header comment of
+  `claude-review.yaml` lists.
+  Everywhere else — including `docs/operations/development-workflow.md` — refer
+  to it as "the review trigger phrase". A project that disables this workflow's
+  triggers also deletes the `AGENTS.md` override block (key
+  `POST_PUSH_OVERRIDE`), after which the fallback reviewer subagent is the
+  post-push review route.
 - **`branch-governance-audit.yaml`** — set `AGENT_PREFIX` to the push-allowed
   branch prefix `AGENTS.md` names, if the project uses something other than
   `claude/`.
@@ -673,9 +685,10 @@ the shape below.
   no endpoint and no credential, so telemetry stays off until the project sets
   it up; delete the `env` block if the project wants no tagging at all.
 - `.claude/settings.local-example.json` is the opt-in quality binding
-  (format-on-edit + lint/test-before-stop) and pre-approves the two scheduling
-  tools `loop-engineering` uses to wake itself while waiting on CI. The
-  session-start hook copies it to `settings.local.json` in cloud sessions.
+  (format-on-edit + lint/test-before-stop) and pre-approves the two pull request
+  activity subscription tools a run waits through while CI and review run. It
+  grants no tool that schedules a wake. The session-start hook copies it to
+  `settings.local.json` in cloud sessions.
 - `.claude/hooks/*.sh` need the token fill — `{{CODE_FILE_GLOB}}`,
   `{{CODE_FILE_REGEX}}`, `{{INSTALL_CMD}}`, and the command tokens, plus the
   optional `{{LINT_FIX_CMD}}` and `{{LINT_FIX_FILE_GLOB}}` if the project keeps
@@ -684,10 +697,12 @@ the shape below.
   when it is already present). Delete any hook the project does not want, and
   its entry in the settings file above.
 - `.claude/agents/` holds `implementer.md`, `reviewer.md`, and
-  `investigator.md`. None carries project-specific text, so none needs
-  adapting; all three are outside the skills CLI, so refreshing skills never
-  updates them — copy a newer version by hand if upstream changes one. Deleting
-  any of them degrades the loop gracefully rather than breaking it.
+  `investigator.md`. They are shared definitions that carry no project-specific
+  text — the reviewer takes its marker from `AGENTS.md` and its report format
+  from `REVIEW.md` — so none needs adapting; all three are outside the skills
+  CLI, so refreshing skills never updates them — copy a newer version by hand
+  if the template changes one. Deleting any of them degrades the loop
+  gracefully rather than breaking it.
 - The session-start hook materializes `settings.local.json` and `.env.local`.
   The template ships a `.gitignore` that excludes both (the
   `application-security` skill assumes they are gitignored) — keep those entries
@@ -698,8 +713,28 @@ The Claude Code binding is the only one to set up — there is no per-agent choi
 to make. A project that later wants to drive the same `AGENTS.md`, skills, and
 `docs/` from another agent adds that binding itself, outside INIT, by pointing
 the agent at `AGENTS.md`; the portable substance already supports it, which is
-why `AGENTS.md` holds the whole agreement and `CLAUDE.md` holds nothing but the
-import.
+why `AGENTS.md` holds the host-neutral agreement and `CLAUDE.md` holds what is
+specific to Claude Code.
+
+---
+
+## Step 6b — Fill in or delete the standing delivery grant
+
+[`docs/operations/development-workflow.md`](./docs/operations/development-workflow.md)
+ends with a **Standing Delivery Grant** skeleton. In the template it grants
+nothing: it is inert until the maintainer merges a change that fills it in. Ask
+the maintainer whether runs in this project should perform the delivery effects
+it lists — the tracking issue, append-only pushes of the working branch, the
+draft pull request, post-push review requests, review-thread replies, and the
+ready transition — without asking each time. This is a MUST-ask: the grant is
+human authorization, and an agent never grants it to itself.
+
+- **Yes** — fill in the `<maintainer>` and adopting-pull-request placeholders,
+  adjust the targets, effects, and exclusions to the project, and delete its
+  `<!-- INIT: ... -->` comment and the inert-until-merged paragraph. The grant
+  takes effect only when the maintainer merges the pull request that carries it.
+- **No** — delete the section, and remove "and the delivery grant" from the
+  GitHub routing bullet in `AGENTS.md`.
 
 ---
 
@@ -737,6 +772,8 @@ import.
   starts at its own first decision, never backfilled to explain a constraint
   inherited from the template — and reword `docs/index.md`'s Decisions entry so
   it no longer links a directory that is now gone.
+- Search the tree for `TRANSITIONAL` blocks and remove each one whose condition
+  is met (see the completion checklist).
 - Remove the "Template note" blockquote at the top of `AGENTS.md`, every
   `<!-- INIT:OPTIONAL ... -->` marker and `<!-- INIT: ... -->` fill-in comment,
   every "TEMPLATE NOTE" / "_delete during INIT_" line for sections you decided
@@ -751,7 +788,7 @@ import.
 - [ ] No `{{TOKEN}}`s remain in authored files (build/VCS dirs excluded):
       `./init.sh check` (or `grep -rnE '\{\{[A-Z][A-Z0-9_]*\}\}' .
       --exclude-dir=node_modules --exclude-dir=.next --exclude-dir=.git`).
-      The uppercase-token pattern matters when the independent-review
+      The uppercase-token pattern matters when the post-push review
       workflows are kept: GitHub Actions `${{ ... }}` expressions contain
       `{{` but are lowercase, so they never match, while leftover tokens in
       `.github/` (e.g. `merge-checks.yaml`'s run commands) are caught.
@@ -810,3 +847,15 @@ import.
 - [ ] No kept workflow's comments still describe the un-adapted template —
       including `.github/workflows/merge-checks.yaml`'s header, once its guard
       steps have armed for good.
+- [ ] `grep -rn 'TRANSITIONAL' . --exclude-dir=.git --exclude-dir=skills
+      --exclude=INIT.md` finds no block whose condition is met: each
+      `<!-- TRANSITIONAL: remove once the installed skills no longer conflict
+      with this block -->` … `<!-- /TRANSITIONAL -->` pair is removed, with its
+      contents, once the project's installed skills are refreshed past the
+      upstream change that ends the conflict. A pair whose condition still holds
+      stays.
+- [ ] The standing delivery grant skeleton in
+      `docs/operations/development-workflow.md` is resolved: either filled in
+      (no `<maintainer>` or `<adopting pull request>` placeholder left,
+      awaiting the maintainer's merge) or deleted, together with the
+      "delivery grant" mention in `AGENTS.md`'s GitHub routing bullet.
