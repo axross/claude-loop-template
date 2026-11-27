@@ -37,7 +37,8 @@ The adopted grant authorizes these actions on its named targets:
 
 - creating the tracking issue, publishing and revising the plan in it, and
   assigning the authenticated operator
-- append-only pushes of the working branch
+- append-only pushes of the working branch when the operator selects delivery
+  at the [plan gate](../../CLAUDE.md#confirming-delivery-at-the-plan-gate)
 - opening the draft pull request, where the host's explicit-request condition is
   also met
 - maintaining the pull request description

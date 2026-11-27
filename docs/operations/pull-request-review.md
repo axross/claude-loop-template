@@ -23,8 +23,9 @@ applies only when the human authorizes publication at the
 
 Address CI review findings in the main session when subagents are
 unavailable. If a missing subagent also prevents the selected fallback review,
-report that gate unmet. A local-only delivery choice keeps the branch
-local.
+report that gate unmet. When the human selects “neither” at the plan gate, the branch stays
+local and the human decides whether to push it. That choice narrows the
+[standing grant](./delivery-authorization.md#covered-effects) for this run.
 
 At the round cap, explain that deferring an open Critical or Major finding
 records it on the tracking issue. When the human chooses deferral and authorizes the issue write, post the

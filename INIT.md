@@ -549,15 +549,23 @@ cite its decision if one exists, or remove the template-specific sentence.
 
 ### The write order
 
-Use the Step 1 interview and the repository to identify a question a
-contributor or caller needs answered. Find the subject that owns the answer.
-Update its page in place, keeping a constraint beside its reason. Add a page
-when readers need to make an independent decision.
+Build the first reading route in this order:
+
+1. Choose a question from the Step 1 interview and check its answer against
+   the repository or an adopted project decision.
+2. Find the subject where the reader would look. Update its owning page, or
+   add a typed page if the question calls for an independent decision. Keep
+   the constraint beside its reason.
+3. Link the answer from the subject or root index and from the contributor
+   entry point for that task.
 
 ### Placing a document: `conventions/` or `operations/`?
 
-For the directory choice in §1c, put the agreed module placement in a
-Convention. Put the steps for running a deployment with its Procedure.
+Choose the directory by asking where a mistake would show up. If it appears
+in a proposed repository change, put the team's rule in `docs/conventions/`.
+For example, the module layout agreed in §1c belongs there. If a person
+would make the mistake while running or recovering a task, put the procedure
+in `docs/operations/`. Deployment steps belong there.
 An architectural boundary may need its own page when a reader needs to know
 which component owns a responsibility. For a project with a login, put its
 lockout thresholds and session-cookie ownership rule in
@@ -724,9 +732,14 @@ human authorization, and an agent never grants it to itself.
   whole-root documentation check. Preserve the prerequisites of each check
   you keep, including npm dependencies, Python with PyYAML, and the pinned
   OKF validator for the documentation check.
-- An adopter with no readers of the template's two historical skill decisions
-  may remove their compatibility pages in `docs/decisions/` and their index
-  entries. Keep any route that the adopted project still supports.
+- When retiring the two historical skill records in `docs/decisions/`, remove
+  their entries from the root index. Remove the Decisions heading and its
+  introduction if no entries remain. Preserve the routes if the project
+  supports them or external use is uncertain.
+- Apply the same bookmark check to `docs/operations/agent-sessions.md` and
+  `docs/operations/development-workflow.md`. An adopter retiring either
+  template guide must update the final paragraph in `docs/operations/index.md`
+  and any other links to that guide. Remove the paragraph if both guides go.
 - Remove the "Template note" blockquote at the top of `AGENTS.md`, every
   `<!-- INIT:OPTIONAL ... -->` marker and `<!-- INIT: ... -->` fill-in comment,
   every "TEMPLATE NOTE" / "_delete during INIT_" line for sections you decided
