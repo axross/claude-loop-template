@@ -32,8 +32,8 @@
   `<!-- agent -->` is retired: it is still recognized in history and never
   written.
   <!-- INIT: keep the marker and the retired-marker note, or replace both with the project's own marker and its retired predecessors. -->
-  Begin every agent-authored GitHub comment with the marker, identically across
-  every run, so a later run can tell its own output from human input.
+  [GitHub Operation](./.claude/skills/github-operation/references/identity-and-targets.md#attribute-comments-without-inventing-a-bot)
+  owns how an agent comment is marked and read back.
 - Never push to the default branch. Work on a `claude/`-prefixed branch and
   leave merging to the maintainer, `@<maintainer>`.
   <!-- INIT: replace `@<maintainer>` with the connected operator's real handle. -->
@@ -90,8 +90,8 @@ Choose guidance from the actual session and the changed surface:
   and the subagents.
 - **GitHub:** load [GitHub Operation](./.claude/skills/github-operation/SKILL.md)
   for every read and write, and
-  [Development Workflow](./docs/operations/development-workflow.md) for the
-  three reviews, branch governance, and the delivery grant.
+  [Development Workflow](./docs/operations/development-workflow.md) for this
+  repository's review choices, branch governance, and the delivery grant.
 
 <!-- INIT:OPTIONAL key=POST_PUSH_OVERRIDE — Keep the bullet below while the project's CI reviewer (.github/workflows/claude-review.yaml) stays enabled, then delete this comment. To disable that reviewer's triggers, delete this comment and the bullet: the fallback reviewer subagent then becomes the post-push review route. -->
 - **Post-push review override, Claude Code sessions:** use the review trigger
@@ -103,9 +103,10 @@ Choose guidance from the actual session and the changed surface:
 
 MUST read and apply [REVIEW.md](./REVIEW.md) as this repository's review policy,
 and load [Code Review](./.claude/skills/code-review/SKILL.md) for the review
-methodology. [Development Workflow](./docs/operations/development-workflow.md#the-three-reviews)
-defines plan review, pre-push review, and post-push review and the route each
-takes.
+methodology. [Loop Engineering](./.claude/skills/loop-engineering/SKILL.md)
+defines plan review, pre-push review, and post-push review;
+[Development Workflow](./docs/operations/development-workflow.md#the-three-reviews)
+states this repository's choices for them.
 
 Changes to the review or CI infrastructure, secret handling, the dependency or
 supply-chain surface, public route or API contracts, the data layer, and large
@@ -114,9 +115,9 @@ review, not a lighter path.
 
 ## Skill maintenance
 
-MUST NOT edit an installed skill under `.claude/skills/` to fix a rule that is
-wrong, outdated, or missing; the edit does not survive a reinstall and
-misrepresents the library until it is discarded. Route it per
-[docs/operations/agent-skills.md](./docs/operations/agent-skills.md). At
-completion, MUST report whether skill maintenance was performed, skipped, or
-blocked.
+[Agent Skill Management](./.claude/skills/agent-skill-management/SKILL.md) owns
+the rule against hand-editing an installed skill and the routing of a rule that
+is wrong, outdated, or missing; [docs/operations/agent-skills.md](./docs/operations/agent-skills.md)
+holds this repository's register of departures. At completion, MUST report
+whether skill maintenance was performed, skipped, or blocked; this three-way
+report is this project's own convention.
