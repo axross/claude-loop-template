@@ -9,11 +9,13 @@
 // written down. checking the other direction would need an exception list for
 // both, and an exception list is where a rule goes to be ignored.
 
-import { extractHeadings, main, selfName, siblingHelp, slug } from "./docs.mjs";
+import { main, selfName, siblingHelp } from "./docs.mjs";
+
+import { checkGlossary } from "./navigation.mjs";
 
 const USAGE = `Usage: ${selfName(import.meta.url)} [<docs-dir>]
 
-Check that every spec under a project's docs has a matching heading in
+In a legacy layout, check that every spec under a project's docs has a matching heading in
 glossary.md. Run it after adding or renaming a spec, or after editing the
 glossary.
 
@@ -26,51 +28,17 @@ Exit codes: 0 every spec has a heading, or the project has no docs, or no specs/
             1 findings. 2 bad invocation.
 ${siblingHelp(selfName(import.meta.url))}`;
 
-function run(docs) {
-  const specs = docs.documents.filter((doc) => doc.relative.startsWith("specs/"));
-  if (specs.length === 0) return [];
-
-  const glossary = docs.documents.find((doc) => doc.relative === "glossary.md");
-  if (!glossary) {
-    return [
-      {
-        category: "glossary",
-        message: `glossary.md is missing, so none of the ${specs.length} spec(s) has anywhere to define its terms`,
-      },
-    ];
-  }
-
-  const headings = new Set(extractHeadings(glossary.text, 2).map(({ text }) => slug(text)));
-  const findings = [];
-
-  for (const spec of specs) {
-    const stem = spec.relative.slice("specs/".length, -".md".length);
-    if (stem.includes("/")) {
-      findings.push({
-        category: "nested",
-        message: `${spec.relative} is nested; specs/ is flat so one domain maps to one heading`,
-      });
-      continue;
-    }
-    if (!headings.has(slug(stem))) {
-      findings.push({
-        category: "glossary",
-        message: `${spec.relative} has no matching heading in glossary.md`,
-      });
-    }
-  }
-
-  return findings;
-}
-
 process.exitCode = await main({
   usage: USAGE,
-  argv: process.argv.slice(2),
-  needs: "specs",
-  absent: "Nothing to check.",
-  run,
-  pass: (docs) =>
-    `Every spec has a heading in glossary.md (${
-      docs.documents.filter((doc) => doc.relative.startsWith("specs/")).length
-    } checked).`,
+  run: checkGlossary,
+  pass: (docs) => {
+    if (docs.okf)
+      return "OKF concepts do not require matching glossary headings.";
+    const count = docs.documents.filter((doc) =>
+      doc.relative.startsWith("specs/"),
+    ).length;
+    return count
+      ? `Every spec has a heading in glossary.md (${count} checked).`
+      : "No specs/ entries. Nothing to check.";
+  },
 });

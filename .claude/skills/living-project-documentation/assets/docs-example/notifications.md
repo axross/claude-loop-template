@@ -1,4 +1,8 @@
-<!-- Example. Part of the example docs tree shipped with living-project-documentation. -->
+---
+type: Specification
+title: Notifications
+description: How terminal job outcomes reach channels, immediately or in a digest.
+---
 
 # Notifications
 
@@ -8,19 +12,19 @@ collapses a run of them.
 
 ## Rules
 
-A notification rule belongs to the account, not to a template, and selects the jobs it
+A **Notification Rule** belongs to the account, not to a template, and selects the jobs it
 cares about by template name and terminal state. Two rules matching the same job both
 fire; the product does not deduplicate across rules, because each names its own
 channel and suppressing one would silently drop a recipient.
 
 A rule fires on a job's terminal state only. `queued` and `running` are not states a
 rule can select, so a job that never finishes never notifies —
-[scheduling.md](./scheduling.md) owns which states are terminal, and this rule reads
-that set rather than restating it.
+see [which job states are terminal and when a failed attempt returns to the queue](./scheduling/outcomes.md#states).
 
 ## Channels
 
-A rule names exactly one channel. A channel serves many rules, so disabling a channel
+A **Channel** is an email address, webhook, or chat integration. A rule names
+exactly one channel. A channel serves many rules, so disabling a channel
 silences every rule pointing at it at once, and the rules stay enabled rather than
 being rewritten.
 
@@ -31,8 +35,8 @@ an operator who has already moved on.
 
 ## Digests
 
-A rule set to digest emits one message per interval standing for every outcome that
-matched it, rather than one message per job. An interval that matched nothing emits
+A **Digest** collects outcomes on a fixed interval. The rule emits one
+message for all matching outcomes in that interval. An interval that matched nothing emits
 nothing — a digest saying "no failures" is a message someone learns to ignore, which
 costs more than it tells them.
 

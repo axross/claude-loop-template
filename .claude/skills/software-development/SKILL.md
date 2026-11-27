@@ -1,6 +1,6 @@
 ---
 name: software-development
-description: Every task that touches a project — implementing, refactoring, running a project command, or writing a pull request body. The baseline discipline underneath the specialised skills — keep the change scoped, run the format and lint loop, map what the change puts at risk, and find out how the project is actually run. Applies even when the request never mentions formatting, linting, comments, dependencies, docs, or descriptions, and when you need one of the project's operations — tests, dev server, build, lint, deploy — and must find it documented or ask. Not for a session that touches nothing, where the conduct baseline applies instead.
+description: Every task that touches a project — implementing, refactoring, diagnosing failed checks, running a project command, or writing a pull request body. The baseline discipline underneath the specialised skills — keep the change scoped, run the format and lint loop, map what the change puts at risk, and find out how the project is actually run. Applies even when the request never mentions formatting, linting, comments, dependencies, docs, or descriptions, and when you need one of the project's operations — tests, dev server, build, lint, deploy — and must find it documented or ask. Change-loop practices own progression after results; the conduct baseline applies when a session touches nothing.
 user-invocable: false
 ---
 
@@ -8,32 +8,23 @@ user-invocable: false
 
 This skill equips you to make a change the way a project expects: formatted and linted, kept to the smallest scope that satisfies the task, verified against the surfaces it puts at risk, operated through the commands the project documents, grounded in current vendor docs where a dependency moves fast, and landed as a well-described pull request. Reach for it on every task that touches the project — it is the baseline the other, more specific skills build on.
 
-Load only the reference sections a given task touches; each one below routes to the detail.
+Choose the applicable references below for the current task and read each in full before the judgment it governs.
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119.html).
 
 ## Independent Operations
 
-A turn is priced by the size of the context it carries, not by what it does: a turn that issues one operation costs about what a turn that issues several unrelated operations costs, because the price follows the turn, not what is packed into it. Spreading N operations that do not depend on one another across N turns therefore costs roughly N times what issuing the same N together, in one turn, costs — without producing more than the one-turn version would have.
+Operations can share a turn when their inputs and necessity are already known. For prerequisites between incremental changes, follow [Make Incremental Changes](./references/change-management.md#make-incremental-changes).
+
+**Guidelines:**
+
+- MUST issue independent operations in the same turn.
+- MUST wait when an earlier result determines a later operation's target, arguments or necessity.
 
 See [independent-operations.md](./references/independent-operations.md) for:
 
-- the pricing rationale in full — what a turn is billed for, and why the multiplier is the number of turns rather than the number of operations
-- the dependency test that decides which operations may share a turn, worked through with a Good/Bad example pair
-- why no numeric target is given for how many operations belong in one turn
-- how this rule sits beside [change-management.md](./references/change-management.md)'s incremental-changes rule without contradicting it
-
-**Guidelines:**
-
-- MUST read [independent-operations.md](./references/independent-operations.md) when it is not obvious whether a candidate operation depends on another's result, or when this rule appears to conflict with [change-management.md](./references/change-management.md)'s incremental-changes rule.
-
-What follows is the rule itself, not a further reading obligation: it binds every turn this skill governs rather than some narrower situation — a turn either has mutually independent operations available to issue together or it does not, and this rule is what decides which — so it stands here directly instead of behind a pointer that would fire on every turn regardless.
-
-**Guidelines:**
-
-- MUST issue operations that do not depend on one another in the same turn rather than splitting them across consecutive turns.
-- MUST NOT batch an operation into that turn when its target, arguments, or necessity is determined by another operation's result — that operation is dependent, and batching it produces a call made against the wrong target, or one that should never have been made at all.
-- MUST NOT read this rule as licence to skip verifying a change before moving to the next step: [change-management.md](./references/change-management.md)'s "Make Incremental Changes" governs that case, and such a step is dependent by construction — its necessity is set by the previous step's verification result, so it stays outside this rule's batch rather than being an exception to it.
+- deciding whether candidate reads, checks or other operations depend on each other
+- reasoning about repeated input costs or choosing batches within incremental changes
 
 ## Code Quality
 
@@ -44,7 +35,7 @@ See [code-quality.md](./references/code-quality.md) for:
 - what makes text a comment when the carrying format has no comment syntax of its own, and why a field a program reads as data stays out of scope
 - the comment voice — lowercase prose, no all-caps emphasis, and what keeps its real casing
 - the admissibility test a comment must clear — nothing recoverable by reading the code or following it — and deletion rather than rewording as the fix
-- doc-comment and explanatory-comment conventions in source files, including the line-comment form and the ~300-character prose budget on an explanatory comment
+- doc-comment and explanatory-comment conventions in source files, including the line-comment form, the ~300-character prose budget on an explanatory comment, and the comment-subject test that keeps either kind describing the code rather than the work that produced it
 - the `TODO(#123):` convention, the unfinished-code test that earns a site the marker, the tracked follow-up it must resolve to, and the standardized forms that may still carry an identifier or a URL
 - where a specification, a domain term, a decision's rationale, or an incompressible file-local "why" goes once a comment may no longer carry it
 
@@ -52,7 +43,10 @@ See [code-quality.md](./references/code-quality.md) for:
 
 See [change-management.md](./references/change-management.md) for:
 
+- implementing a defect correction, addressing a review finding, or refactoring behavior
 - staying within the scope of the task
+- tracing a correction to its evidenced cause and owner instead of patching symptoms
+- selecting a coherent remedy, including shared causes and temporary mitigation
 - making incremental, independently verifiable changes
 - following existing patterns before introducing new ones
 - weighing whether to add a dependency
@@ -86,8 +80,16 @@ ships none, it requires nothing.
 
 See [verification.md](./references/verification.md) for:
 
+- choosing verification for a defect correction or review-driven change
+- diagnosing failed checks through regression, baseline-source, generated/local-state and unavailable-route evidence, including identical base/current failures
 - mapping changed files to the output surfaces they put at risk before choosing a verification path
+- planning fragile obligations with independent expected results and discriminating checks before execution
 - the manual verification steps that confirm a change before it is called done, and why a passing gate is not one of them
+- routing a device check — when an agent's simulator or emulator exercise satisfies it, and when it goes to a human on a physical device
+- leaving a shared simulator, emulator or device as found — restoring a changed setting even after a failed check, and when to uninstall the run's build
+- checking the current integrated output against governing rules and valid exceptions, separately from skill acquisition
+- bounding evidence by material, scope, platform, evidence tier and observed stage, with skipped or insufficient checks left unverified
+- checking that a correction achieves the intended outcome without sacrificing required behavior
 
 ## Current External Documentation
 
@@ -107,15 +109,13 @@ See [pull-request-descriptions.md](./references/pull-request-descriptions.md) fo
 - who the description is written for — the developer about to read the diff — and the roughly 200-word ceiling that follows from it
 - what a pull request body contains, and why the "why" leads
 - reproducing the repository's pull request template in an API-authored body
-- issue linking, verification evidence, risk disclosure, and reviewer guidance
+- issue linking, the body's diff-verifiable and designated out-of-tree criteria with evidence links, risk disclosure, and reviewer guidance
 - keeping the description current across review rounds
 
 ## Topic-Specific Skills
 
-A project may define its own topic skills — covering repository structure, a component or routing convention, or any authoring-domain rules. Consult those skills when a change touches the area they own, if they have been defined.
+See [topic-specific-skills.md](./references/topic-specific-skills.md) for:
 
-**Guidelines:**
-
-- MUST consult the matching topic skill when a change touches the area that skill owns.
-- SHOULD load only the references relevant to the changed files or requested behavior.
-- MUST defer detailed project rules to the owning topic skill instead of restating them here.
+- selecting applicable skills by affected responsibility before planning, explanation, implementation, verification or review
+- distinguishing bounded structural discovery from judgments that depend on full skill bodies and applicable references
+- reassessing selection before newly affected work, without treating the starting set as a ceiling

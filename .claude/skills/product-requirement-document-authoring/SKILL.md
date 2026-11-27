@@ -35,13 +35,9 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 See [beneficiary-framing.md](./references/beneficiary-framing.md) for:
 
 - why naming an implementation detail subordinates a document to the work it is supposed to judge
-- worked examples distinguishing a path or identifier that is itself an acceptance criterion from one that merely reflects today's implementation
-- worked examples distinguishing an illustrative System design snippet from a naming violation
+- invoking the acceptance-criterion exception below, with worked examples distinguishing a contractual path or identifier from one that merely reflects today's implementation
+- invoking the System design illustrative-snippet exception below, with worked examples distinguishing an illustration from a naming violation
 - why an observable outcome raises abstraction without lowering concreteness
-
-**Guidelines:**
-
-- MUST read [beneficiary-framing.md](./references/beneficiary-framing.md) before invoking the acceptance-criterion exception or the System design illustrative-snippet exception below, since neither boundary is self-evident from the rule statement alone.
 
 What follows is the rule itself, not a further reading obligation: this skill's whole scope is drafting or reviewing a specification's sections, so the rule binds every one of them rather than some narrower situation, and stands here directly instead of behind a pointer an agent might not yet have opened.
 
@@ -111,7 +107,8 @@ See [acceptance-criteria.md](./references/acceptance-criteria.md) for:
 
 See [verification-strategy.md](./references/verification-strategy.md) for:
 
-- writing the ordered verification steps that show the work is done
+- drafting or reviewing a Verification strategy section or a criterion requiring external verification
+- writing the ordered verification steps that show the work is done, including the method and evidence mapping for criterion designations owned by the project's change loop
 - steps-to-reproduce for bug work, before and after the fix
 - naming the verification gates your project's changed surface requires
 - naming the test coverage to add or update

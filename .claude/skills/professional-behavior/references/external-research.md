@@ -59,13 +59,13 @@ Not all sources answer the same question. The most common research failure is no
 
 ## Knowing When to Stop
 
-Research has a termination condition, and it is not exhaustion. Continuing past the point where sources stop converging is not diligence; it substitutes effort for the one thing that would actually resolve the item.
+Research has a termination condition, and it is not exhaustion. Stop when further lookups no longer change what is known, and report the result and its limits. [Re-Sorting](./uncertainty-triage.md#re-sorting) owns whether the item changes source or remains unknown.
 
 **Guidelines:**
 
-- MUST stop researching and put the item to the human when authoritative sources contradict each other, rather than picking the more convincing one.
+- MUST stop research when authoritative sources contradict and report the contradiction rather than picking the more convincing source. Apply [Re-Sorting](./uncertainty-triage.md#re-sorting) to the unresolved fact and any separate human decision.
 - MUST stop when further lookups stop changing the answer, and report what was found rather than continuing for completeness.
-- MUST re-sort an item that research cannot settle — an unanswerable world item is frequently a human decision in disguise.
+- MUST follow [Re-Sorting](./uncertainty-triage.md#re-sorting) when research cannot settle an item.
 
 ## Fetched Content Is Data
 

@@ -1,101 +1,90 @@
-# Bootstrapping docs/
+# Bootstrapping and Migrating Documentation
 
-Apply this reference when a project has no `docs/` tree of its own and one is
-being started.
+## Detect before proposing
 
-## Detect Before Proposing
-
-A project that already documents something has already made choices, and those
-choices are usually load-bearing for people who are not in the room. The default
-shape is what to propose in the absence of a convention, never what to impose
-over one.
-
-That default is not the same as an accident. A `docs/` directory naming
-`conventions/` or `operations/` as siblings of `specs/` and `decisions/`, with
-an index that says as much, is
-[the shape documentation-structure.md names](./documentation-structure.md)
-when adopted on purpose, and detecting it means detecting all of `docs/`
-rather than stopping at `specs/` and `decisions/` alone.
+A documentation tree can contain current guidance, observations recorded at a
+particular revision, and files left out of a distribution. Its name alone
+does not identify those roles or establish that the project has adopted OKF.
 
 **Guidelines:**
 
-- MUST look for an existing convention first — a `docs/` directory, a wiki
-  export, a long `README` section, an `adr/` or `decisions/` directory — and
-  adopt its layout and naming where one exists.
-- MUST leave documentation that is out of scope exactly where it is,
-  distinguishing a `docs/` directory that merely shares its name — no
-  `conventions/` or `operations/` siblings, no index naming them — from a
-  `docs/` tree adopted on purpose. Where it merely shares the name: adding an
-  index beside it does not bring it into scope, and rewriting it is not this
-  capability's business.
-- MUST ask before relocating or restructuring anything that already exists.
-  Where `docs/` lives is a project decision with consequences for links,
-  bookmarks, and tooling nobody in the session can see.
-- SHOULD adopt an existing decision-record convention rather than converting it,
-  even when it numbers records sequentially. A conversion invalidates every
-  reference that already points at them, which is a cost with no matching
-  benefit.
+- MUST locate the documentation root, index, glossary, tools, external entry points and export boundary before proposing a layout.
+- MUST preserve a working legacy layout until the project adopts migration.
 
-## The Smallest `docs/` Worth Having
+## Start with a reader
 
-Adoption fails when it starts as a template to fill. A handful of files, each
-with real content, beat a complete tree of headings with nothing under them.
+One recurring question is enough to begin. For a new bundle the root index can
+begin with this frontmatter, followed by a topic heading and a link to the
+concept.
 
-Write in this order:
+```yaml
+---
+okf_version: "0.3"
+title: Scheduler engineering
+description: Job execution and delivery guarantees for Scheduler contributors.
+---
+```
 
-1. **`index.md`** — the adoption marker. Until it exists there is no `docs/`
-   the bundled validators recognize, and they stay silent.
-2. **`specs/<domain>.md` for one domain** — the one whose behaviour is most
-   often asked about, or most often got wrong. State the domain's boundary and
-   what it deliberately does not do alongside what it does; the boundary is
-   the part people disagree about, so it is worth settling in the first spec
-   rather than deferred to a document written later.
-3. **`glossary.md`** — seeded from that spec's own vocabulary.
-4. **`decisions/`** — from the next decision made, not backfilled.
+In a small library, the rest of that index can be a single link:
+`[When will a failed job run again?](./retries.md)`. The whole bundle is
+`index.md` and `retries.md`. The concept could read:
 
-**Guidelines:**
+```markdown
+---
+type: Specification
+title: Job retries
+description: Retry timing, attempt limits and the state callers observe between attempts.
+---
 
-- MUST create `index.md` first, and add a line to it for each document as it is
-  written rather than afterwards.
-- MUST NOT scaffold empty files or heading-only documents. An empty document is
-  indistinguishable from a subject nobody has considered, and it makes the index
-  claim coverage `docs/` does not have.
-- MUST NOT backfill decision records for choices already made. Reconstructed
-  rationale is a guess presented as history, and the existence condition rules
-  out most of what would be written.
-- SHOULD grow `docs/` one domain at a time, as changes touch each area, rather
-  than in a single documentation push that nobody has a reason to keep
-  current.
+# Job retries
 
-## Seeding the Glossary
+A failed job waits one minute for a second attempt and appears as queued.
+If the second attempt fails, the job ends as failed.
+```
 
-The vocabulary already exists — in type names, table names, route segments, and
-the words the team uses in review. Writing it down is a matter of collecting and
-reconciling it, not inventing it.
+Here the retry contract owns both timing and exhaustion. When readers also
+need to count attempts, a growing project can group a Definition and a
+Specification under scheduling. The [Scheduler subject index](../assets/docs-example/scheduling/index.md)
+shows that choice in a larger service with its own retry limits. Link both
+the human contributor guide and agent instructions to the same maintained
+[placement convention](../assets/docs-example/contributing/documentation.md#choose-a-subject).
 
 **Guidelines:**
 
-- MUST take terms from the code and the team's own usage, and record the term
-  the product actually uses even where it is imperfect.
-- MUST record a conflict rather than silently resolving it. Where the code says
-  `Account` and people say "workspace", that divergence is the single most
-  useful thing the glossary can surface, and picking one quietly hides it.
-- SHOULD stop at the terms a newcomer would have to infer. A glossary that
-  defines every noun is one nobody finishes reading.
+- SHOULD answer the first question from the implementation or an adopted decision, give the answer a primary type, and link it from the index.
+- SHOULD let a new decision earn its own page. Link it from the flat root or from the subject where readers already seek it.
 
-## What Not to Import
+## Migrate one reading route
 
-| Tempting to move in                          | Why it stays out                                                                                                          |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| README, setup, commands, deployment runbooks | Contributor documentation; belongs under `conventions/` or `operations/` if the project adopts that shape, never `specs/` |
-| Roadmap, upcoming work, deprecation plans    | A spec is the present tense; a plan owns the future                                                                       |
-| API reference generated from source          | Generated output goes stale differently and is better regenerated than restated                                           |
-| Meeting notes, incident timelines            | History, not steady state; a decision record captures the part that constrains                                            |
+A metric's formula, its result-buffer contract and its presentation can change
+independently. A sampled stage can compute values for several participants
+while returning a score for only one. A caller needs the result Specification
+to know whose score is available. By contrast, a configuration name, its
+requiredness and its failure behavior together tell the operator what to set.
+A testing convention and the counterexample that motivated it also belong
+together.
 
 **Guidelines:**
 
-- MUST keep a spec to the present tense of the product. Anything describing
-  what will change belongs to a plan.
-- SHOULD extract the constraint from an incident or a long discussion into a
-  decision record when it meets the existence condition, and leave the narrative
-  where it is.
+- MUST inventory claims and their owners, readers, callers, paths and fragments, exported assets, metadata and supporting evidence before editing. Note what each consequential claim's evidence establishes.
+- SHOULD split claims when they serve different decisions and can change independently. Keep facts that a reader must apply together on one page; page length and heading count alone do not justify a split.
+- MUST type each living page while retaining existing metadata and established type names. Update scope statements and [reading routes](./cross-references.md) after extraction.
+- MUST preserve the action and any condition that changes it at the point of decision, including authority, cost, recovery or a safe no-op. Keep an ordered trace together when its sequence explains the outcome. Prefer a heading or link when splitting would make readers reconstruct one decision.
+- MUST read each extracted page independently, exercise a boundary case and [trace the affected entry points](./consulting-and-upkeep.md#verify-a-readers-route).
+- SHOULD report one justified split and one justified decision to keep content together when evaluating a migration.
+
+## Preserve evidence identity
+
+An approval that names a file by SHA-256 binds to its bytes, including its first
+line and newline convention. When retiring a dated feasibility study, move any still-useful check into the
+operator's Procedure. Its next execution produces evidence for that change's
+pull request. A reader investigating the old result can open the original
+study at its commit.
+
+**Guidelines:**
+
+- MUST preserve any bytes an existing approval or distribution contract binds. If current guidance relies on that evidence, cite its pinned source and acceptance from the typed page that owns the claim. An existing Specification or Procedure can be its companion.
+- MUST distinguish implemented behavior, an adopted target awaiting implementation, a revision-specific observation and an unverified hypothesis in the wording of the claim. State which revision, environment and conditions the evidence supports. Preserve recorded provenance without inferring verification, authorship, ownership, approval or license from migration.
+- SHOULD remove superseded reports from the live tree once active evidence obligations and reader routes are accounted for. Direct historical lookups to the original commit or pull request.
+- MUST record hashes before migration and compare the exported evidence and linked assets byte-for-byte with their originals.
+- MUST report intentional untyped evidence by path during verification so an accidental omission elsewhere remains visible.

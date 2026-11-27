@@ -5,21 +5,10 @@ decide which of the candidates belong together and which do not.
 
 ## What a Turn Is Billed For
 
-A turn's price follows the context it carries into the model and back — the
-instructions, the files it reads, the results the tools it calls return — not
-the number of things it decides to do with that context. Two turns, each
-holding one operation, pay that overhead twice; one turn holding both
-operations pays it once. The multiplier that matters is therefore the count
-of turns issued, not the count of operations performed inside them: N
-operations spread across N turns each pay a turn's worth of overhead N times
-over, while the same N issued together pay it once. Nothing about the work
-itself changes — the same files get read, the same calls get made — only how
-many times the overhead attached to making them was paid.
-
-The ceiling this implies is not a preference for fewer turns as a matter of
-style; it is a direct consequence of what a turn costs, and it holds
-regardless of which kind of operation is doing the reading, writing, or
-querying.
+Batching independent operations can avoid another trip through the model.
+The cost difference depends on input, cache writes and reads, and generated
+output. Tool results that enter a later request contribute to its input. To evaluate savings for a task, compare the total cost of all
+requests and the observed wall time under comparable conditions.
 
 ## The Dependency Test
 
@@ -36,10 +25,10 @@ it still has to wait for the turn after the one whose result it needs.
 
 **Good Example:**
 
-> Three files whose paths are already known — a skill's `SKILL.md`, its
-> sibling reference, and the repository's contributing guide — read together
-> in one turn. Nothing about any of the three reads depends on what either of
-> the other two returns.
+> A change has already been located in two files. Both diffs and the
+> project's contributor guide are needed to assess it. Their paths and the
+> need for each read are known before any result returns, so read them
+> together.
 
 **Bad Example:**
 
@@ -51,35 +40,13 @@ it still has to wait for the turn after the one whose result it needs.
 
 ## Why No Target Number Is Given
 
-The ceiling on a turn is however many genuinely independent operations the
-task at hand actually has — a property of the task, not of the agent
-applying this rule. A task touching three unrelated files has three
-independent reads available to it; a task touching one has one, and forcing
-a second, unrelated operation into that turn only to reach some stated
-figure would not make the two operations any more independent than they
-already were. A fixed number — an average, a minimum batch size, a
-per-turn quota — would invite exactly that: manufacturing operations to
-reach it, or worse, forcing a dependent operation into a batch because the
-count fell short. Naming no number is therefore not an omission; it keeps
-the rule pointed at the actual shape of the task in front of it rather than
-at a target that has nothing to do with that task.
+Use the operations the task actually needs. A batch might contain one read
+or several. Adding a speculative read to meet a quota also pays for its
+result and can expose irrelevant material to later requests.
 
 ## Beside Change Management's Incremental Steps
 
-[change-management.md](./change-management.md)'s "Make Incremental Changes"
-asks for small, independently verifiable steps, each checked before the next
-begins. Read quickly, that can sound like it is in tension with a rule that
-asks for operations to be batched — until the dependency test above is
-applied to the steps themselves. A verification step's necessity, and often
-its shape, is set by what the previous step's check returned: whether the
-tests still pass, whether the lint gate is clean, whether the edit did what
-it was meant to do. That makes each step in an incremental sequence dependent
-on the one before it by construction, which is exactly the case this rule
-already excludes from batching. The two rules are not competing for the same
-operations: the incremental-changes rule governs a chain where each link
-needs the previous link's result, and this rule governs the operations that
-do not form such a chain — reads of already-known targets, checks against
-already-known criteria, requests whose input none of the others determines.
-Applying both leaves a task moving through its dependent steps one at a
-time, while batching whatever independent operations each step itself calls
-for.
+[Make Incremental Changes](./change-management.md#make-incremental-changes)
+makes verification of the current step a prerequisite for starting the next,
+including steps that modify different files. Within the current step, independent
+reads or checks on the same fixed material can share a turn.

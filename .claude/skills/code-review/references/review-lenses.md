@@ -13,7 +13,28 @@ Correctness is the lens no change can skip: the other lenses assume the code doe
 - MUST flag an async result whose completion the caller depends on but does not await (or otherwise sequence), and any race between concurrent operations that share state.
 - MUST flag an error path that is swallowed, logged and then continued as if it succeeded, or caught so broadly it hides an unrelated failure.
 - MUST flag off-by-one bounds, inverted conditionals, and comparison/assignment or truthy/exact-equality confusions in changed expressions.
-- SHOULD confirm the change actually satisfies each acceptance criterion, and name any criterion the diff leaves unmet or that cannot be confirmed from the diff.
+- SHOULD assess acceptance criteria under the code-inspection boundary below.
+
+## Acceptance Criteria
+
+Another inspection round cannot establish a real-device result or a machine-specific measurement from code. Review findings therefore distinguish an evidenced violation from a criterion whose verification happens outside the diff. A criterion requiring a device measurement does not become a finding because its evidence is missing; changed code that contradicts the criterion still does.
+
+This boundary concerns acceptance-criteria findings, not other evidenced defects. It does not waive contributor verification, publication of required evidence, or self-review's reporting of skipped required checks. A known unmet requirement remains unmet even when the review does not mention it.
+
+**Guidelines:**
+
+- MUST report acceptance-criteria violations that code changes can demonstrate, using the applicable evidence and severity rules.
+- MUST NOT raise a finding solely because a criterion needs a real device, machine-specific measurements, or other verification outside code inspection, whether or not it carries an out-of-tree designation or evidence link; generic project-rule conformance and verification checks must not reintroduce that absence-only finding.
+- MUST NOT re-run or judge that external evidence as part of the acceptance-criteria inspection check.
+
+## Refactoring Opportunities
+
+Review can identify a smaller, clearer structure without turning the change into a cleanup campaign. Examine changed code for concrete simplifications; a shared responsibility duplicated by the change is a candidate, while a speculative abstraction for future callers is not. The existing evidence and severity rules decide whether and how to report an opportunity, without a new severity floor.
+
+**Guidelines:**
+
+- MUST examine changed code for concrete ways to simplify responsibilities, remove meaningful duplication, or reduce unnecessary complexity, and report opportunities supported by evidence under the existing severity rules.
+- MUST NOT expand this examination into unrelated pre-existing cleanup or speculative abstractions.
 
 ## Maintainability and Design
 
@@ -59,7 +80,7 @@ Tests are how a change proves it works and stays working. Review them as behavio
 - MUST flag a regenerated snapshot or golden file whose visual/output change is not explained, and a removed snapshot not paired with a removed or restructured test.
 - MUST flag a committed focus/only or skip marker, and any weakening of anti-flake configuration or "fix" of a flaky test by adding a sleep, retry, or poll instead of removing the nondeterminism.
 - SHOULD flag a new user-facing element that an end-to-end test would target but that exposes no stable test hook.
-- SHOULD flag missing manual verification when the change touches a data-driven surface (non-default and empty states), a routing change (the not-found path), or dev-server output (new warnings or errors).
+- SHOULD flag missing manual verification when the change touches a data-driven surface (non-default and empty states), a routing change (the not-found path), or dev-server output (new warnings or errors), subject to the Acceptance Criteria boundary above.
 - MUST record which checks ran and which were skipped, per evidence-and-reporting.md; unverified is not the same as verified-passing.
 
 ## Performance and Reliability

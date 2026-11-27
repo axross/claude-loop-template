@@ -2,37 +2,50 @@
 
 Apply this reference when the review's output is **posted** to a pull request — by an automated CI reviewer or a managed review product — rather than kept as an internal self-review report. A posted review is read by the change's author and teammates, so it trades the internal four-tier vocabulary for a tighter, lower-noise shape. When these rules conflict with the internal report format, the posted rules win for posted output only; the internal triage still runs underneath.
 
+## Project-Adopted Review Arrangements
+
+The presentation and all-findings reporting rules below are defaults for authored reports. A project may explicitly accept a managed review's native labels, container, summary and reporting scope instead. That choice accepts the risk of unreported omissions; it does not prove exhaustive inspection, waive substantive review checks or establish readiness by itself.
+
+**Guidelines:**
+
+- MUST apply an explicitly adopted project arrangement instead of conflicting default presentation or all-findings reporting rules, including the labels used in Mandatory Checks; absent that arrangement, apply the defaults below.
+- MUST preserve original posted findings, severities and citations without manufacturing a tally, relabeling them or demanding reformatting solely to satisfy the defaults.
+- MUST distinguish an accepted reporting filter from an explicit statement that required review material or scope was not checked; the filter alone is not such a limitation.
+
 ## Posted vs Internal
 
 The internal review (the four-tier report in evidence-and-reporting.md) is the reviewer's own working triage. The posted review is a communication to the author. The same findings drive both, but they are labeled and grouped differently.
 
 **Guidelines:**
 
-- MUST keep using the internal Critical/Major/Minor/Nit triage and the Approve / Approve with Nits / Request Changes verdict to _decide_ what to report; they never appear in posted output.
-- MUST switch to the posted shape below whenever the review is written to a pull-request thread rather than returned as a self-review report.
-- SHOULD adopt any repository-provided posted-review policy on top of these defaults, and let that policy win where it is stricter or more specific.
+- MUST keep using the internal Critical/Major/Minor/Nit triage and the Approve / Approve with Nits / Request Changes verdict in internal self-review and authored-report triage; the default posted output does not carry them.
+- MUST use the posted defaults below when writing to a pull-request thread without an explicitly adopted alternative arrangement.
 
 ## Two-Label Severity
 
 A posted review uses exactly two labels, so the author can sort must-fix from nice-to-have at a glance.
 
-- **Important** — must be addressed before merge: a finding that breaks behavior, corrupts persisted state, leaks data, regresses accessibility, violates a hard project rule, or leaves an acceptance criterion unmet or unverifiable from the diff.
+- **Important** — must be addressed before merge: a finding that breaks behavior, corrupts persisted state, leaks data, regresses accessibility, violates a hard project rule, or demonstrates an acceptance-criteria violation under the [review lenses](./review-lenses.md).
 - **Nit** — safe to defer: style, naming, and refactoring suggestions.
 
 **Guidelines:**
 
 - MUST label every posted finding exactly **Important** or **Nit** — no other labels appear.
 - MUST map every internal Critical or Major to Important, and every internal Minor or Nit to Nit.
-- MUST label as Important any acceptance criterion the diff leaves unmet or that cannot be confirmed from the diff.
+- MUST label as Important any reportable acceptance-criteria violation under the review lenses' Acceptance Criteria boundary.
 
 ## Mandatory Checks
 
 A posted review is strict: it runs a fixed set of checks every time and raises a finding for each miss, rather than reviewing only what happens to catch the eye.
 
+The acceptance criteria those checks run against are the ones the pull request body carries. A posted reviewer often cannot open the tracker the criteria were planned in — it may hold no credential for it, or the tracker may sit outside the forge entirely — and a check that silently degrades whenever that happens is not a mandatory check. Reading the body is a capability every posted reviewer has.
+
 **Guidelines:**
 
 - MUST verify the change against every project rule that matches the changed files and raise an Important finding for each violated hard rule, citing the rule.
-- MUST verify the diff against every acceptance criterion of the linked issue and raise an Important finding for each one unmet or unverifiable — anchored inline where it attaches to a diff line, and carried by the summary's no-line entry otherwise — and state plainly when the pull request links no issue.
+- MUST assess every acceptance criterion stated in the pull request body under the review lenses' Acceptance Criteria boundary and raise an Important finding for each reportable violation — anchored inline where it attaches to a diff line, and carried by the summary's no-line entry otherwise.
+- MUST raise an Important finding when the body states no acceptance criteria at all, naming the omission rather than reviewing as though the change had none; a linked issue does not excuse it, and the review does not stall waiting for one.
+- MUST perform the review lenses' Refactoring Opportunities examination on changed code.
 - MUST give each finding a label, `file:line` evidence, and a concrete fix, exactly as an internal finding.
 
 ## Do Not Report
@@ -68,8 +81,10 @@ The summary is read again on every round it stays open, and, where an agent driv
 What the summary keeps, exhaustively:
 
 - The tally [Reporting Shape](#reporting-shape) requires the summary to open with.
-- Anything that could not be checked, and why.
-- A finding that attaches to no single line, and why it has none — an unmet or unverifiable acceptance criterion is the standing case, since what is missing has no line to anchor to.
+- Required review material or scope that could not be checked, and why.
+- A finding that attaches to no single line, and why it has none — an absent acceptance-criteria section is the standing case, since what is missing has no line to anchor to.
+
+Passed criteria, applied skills and successful refactoring checks need no affirmative enumeration. Findings and explicit limitations carry the review's actionable output; silence about a passed item does not prove which rules the reviewer consumed or which checks ran. A criterion outside the code-inspection boundary is not, by itself, unchecked required review scope.
 
 **Guidelines:**
 

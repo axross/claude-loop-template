@@ -18,6 +18,10 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 Every review runs the same loop: reset into reviewer mode, scope the change from its diff, assess that diff through the review lenses, classify each finding by severity, report with evidence, and escalate anything too risky to self-approve. The reset is what makes the rest trustworthy — the reviewer inspects what the code _does_, as if someone else wrote it, instead of re-affirming the reasoning that produced it; this matters most in self-review, where the author and reviewer are the same agent. Do not read any code before the reset — it is the first normative step, owned by [scoping.md](./references/scoping.md). The sections below route to the reference that owns each step, ordered as a review applies them.
 
+**Guidelines:**
+
+- MUST read [review-lenses.md](./references/review-lenses.md) before assessing a change; its acceptance-criteria boundary and scoped refactoring examination apply to every review.
+
 ## Review Scoping
 
 See [scoping.md](./references/scoping.md) for:
@@ -42,6 +46,8 @@ See [severity.md](./references/severity.md) for:
 See [review-lenses.md](./references/review-lenses.md) for:
 
 - the correctness lens: logic errors, edge cases, error and async handling, contract changes
+- acceptance-criteria findings grounded in code inspection rather than external-verification limits
+- examining concrete refactoring opportunities within changed code, without speculative or unrelated cleanup
 - the maintainability lens: naming, organization, abstraction boundaries, complexity, dead code, scope discipline, and naming what a content-adding change should cut
 - the security and privacy lens: secrets, input validation, access control, injection, SSRF, auth, data exposure, supply chain
 - the testing and verification lens: coverage, stable test hooks, snapshots, flakiness, manual checks
@@ -80,7 +86,8 @@ See [escalation.md](./references/escalation.md) for:
 See [posted-review-policy.md](./references/posted-review-policy.md) for:
 
 - when a review is _posted_ to a pull request (a CI reviewer or a managed review product) rather than kept as internal self-review
-- collapsing the internal four-tier triage to a two-label Important / Nit report with a one-line tally
+- applying an explicitly adopted project's native presentation and reporting scope instead of conflicting authored-report defaults, while preserving substantive checks and original findings
+- collapsing the internal four-tier triage to the default two-label Important / Nit report with a one-line tally
 - running the repository's mandatory checks and honoring its do-not-report exclusions, built as an enumerated list of checks each coextensive with the finding it silences, never a blanket "anything CI enforces" clause
-- posting the whole review as one submission of the platform's review mechanism able to carry diff-anchored comments, chosen before the diff is read, with the submission's verdict kept non-gating for an advisory reviewer as a separate decision that never falls back to a looser container
-- keeping the summary to a closed three-entry allowlist — the tally, what could not be checked, and a finding with no line to anchor to — with one exception for a host-mandated per-round enumeration
+- posting the default authored report as one submission of the platform's review mechanism able to carry diff-anchored comments, chosen before the diff is read, with a non-gating verdict for an advisory reviewer
+- keeping the default summary to a closed three-entry allowlist — the tally, what could not be checked, and a finding with no line to anchor to — with one exception for a host-mandated per-round enumeration

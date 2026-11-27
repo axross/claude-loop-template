@@ -100,10 +100,16 @@ Properties are where an event stops being a bare count and starts answering a qu
 
 ## Where the Call Goes
 
-An event fired from the click handler records an intention; an event fired after the write succeeds records a fact. Only the second is safe to build a funnel on, because the first counts attempts that failed, retried, or were abandoned mid-flight.
+An event fired from the click handler records an intention; an event fired after the write succeeds records a completed fact. An intent event can mark a funnel's entry, but cannot stand in for completion: it counts attempts that may fail, retry, or be abandoned mid-flight.
+
+Counting completed facts — an object created, renamed, or deleted — does not by itself require failure counterparts, even when those facts are funnel conversions. Diagnosing why a flow did not complete is a different measurement purpose: distinguishing abandonment from failure needs analyzable outcome evidence. A missing completion event alone does not establish the reason. That evidence can be a separate failure event, an outcome/reason property, or another signal that demonstrably answers the same question; the mere presence of an error tracker does not establish equivalence.
+
+Unexpected failures still follow [error-handling.md](./error-handling.md) and [error-tracking.md](./error-tracking.md), including when product measurement is success-only. Expected rejection, cancellation, and abandonment are not automatically unexpected errors; measure the outcomes the requirements need without conflating them.
+
+**Example:**
 
 ```typescript
-// Both outcomes are instrumented — silence is not data.
+// this checkout measurement requires failure diagnosis.
 try {
   const order = await submitOrder(cart);
   trackEvent("checkout completed", {
@@ -118,8 +124,11 @@ try {
 
 **Guidelines:**
 
-- MUST emit the event where the fact becomes true — after the operation succeeds — not where the interaction started.
-- MUST instrument the failure path as its own event carrying a reason, so a drop-off can be told apart from an error.
+- MUST place any emitted completed-fact event after the operation succeeds, and any emitted intent event where the intent occurs; never count an attempted operation as completed.
+- MUST establish the measurement purpose from the project's tracking plan, event catalogue, or measurement requirements before deciding whether failure outcomes are needed; clarify an unspecified purpose rather than assuming success-only measurement.
+- MUST record outcomes with reason classifications when the measurement requirements call for distinguishing abandonment from failure; being a funnel step alone does not impose that requirement.
+- MUST verify that an alternative signal used for required outcome diagnosis provides the needed flow association, reason distinctions, analysis population and time window, and collection coverage.
+- MUST distinguish measured expected rejection, cancellation, and abandonment from unexpected failure rather than treating every non-completion as an error.
 - MUST NOT emit an event from a render body or from an effect that re-runs on a dependency change.
 - SHOULD emit a view event from one router subscription rather than from each screen, which also avoids React Strict Mode's development-only double invocation of mount effects — a `useRef` guard against that double fire is a sign the call is in the wrong layer, not a fix.
 - SHOULD carry an idempotency key on events that can be replayed by a retry, a background job, or an offline queue flush.
@@ -209,4 +218,4 @@ A rename is a breaking schema change to every chart, funnel, alert, cohort, and 
 - SHOULD migrate by emitting both names for a defined window, or by mapping the old name in the analytics tool, and remove the old one only after the reporting window has passed.
 - SHOULD assume released clients keep emitting the previous shape for months, and keep the receiving side tolerant of both until they age out.
 - MUST delete the call sites and the schema entry together when retiring an event, so the schema never lists an event nothing emits.
-- SHOULD flag, when reviewing a change, a new user-facing action with no event, a UI-shaped event name, a property carrying PII, an event emitted from a render body, a failure path with no event, an identity call with no matching reset, and a vendor import outside the wrapper.
+- SHOULD flag, when reviewing a change, a new user-facing action with no event, a UI-shaped event name, a property carrying PII, an event emitted from a render body, missing outcome evidence required by the measurement purpose, an identity call with no matching reset, and a vendor import outside the wrapper.

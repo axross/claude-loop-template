@@ -35,27 +35,35 @@ Strategy, direction, and decision documents ask the reader to invest attention o
 
 ## Headings That Map to Reader Tasks
 
-Headings are the document's outline and its entry points from search and tables of contents, so phrase them in the reader's vocabulary and make each one specific enough to signal what it answers.
+Headings are entry points from search and tables of contents. Help readers identify the answer or subject a section contains, using terms they recognize. Choose the heading's form for the section's purpose, not one grammatical form for the whole document. A procedure can have task-based step headings and noun-phrase headings for prerequisites; a reference policy can organize rules by named subjects.
 
 **Good Examples:**
 
-> Configure the database connection
+> Configure the database connection — an action in a how-to guide.
 
-> Why we chose Postgres over MySQL
+> Mandatory checks — a subject in a review-policy reference.
+
+> Connection options — a subject in an API reference.
+
+> Why we chose Postgres over MySQL — a rationale in an explanation.
+
+> Prerequisites — a recognizable supporting section in a runbook.
 
 **Bad Examples:**
 
-> Database layer
+> Details — when the document title and heading hierarchy still leave the section's subject unclear.
 
-> Overview
-
-> Details
+> StorageManager internals — when the section explains connection options for API users who do not know that internal component.
 
 **Guidelines:**
 
-- MUST use task-based or question-based headings phrased in the reader's vocabulary over implementation-internal labels.
+- MUST make each heading identify the answer or subject its section contains, considering the document title, heading hierarchy, and conventions familiar to the intended reader.
+- MUST use terms the intended reader recognizes or searches for, rather than implementation-internal labels unfamiliar to that reader.
+- SHOULD use task-based headings for procedural sections in tutorials, how-to guides, and runbooks.
+- SHOULD use subject or term names, usually noun phrases, for reference sections, including policies.
+- SHOULD use questions or headings that name the issue being explained for explanation sections.
+- SHOULD choose heading forms by section purpose; supporting sections such as `Prerequisites` need not take the same form as procedural steps.
 - SHOULD use sentence case, not title case, and SHOULD NOT end a heading in punctuation.
-- SHOULD make a heading specific enough that a reader landing on it from a search result or table-of-contents link knows whether it answers their question — `Overview` and `Details` fail this test.
 - MUST NOT stack headings with no body text between them (an H2 immediately followed by an H3 with nothing in between); add at least one sentence of orientation under each heading.
 - MUST NOT skip heading levels (jumping from H2 to H4); the hierarchy is also the document's outline for accessibility tools.
 - SHOULD parallel headings in form within a section — if one H3 is a question, sibling H3s SHOULD also be questions.

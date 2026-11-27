@@ -84,3 +84,14 @@ A project with an established convention has already answered these questions, a
 - MUST name an instant with the `At` suffix on a past participle, keeping the past participle when the instant lies in the future (`expiredAt` for an expiry not yet reached), so the suffix marks a timestamp rather than a tense.
 - MUST name a span remaining until an event with the `In` suffix on the plain verb (`expiresIn`), so it is never read as the instant the `At` form carries.
 - MUST reserve a plural noun for a value that is a list or an array, and MUST NOT pluralize the name of one that is not.
+
+### Domain Meaning
+
+A general word asked to carry a domain-specific meaning collides with the plain word every reader already knows. A living-project-documentation capability's glossary guidance owns the principle for choosing such a term — the pricing between a term that visibly does not compose and one that composes to something nearly right, and the per-axis table of near-misses that follows it — and this section defers to it rather than restating it. Where that capability is not installed, the test below still flags the same names; only the reasoning for choosing the exact replacement word lives upstream.
+
+**Guidelines:**
+
+- MUST apply this test to a name in question: read it alone, with no other code in view — does it tell you which domain concept it names? If not, and the identifier is not scoped to one function or one component, it needs a compound. Without a project glossary, this test rests more on reviewer judgment, since it checks against no definition that exists outside the code.
+- MUST leave a general word alone where an identifier's own scope already disambiguates it — a local variable, a private helper, or a style key used only inside the one function or component that declares it.
+- MUST NOT let one word name both a collection and its own constituent (a list called `Runouts` alongside a single element called `Runout` is fine; the same bare word standing for both is the finding).
+- MUST NOT defer this section to an established project vocabulary the way the parent guideline that matches a new identifier's casing and pattern to its neighborhood does; a pervasive but wrong term is the defect that neighborhood consistency does not excuse, and this section's rule outranks that parent guideline where the two disagree on one identifier.
