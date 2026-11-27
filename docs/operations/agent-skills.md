@@ -10,10 +10,10 @@ library and are copied in with the
 [`skills-lock.json`](../../skills-lock.json) records which skills are installed,
 where each came from, and the upstream commit it was installed at. This
 project owns no skill of its own — its conventions and operating procedures are
-the documents you are reading. Two costs come with that choice. Refreshing needs Node and network
-access, because `npx skills` fetches from the library over the network; the
-installed skills themselves are plain Markdown, so this cost falls on
-refreshing, not on every session. And the library is not this project's own: a
+the documents you are reading. Two costs come with that choice. Refreshing
+needs Node and network access, because `npx skills` fetches from the library
+over the network; the installed skills themselves are plain Markdown, so this
+cost falls on refreshing, not on every session. And the library is not this project's own: a
 rule that turns out wrong, outdated, or silent on a case here cannot be fixed by
 editing the installed copy, because the next install discards the edit while it
 poses as a rule the library agrees with — see

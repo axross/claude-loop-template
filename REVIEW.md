@@ -86,9 +86,9 @@ entries and no others:
 This repository explicitly adopts the following under
 [Code Review](.claude/skills/code-review/SKILL.md)'s Project-Adopted Review
 Arrangements, split by reviewer. Everything else stays at Code Review's
-defaults, including the two labels and the mandatory checks, and the summary
-scope, except that the fallback reviewer's summary also carries the round and
-the reviewed commit.
+defaults: the two labels, the mandatory checks and the summary scope. The one
+addition is that the fallback reviewer's summary also carries the round and the
+reviewed commit.
 
 - **The CI reviewer.** Only the container is adopted: diff-anchored inline
   comments plus one summary comment, with no formal review submission. The

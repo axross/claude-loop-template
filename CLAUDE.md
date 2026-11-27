@@ -64,8 +64,8 @@ needs, in one `AskUserQuestion` call of at most four questions:
 
 A "pull request with subagents" answer is the user's explicit request for that
 run's pull request and for the subagents the run spawns after the gate, and the
-run then follows the change loop to ready without asking again. The other two
-answers are explicit requests for less, as follows. What a decline means:
+run then follows the change loop to ready without asking again. The other
+answers narrow the request. What each non-confirming answer means:
 
 - **Plan declined.** Revise the plan and ask again; nothing is implemented in
   the meantime.
@@ -126,9 +126,14 @@ recorded as a permanent deviation in
   Run state records, for each reviewer instance, its agent id, role, round and
   end and, for a fallback post-push reviewer, the locator of its posted review.
 - Before stopping a reviewer that is still running at a stop, the run inspects
-  the pull request for a result it may already have posted.
+  the pull request for a result it may already have posted, then stops it with
+  the host's task-stop tool. That leaves the instance resumable, so it is not
+  closure.
 - For closure the run follows the skill's section. The host-specific step is to
-  tell the human the agent id and ask them to stop the instance from `/tasks`.
+  tell the human the agent id and ask them to stop the instance from `/tasks`
+  while it is still listed there; once it has left the list, the run reports the
+  instance unclosed with its agent id, and a failed close does not invalidate
+  the verified review.
 
 ## Waiting on a Pull Request
 

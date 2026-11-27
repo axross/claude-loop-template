@@ -80,14 +80,17 @@ applies:
 
 - the draft pull request opens, with the gap named under the body's risks
   section;
-- the run requests the post-push review on the selected route and addresses
-  findings single-agent;
+- the run requests the post-push review on the selected route when that route
+  needs no subagent, as the CI reviewer does, and addresses findings
+  single-agent; where the fallback reviewer is the selected route, the
+  post-push review gate is reported unmet as well;
 - the pull request stays draft and the run never marks it ready. It ends with
   the pre-push review gate reported unmet, and readying the pull request is then
   the human's own act.
 
 The exception does not cover the answer "neither": no pull request opens, the
-branch stays local, and pushing it is the human's own act. Publication is
+branch stays local, and pushing it is the human's own act. For that run this
+answer narrows the standing delivery grant's push effect. Publication is
 authorized separately, by that delivery question; [`CLAUDE.md`](../../CLAUDE.md)
 lists its answers.
 
