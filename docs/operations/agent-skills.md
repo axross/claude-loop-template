@@ -329,25 +329,28 @@ installed copy, the entry says so.
 <!-- /TRANSITIONAL -->
 
 <!-- TRANSITIONAL: remove once the installed skills no longer conflict with this block -->
-### Deviation — the shared reviewer definition carries its posting boundary in full
+### Deviation — the shared subagent definitions carry their working boundaries
 
 - **Installed skill:** `loop-engineering` › Subagent Delegation › Defining an
   Agent of Your Own, in its rule that a definition holds only model, effort,
   tool limits, and a short framing, and restates nothing the task supplies
   (installed copy refreshed in #67 (d5799aa); the lockfile records no upstream
   revision).
-- **What this project does instead:** `.claude/agents/reviewer.md` carries,
-  with its posting boundary, what to do on a maintainer decision it cannot
-  settle and what to return after posting, framed around the post-push review
-  round.
+- **What this project does instead:** all three definitions in
+  `.claude/agents/` carry working boundaries the installed rule leaves to the
+  task. `implementer.md` states its decision boundary and what it hands back,
+  that it runs the documented checks and reports what they did, and that it
+  commits locally and publishes nothing. `investigator.md` fixes its hand-back
+  as a conclusion plus a locator. `reviewer.md` carries, with its posting
+  boundary, what to do on a maintainer decision it cannot settle and what to
+  return after posting, framed around the post-push review round.
 - **Why:** the three definitions are shared verbatim across the maintainer's
-  repositories, and the reviewer is the one agent allowed a public write. Its
-  limits on that write, the escalation that stops it, and the evidence it
-  returns are kept in the definition so they hold even when a caller's
-  assignment omits them.
-- **Meanwhile:** the implementer and investigator definitions stay within the
-  installed rule, and every per-run detail — the pull request, the round, the
-  head commit, the author's checkout path — still arrives in the assignment.
+  repositories, so the boundaries hold even when a caller's brief omits them;
+  for the reviewer, the one agent allowed a public write, that matters most.
+- **Meanwhile:** every per-run detail — the approved scope, the files to read,
+  the pull request, the round, the head commit, the author's checkout path —
+  still arrives in the brief or the assignment, and a brief that sets a
+  narrower boundary than the definition governs that run.
 - **Upstream:** at fe0dbeb `subagent-delegation.md` has no guidance on what an
   agent definition holds, so the conflict may be gone; re-check on refresh.
 <!-- /TRANSITIONAL -->
