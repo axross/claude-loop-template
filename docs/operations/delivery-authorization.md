@@ -40,8 +40,10 @@ The adopted grant authorizes these actions on its named targets.
 - requesting the post-push review once per round, up to the round cap
 - replying to and resolving that pull request's review threads
 - converting the pull request back to draft, and to ready after the ready gate
-- subscribing to pull request activity when the operator confirms watching
-- releasing the subscription when the operator withdraws consent or the run reaches a [teardown condition](../../CLAUDE.md#waiting-on-a-pull-request)
+- subscribing to and unsubscribing from the pull request's activity
+
+For the operator's watching choice and the conditions for releasing an active
+subscription, follow the [host's waiting procedure](../../CLAUDE.md#waiting-on-a-pull-request).
 
 ## Exclusions
 

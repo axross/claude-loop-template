@@ -1,7 +1,7 @@
 name: Template Checks
 
-# INIT Step 7 removes this template-only workflow. adopters can carry the
-# repository link check and the whole-bundle check into their merge checks.
+# before removing this template-only workflow in INIT Step 7, adopters can
+# copy the link and documentation checks into their own merge checks.
 
 on:
   pull_request:

@@ -540,6 +540,11 @@ before adding or moving pages. The template documents how contributors use
 the harness. Add a product specification once the project has observable
 behavior for a caller to rely on.
 
+The [skill installation procedure](./docs/operations/agent-skills.md) cites two
+pull requests from this template. Keep those links when describing the
+template's history. When describing your project's own adoption or rename,
+cite its decision if one exists, or remove the template-specific sentence.
+
 ### The write order
 
 Use the Step 1 interview and the repository to identify a question a

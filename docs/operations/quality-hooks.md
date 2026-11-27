@@ -11,13 +11,11 @@ To enable the quality hooks locally, copy
 `.claude/settings.local.json`. Cloud startup installs the example
 automatically. It also pre-approves `subscribe_pr_activity` and
 `unsubscribe_pr_activity` on the Remote MCP server so an unattended run can
-wait for CI and review. Before subscribing, check the [delivery authorization](./delivery-authorization.md)
-and the operator's watching choice for this run. If the operator declines watching,
-wait for the human to report the result. With watching confirmed, use the
-subscription whenever the host provides it. A scheduled check-in is available
-only when the host lacks a subscription route and the human explicitly permits
-that check-in. The settings example grants no scheduling permission. See the
-[waiting procedure](../../CLAUDE.md#waiting-on-a-pull-request).
+wait for continuous integration (CI) and review. The example grants no
+scheduling permission. Before using its tools, check the run's
+[delivery authorization](./delivery-authorization.md), the operator's
+[watching choice](../../CLAUDE.md#confirming-delivery-at-the-plan-gate) and
+the [host rules for subscriptions and scheduled check-ins](../../CLAUDE.md#waiting-on-a-pull-request).
 
 ## Format after an edit
 

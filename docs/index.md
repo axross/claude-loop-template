@@ -8,6 +8,8 @@ description: Contributor practices and operating instructions for adapting and u
 
 For template setup and commands, start with the [README](../README.md).
 For a project rule or an operating decision, choose the question below.
+The conventions and operating procedures use MUST, MUST NOT, SHOULD, SHOULD NOT
+and MAY as defined in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119.html).
 
 ## Conventions
 

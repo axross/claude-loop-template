@@ -14,7 +14,7 @@ Maintaining a separate fork or vendoring the files under local ownership
 would hide divergence from upstream corrections. Project-specific rules
 belong in the project's documentation, where the
 [placement convention](../conventions/documentation.md#choose-a-subject) routes their readers.
-[Original adoption](https://github.com/axross/claude-loop-template/pull/65)
+The template adopted shared skills in [PR #65](https://github.com/axross/claude-loop-template/pull/65).
 
 ## Install and Refresh
 
@@ -74,7 +74,7 @@ affected command at its new path. Review the generated diff through the
 lockfile and call sites. Pinning an older library revision to avoid a rename
 defers this work and holds back other skills' improvements. Forking the renamed
 skill also cuts it off from shared fixes.
-[Rename adopted in PR #67](https://github.com/axross/claude-loop-template/pull/67)
+The template applied this procedure in [PR #67](https://github.com/axross/claude-loop-template/pull/67).
 
 ## Deviations and Gaps
 
