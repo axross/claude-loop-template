@@ -50,9 +50,9 @@ route from a published path or fragment while external use is uncertain.
 
 ## Where a settled decision belongs
 
-The governing page MUST state the current constraint and its rationale. Use the original commit or pull request for the deliberation.
-The template's dated skill records are historical entry points. New decisions
-are maintained with their subject.
+Keep each new decision on the page that governs its subject. That page MUST
+state the current constraint and its rationale. To trace how the decision
+was made, consult the original commit or pull request.
 
 ## Checking a Documentation Change
 
