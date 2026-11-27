@@ -78,9 +78,9 @@ change loop to ready without asking again. What a decline means:
 - **Route declined.** The pull request stays draft and the post-push review gate
   is reported unmet.
 - **Watching declined.** Each CI or review result becomes a human wait: end the
-  turn and resume on the human's next message. The pull request subscription
-  route exists, so nothing is scheduled in its place. A
-  subagent's completion notification still resumes the run.
+  turn and resume on the human's next message. Where the pull request
+  subscription route exists, nothing is scheduled in its place. A subagent's
+  completion notification still resumes the run.
 
 **Guidelines:**
 
@@ -121,7 +121,8 @@ notification.
   scheduled.
 - MUST NOT poll within a turn: no sleeping or looping to re-check, in any case.
 
-For a pull request, the subscription route exists:
+For a pull request, the route is the pull request activity subscription, where
+the host provides the two tools below:
 
 - After the pull request opens, and when watching was confirmed, call
   `mcp__claude-code-remote__subscribe_pr_activity`.

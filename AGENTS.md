@@ -22,12 +22,12 @@
   [Routing a Change](#routing-a-change). Skill discovery never surfaces those
   either.
 - **Every skill under `.claude/skills/` is installed, not written here.** They
-  come from the [axross/skills](https://github.com/axross/skills) library and
-  are copied in with the [vercel-labs/skills](https://github.com/vercel-labs/skills)
-  CLI; [`skills-lock.json`](./skills-lock.json) records what is installed. A
+  come from a shared skills library and are copied in with the skills CLI;
+  [`skills-lock.json`](./skills-lock.json) records what is installed. A
   hand-edit to one is discarded by the next install; see
-  [docs/operations/agent-skills.md](./docs/operations/agent-skills.md) for how
-  they are refreshed and how a wrong or missing rule is routed.
+  [docs/operations/agent-skills.md](./docs/operations/agent-skills.md) for the
+  library, how the skills are refreshed, and how a wrong or missing rule is
+  routed.
 - This project's fixed agent-comment marker is `<!-- ai-agent -->`. The marker
   `<!-- agent -->` is retired: it is still recognized in history and never
   written.

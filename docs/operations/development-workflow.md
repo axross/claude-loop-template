@@ -157,12 +157,10 @@ the grant as it stands on the default branch: in the template, it grants
 nothing.
 
 Once adopted, the maintainer, `@<maintainer>`, issues this standing delivery
-grant once, here, to every agent run in this repository. It is the operation
-grant `loop-engineering` and `github-operation` require before an external
-effect: actual human authorization that names its targets, its effects, its
-lifetime, and its exclusions, rather than an inference from project policy. Its
-human-evidence locator is `@<maintainer>`'s merge of
-`<adopting pull request>`.
+grant once, here, to every agent run in this repository. It is actual human
+authorization that names its targets, its effects, its lifetime, and its
+exclusions, rather than an inference from project policy. Its evidence is
+`@<maintainer>`'s merge of `<adopting pull request>`.
 
 The grant's targets are:
 

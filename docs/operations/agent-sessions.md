@@ -51,7 +51,7 @@ activity subscription and its release, `subscribe_pr_activity` and
 the run waits for CI and review results through that subscription, and without
 the grant each call raises a permission prompt that an unattended session cannot
 answer. The example grants nothing that schedules a wake; `CLAUDE.md` lists the
-tools an agent never uses and states how the run waits.
+scheduling tools its waiting rule covers and states how the run waits.
 
 Format-on-edit fires only for a file changed through `Edit`, `Write`, or
 `MultiEdit` — the `PostToolUse` matcher's scope, deliberately not widened — so

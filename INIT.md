@@ -733,7 +733,8 @@ human authorization, and an agent never grants it to itself.
   adjust the targets, effects, and exclusions to the project, and delete its
   `<!-- INIT: ... -->` comment and the inert-until-merged paragraph. The grant
   takes effect only when the maintainer merges the pull request that carries it.
-- **No** — delete the section.
+- **No** — delete the section, and remove "and the delivery grant" from the
+  GitHub routing bullet in `AGENTS.md`.
 
 ---
 
@@ -855,5 +856,6 @@ human authorization, and an agent never grants it to itself.
       stays.
 - [ ] The standing delivery grant skeleton in
       `docs/operations/development-workflow.md` is resolved: either filled in
-      (no `<maintainer>` placeholder left, awaiting the maintainer's merge) or
-      deleted.
+      (no `<maintainer>` or `<adopting pull request>` placeholder left,
+      awaiting the maintainer's merge) or deleted, together with the
+      "delivery grant" mention in `AGENTS.md`'s GitHub routing bullet.
