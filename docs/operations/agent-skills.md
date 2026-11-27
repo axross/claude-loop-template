@@ -210,8 +210,9 @@ installed copy, the entry says so.
   Request Independent Review with its CI and review tail (installed copy
   refreshed in #67 (d5799aa); the lockfile records no upstream revision).
 - **What this project does instead:** the run waits through an
-  event subscription whenever one exists and schedules no wake beside it; the
-  rule and its narrow exception are stated in
+  event subscription whenever one exists and watching was confirmed, schedules
+  no wake beside it, and turns each result into a human wait when watching was
+  declined; the rule and its narrow exception are stated in
   [`CLAUDE.md`](../../CLAUDE.md#waiting-on-a-pull-request).
 - **Why:** the maintainer's policy is that an agent uses an event-subscription
   route whenever one exists and schedules a check-in only with the human's
@@ -303,6 +304,52 @@ installed copy, the entry says so.
   delivery target's review mechanism satisfy the default, with stronger identity
   requirements applying only when explicitly selected, so the conflict may be
   gone; re-check on refresh.
+<!-- /TRANSITIONAL -->
+
+<!-- TRANSITIONAL: remove once the installed skills no longer conflict with this block -->
+### Deviation — the fallback post-push reviewer runs in its own worktree
+
+- **Installed skill:** `loop-engineering` › Subagent Delegation › Defining an
+  Agent of Your Own, in its rule against giving an agent its own isolated
+  checkout (installed copy refreshed in #67 (d5799aa); the lockfile records no
+  upstream revision).
+- **What this project does instead:** `CLAUDE.md` spawns the fallback post-push
+  reviewer with `isolation: worktree`, and the `reviewer` definition has it
+  check the reviewed commit out in that worktree.
+- **Why:** the post-push reviewer reads a pushed pull request head, which it
+  can fetch by commit into a separate checkout, and keeping it out of the
+  author's checkout is part of what keeps it a non-author reviewer. The
+  installed rule protects an agent that must verify an unpushed branch, which
+  this reviewer never does.
+- **Meanwhile:** the implementer and the plan and pre-push reviewers are
+  spawned without an isolated checkout, as the installed rule requires.
+- **Upstream:** at fe0dbeb `subagent-delegation.md` says only that the loop
+  must not *require* a separate checkout, which no longer forbids one; re-check
+  on refresh.
+<!-- /TRANSITIONAL -->
+
+<!-- TRANSITIONAL: remove once the installed skills no longer conflict with this block -->
+### Deviation — the shared reviewer definition carries its posting boundary in full
+
+- **Installed skill:** `loop-engineering` › Subagent Delegation › Defining an
+  Agent of Your Own, in its rule that a definition holds only model, effort,
+  tool limits, and a short framing, and restates nothing the task supplies
+  (installed copy refreshed in #67 (d5799aa); the lockfile records no upstream
+  revision).
+- **What this project does instead:** `.claude/agents/reviewer.md` carries,
+  with its posting boundary, what to do on a maintainer decision it cannot
+  settle and what to return after posting, framed around the post-push review
+  round.
+- **Why:** the three definitions are shared verbatim across the maintainer's
+  repositories, and the reviewer is the one agent allowed a public write. Its
+  limits on that write, the escalation that stops it, and the evidence it
+  returns are kept in the definition so they hold even when a caller's
+  assignment omits them.
+- **Meanwhile:** the implementer and investigator definitions stay within the
+  installed rule, and every per-run detail — the pull request, the round, the
+  head commit, the author's checkout path — still arrives in the assignment.
+- **Upstream:** at fe0dbeb `subagent-delegation.md` has no guidance on what an
+  agent definition holds, so the conflict may be gone; re-check on refresh.
 <!-- /TRANSITIONAL -->
 
 ### Gap — `application-security` is silent on authentication lockout and session-cookie ownership
