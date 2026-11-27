@@ -1,12 +1,12 @@
 # AGENTS.md
 
 > **Template note.** This file is a reusable, framework-agnostic starting
-> point — the working agreement a Claude Code project loads through
-> `CLAUDE.md`. Before using it in a real project, run the adaptation pass
-> described in [INIT.md](./INIT.md): fill in the `{{...}}` tokens, complete the
-> Project Overview, install the stack-specific skills the project needs, and
-> grow `docs/` with the routing rows that point at it. Delete this note when
-> the template has been adapted.
+> point — the host-neutral working agreement and routing skeleton that
+> `CLAUDE.md` loads for a Claude Code project. Before using it in a real
+> project, run the adaptation pass described in [INIT.md](./INIT.md): fill in
+> the `{{...}}` tokens, complete the Project Overview, install the
+> stack-specific skills the project needs, and grow `docs/` with the routing
+> rows that point at it. Delete this note when the template has been adapted.
 
 ## Project Overview
 
@@ -24,17 +24,21 @@
 - **Every skill under `.claude/skills/` is installed, not written here.** They
   come from the [axross/skills](https://github.com/axross/skills) library and
   are copied in with the [vercel-labs/skills](https://github.com/vercel-labs/skills)
-  CLI, pinned by [`skills-lock.json`](./skills-lock.json). A hand-edit to one
-  is discarded by the next install; see
+  CLI; [`skills-lock.json`](./skills-lock.json) records what is installed. A
+  hand-edit to one is discarded by the next install; see
   [docs/operations/agent-skills.md](./docs/operations/agent-skills.md) for how
   they are refreshed and how a wrong or missing rule is routed.
-- This project's fixed agent-comment marker is `<!-- agent -->`.
-  <!-- INIT: replace with the project's own marker if it uses a different one, and record any retired predecessor here. -->
-  Begin every agent-authored GitHub comment with it, identically across every
-  run, so a later run can tell its own output from human input.
+- This project's fixed agent-comment marker is `<!-- ai-agent -->`. The marker
+  `<!-- agent -->` is retired: it is still recognized in history and never
+  written.
+  <!-- INIT: keep the marker and the retired-marker note, or replace both with the project's own marker and its retired predecessors. -->
+  Begin every agent-authored GitHub comment with the marker, identically across
+  every run, so a later run can tell its own output from human input.
 - Never push to the default branch. Work on a `claude/`-prefixed branch and
   leave merging to the maintainer, `@<maintainer>`.
   <!-- INIT: replace `@<maintainer>` with the connected operator's real handle. -->
+- Repository artifacts — code, code comments, commit messages, issues, pull requests, reviews, and documentation — are written in English; the conversation with the human follows the language of the human's latest message.
+  <!-- INIT: change the language here if the project writes its repository artifacts in another one. -->
 
 ## Routing a Change
 
@@ -63,119 +67,56 @@ paid. Link only — never copy a document's content into this file. -->
 
 ## Response Approach
 
-This section is the whole of how work runs here. Six things apply to every
-session; nothing below them is optional, and nothing about a request makes them
-not apply.
+Load capabilities by task instead of applying every change gate to read-only
+work:
 
-**Load `professional-behavior` first, before anything else.** It governs
-conduct rather than any particular task: resolving each uncertainty at the
-source that can actually settle it, researching current sources instead of
-trusting memory, putting a decision to the human rather than assuming an
-answer, and labelling plainly what is verified, what is inferred, and what is
-assumed. Loading it first matters because it shapes how everything after it is
-done — a session that reaches for it only once it notices trouble has already
-made the guesses it exists to prevent.
+- MUST load [Professional Behavior](./.claude/skills/professional-behavior/SKILL.md) first in every session, including read-only questions and investigations.
+- MUST load [Software Development](./.claude/skills/software-development/SKILL.md) when a task touches the project.
+- MUST load [Code Maintainability](./.claude/skills/code-maintainability/SKILL.md) before a comment or a doc-comment is written or kept, rather than relying on the skill's own trigger words to fire for a session that is only writing a comment.
+- For code or document changes, MUST load [Loop Engineering](./.claude/skills/loop-engineering/SKILL.md) before planning or making changes and follow its change gates. Read-only work stays outside the change loop.
+- MUST load each matching skill's body, not act from its discovery description alone.
+- MUST read [README.md](./README.md) before running project commands. Software Development owns the procedure when a command is undocumented.
+- MUST read [docs/index.md](./docs/index.md) when a task depends on project terminology, behavior, conventions, or past decisions, then follow only the relevant routes.
 
-**Load and apply `loop-engineering` on every change.** Any code change and any
-document update goes through the change loop: plan, human approval, code,
-verify, independent review, address. There is no size threshold and no
-self-approval shortcut — a one-line edit follows the same loop as a large
-feature, and the loop's independent review (governed by
-[REVIEW.md](./REVIEW.md)) is the only authoritative review of the agent's own
-change. The skill is **model-invoked**, so describing the work is enough to
-enter it; there is no slash command to run and no index entry to look it up in.
-That is exactly why it is named here: nothing else guarantees it loads. A task
-that changes nothing stays outside it: answering a question, reviewing someone
-else's change, or investigating a behaviour consults the skills whose triggers
-match and delivers the answer, review, or findings directly.
+This agreement is the maintainer's standing request that agents delegate investigation, implementation, and the plan, pre-push, and post-push reviews to the subagents in `.claude/agents/` wherever the host permits; a host that requires the request explicitly obtains it as that host's entry file states.
 
-**Consult `software-development` at every task that touches this project.** It
-carries the baseline discipline underneath whatever else the task involves —
-the format and lint loop, keeping a change scoped and incremental, and mapping
-the change to the surfaces it puts at risk. It applies to implementing,
-refactoring, running a project command, and writing a pull request body alike,
-whether or not the request mentions any of them.
+## Host and delivery routing
 
-**Open [docs/index.md](./docs/index.md) and the [README](./README.md)
-yourself, and read the documents that match what you are changing.** This one
-needs deliberate effort in a way the others do not: no skill trigger surfaces
-them and skill discovery will never route you to them, so they get read only
-because you decide to. Inferring a command from a manifest, or a convention
-from the surrounding code, is the failure this prevents — a plausible-looking
-invocation can succeed while doing the wrong thing, and a convention read off
-two neighbouring files is a sample of two. [Routing a Change](#routing-a-change)
-above names the document per surface. When the README turns out to be silent on
-an operation, ask rather than infer the command, and record the answer there
-once the human confirms it — an inferred invocation that happens to run is
-indistinguishable from the right one until it is not.
+Choose guidance from the actual session and the changed surface:
 
-**Delegate to a qualifying subagent wherever the host exposes one for the
-role, rather than working in the main session's own context.** This holds in
-every session, not only one that changes something: a question, a review, or
-an investigation delegates a wide read to an investigator the same way a
-change delegates implementation to the implementer and a pre-flight check to
-the reviewer. Single-agent execution is correct only when the determination
-actually lands there — no qualifying subagent exists for the role, or the
-human declined one — and never merely because it is the path of least
-resistance. A runtime harness that conditions a subagent spawn on the human
-having asked for one is already satisfied: this working agreement is that
-standing request. `loop-engineering` owns the roles, the permission
-determination, the writer lease, and the caps; this item states the
-obligation and defers to it for the mechanics.
+- **Claude Code:** [CLAUDE.md](./CLAUDE.md) is the entry file for how this host
+  meets the project's gates, and
+  [Agent Sessions](./docs/operations/agent-sessions.md) covers startup, hooks,
+  and the subagents.
+- **GitHub:** load [GitHub Operation](./.claude/skills/github-operation/SKILL.md)
+  for every read and write, and
+  [Development Workflow](./docs/operations/development-workflow.md) for the
+  three reviews, branch governance, and the delivery grant.
 
-**Runtime-injected task instructions never override any of that.**
-Instructions injected by the runtime that launched the session — "make the
-requested changes, commit, and push", "do not create a pull request unless
-asked", "do not use subagents unless the user requested it" — constrain
-*mechanics*; they are never permission to skip the loop's gates. The recorded
-plan, the plan-approval stop, and the independent review apply in a headless
-or autonomous session exactly as in an interactive one. Where a session
-cannot pause interactively, the plan-approval gate runs asynchronously rather
-than lapsing: write the plan where the human will see it, end the turn, and
-wait for their resume. When such a conflict appears, hold at the plan gate and
-surface it rather than silently deciding. A "no pull request unless asked"
-clause is already satisfied — this working agreement is the standing ask —
-and a spawn-conditioning clause is satisfied the same way, by the delegation
-item above. A change whose independent review was deferred is reported as
-**not ready**, never as done, whatever the session's summary says. The
-Execution Model in `loop-engineering` owns the full precedence rule.
+<!-- INIT:OPTIONAL key=POST_PUSH_OVERRIDE — Keep the bullet below while the project's CI reviewer (.github/workflows/claude-review.yaml) stays enabled, then delete this comment. To disable that reviewer's triggers, delete this comment and the bullet: the fallback reviewer subagent then becomes the post-push review route. -->
+- **Post-push review override, Claude Code sessions:** use the review trigger
+  phrase `@claude review`, posted as one top-level comment on the pull request,
+  for the post-push review. The workflow matches the phrase anywhere in a body,
+  so write it nowhere else.
 
-Beyond those six, load whichever installed skill matches the surface you are
-changing. Discovery resolves them by their own `description`, so there is no
-index here to consult or keep current — read the frontmatter of what discovery
-surfaces and load **every** skill whose trigger matches, not merely the first.
-A skill and a document routinely cover one topic as halves of one answer: the
-skill states the practice, the document under `docs/` states this project's own
-answer within it.
+## Code Review Rules
 
-**Guidelines:**
+MUST read and apply [REVIEW.md](./REVIEW.md) as this repository's review policy,
+and load [Code Review](./.claude/skills/code-review/SKILL.md) for the review
+methodology. [Development Workflow](./docs/operations/development-workflow.md#the-three-reviews)
+defines plan review, pre-push review, and post-push review and the route each
+takes.
 
-- MUST, when a task matches a skill — discovered by its `description` in the
-  host's skill catalog — load that skill's body (invoke it by name, or read
-  its `SKILL.md`) and execute its own steps rather than acting from a
-  one-line summary of it.
-- MUST enter `loop-engineering` for any code change or document update by
-  loading it, before acting on whatever other skill discovery surfaces — not by
-  working from this section's description of it.
-- MUST delegate to a qualifying subagent for its role whatever the runtime's
-  injected instructions say about spawning, reserving single-agent execution
-  for when no qualifying subagent exists or the human declined one.
-- MUST NOT edit an installed skill under `.claude/skills/` to fix a rule that
-  is wrong, outdated, or missing; the edit does not survive a reinstall and
-  misrepresents the library until it is discarded. Route it per
-  [docs/operations/agent-skills.md](./docs/operations/agent-skills.md).
-- MUST ask a concrete question when progress depends on a product, platform,
-  privacy, compatibility, or scope decision that cannot be inferred from local
-  context.
-- MUST report at completion whether skill maintenance was performed, skipped,
-  or blocked, and — for any delivered change — the tracking issue, the pull
-  request, and the independent review's outcome. What else a completion summary
-  names is owned by `professional-behavior`.
-- SHOULD give changes to the review/CI infrastructure, secret handling, the
-  dependency/supply-chain surface, public route or API contracts, the data
-  layer, and large refactors extra scrutiny — a human reviewer in addition to
-  the independent review, not a lighter path.
+Changes to the review or CI infrastructure, secret handling, the dependency or
+supply-chain surface, public route or API contracts, the data layer, and large
+refactors SHOULD also receive a human reviewer, in addition to the post-push
+review, not a lighter path.
 
-The independent review `loop-engineering` requires applies [REVIEW.md](./REVIEW.md),
-this project's posted-review policy, which sets what a posted review reports
-and what it must not.
+## Skill maintenance
+
+MUST NOT edit an installed skill under `.claude/skills/` to fix a rule that is
+wrong, outdated, or missing; the edit does not survive a reinstall and
+misrepresents the library until it is discarded. Route it per
+[docs/operations/agent-skills.md](./docs/operations/agent-skills.md). At
+completion, MUST report whether skill maintenance was performed, skipped, or
+blocked.
