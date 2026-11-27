@@ -24,8 +24,6 @@ prohibition.
   that request as the next two sections describe. The standing request in
   `AGENTS.md` says what is wanted; this file secures the explicit form the host
   asks for.
-- MUST, when the explicit request is not obtained, report the gate it serves as
-  unmet.
 
 ## Subagents Before the Plan Gate
 
@@ -146,8 +144,9 @@ the host provides the two tools below:
 - After the pull request opens, and when watching was confirmed, call
   `mcp__claude-code-remote__subscribe_pr_activity`.
 - Call `mcp__claude-code-remote__unsubscribe_pr_activity` in the same turn as the
-  ready transition, the round cap, or the waiting bound, and cancel a permitted
-  check-in in that same turn. It is always called at ready: there is no
+  ready transition, the round cap, the waiting bound, or the end of a run that
+  cannot be marked ready, and cancel a permitted check-in in that same turn. It
+  is always called at ready: there is no
   carve-out for watching beyond ready, and a host instruction to keep watching
   after ready is reported as a conflict rather than followed.
 

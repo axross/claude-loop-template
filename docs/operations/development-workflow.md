@@ -99,17 +99,9 @@ skill requires. When the human declines to fix one, it is deferred, and the run
 records it in a comment on the tracking issue, the permitted project mechanism
 for the skill's [deferred
 handoff](../../.claude/skills/loop-engineering/references/pre-push-review.md#deferred-handoff).
-The cap question tells the human that declining to fix a finding records it in
-a comment on the tracking issue, and the human's answer authorizes that write.
-The comment:
-
-- begins with the agent-comment marker and is titled "Deferred pre-push
-  findings";
-- carries each deferred finding's identifier, severity, citation, claim,
-  supporting evidence, and suggested fix, its deferred disposition and the
-  decision reason, the round, the reviewed material's identity (the commit plus
-  the identity of the uncommitted diff), and the human-decision evidence;
-- is labeled "handoff evidence, not canonical requirements or review input".
+The cap question tells the human that declining to fix a finding records it
+there, and the human's answer authorizes that write. The comment begins with the agent-comment marker, is titled "Deferred pre-push
+findings", and carries what `loop-engineering`'s Deferred Handoff requires.
 
 The pull request body states only that such a record exists on the tracking
 issue; it neither links nor restates it. If the write fails, the full ledger

@@ -44,7 +44,8 @@ This repository adds one floor to that definition.
 Run every mandatory check on every review and raise a finding for each miss —
 they are not skippable. Grade each miss by its real impact: a miss that breaks a
 hard requirement is **Important**, a gap that does not is a **Nit**. Cite the
-owning skill in the finding.
+owning skill in the finding. [Code Review](.claude/skills/code-review/SKILL.md)
+owns the finding format.
 
 - **Skill conformance** — verify the change conforms to **every** skill whose
   discovery condition (`description`) matches the changed files, and flag any
@@ -56,14 +57,6 @@ owning skill in the finding.
 The acceptance-criteria check runs as
 [Code Review](.claude/skills/code-review/SKILL.md)'s posted-review policy
 defines it, against the criteria the pull request body carries.
-
-**Guidelines:**
-
-- MUST run every mandatory check on every review and raise a finding for each
-  miss.
-- MUST give each finding a severity label, `file:line` evidence, and a concrete
-  fix, per
-  [Code Review](.claude/skills/code-review/SKILL.md).
 
 ## Do Not Report
 
