@@ -538,7 +538,9 @@ Start at [the documentation index](./docs/index.md). Read the installed
 and the project's [documentation convention](./docs/conventions/documentation.md#choose-a-subject)
 before adding or moving pages. The template documents how contributors use
 the harness. Add a product specification once the project has observable
-behavior for a caller to rely on.
+behavior for a caller to rely on. Replace the template title, description and
+setup wording in `docs/index.md` with the project's name and scope. Retitle
+the heading in `docs/operations/index.md` to match the project.
 
 The [skill installation procedure](./docs/operations/agent-skills.md) cites two
 pull requests from this template. Keep those links when describing the
@@ -745,6 +747,8 @@ human authorization, and an agent never grants it to itself.
       `.github/` (e.g. `merge-checks.yaml`'s run commands) are caught.
 - [ ] No `<!-- INIT… -->` markers remain — neither `INIT:OPTIONAL` capability
       markers nor `INIT:` fill-in comments: `grep -rn '<!-- INIT' .`
+- [ ] The documentation index title, description and opening prose identify the
+      adopted project, and the operations index heading names its scope.
 - [ ] Run the repository-wide relative-link check. Run the skill's whole-root
       check on `docs/` with `--source-root .` and its pinned validator. Each
       living page has an appropriate type and is reachable from the root.

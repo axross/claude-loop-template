@@ -14,7 +14,7 @@ only, so an installer refresh does not update these definitions.
 
 ## Role boundaries
 
-Choose a definition by assignment. Use its fallback if the definition is unavailable.
+Match the assignment to its definition and fallback:
 
 | Assignment | Definition | If unavailable |
 | --- | --- | --- |

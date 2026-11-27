@@ -4,7 +4,7 @@ Choose the task you are performing in the session, skill library or change workf
 
 ## Configure a Claude Code session
 
-Choose the procedure or role definition for the session task.
+Choose the procedure or role definition for your session task:
 
 - [Bootstrap a cloud session or verify telemetry](./session-startup.md)
 - [Enable the quality hooks or diagnose a blocked stop](./quality-hooks.md)
@@ -12,14 +12,14 @@ Choose the procedure or role definition for the session task.
 
 ## Maintain the installed skills
 
-Use the installation procedure for a change to the installed set. Consult the register when applying a project exception.
+Select the skill-maintenance task:
 
 - [Install skills, restore locked revisions or handle an upstream rename](./agent-skills.md)
 - [Check whether the project has adopted a departure from an installed rule](./skill-departures.md)
 
 ## Deliver a change
 
-Start with the action you need to take on the branch or pull request.
+Choose the action you need to take on the branch or pull request:
 
 - [Determine which delivery actions the maintainer has authorized](./delivery-authorization.md)
 - [Choose a working branch or resolve a branch audit failure](./branch-governance.md)

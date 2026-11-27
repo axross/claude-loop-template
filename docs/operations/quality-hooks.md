@@ -6,16 +6,21 @@ description: How to activate format-on-edit and diagnose a stop check or a deliv
 
 # Quality hooks
 
+Use this procedure to enable or diagnose the edit and stop hooks in a Claude
+Code checkout. The hooks need the project's package manager. For cloud
+provisioning, see [session startup](./session-startup.md#bootstrap-a-cloud-session).
+
 To enable the quality hooks locally, copy
 [the settings example](../../.claude/settings.local-example.json) to
 `.claude/settings.local.json`. Cloud startup installs the example
-automatically. It also pre-approves `subscribe_pr_activity` and
+automatically. The example pre-approves `subscribe_pr_activity` and
 `unsubscribe_pr_activity` on the Remote MCP server so an unattended run can
 wait for continuous integration (CI) and review. The example grants no
-scheduling permission. Before using its tools, check the run's
-[delivery authorization](./delivery-authorization.md), the operator's
-[watching choice](../../CLAUDE.md#confirming-delivery-at-the-plan-gate) and
-the [host rules for subscriptions and scheduled check-ins](../../CLAUDE.md#waiting-on-a-pull-request).
+scheduling permission. Before using the subscription tools, check:
+
+- The run's [delivery authorization](./delivery-authorization.md).
+- The operator's [watching choice](../../CLAUDE.md#confirming-delivery-at-the-plan-gate).
+- The [host rules for subscriptions and scheduled check-ins](../../CLAUDE.md#waiting-on-a-pull-request).
 
 ## Format after an edit
 
@@ -47,7 +52,7 @@ on different contents. Test failures and lint errors that need an author's
 judgment belong in the blocking check.
 
 The hook also emits a reminder when the working branch has commits ahead of
-the default branch and every commit has reached its upstream. This catches a
+the default branch and every commit has reached its upstream. This reminder catches a
 run that stopped after pushing even when its tree is clean. The reminder MUST
 remain non-blocking because the local hook cannot determine whether GitHub
 already has an open pull request.

@@ -6,6 +6,10 @@ description: How to bootstrap a remote Claude Code session and verify its teleme
 
 # Session startup
 
+Use a fresh Claude Code session to verify bootstrap and telemetry settings.
+For the change and review gates that apply once the session is running, see
+[the host instructions](../../CLAUDE.md#project-gates-within-claude-code).
+
 Claude Code reads [the shared settings](../../.claude/settings.json) at startup.
 They set the default reasoning effort to `xhigh` and register the
 [session-start hook](../../.claude/hooks/session-start.sh). Start a fresh
@@ -15,7 +19,7 @@ session to exercise a change to either setting.
 
 The hook runs its setup only when `CLAUDE_CODE_REMOTE=true`. A local session
 uses the contributor's toolchain. Set the variable explicitly to exercise
-cloud setup locally.
+cloud setup locally. The hook performs the following steps:
 
 1. Activate the version manager if it is available. The template uses mise
    and records its activation in `CLAUDE_ENV_FILE` when available. Keep the

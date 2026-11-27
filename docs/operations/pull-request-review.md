@@ -13,11 +13,15 @@ ready. Reviewers apply the repository's [review policy](../../REVIEW.md).
 ## Pre-push findings
 
 This project requires pre-push review. If that review cannot run, the
-[authorized-draft procedure](../../.claude/skills/loop-engineering/references/pre-push-review.md)
+[authorized-draft procedure](../../.claude/skills/loop-engineering/references/pre-push-review.md#checkpoint-qualification)
 applies only when the human authorizes publication at the
-[plan gate](../../CLAUDE.md#confirming-delivery-at-the-plan-gate). Record the unmet gate in
-the draft's risks, request the CI review if selected, and leave the draft for
-the human to ready. Address CI review findings in the main session when subagents are
+[plan gate](../../CLAUDE.md#confirming-delivery-at-the-plan-gate). For an authorized draft, follow these steps:
+
+1. Record the unmet gate in the draft's risks.
+2. Request the continuous integration (CI) review if selected.
+3. Leave the draft for the human to mark ready.
+
+Address CI review findings in the main session when subagents are
 unavailable. If a missing subagent also prevents the selected fallback review,
 report that gate unmet. A local-only delivery choice keeps the branch
 local.
@@ -25,8 +29,8 @@ local.
 At the round cap, explain that deferring an open Critical or Major finding
 records it on the tracking issue. When the human chooses deferral and authorizes the issue write, post the
 ledger there in a comment titled “Deferred pre-push findings” beginning with
-the project's agent-comment marker. Use the Deferred Handoff fields from the
-pre-push procedure. The pull request body mentions that a record exists on
+the project's agent-comment marker. Use the fields specified for a
+[deferred handoff](../../.claude/skills/loop-engineering/references/pre-push-review.md#deferred-handoff). The pull request body mentions that a record exists on
 the tracking issue and omits its contents and link. If the write fails,
 retain the ledger in run state and report delivery incomplete.
 

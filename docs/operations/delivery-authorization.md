@@ -6,6 +6,10 @@ description: Who can authorize delivery and which targets, effects and limits an
 
 # Standing delivery grant
 
+Read the policy on the default branch to determine who may authorize delivery
+and which actions the grant covers. The [review procedure](./pull-request-review.md)
+governs how to use an authorized review route.
+
 <!-- INIT: if the maintainer adopts the grant, fill both placeholders and remove this comment and the inert-template notice. If the maintainer declines, replace the grant text with the requirement to obtain explicit authorization for each delivery effect. Keep the page so delivery procedures still point to the authority. -->
 
 **Template status.** This grant is inert. Until the maintainer adopts it on
@@ -19,7 +23,7 @@ version on the default branch when determining the scope of a run's grant.
 
 ## Targets
 
-The grant covers the following targets for the current run.
+The grant covers the following targets for the current run:
 
 - this repository
 - the run's `claude/` working branch
@@ -29,7 +33,7 @@ The grant covers the following targets for the current run.
 
 ## Covered effects
 
-The adopted grant authorizes these actions on its named targets.
+The adopted grant authorizes these actions on its named targets:
 
 - creating the tracking issue, publishing and revising the plan in it, and
   assigning the authenticated operator
@@ -47,7 +51,7 @@ subscription, follow the [host's waiting procedure](../../CLAUDE.md#waiting-on-a
 
 ## Exclusions
 
-The grant excludes these actions.
+The grant excludes these actions:
 
 - merging
 - pushing to the default branch
