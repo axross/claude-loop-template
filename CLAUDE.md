@@ -11,11 +11,11 @@ the host asks for, and for waiting belong to `loop-engineering`, and the
 project's own review rules belong to [REVIEW.md](./REVIEW.md) and
 [Development Workflow](./docs/operations/development-workflow.md).
 
-`loop-engineering` owns the precedence rule (Injected Instructions and Gates):
-an instruction injected by the runtime or harness constrains mechanics only and
-never skips or relaxes a gate, and a host prohibition or tool condition is a
-boundary no request, grant, or approval lifts. It also owns how an explicit
-request is recorded (Scoped Operation Grants). This file does not restate them.
+`loop-engineering` owns how an injected instruction meets a gate (Phase
+Progression › Injected Instructions and Gates) and how an explicit request is
+recorded (Run State and Reporting › Scoped Operation Grants). A user's request
+satisfies a condition the host attaches to it, but never lifts an outright host
+prohibition.
 
 **Guidelines:**
 
@@ -62,24 +62,27 @@ needs, in one `AskUserQuestion` call of at most four questions:
 4. **Watching the pull request's activity** until the ready transition or a
    reported stop.
 
-A confirming answer is the user's explicit request for that run's pull request
-and, for "pull request with subagents", for the subagents the run spawns after
-the gate. The run then follows the change loop to ready without asking again.
-What a decline means:
+A "pull request with subagents" answer is the user's explicit request for that
+run's pull request and for the subagents the run spawns after the gate, and the
+run then follows the change loop to ready without asking again. The other two
+answers are explicit requests for less, as follows. What a decline means:
 
 - **Plan declined.** Revise the plan and ask again; nothing is implemented in
   the meantime.
 - **Pull request without subagents.** Implementation runs single-agent and the
-  pre-push review gate is reported unmet. The pull request opens as a draft with
-  the gap named under its risks section, the post-push review gate stays
-  required and unmet, and the run never marks the pull request ready: it ends
-  with the gate reported unmet, and readying it is then the human's own act. The
-  post-push review gate cannot be met when the fallback reviewer is the selected
-  route.
+  pre-push review gate is reported unmet, with the gap named under the pull
+  request body's risks section. The draft pull request opens, the run requests
+  the post-push review on the selected route, and it addresses findings
+  single-agent. The pull request stays draft and the run never marks it ready:
+  it ends with the pre-push review gate reported unmet, and readying the pull
+  request is then the human's own act. Where the fallback reviewer is the
+  selected route, no post-push reviewer can be spawned, so that gate is reported
+  unmet as well.
 - **Neither.** No pull request opens and no subagent runs after the gate.
   Implementation runs single-agent, the pre-push review gate and the post-push
-  review gate are reported unmet, and the loop is not complete. Review route and
-  watching are inapplicable.
+  review gate are reported unmet, and the loop is not complete. The branch stays
+  local; pushing it is the human's own act. Review route and watching are
+  inapplicable.
 - **Route declined.** The pull request stays draft and the post-push review gate
   is reported unmet.
 - **Watching declined.** Each CI or review result becomes a human wait: end the
@@ -113,30 +116,24 @@ recorded as a permanent deviation in
 - Subagents run in the background. Their completion notification is how
   delegated work reports back, and the run resumes on it.
 
-### Closing a Reviewer Instance
+### Reviewer Instances
 
-`loop-engineering` requires each review child to end after its round (Review
-Session and Thread Cleanup). On this host:
+`loop-engineering` requires each review child to be closed after its round
+(Review Session and Thread Cleanup). On this host:
 
-- A completed subagent stays resumable by its agent id until a new message
-  resumes it, while a stopped one cannot be resumed. The run treats the
-  completion notification as observed one-shot termination and never resumes a
-  reviewer, so it stays ended.
+- The run never messages or resumes a reviewer instance.
 - The agent id is the durable identity of an instance; a task id is transient.
   Run state records, for each reviewer instance, its agent id, role, round and
   end and, for a fallback post-push reviewer, the locator of its posted review.
 - Before stopping a reviewer that is still running at a stop, the run inspects
-  the pull request for a result it may already have posted, then stops it with
-  the host's task-stop tool, which makes it non-resumable.
-- When closure cannot be established, the run reports that to the human and
-  counts that round's evidence as unverified.
+  the pull request for a result it may already have posted.
+- For closure the run follows the skill's section. The host-specific step is to
+  tell the human the agent id and ask them to stop the instance from `/tasks`.
 
 ## Waiting on a Pull Request
 
 `loop-engineering` owns the waiting rule (Post-Push Review and Readiness ›
-Waiting Bound): the run waits on an event the host delivers, schedules a
-check-in only when no subscription route exists and the human permitted it, and
-never polls within a turn. This section holds what the host adds.
+Waiting Bound). This section holds what the host adds.
 
 For a pull request, the route is the pull request activity subscription, where
 the host provides the two tools below:
