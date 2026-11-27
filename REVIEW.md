@@ -1,6 +1,6 @@
 # Review Instructions
 
-<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — Fixed: INIT KEEPS this file (the independent-review channel is fixed infrastructure, see INIT.md Step 4). Just delete this marker and the italic note below, then configure it — enumerate the do-not-report list from the checks CI actually enforces. A project that wants no automated review loop disables the workflow triggers rather than deleting this file. -->
+<!-- INIT:OPTIONAL key=POST_PUSH_REVIEW — Fixed: INIT KEEPS this file (the post-push review channel is fixed infrastructure, see INIT.md Step 4). Just delete this marker and the italic note below, then configure it — enumerate the do-not-report list from the checks CI actually enforces. A project that wants no automated review loop disables the workflow triggers rather than deleting this file. -->
 *Configure this policy during INIT: enumerate the do-not-report list from the project's CI-enforced checks.*
 
 Review **policy** for this repository — the highest-priority, review-only
