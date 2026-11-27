@@ -135,11 +135,10 @@ effort and the reviewer at xhigh.
 
 ### The Reviewer
 
-`reviewer.md` serves all three reviews that `loop-engineering`
-defines, and every round of every review is a fresh instance.
+`reviewer.md` serves all three reviews that `loop-engineering` defines;
 [Development Workflow](./development-workflow.md#the-three-reviews) states this
-repository's choices for them. Used for plan review or
-pre-push review it returns its report to the main agent and posts nothing. Only
+repository's choices for them. Used for plan review or pre-push review it
+returns its report to the main agent and posts nothing. Only
 when its prompt assigns it as a round's post-push review of a named pull
 request — naming the pull request, the round, the head commit, and the author's
 checkout path — does it post, as exactly one COMMENT-type review; a prompt that

@@ -49,10 +49,9 @@ open pull request: work delivered outside the loop, and so never given a
 post-push review. It MUST stay a scheduled sweep rather than gaining a push trigger —
 the loop legitimately pushes the working branch before it opens the draft pull
 request, so a push-time check would fail that window every time. A grace period
-skips a branch whose latest commit is still fresh. A branch pushed without a
-pull request, as when the human declined pull request delivery at the plan gate,
-is expected to be flagged here until the human opens a pull request for it or
-deletes it.
+skips a branch whose latest commit is still fresh. A branch the human pushed
+without opening a pull request is expected to be flagged here until the human
+opens a pull request for it or deletes it.
 
 [`check.sh`](../../.claude/hooks/check.sh)'s in-flight reminder covers the
 narrower case within a single session; see
@@ -62,7 +61,9 @@ narrower case within a single session; see
 
 `loop-engineering` defines plan review, pre-push review, and post-push review:
 their terms, scope, round caps, route selection, and the properties of the
-post-push review. It sets them out in Review Terms and in the references for
+post-push review. It sets them out in its [Review
+Terms](../../.claude/skills/loop-engineering/references/review-workflow.md#review-terms)
+and in the references for
 [plan review](../../.claude/skills/loop-engineering/references/plan-review.md),
 [pre-push review](../../.claude/skills/loop-engineering/references/pre-push-review.md),
 and [post-push review](../../.claude/skills/loop-engineering/references/post-push-review.md).
@@ -70,27 +71,34 @@ This section states only this repository's choices.
 
 ### Pre-Push Review
 
-Pre-push review always runs in this repository. Where it cannot run, because no
-reviewer subagent exists or the human declined subagent use at the plan gate,
-the gate is reported unmet and the authorized-draft exception in
+Pre-push review always runs in this repository. Where it cannot run, because
+no reviewer subagent exists or the human answered "pull request without
+subagents" to the delivery question at the plan gate, the gate is reported unmet
+and the authorized-draft exception in
 [`pre-push-review.md`](../../.claude/skills/loop-engineering/references/pre-push-review.md#checkpoint-qualification)
 applies:
 
-- the draft pull request may open, with the gap named under the body's risks
+- the draft pull request opens, with the gap named under the body's risks
   section;
-- post-push review stays required and unmet;
-- the run never marks the pull request ready and ends with the gate reported
-  unmet. Readying it is then the human's own act.
+- the run requests the post-push review on the selected route and addresses
+  findings single-agent;
+- the pull request stays draft and the run never marks it ready. It ends with
+  the pre-push review gate reported unmet, and readying the pull request is then
+  the human's own act.
 
-Publication is authorized separately, by the delivery question at the plan gate;
-[`CLAUDE.md`](../../CLAUDE.md) lists its answers.
+The exception does not cover the answer "neither": no pull request opens, the
+branch stays local, and pushing it is the human's own act. Publication is
+authorized separately, by that delivery question; [`CLAUDE.md`](../../CLAUDE.md)
+lists its answers.
 
 At the round cap, each open Critical or Major finding goes to the human, as the
 skill requires. When the human declines to fix one, it is deferred, and the run
 records it in a comment on the tracking issue, the permitted project mechanism
 for the skill's [deferred
 handoff](../../.claude/skills/loop-engineering/references/pre-push-review.md#deferred-handoff).
-The human's answer to the cap question authorizes that write. The comment:
+The cap question tells the human that declining to fix a finding records it in
+a comment on the tracking issue, and the human's answer authorizes that write.
+The comment:
 
 - begins with the agent-comment marker and is titled "Deferred pre-push
   findings";
