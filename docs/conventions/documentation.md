@@ -31,7 +31,9 @@ change to a delivery grant also requires checking the procedures that rely
 on it. The installed [Living Project Documentation skill](../../.claude/skills/living-project-documentation/SKILL.md)
 defines the format and migration rules.
 
-## A New Document Earns Two Entries
+<a id="a-new-document-earns-two-entries"></a>
+
+## Link a new page and route its change surface
 
 A new page MUST have a descriptive link from its subject index or the root.
 A change introducing a new surface MUST also add its owner to the

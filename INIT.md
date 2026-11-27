@@ -561,13 +561,9 @@ Build the first reading route in this order:
 
 ### Placing a document: `conventions/` or `operations/`?
 
-Choose the directory by asking where a mistake would show up. If it appears
-in a proposed repository change, put the team's rule in `docs/conventions/`.
-For example, the module layout agreed in §1c belongs there. If a person
-would make the mistake while running or recovering a task, put the procedure
-in `docs/operations/`. Deployment steps belong there.
-An architectural boundary may need its own page when a reader needs to know
-which component owns a responsibility. For a project with a login, put its
+Use the [placement convention](./docs/conventions/documentation.md#choose-a-subject)
+to choose between the two directories. Record the module layout agreed in §1c
+in `docs/conventions/directory-structure.md`. For a project with a login, put its
 lockout thresholds and session-cookie ownership rule in
 `docs/conventions/security.md` while the
 [authentication gap](./docs/operations/skill-departures.md#gap--application-security-is-silent-on-authentication-lockout-and-session-cookie-ownership) applies.
@@ -680,7 +676,9 @@ specific to Claude Code.
 
 ---
 
-## Step 6b — Fill in or delete the standing delivery grant
+<a id="step-6b--fill-in-or-delete-the-standing-delivery-grant"></a>
+
+## Step 6b — Fill in or replace the standing delivery grant
 
 The [delivery authorization policy](./docs/operations/delivery-authorization.md)
 contains the **Standing Delivery Grant** skeleton. In the template it grants
@@ -771,10 +769,10 @@ human authorization, and an agent never grants it to itself.
 - [ ] A fresh session's `/context` shows the installed skills. This cannot be
       confirmed from the session that installed them — skills load at session
       start.
-- [ ] `AGENTS.md`'s **Routing a Change** table has a row for every document
-      that governs a distinct change, and every row resolves to its owner.
-      Nothing surfaces those documents automatically, so an unrouted one is
-      unreachable in practice.
+- [ ] Each new page has a link from its subject index or the root. Each
+      distinct kind of change has a row in the **Routing a Change** table in
+      `AGENTS.md` that links to its owner. See the
+      [routing convention](./docs/conventions/documentation.md#link-a-new-page-and-route-its-change-surface).
 - [ ] `docs/` holds no empty or heading-only document. A subject with nothing
       to say about it yet has no file, and no index line.
 - [ ] Skipped capabilities no longer appear in prose: grep the tree for each
