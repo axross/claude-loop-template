@@ -47,12 +47,12 @@ on:
 
 # LOAD-BEARING SAFETY PROPERTY 1 of 3 — least privilege for GITHUB_TOKEN.
 # The `permissions:` block is the technical control, and it bounds only
-# GITHUB_TOKEN: no contents:write. "Never push or change repository contents"
-# is an instruction in the review prompt below, not a technical restriction.
-# The Claude App token the action mints via OIDC carries the App's own grant
-# (see the --allowedTools comment below). pull-requests / issues / checks
-# writes cover inline review comments, the summary comment, and the check-run
-# respectively.
+# GITHUB_TOKEN: no contents:write. The never-push, never-change-repository
+# rule is an instruction in the review prompt below, not a technical
+# restriction. The Claude App token the action mints via OIDC carries the
+# App's own grant (see the --allowedTools comment below). The pull-requests /
+# issues / checks grants are GITHUB_TOKEN's scope for review output; they do
+# not bound the reviewer's own `gh` calls, which use the App token.
 permissions:
   contents: read
   pull-requests: write
@@ -63,7 +63,7 @@ permissions:
 jobs:
   review:
     name: Review
-    # LOAD-BEARING SAFETY PROPERTY 1 (continued) — the author-association gate.
+    # LOAD-BEARING SAFETY PROPERTY 1 (continued) — trigger gate.
     # Only fire on: a comment on a pull request (not a plain issue), containing
     # the review trigger phrase, from a trusted user (owner/member/
     # collaborator). This keeps untrusted authors from spending tokens or
