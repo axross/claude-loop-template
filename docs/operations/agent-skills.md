@@ -8,9 +8,9 @@ them come from the shared [axross/skills](https://github.com/axross/skills)
 library and are copied in with the
 [vercel-labs/skills](https://github.com/vercel-labs/skills) CLI;
 [`skills-lock.json`](../../skills-lock.json) records which skills are installed,
-where each came from, and the upstream commit it was installed at. This project owns no skill of its
-own — its conventions and operating procedures are the documents you are
-reading. Two costs come with that choice. Refreshing needs Node and network
+where each came from, and the upstream commit it was installed at. This
+project owns no skill of its own — its conventions and operating procedures are
+the documents you are reading. Two costs come with that choice. Refreshing needs Node and network
 access, because `npx skills` fetches from the library over the network; the
 installed skills themselves are plain Markdown, so this cost falls on
 refreshing, not on every session. And the library is not this project's own: a
@@ -166,7 +166,8 @@ go stale the moment it did. An agent-authored comment is not adoption evidence.
   travels with the canonical `CLAUDE.md`.
 - **Scope:** the plan-gate confirmation only. Every other decision a run puts to
   the human follows the installed rule, in dependency order.
-- **Adopted by:** the maintainer's merge of #79.
+- **Adopted by:** the maintainer's merge of #79, and of the pull request that
+  closes #78, which rewrote the entry.
 - **Reassess when:** the installed section changes, or `CLAUDE.md` changes the
   confirmation's questions.
 
@@ -176,10 +177,12 @@ go stale the moment it did. An agent-authored comment is not adoption evidence.
   Operation Grants, checked at aa471aa; it keeps host permission prompts and
   tool usage conditions as boundaries, as does `loop-engineering` › Phase
   Progression › Injected Instructions and Gates.
-- **Counterexample:** the human confirmed delivery in a session, the plan is then
-  revised, or a fresh session resumes the run with the confirmation recorded in
-  run state. The installed rule carries the matching grant forward and asks only
-  for an absent or expanded effect.
+- **Counterexample:** in each of three cases the installed rule carries the
+  matching grant forward and asks only for an absent or expanded effect. The
+  human confirmed delivery and the plan is then revised. A fresh session resumes
+  the run with the confirmation recorded in run state. The human granted a
+  subagent spawn needed before the plan gate, and the roles after the gate need
+  the same kind of spawn.
 - **What this project does instead:** where the host conditions pull request
   creation or a subagent spawn on the user's explicit request, the run asks it
   again in three cases: with every revised plan; once, before any further
@@ -193,7 +196,8 @@ go stale the moment it did. An agent-authored comment is not adoption evidence.
 - **Scope:** operations the host conditions on the user's explicit request, that
   is, opening the pull request and spawning a subagent. Every other effect a
   valid grant covers is carried forward as installed.
-- **Adopted by:** the maintainer's merge of #79.
+- **Adopted by:** the maintainer's merge of #79, and of the pull request that
+  closes #78, which rewrote the entry.
 - **Reassess when:** the installed section changes, or the host changes what it
   accepts as the user's explicit request.
 
@@ -221,9 +225,10 @@ go stale the moment it did. An agent-authored comment is not adoption evidence.
 ### Gap — `application-security` is silent on authentication lockout and session-cookie ownership
 
 - **Uncovered concern:** `application-security` presents itself as an OWASP Top
-  10 lens, and OWASP's A07 is Identification and Authentication Failures. At
-  aa471aa its references cover secrets, input validation, injection, SSRF,
-  privacy and exposure, and supply chain, but not authentication itself. Two rule
+  10:2025 lens, and that list's A07 is Authentication Failures, to which the
+  installed coverage table routes no reference. At aa471aa its references cover
+  secrets, input validation, injection, SSRF, privacy and exposure, and supply
+  chain, but not authentication itself. Two rule
   classes any project with a login needs have no home in the installed set:
   - **Lockout thresholds.** A lockout duration below 5 minutes, a max-attempt
     count above 5, or the removal of the lockout configuration block entirely.
@@ -243,7 +248,8 @@ go stale the moment it did. An agent-authored comment is not adoption evidence.
 - **Scope:** a project with authentication. Until the gap closes, such a project
   states these thresholds in its own `docs/conventions/security.md` and reviews
   against them there.
-- **Adopted by:** the maintainer's merge of #79.
+- **Adopted by:** the maintainer's merge of #79, and of the pull request that
+  closes #78, which rewrote the entry.
 - **Reassess when:** the installed `application-security` changes, or a refresh
   installs a skill that states either rule. A proposal upstream follows
   `agent-skill-management` and waits on the human's go-ahead; none is recorded

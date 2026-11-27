@@ -33,7 +33,7 @@
   written.
   <!-- INIT: keep the marker and the retired-marker note, or replace both with the project's own marker and its retired predecessors. -->
   [GitHub Operation](./.claude/skills/github-operation/references/identity-and-targets.md#attribute-comments-without-inventing-a-bot)
-  owns how an agent comment is marked and read back.
+  owns how an agent comment is marked and recognized.
 - Never push to the default branch. Work on a `claude/`-prefixed branch and
   leave merging to the maintainer, `@<maintainer>`.
   <!-- INIT: replace `@<maintainer>` with the connected operator's real handle. -->

@@ -44,8 +44,9 @@ the recorded commit is a separate command, and nothing runs either
 automatically; the template never chooses a revision of its own. They are
 generated artifacts: a hand-edit is silently discarded by the next install, so a
 change goes upstream as an issue or pull request there.
-[docs/operations/agent-skills.md](./docs/operations/agent-skills.md) holds the refresh command and the register for a rule that turns out to be
-wrong or to collide with your project.
+[docs/operations/agent-skills.md](./docs/operations/agent-skills.md) holds the
+refresh command and the register for a rule that turns out to be wrong or to
+collide with your project.
 
 The template installs the core set that applies to any project whatever its
 stack — conduct, the change loop, baseline development, commits, GitHub operation,
