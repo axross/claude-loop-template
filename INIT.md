@@ -727,9 +727,9 @@ human authorization, and an agent never grants it to itself.
   tooling — they ship inside installed skills and stay. Before deleting
   `template-checks.yaml`, copy whichever of its two jobs the project wants as
   an ongoing gate into `merge-checks.yaml`: the relative-link check, and the
-  whole-root documentation check. Preserve the prerequisites of each check
-  you keep, including npm dependencies, Python with PyYAML, and the pinned
-  OKF validator for the documentation check.
+  whole-root documentation check. Copy the setup steps with each job you
+  keep. If you adapt the documentation job to a different CI runner, follow
+  the [validator setup](./.claude/skills/living-project-documentation/references/validators.md#prepare-the-installed-skill).
 - When retiring the two historical skill records in `docs/decisions/`, remove
   their entries from the root index. Remove the Decisions heading and its
   introduction if no entries remain. Preserve the routes if the project
