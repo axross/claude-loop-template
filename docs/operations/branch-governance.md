@@ -29,14 +29,14 @@ when all three conditions hold:
 - The branch has no open pull request.
 - The head commit is at least 30 minutes old.
 
-The audit also checks branches pushed by a human.
+The same conditions apply when a human pushes a `claude/*` branch.
 For work intended for delivery, check the [delivery authorization](./delivery-authorization.md)
 before opening the draft and [requesting review](./pull-request-review.md#request-the-post-push-review).
 A failed audit grants no permission to publish or delete a branch. If the
 required effect has no authorization, stop and ask the maintainer. The
 maintainer can remove an abandoned branch.
 
-Keep the scheduled sweep and its grace period. The normal delivery sequence
+The audit MUST remain a scheduled sweep with a grace period. The normal delivery sequence
 pushes the branch before opening the draft, so checking on push would report
 a failure while delivery was still in progress. Running on GitHub also
 catches a session that exits after the push.

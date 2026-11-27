@@ -39,12 +39,12 @@ to run`, retry the command with `npx --yes skills@latest add`.
 After the refresh finishes:
 
 1. Check the installation summary for each skill you selected.
-2. Compare the directories under `.claude/skills/` with the entries in `skills-lock.json`.
+2. Compare the directories under `.claude/skills/` with the entries in `skills-lock.json`. You MUST NOT add a skill absent from the lockfile.
 3. Review the upstream revisions and the changes to the installed files.
-4. Commit the generated copies and the lockfile together.
+4. You MUST commit the generated copies and the lockfile together.
 5. Start a fresh Claude Code session and check `/context` to confirm that Claude Code discovered the skills.
 
-A refresh overwrites hand-edits to installed skills. Follow
+Treat each directory under `.claude/skills/` as a generated artifact. A refresh overwrites hand-edits. Follow
 [Changes to installed rules](../../.claude/skills/agent-skill-management/references/installed-rule-changes.md)
 to verify and route a suspected defect.
 

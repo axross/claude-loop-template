@@ -6,6 +6,9 @@ description: How to handle an unmet pre-push gate, defer findings and request or
 
 # Pull request review
 
+Use this procedure to handle a missing review or a finding at the round cap.
+Before acting on a pull request, check which effects the run's
+[delivery authorization](./delivery-authorization.md) covers.
 Loop Engineering defines the plan, pre-push and post-push review gates,
 including their round limits and the conditions for marking a pull request
 ready. Reviewers apply the repository's [review policy](../../REVIEW.md).
@@ -37,7 +40,7 @@ retain the ledger in run state and report delivery incomplete.
 
 ## Request the post-push review
 
-Before publishing or requesting a review, check the [delivery authorization](./delivery-authorization.md) for this run. If the grant is inert or the effect falls outside its scope, obtain specific authorization before continuing.
+If the grant is inert or excludes the review request, obtain specific authorization before posting.
 
 Use the route selected in [AGENTS.md](../../AGENTS.md). The template selects
 the CI reviewer. If the override is removed, Loop Engineering's fallback
@@ -45,8 +48,8 @@ reviewer applies. For the CI route, post the configured trigger phrase in
 one top-level pull request comment. Reserve the literal phrase for that
 request because the workflow matches it anywhere in a comment body.
 
-If the review does not arrive, verify the following before interpreting its
-silence:
+If the review does not arrive, the run MUST confirm the CI reviewer setup
+before interpreting its silence:
 
 - The [review workflow](../../.github/workflows/claude-review.yaml) is active
   on the default branch, and the trigger comment came from an owner, member or

@@ -25,8 +25,9 @@ Match the assignment to its definition and fallback:
 Each definition selects its model explicitly to avoid inheriting the main
 session's model and cost. The investigator and implementer use high effort.
 The reviewer uses xhigh. The investigator and reviewer deny editing tools and
-spawning. Preserve the reviewer's access to the issue, plan artifacts and
-sources for factual claims so it can check the requested change against them.
+spawning. The reviewer definition MUST NOT widen that deny-list. The reviewer
+needs access to the issue and plan artifacts to check the requested change
+and to the sources behind factual claims.
 The implementer's local-only delivery boundary is an instruction in its
 definition.
 

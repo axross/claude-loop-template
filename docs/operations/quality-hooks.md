@@ -40,9 +40,12 @@ prefix because its command takes no path.
 ## Diagnose a stop check
 
 [check.sh](../../.claude/hooks/check.sh) runs the retained lint and unit-test
-commands when the package manager is available and source files have pending
-changes in the working tree or commits ahead of the upstream branch. A
-failure blocks completion and prints the checks' output. Fix the reported
+commands when the package manager is available and at least one condition holds:
+
+- The working tree or index contains changes matching the project's source-file pattern.
+- The diff for commits ahead of the upstream branch includes a path matching that pattern.
+
+A failure blocks completion and prints the checks' output. Fix the reported
 errors before stopping again. A mechanically fixable lint error can still
 arrive here after a shell edit or an unsuccessful autofix.
 

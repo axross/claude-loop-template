@@ -24,7 +24,8 @@ Introduce a glossary when readers actually use competing names for a concept.
 
 ## A Document Is Corrected by the Change That Made It Wrong
 
-Update the owning page with the change that alters its answer. Keep the
+A change that alters a documented answer MUST update its owning page in the
+same change. The plan SHOULD name each page it invalidates. Keep the
 condition that changes the action beside the action itself. For example, a
 change to a delivery grant also requires checking the procedures that rely
 on it. The installed [Living Project Documentation skill](../../.claude/skills/living-project-documentation/SKILL.md)
@@ -32,22 +33,22 @@ defines the format and migration rules.
 
 ## A New Document Earns Two Entries
 
-Add a descriptive link to the subject index (or the root for a directly
-listed subject). For each new change surface, also add its owner to the
+A new page MUST have a descriptive link from its subject index or the root.
+A change introducing a new surface MUST also add its owner to the
 [agent routing table](../../AGENTS.md#routing-a-change). The table is how a
 session editing the project discovers a local rule. Keep project conventions
 here instead of authoring local skills, so a library refresh and template
 adaptation can manage installed skills without modifying their contents.
 
-When moving an answer, point editable callers at the new owner. Keep a short
+A rename or removal MUST update the index and any affected routing row in
+the same change. When moving an answer, point editable callers at the new owner. Keep a short
 route from a published path or fragment while external use is uncertain.
 
 <a id="the-decision-log-is-this-projects-own"></a>
 
 ## Where a settled decision belongs
 
-Record the current constraint and its reason on the page governing the
-decision. Use the original commit or pull request for the deliberation.
+The governing page MUST state the current constraint and its rationale. Use the original commit or pull request for the deliberation.
 The template's dated skill records are historical entry points. New decisions
 are maintained with their subject.
 

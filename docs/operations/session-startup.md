@@ -22,9 +22,9 @@ uses the contributor's toolchain. Set the variable explicitly to exercise
 cloud setup locally. The hook performs the following steps:
 
 1. Activate the version manager if it is available. The template uses mise
-   and records its activation in `CLAUDE_ENV_FILE` when available. Keep the
-   manager optional so a cloud image with a working runtime can start even if
-   the manager's installer is unreachable.
+   and records its activation in `CLAUDE_ENV_FILE` when available. The hook MUST NOT
+   install a version manager unconditionally. A cloud image with a working
+   runtime can start even if the manager's installer is unreachable.
 2. Seed a missing `.env.local` from `.env.example` when the example exists.
 3. Copy the local settings example, when present, over
    `.claude/settings.local.json`. This file is gitignored and Claude Code
