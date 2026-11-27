@@ -6,8 +6,9 @@ when one of them turns out to be wrong or to collide with this codebase.
 Every skill under `.claude/skills/` is **installed**, not written here. All of
 them come from the shared [axross/skills](https://github.com/axross/skills)
 library and are copied in with the
-[vercel-labs/skills](https://github.com/vercel-labs/skills) CLI, pinned by
-[`skills-lock.json`](../../skills-lock.json). This project owns no skill of its
+[vercel-labs/skills](https://github.com/vercel-labs/skills) CLI;
+[`skills-lock.json`](../../skills-lock.json) records which skills are installed
+and where each came from. This project owns no skill of its
 own — its conventions and operating procedures are the documents you are
 reading. Two costs come with that choice. Refreshing needs Node and network
 access, because `npx skills` fetches from the library over the network; the
@@ -59,6 +60,15 @@ Installing a skill does not prove a host loaded it. That is not observable from
 inside the session that changed the tree, because skills are read at session
 start — so confirm it once in a **fresh** session with `/context`, which is what
 proves the installed directories were picked up.
+
+### Versions
+
+This template does not pin installed skills. `skills-lock.json` records which
+skills are installed and their source, not an upstream revision, so a refresh
+takes the latest upstream when it is performed, and nothing updates the skills
+automatically: an installed skill stays exactly as it was copied until someone
+runs the refresh above. A project that wants a fixed revision chooses that for
+itself; this one does not.
 
 ### When Upstream Renames a Skill
 
@@ -135,10 +145,156 @@ An entry records a decision the human accepted, with its reason. A hypothetical
 or anticipated collision MUST NOT be entered: a deviation is recorded when it is
 accepted, not when it is expected.
 
-<!-- INIT: the one entry below is real, not an example — keep it while the
-project has authentication and the gap is still open upstream. Do not seed the
-section with anything else; an otherwise-empty register is the correct state
-for a project that has not departed from an installed rule. -->
+<!-- INIT: every entry below ships with the template and is real, not an
+example. Keep the combined plan-gate confirmation entry for as long as
+`CLAUDE.md` keeps that confirmation; it is permanent. Keep the
+`application-security` gap while the project has authentication and the gap is
+still open upstream. Each remaining entry sits between a TRANSITIONAL comment
+pair: it records a departure from the installed skills as they stood when this
+template was last refreshed, so delete it once your installed skills are
+refreshed past the upstream change that removes the conflict, as INIT's
+completion checklist directs. Do not seed the section with anything else; a
+register holding only the entries that still apply is the correct state. -->
+
+Every entry cites the installed skill's section by name, with the provenance of
+the installed copy, and does not quote the skill: the installed text changes
+with each refresh, and a quotation would go stale the moment it did. For the
+installed copy, that provenance is "refreshed in #67 (d5799aa); the lockfile
+records no upstream revision". Where `axross/skills` at `main` (fe0dbeb,
+2026-11-26) differs, the entry says so.
+
+### Deviation — combined plan-gate confirmation
+
+- **Installed skill:** `professional-behavior` › Asking the Human › One
+  Decision Per Prompt (installed copy refreshed in #67 (d5799aa); the lockfile
+  records no upstream revision).
+- **What this project does instead:** `CLAUDE.md`'s plan-gate confirmation puts
+  plan approval, delivery of the draft pull request including subagent use, the
+  post-push review route, and watching the pull request's activity to the human
+  in one `AskUserQuestion` call of at most four questions, though the answers
+  depend on one another: declining delivery makes the route and watching
+  inapplicable.
+- **Why:** the host conditions pull request creation and subagent spawning on
+  the user's explicit request, and the plan-approval exchange is where the human
+  is already answering. The maintainer approved combining them rather than
+  asking again after approval. The entry is permanent because the confirmation
+  travels with the canonical `CLAUDE.md`.
+- **Meanwhile:** every other decision a run puts to the human stays one at a
+  time, in dependency order.
+- **Upstream:** at fe0dbeb the section is named `professional-behavior` ›
+  Asking the Human › Decisions in One Prompt, and it separates independent
+  decisions, which share a prompt, from dependent ones, which do not. This
+  confirmation's decisions are dependent, so the deviation stands.
+
+<!-- TRANSITIONAL: remove once the installed skills no longer conflict with this block -->
+### Deviation — plan approval taken inline in the confirmation
+
+- **Installed skill:** `loop-engineering` › Asking the Human, and the
+  plan-approval gate of Phase 1 — Plan (installed copy refreshed in #67
+  (d5799aa); the lockfile records no upstream revision).
+- **What this project does instead:** the run takes plan approval as the first
+  question of the plan-gate confirmation, answered in the same turn, rather
+  than ending the turn and waiting for the human to resume.
+- **Why:** one exchange then collects every explicit request the run needs;
+  see the combined-confirmation entry above.
+- **Meanwhile:** the plan is still recorded in the tracking issue and approval
+  is still the human's; only the channel it arrives through differs.
+- **Upstream:** at fe0dbeb the section is gone and the approval gate is
+  described under `loop-engineering` › Phase Progression; re-check whether the
+  conflict remains when the skills are refreshed.
+<!-- /TRANSITIONAL -->
+
+<!-- TRANSITIONAL: remove once the installed skills no longer conflict with this block -->
+### Deviation — no scheduled self-wake
+
+- **Installed skill:** `loop-engineering` › Execution Model, and Phase 3 —
+  Request Independent Review with its CI and review tail (installed copy
+  refreshed in #67 (d5799aa); the lockfile records no upstream revision).
+- **What this project does instead:** the run never schedules its own wake. It
+  waits only on host-delivered events — the pull request activity subscription
+  and a delegated worker's completion notification — re-reads state on each
+  wake, and ends the turn reporting "pending" when nothing else is pending.
+  `CLAUDE.md` names the scheduling tools no agent uses and the two subscription
+  tools it does use.
+- **Why:** the maintainer's policy is that an agent never schedules its own wake
+  on any host; the only waiting it does is on events the host delivers.
+- **Meanwhile:** where the installed skill keeps a scheduled wake as a backstop
+  while waiting on CI and review, that backstop is not armed; the human wait
+  that results is the intended behavior.
+- **Upstream:** at fe0dbeb the Execution Model section is gone, and the waiting
+  bound in `loop-engineering` › Independent Review and Readiness no longer
+  requires a scheduler or any particular resume mechanism; re-check on refresh.
+<!-- /TRANSITIONAL -->
+
+<!-- TRANSITIONAL: remove once the installed skills no longer conflict with this block -->
+### Deviation — the explicit request is obtained, not presumed from a standing mandate
+
+- **Installed skill:** `loop-engineering` › Execution Model, and
+  `loop-engineering` › Subagent Delegation › Harness Permission Determination
+  (installed copy refreshed in #67 (d5799aa); the lockfile records no upstream
+  revision).
+- **What this project does instead:** where the host conditions pull request
+  creation or a subagent spawn on the user's explicit request, the run obtains
+  that request: at the plan gate, or, for a subagent needed before the plan gate,
+  once at its first need. `AGENTS.md`'s standing request names what is wanted but
+  is not treated as the explicit request itself.
+- **Why:** the host decides what counts as the user's explicit request, and a
+  checked-in mandate cannot be assumed to meet it. An unobtained request leaves
+  the gate it serves reported unmet.
+- **Meanwhile:** every other part of the installed permission determination
+  applies as installed.
+- **Upstream:** at fe0dbeb `loop-engineering` states that it does not rank
+  runtime-injected instructions against project mandates, and leaves the
+  hierarchy to host entry guidance; a parallel upstream change is expected to
+  make it the canonical home of that rule; re-check on refresh.
+<!-- /TRANSITIONAL -->
+
+<!-- TRANSITIONAL: remove once the installed skills no longer conflict with this block -->
+### Deviation — pre-push review as a gate, capped at the initial round plus 3
+
+- **Installed skill:** `loop-engineering` › Pre-Flight Review (the
+  `pre-flight-review` reference) and Phase 2 — Code + Verify (installed copy
+  refreshed in #67 (d5799aa); the lockfile records no upstream revision).
+- **What this project does instead:** the review of the implementation before
+  the first push is a gate rather than an advisory stage, run by a fresh reviewer
+  per round, with findings returned privately and triaged by the main agent.
+  After the initial round plus 3, no further round runs: the main agent triages
+  what remains and names each unresolved Critical or Major finding individually
+  in the pull request body.
+- **Why:** the maintainer's policy makes review before the first push a gate,
+  where the installed stage is advisory and is skipped when no worker qualifies.
+  The unresolved list in the pull request body is how the human, and the
+  post-push reviewer, still see what remains.
+- **Meanwhile:** the installed skill's advisory stage and its own caps stay in
+  the skill; this project reads "advisory pre-flight review" there as the
+  pre-push review defined in [Development Workflow](./development-workflow.md#pre-push-review).
+- **Upstream:** at fe0dbeb the `pre-flight-review` reference applies when
+  project policy selects an advisory review before delivery, and keeps its own
+  round cap; re-check on refresh.
+<!-- /TRANSITIONAL -->
+
+<!-- TRANSITIONAL: remove once the installed skills no longer conflict with this block -->
+### Deviation — the fallback post-push reviewer is a subagent under the operator's identity
+
+- **Installed skill:** `loop-engineering` › Phase 3 — Request Independent
+  Review, in its requirement of a separate bot identity (installed copy
+  refreshed in #67 (d5799aa); the lockfile records no upstream revision).
+- **What this project does instead:** where `AGENTS.md` names no post-push
+  override, the fallback route gives a fresh `reviewer` subagent the pull
+  request, and it posts its review as a COMMENT-type review under the same
+  operator identity the author uses.
+- **Why:** without the CI reviewer there is no second identity to post as. The
+  reviewer's fresh, non-fork, never-resumed context, its lack of pre-push
+  findings, and its posting the review itself are what keep it separate from the
+  author.
+- **Meanwhile:** the template's override route, the CI reviewer under a bot
+  identity, still satisfies the installed requirement as written.
+- **Upstream:** at fe0dbeb `loop-engineering` › Independent Review and
+  Readiness › Independence lets a fresh child that publishes directly through the
+  delivery target's review mechanism satisfy the default, with stronger identity
+  requirements applying only when explicitly selected, so the conflict may be
+  gone; re-check on refresh.
+<!-- /TRANSITIONAL -->
 
 ### Gap — `application-security` is silent on authentication lockout and session-cookie ownership
 
@@ -160,9 +316,18 @@ a login needs have no home in the installed set:
   that system's internal details, so a second reader desyncs silently whenever
   it changes them.
 
+The installed copy of `application-security` (refreshed in #67 (d5799aa); the
+lockfile records no upstream revision) is silent on both rules.
+
 Neither is framework-specific. `next-app-development` covers adjacent ground
 for one framework, but this project does not necessarily install it, and the
 rules apply to any project with a login.
+
+**Upstream:** at fe0dbeb lockout thresholds are absent everywhere in the
+library. Session-cookie attributes, and the rule that a cookie's presence is not
+proof of authentication, exist only in the Next.js-specific skill, and the rule
+that application code must not read or write session cookies directly is stated
+nowhere. Re-check all of this when the skills are refreshed.
 
 **Until the gap closes:** a project with authentication states these thresholds
 in its own `docs/conventions/security.md` and reviews against them there. The
