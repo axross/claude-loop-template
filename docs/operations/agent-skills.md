@@ -131,10 +131,11 @@ or anticipated collision MUST NOT be entered: a deviation is recorded when it is
 accepted, not when it is expected.
 
 <!-- INIT: every entry below ships with the template and is real, not an
-example. Keep the three Claude Code entries, the combined plan-gate
-confirmation, the explicit request asked again, and watching conditioned on the
-human's confirmation, for as long as `CLAUDE.md` keeps the behavior each
-records: each travels with the canonical `CLAUDE.md`. Replace each entry's
+example. Keep the four Claude Code entries, the combined plan-gate
+confirmation, the explicit request asked again, watching conditioned on the
+human's confirmation, and reviewer instances that cannot be closed or checked,
+for as long as `CLAUDE.md` keeps the behavior each records: each travels with
+the canonical `CLAUDE.md`. Replace each entry's
 adoption locator with the pull request in which your maintainer adopted it. Keep
 the `application-security` gap while the project has authentication and the gap
 is still open at the installed commit. Do not seed the section with anything
@@ -221,6 +222,35 @@ go stale the moment it did. An agent-authored comment is not adoption evidence.
 - **Adopted by:** the maintainer's merge of #80.
 - **Reassess when:** the installed section changes, or `CLAUDE.md` changes the
   watching question.
+
+### Deviation — reviewer instances that cannot be closed or checked
+
+- **Installed rule:** `loop-engineering` › Selecting Review Workflows › Review
+  Session and Thread Cleanup, checked at aa471aa.
+- **Counterexample:** the installed rule has the run retain each review child's
+  checkable identity and close the child after its result is verified, with a
+  concrete host-specific handoff when it cannot. Three cases leave the run no way
+  to do either. A finished reviewer in a local session can only have its row
+  cleared from the task list, and it stays resumable. For any reviewer in a cloud
+  session the host documents no step that ends it, and archiving the session or
+  letting its environment expire does not end it. A plan-review or pre-push
+  reviewer posts nothing, so its identity is a label, and the host marks the
+  agent id that could stand for it as not for user-facing text.
+- **What this project does instead:** the run never messages or resumes a
+  reviewer instance, and records each one by role, round, reviewed commit and end
+  and, for a fallback post-push reviewer, the locator of its posted review. It
+  reports each instance it cannot close as unclosed, naming it by that record, and
+  still completes and may mark the pull request ready.
+- **Why:** the host documents no step that closes a finished reviewer, so a
+  handoff with a concrete step cannot be written, and the agent id is not for
+  user-facing text, so it cannot serve as the identity the run records and
+  reports.
+- **Scope:** reviewer subagents on Claude Code. The section's other limbs still
+  apply: the run verifies the posted result, records the round and the locator,
+  and asks for cleanup permission where a permission boundary prevents closure.
+- **Adopted by:** the maintainer's merge of the pull request that closes #83.
+- **Reassess when:** the host documents a step that closes a reviewer instance or
+  a checkable identity for one, or the installed section changes.
 
 ### Gap — `application-security` is silent on authentication lockout and session-cookie ownership
 

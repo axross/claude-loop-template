@@ -117,21 +117,30 @@ recorded as a permanent deviation in
 ### Reviewer Instances
 
 `loop-engineering` requires each review child to be closed after its round
-(Review Session and Thread Cleanup). On this host:
+(Review Session and Thread Cleanup). The run follows the skill's section as far
+as this host allows, and the departure it leaves is recorded in
+[the register](./docs/operations/agent-skills.md#deviation--reviewer-instances-that-cannot-be-closed-or-checked).
+On this host:
 
-- The run never messages or resumes a reviewer instance.
-- The agent id is the durable identity of an instance; a task id is transient.
-  Run state records, for each reviewer instance, its agent id, role, round and
-  end and, for a fallback post-push reviewer, the locator of its posted review.
-- Before stopping a reviewer that is still running at a stop, the run inspects
-  the pull request for a result it may already have posted, then stops it with
-  the host's task-stop tool. That leaves the instance resumable, so it is not
-  closure.
-- For closure the run follows the skill's section. The host-specific step is to
-  tell the human the agent id and ask them to stop the instance from `/tasks`
-  while it is still listed there; once it has left the list, the run reports the
-  instance unclosed with its agent id, and a failed close does not invalidate
-  the verified review.
+- The run never messages or resumes a reviewer instance. This is the control the
+  run has over an instance.
+- The agent id is a host handle that this host marks as not for user-facing
+  text, and a task id is transient. The run records neither in run state and
+  quotes neither to the human.
+- Run state records, for each reviewer instance, its role, round, reviewed
+  commit and end and, for a fallback post-push reviewer, the locator of its
+  posted review. The spawn description names the role and round, so an instance
+  is identified by those.
+- At a stop, for an instance that is still running, the run inspects the pull
+  request for a result it may already have posted, then stops the instance with
+  `TaskStop`. That leaves the instance resumable, so it is not closure. The run
+  does not wait on the human for this step, in any session type.
+- No documented step ends a finished instance, or one stopped with `TaskStop`, in
+  a local or a cloud session. The run names the instance by its run-state
+  identity, says that no documented step exists, and reports the instance
+  unclosed.
+- A failed or unavailable close does not invalidate the verified review, and
+  the run may complete and mark the pull request ready.
 
 ## Waiting on a Pull Request
 
