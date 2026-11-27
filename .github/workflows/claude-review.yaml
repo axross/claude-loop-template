@@ -19,11 +19,10 @@ name: Claude Code Review
 #
 # This is the one list of where the literal phrase appears; changing the phrase
 # means changing it in each: the `contains(...)` check below, the post-push
-# override block in AGENTS.md, the heading and the body sentence of the review
-# subsection in README.template.md (the README seed), and the phrase
-# loop-engineering itself posts, which lives in its installed (never
-# hand-edited) SKILL.md — route that change upstream per
-# docs/operations/agent-skills.md. Every other
+# override block in AGENTS.md, and the heading and the body sentence of the
+# review subsection in README.template.md (the README seed). The mention in
+# the installed loop-engineering skill is a non-binding example that defers to
+# the repository's configured trigger, so it needs no change. Every other
 # document refers to it as "the review trigger phrase" rather than spelling it
 # out, because a comment-triggered workflow matches the literal string ANYWHERE
 # in a comment body: a second spelling in a plan or a summary fires a duplicate

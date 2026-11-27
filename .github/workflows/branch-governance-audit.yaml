@@ -13,8 +13,8 @@ name: Branch Governance Audit
 # within one — that, and not redundancy, is why it is worth a workflow.
 #
 # it is deliberately a scheduled sweep, not a push-triggered gate: the loop
-# legitimately pushes a branch in Phase 2 (Code) and opens its draft pull
-# request only in Phase 3, so a push-time check would false-positive that
+# legitimately pushes a branch after implementation and opens its draft pull
+# request as a later step, so a push-time check would false-positive that
 # window. a grace window (GRACE_MINUTES) skips a branch whose latest commit is
 # very recent — still mid-delivery in an active session.
 #
