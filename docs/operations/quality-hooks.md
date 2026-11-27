@@ -12,9 +12,12 @@ To enable the quality hooks locally, copy
 automatically. It also pre-approves `subscribe_pr_activity` and
 `unsubscribe_pr_activity` on the Remote MCP server so an unattended run can
 wait for CI and review. Before subscribing, check the [delivery authorization](./delivery-authorization.md)
-and the operator's watching choice for this run. If the operator declines,
-wait for the human to report the result. Leave scheduling disabled as required
-by the [waiting procedure](../../CLAUDE.md#waiting-on-a-pull-request).
+and the operator's watching choice for this run. If the operator declines watching,
+wait for the human to report the result. With watching confirmed, use the
+subscription whenever the host provides it. A scheduled check-in is available
+only when the host lacks a subscription route and the human explicitly permits
+that check-in. The settings example grants no scheduling permission. See the
+[waiting procedure](../../CLAUDE.md#waiting-on-a-pull-request).
 
 ## Format after an edit
 

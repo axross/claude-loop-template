@@ -52,7 +52,9 @@ npx skills install --agent claude-code
 The source-free `install` alias was verified with skills CLI 1.9.0. If the
 restore creates a staging `.agents/` directory, remove the generated staging
 files before committing. This template tracks only the Claude Code skill root.
-The lockfile records each refresh. Nothing schedules an automatic upgrade.
+Running the [refresh command](#install-and-refresh) installs the latest upstream
+revision of each selected skill and updates its recorded commit in
+`skills-lock.json`. Upgrades run only when someone invokes the command.
 
 ### When Upstream Renames a Skill
 
