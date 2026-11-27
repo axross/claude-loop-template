@@ -204,19 +204,22 @@ installed copy, the entry says so.
 <!-- /TRANSITIONAL -->
 
 <!-- TRANSITIONAL: remove once the installed skills no longer conflict with this block -->
-### Deviation — no scheduled self-wake
+### Deviation — no scheduled self-wake beside a subscription
 
 - **Installed skill:** `loop-engineering` › Execution Model, and Phase 3 —
   Request Independent Review with its CI and review tail (installed copy
   refreshed in #67 (d5799aa); the lockfile records no upstream revision).
-- **What this project does instead:** the run never schedules its own wake. It
-  waits only on host-delivered events — the pull request activity subscription
-  and a delegated worker's completion notification — re-reads state on each
-  wake, and ends the turn reporting "pending" when nothing else is pending.
-  `CLAUDE.md` names the scheduling tools no agent uses and the two subscription
-  tools it does use.
-- **Why:** the maintainer's policy is that an agent never schedules its own wake
-  on any host; the only waiting it does is on events the host delivers.
+- **What this project does instead:** the run schedules no wake while an
+  event-subscription route exists. It waits on host-delivered events — the pull
+  request activity subscription and a delegated worker's completion
+  notification — re-reads state on each wake, and ends the turn reporting
+  "pending" when nothing else is pending. Only where no subscription route
+  exists and the human explicitly permitted it may a check-in be scheduled, and
+  it never polls within a turn. `CLAUDE.md` states the rule, names the
+  scheduling tools it covers, and names the two subscription tools.
+- **Why:** the maintainer's policy is that an agent uses an event-subscription
+  route whenever one exists and schedules a check-in only with the human's
+  explicit permission when none does.
 - **Meanwhile:** where the installed skill keeps a scheduled wake as a backstop
   while waiting on CI and review, that backstop is not armed; the human wait
   that results is the intended behavior.

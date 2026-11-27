@@ -78,7 +78,8 @@ change loop to ready without asking again. What a decline means:
 - **Route declined.** The pull request stays draft and the post-push review gate
   is reported unmet.
 - **Watching declined.** Each CI or review result becomes a human wait: end the
-  turn and resume on the human's next message, with nothing scheduled. A
+  turn and resume on the human's next message. The pull request subscription
+  route exists, so nothing is scheduled in its place. A
   subagent's completion notification still resumes the run.
 
 **Guidelines:**
@@ -108,8 +109,19 @@ that departure, and it is recorded as a permanent deviation in
 
 ## Waiting on a Pull Request
 
-Only host-delivered events wake a run: the pull request activity subscription
-and a delegated worker's completion notification. Nothing is scheduled.
+A run waits on events the host delivers: an event subscription, such as the
+pull request activity subscription, and a delegated worker's completion
+notification.
+
+- MUST first check whether an event-subscription route exists for what the run
+  waits on, and MUST use it when one is available. While it is, scheduled
+  check-ins are prohibited, including as a backstop beside the subscription.
+- Only when no subscription route exists and the human explicitly permitted it,
+  asked through `AskUserQuestion` and recorded in run state, may a check-in be
+  scheduled.
+- MUST NOT poll within a turn: no sleeping or looping to re-check, in any case.
+
+For a pull request, the subscription route exists:
 
 - After the pull request opens, and when watching was confirmed, call
   `mcp__claude-code-remote__subscribe_pr_activity`.
@@ -124,7 +136,9 @@ and a delegated worker's completion notification. Nothing is scheduled.
 - Release after merge happens only when a human message or a fresh session shows
   the merge. Arm nothing to observe it.
 
-An agent never uses these scheduling tools, on any path:
+These are the scheduling tools the rule above covers. An agent never uses them
+while a subscription route exists, without that explicit permission, or as a
+backstop beside a subscription:
 `mcp__claude-code-remote__send_later`, `mcp__claude-code-remote__create_trigger`,
 `mcp__claude-code-remote__update_trigger`,
 `mcp__claude-code-remote__fire_trigger`, `CronCreate`, `ScheduleWakeup`, and the

@@ -127,13 +127,17 @@ is a gate — and the differences are recorded in the
 
 ## Waiting, Ready, and Teardown
 
-A run waits only on events the host delivers: the pull request activity
+A run waits on events the host delivers: the pull request activity
 subscription, where watching was confirmed, and a delegated worker's completion
-notification. It never schedules its own wake, on any host. On each wake it
+notification. It checks for an event-subscription route first and uses it when
+one exists, and it then schedules no check-in; only where no such route exists
+and the human explicitly permitted it may a check-in be scheduled. It never
+polls within a turn. On each wake it
 re-reads the pull request's checks, reviews, and mergeability rather than
 trusting the event that woke it, because a success transition such as CI turning
 green may not be delivered. When nothing else is pending, the run ends its turn
-and reports "pending". [`CLAUDE.md`](../../CLAUDE.md) names the tools.
+and reports "pending". [`CLAUDE.md`](../../CLAUDE.md) states the rule in full
+and names the tools.
 
 The run flips its pull request to ready only after verification and the
 post-push review gate are met, and it releases its subscription in that same
