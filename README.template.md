@@ -33,7 +33,9 @@ Development in this repository is agent-assisted via
 entry file: it loads the working agreement in [`AGENTS.md`](./AGENTS.md), which
 routes to the installed skills under [`.claude/skills/`](./.claude/skills) and to
 this project's own documents under [`docs/`](./docs/index.md). Human and agent
-contributors follow the same loop.
+contributors follow the same loop. When a change affects project documentation,
+use the [documentation convention](./docs/conventions/documentation.md#choose-a-subject) to find
+the owning page and update its reader routes.
 
 <!-- INIT:OPTIONAL key=POST_PUSH_REVIEW — Fixed: the change loop and the post-push review channel are fixed infrastructure (INIT.md Step 4), so KEEP the subsections below; just delete this marker and adapt the copy to the project's stack. -->
 ### The change loop
@@ -67,9 +69,9 @@ session and tell it to.
 5. **Ready** — flips the pull request to ready once CI is green and the
    post-push review is clean. Merging always stays a human decision.
 
-[docs/operations/development-workflow.md](./docs/operations/development-workflow.md)
-holds this project's own part: the branch prefix, what audits the loop from
-outside a session, and how the review is requested.
+Use the [branch governance rules](./docs/operations/branch-governance.md#working-on-a-branch) for
+the branch prefix and audit, and the [review procedure](./docs/operations/pull-request-review.md#request-the-post-push-review)
+to request a review or diagnose a missing response.
 
 ### `@claude review` — get findings on any PR
 <!-- INIT: replace the trigger phrase above and below with this project's own, matching claude-review.yaml. -->

@@ -51,7 +51,7 @@ owns the finding format.
   discovery condition (`description`) matches the changed files, and flag any
   deviation from a skill's stated rule, citing the skill and the rule. A
   violated skill **MUST** rule is Important. A departure the register in
-  [Agent Skills](docs/operations/agent-skills.md#the-register) records, with an
+  [Skill departures](docs/operations/skill-departures.md) records, with an
   adoption locator and within its scope, is not a finding.
 
 The acceptance-criteria check runs as

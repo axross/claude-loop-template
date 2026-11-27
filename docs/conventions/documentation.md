@@ -1,85 +1,70 @@
+---
+type: Convention
+title: Placing a documentation change
+description: How contributors assign a claim to its owner, route readers to it and verify the documentation bundle.
+---
+
 # Documentation
 
-How this project's own documentation is kept true: where a fact goes, what a
-change owes the documents it invalidated, and how a new document becomes
-reachable at all.
+## Choose a subject
 
-The general practice is not restated here. The installed
-[`living-project-documentation`](../../.claude/skills/living-project-documentation/SKILL.md)
-capability owns the shape of `docs/`, the format each document takes, the
-decision-record protocol, and the validators — load it before writing or
-restructuring anything under `docs/`. What follows is only this project's own
-answer within it, which is the part nothing outside this repository can know.
+Put a claim where someone has to use it. In this template, contributors use
+`conventions/` to choose a repository practice. Operators use `operations/`
+to configure a session, maintain skills or deliver a change. For example, the
+procedure for requesting review belongs with pull request review. Permission
+to publish belongs with delivery authorization because pushing a branch and
+requesting a review both depend on the same grant.
+
+Add a subject when a reader brings a question no current subject owns.
+Within it, choose the type that describes the answer. An adopted project's
+first product contract can be a Specification under its product subject.
+Introduce a glossary when readers actually use competing names for a concept.
 
 ## A Document Is Corrected by the Change That Made It Wrong
 
-A change that alters a behaviour, a convention, or a procedure MUST correct the
-document describing it in the same change, never as follow-up work. Documentation
-that is only ever written accumulates claims nobody re-checks, and a reader
-cannot tell which of them still hold; the correction is what makes the rest of
-the tree worth trusting.
-
-The plan for such a change SHOULD name which document it will invalidate, so the
-correction is scoped work rather than something remembered at review time.
+Update the owning page with the change that alters its answer. Keep the
+condition that changes the action beside the action itself. For example, a
+change to a delivery grant also requires checking the procedures that rely
+on it. The installed [Living Project Documentation skill](../../.claude/skills/living-project-documentation/SKILL.md)
+defines the format and migration rules.
 
 ## A New Document Earns Two Entries
 
-Nothing surfaces a document automatically. A skill loads because its own
-`description` matched what is being edited; a document is read only because
-something told a session to read it. So adding a document under `docs/` MUST add
-both of the following in the same change:
+Add a descriptive link to the subject index (or the root for a directly
+listed subject). For each new change surface, also add its owner to the
+[agent routing table](../../AGENTS.md#routing-a-change). The table is how a
+session editing the project discovers a local rule. Keep project conventions
+here instead of authoring local skills, so a library refresh and template
+adaptation can manage installed skills without modifying their contents.
 
-- a one-line entry in [`index.md`](../index.md) saying what the document covers,
-  so a reader can decide not to open it;
-- a row in [`AGENTS.md`](../../AGENTS.md)'s **Routing a Change** table naming the
-  kind of change the document governs.
+When moving an answer, point editable callers at the new owner. Keep a short
+route from a published path or fragment while external use is uncertain.
 
-The index entry makes the document reachable to anyone reading `docs/`; the
-routing row is what points a session at it without anyone having to remember the
-document exists. A kind of change the table does not name has nothing pointing at
-it, which is the standing cost of keeping conventions in documents rather than in
-skills — and adding the row is how that cost is paid. Link from `AGENTS.md`;
-never copy a document's content into it.
+<a id="the-decision-log-is-this-projects-own"></a>
 
-Renaming or removing a document MUST update both entries in that same change,
-for the same reason.
+## Where a settled decision belongs
 
-## The Decision Log Is This Project's Own
-
-`docs/decisions/` holds the decisions **this** project made, and it starts empty:
-a record is written when a decision is taken here, never backfilled to explain a
-constraint inherited from somewhere else. A decision is replaced by a new record
-rather than by editing the old one — the superseded record stays readable exactly
-as it was, because the reasoning it holds is what makes its replacement legible.
-
-No document outside `docs/decisions/` may depend on a record existing. A
-rationale a document actually needs MUST be stated in that document, not linked
-out to a record that may never have been written. This is what keeps the rest of
-`docs/` readable in a repository whose log is still empty, and it is why an
-operational document states the costs it asks a reader to accept rather than
-citing the decision that accepted them.
+Record the current constraint and its reason on the page governing the
+decision. Use the original commit or pull request for the deliberation.
+The template's dated skill records are historical entry points. New decisions
+are maintained with their subject.
 
 ## Checking a Documentation Change
 
-A documentation change is not finished until its checks pass. Run, from the
-repository root:
+Run the repository link check from the root. For OKF, set
+`skill_dir=.claude/skills/living-project-documentation` and prepare the Node
+dependencies, Python environment and pinned validator using the installed
+[validator setup](../../.claude/skills/living-project-documentation/references/validators.md#prepare-the-installed-skill).
+With that environment active, check the checkout:
 
 ```bash
 node .claude/skills/agent-skill-authoring/scripts/check-links.mjs
-for check in .claude/skills/living-project-documentation/scripts/check-*.mjs; do
-  node "$check"
-done
+node .claude/skills/living-project-documentation/scripts/check-docs.mjs \
+  --validator "$VIRTUAL_ENV/validate-okf-v0.3.py" --source-root . docs
 ```
 
-The first resolves every relative link in the tree, including the ones inside
-`.claude/` that a `docs/`-only sweep would miss. The five `docs/` validators
-check what a reader cannot see: a document `index.md` links from nowhere, a spec
-with no matching glossary heading, a decision filename or `status` that does not
-conform, and a document still citing replaced rationale. All of them exit 0 while
-`docs/index.md` is absent, so they stay quiet until the tree exists.
-
-They are deliberately separate commands, one per kind of change, so an author who
-touched one document reads only its findings. What they cannot see stays a
-reviewer's job: whether a fact sits in the one document that owns it, whether a
-document says anything the tree does not already say, and whether a decision
-record was owed at all.
+For a standalone export, run the same whole-root check on the exported
+directory outside the checkout, omitting `--source-root .`. A checkout link
+can resolve here even when the recipient lacks its target. Trace a question
+from the root, subject index and a real caller to the owning passage. Check
+that the reader can also find the exception that changes the answer.

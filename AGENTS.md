@@ -17,8 +17,7 @@
 - [README.md](./README.md) is the authoritative record of this project's
   run-script commands. It is not a skill, so skill discovery never surfaces it
   on its own.
-- This project's own conventions, operational procedures, product
-  specifications, and decision log live under [docs/](./docs/index.md) — see
+- This project's conventions and operating procedures live under [docs/](./docs/index.md) — see
   [Routing a Change](#routing-a-change). Skill discovery never surfaces those
   either.
 - **Every skill under `.claude/skills/` is installed, not written here.** They
@@ -46,24 +45,20 @@
 names the specific document for a kind of change this project already
 distinguishes, so a session does not have to open the index for one of these.
 
-<!-- INIT: the six rows below ship with the template and stay true after
-adaptation. Add a row per surface the project distinguishes, as `docs/` grows — at
-minimum `docs/conventions/directory-structure.md` for where a file goes, and a
-`docs/specs/` row per product domain. The template ships neither, because it has
-no source tree and no product to describe, and an empty document would make this
-table claim coverage `docs/` does not have. A kind of change this table does not
-name has no document pointing a session at it: that is the known cost of keeping
-conventions in documents rather than in skills, and adding the row is how it is
-paid. Link only — never copy a document's content into this file. -->
+<!-- INIT: add a direct route when the project gains a new change surface. -->
 
 | Kind of change | Document |
 | -------------- | -------- |
 | A project run-script command | [README.md](./README.md) |
-| The change loop or branch governance | [docs/operations/development-workflow.md](./docs/operations/development-workflow.md) |
-| Installing or refreshing a skill | [docs/operations/agent-skills.md](./docs/operations/agent-skills.md) |
-| How an agent session starts, its hooks, its subagents, or its telemetry | [docs/operations/agent-sessions.md](./docs/operations/agent-sessions.md) |
-| Why a past decision still constrains current work | [docs/decisions/](./docs/decisions) |
-| Adding, renaming, or correcting a document under `docs/` | [docs/conventions/documentation.md](./docs/conventions/documentation.md) |
+| Documentation placement and checks | [docs/conventions/documentation.md](./docs/conventions/documentation.md) |
+| Cloud session startup or telemetry | [docs/operations/session-startup.md](./docs/operations/session-startup.md) |
+| Format-on-edit or stop checks | [docs/operations/quality-hooks.md](./docs/operations/quality-hooks.md) |
+| Subagent responsibilities | [docs/operations/subagents.md](./docs/operations/subagents.md) |
+| Installing, restoring or renaming a skill | [docs/operations/agent-skills.md](./docs/operations/agent-skills.md) |
+| An accepted skill departure or gap | [docs/operations/skill-departures.md](./docs/operations/skill-departures.md) |
+| Working branches and the scheduled audit | [docs/operations/branch-governance.md](./docs/operations/branch-governance.md) |
+| Pull request review or a deferred finding | [docs/operations/pull-request-review.md](./docs/operations/pull-request-review.md) |
+| Permission to publish or monitor a change | [docs/operations/delivery-authorization.md](./docs/operations/delivery-authorization.md) |
 
 ## Response Approach
 
@@ -86,12 +81,10 @@ Choose guidance from the actual session and the changed surface:
 
 - **Claude Code:** [CLAUDE.md](./CLAUDE.md) is the entry file for how this host
   meets the project's gates, and
-  [Agent Sessions](./docs/operations/agent-sessions.md) covers startup, hooks,
-  and the subagents.
+  [Session startup](./docs/operations/session-startup.md) covers bootstrap and telemetry.
 - **GitHub:** load [GitHub Operation](./.claude/skills/github-operation/SKILL.md)
   for every read and write, and
-  [Development Workflow](./docs/operations/development-workflow.md) for this
-  repository's review choices, branch governance, and the delivery grant.
+  [delivery authorization](./docs/operations/delivery-authorization.md) before publishing.
 
 <!-- INIT:OPTIONAL key=POST_PUSH_OVERRIDE — Keep the bullet below while the project's CI reviewer (.github/workflows/claude-review.yaml) stays enabled, then delete this comment. To disable that reviewer's triggers, delete this comment and the bullet: the fallback reviewer subagent then becomes the post-push review route. -->
 - **Post-push review override, Claude Code sessions:** use the review trigger
@@ -105,7 +98,7 @@ MUST read and apply [REVIEW.md](./REVIEW.md) as this repository's review policy,
 and load [Code Review](./.claude/skills/code-review/SKILL.md) for the review
 methodology. [Loop Engineering](./.claude/skills/loop-engineering/SKILL.md)
 defines plan review, pre-push review, and post-push review;
-[Development Workflow](./docs/operations/development-workflow.md#the-three-reviews)
+[Pull request review](./docs/operations/pull-request-review.md)
 states this repository's choices for them.
 
 Changes to the review or CI infrastructure, secret handling, the dependency or
@@ -117,7 +110,7 @@ review, not a lighter path.
 
 [Agent Skill Management](./.claude/skills/agent-skill-management/SKILL.md) owns
 the rule against hand-editing an installed skill and the routing of a rule that
-is wrong, outdated, or missing; [docs/operations/agent-skills.md](./docs/operations/agent-skills.md)
+is wrong, outdated, or missing; [skill departures](./docs/operations/skill-departures.md)
 holds this repository's register of departures. At completion, MUST report
 whether skill maintenance was performed, skipped, or blocked; this three-way
 report is this project's own convention.

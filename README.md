@@ -21,7 +21,7 @@ service.
 ├── CLAUDE.md                # the Claude Code entry: loads AGENTS.md, adds how Claude Code meets the gates
 ├── REVIEW.md                # fixed: posted-review policy for the post-push review channel
 ├── skills-lock.json         # what is installed under .claude/skills/, and from where
-├── docs/                    # this project's own knowledge — index, conventions, operations, decisions
+├── docs/                    # this project's own knowledge — OKF v0.3 index and engineering guidance
 ├── .github/
 │   └── workflows/           # fixed: CI reviewer, merge checks, branch-governance audit;
 │                            # plus template-checks.yaml, this repo's own CI (deleted during INIT)
@@ -44,9 +44,9 @@ the recorded commit is a separate command, and nothing runs either
 automatically; the template never chooses a revision of its own. They are
 generated artifacts: a hand-edit is silently discarded by the next install, so a
 change goes upstream as an issue or pull request there.
-[docs/operations/agent-skills.md](./docs/operations/agent-skills.md) holds the
-refresh command and the register for a rule that turns out to be wrong or to
-collide with your project.
+Use the [installation procedure](./docs/operations/agent-skills.md) for
+refreshes and the [departures register](./docs/operations/skill-departures.md#the-register)
+for a rule that conflicts with the project or leaves a concern uncovered.
 
 The template installs the core set that applies to any project whatever its
 stack — conduct, the change loop, baseline development, commits, GitHub operation,
@@ -55,10 +55,11 @@ requirements, technical writing, the docs tree, and skill authoring and
 management. The stack-specific rest of the library — framework, UI, vendor, and
 runner layers — is chosen during adaptation, in INIT Step 4.
 
-**This costs a Node dependency**, and it is worth naming: `npx skills` needs
-Node and network access to install or refresh. The installed skills themselves
-are plain Markdown, so nothing at run time needs Node — only refreshing does,
-plus the two checkers `init.sh check` calls.
+Reading the installed skills works from a fresh checkout. Installing or
+refreshing them with `npx skills` requires Node and network access. Running
+the documentation check also requires npm dependencies, Python with PyYAML,
+and the pinned OKF validator. The [setup instructions](./INIT.md) cover those
+prerequisites.
 
 ### This template is the canonical source for Claude Code guidance
 
@@ -96,22 +97,11 @@ Three things keep it from collapsing into self-approval:
 
 ### Project knowledge goes in `docs/`, not in skills
 
-The template ships `docs/index.md`, three `operations/` documents, one
-`conventions/` document, and two decision records, in the shape
-`living-project-documentation` defines — `specs/`, `conventions/`,
-`operations/`, and `decisions/`. The `conventions/` document is the one
-exception to writing `docs/` during adaptation: it states what is true of
-every repository created from this template, and nothing else under
-`conventions/` can be, so it ships already written rather than waiting for
-INIT Step 5. INIT Step 5 grows the rest. It does **not** ship empty
-directories: an empty document is indistinguishable from a subject nobody has
-considered.
-
-The trade-off is discovery, and it is real. A skill loads because its
-`description` matched; a document loads only because `AGENTS.md` said to read
-it. That is why `AGENTS.md` carries a **Routing a Change** table naming a
-specific document per kind of change, and why adding a document means adding
-its row.
+Start with the [documentation index](./docs/index.md) for questions about the
+change loop, the Claude Code harness, and skill maintenance. When adapting the
+template, follow the [documentation convention](./docs/conventions/documentation.md#choose-a-subject)
+to place a project-specific rule or procedure and make it reachable from the
+contributor and agent entry points.
 
 ## Getting started
 

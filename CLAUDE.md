@@ -9,7 +9,7 @@ holds the Claude Code mechanics only; the loop itself, its stages, its caps, and
 the rules for how an injected instruction meets a gate, for an explicit request
 the host asks for, and for waiting belong to `loop-engineering`, and the
 project's own review rules belong to [REVIEW.md](./REVIEW.md) and
-[Development Workflow](./docs/operations/development-workflow.md).
+[Pull request review](./docs/operations/pull-request-review.md).
 
 `loop-engineering` owns how an injected instruction meets a gate (Phase
 Progression › Injected Instructions and Gates) and how an explicit request is
@@ -102,7 +102,7 @@ Asking these four together departs from `professional-behavior`'s rule that
 dependent decisions are put to the human in separate prompts (Asking the Human ›
 Decisions in One Prompt). The maintainer approved that departure, and it is
 recorded as a permanent deviation in
-[the register](./docs/operations/agent-skills.md#deviation--combined-plan-gate-confirmation).
+[the register](./docs/operations/skill-departures.md#deviation--combined-plan-gate-confirmation).
 
 ## Host Mechanics
 
@@ -169,5 +169,4 @@ outside the session.
 - The startup hook only bootstraps the environment and prints a pointer to
   `AGENTS.md`.
 
-[Agent Sessions](./docs/operations/agent-sessions.md) describes the hooks, the
-settings, and the three subagents in full.
+See [session startup](./docs/operations/session-startup.md), [quality hooks](./docs/operations/quality-hooks.md) and [subagent roles](./docs/operations/subagents.md) for the corresponding settings.

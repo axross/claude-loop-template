@@ -21,10 +21,9 @@ Code** project. It ships:
   subagent definitions `loop-engineering` delegates to.
 - `.claude/**` — the rest of the **Claude Code** harness binding (hooks +
   settings).
-- `docs/` — the project's own knowledge, in the shape
-  `living-project-documentation` defines. The template ships `index.md`, three
-  `operations/` documents, one `conventions/` document, and two decision
-  records; Step 5 grows the rest.
+- [`docs/index.md`](./docs/index.md) — the entry to the template's OKF v0.3
+  documentation. Step 5 adapts its contributor guidance and adds the adopter's
+  own engineering decisions where readers need them.
 - `README.template.md` — a seed for the initialized project's own README
   (summary, getting started, development workflow, testing, tech stack,
   related links), finalized into `README.md` in Step 7.
@@ -53,14 +52,15 @@ working setup for one concrete project.
 >   `tokens.json` (`./init.sh init` to scaffold a values file, `apply` to
 >   substitute, `check` to run the gates). Use it instead of a hand-written
 >   `sed` sweep — two tokens contain `| * ( ) \ $` and break `sed`.
-> - `./init.sh check` also runs the two checkers that ship inside installed
->   skills and survive adaptation:
->   `agent-skill-authoring/scripts/check-links.mjs` for relative-link integrity
->   across the whole tree — **including** the `.claude/` dot-directory a
->   `glob('**/*.md')` sweep silently skips — and the five
->   `living-project-documentation/scripts/check-*.mjs` validators over `docs/`,
->   which stay inert until `docs/index.md` exists. Both need Node, which
->   refreshing skills needs anyway.
+> - The repository-wide link check covers Markdown under `.claude/` as well
+>   as contributor guides. The whole-root documentation check validates types,
+>   navigation, and source links under `docs/`. Its prerequisites include Node,
+>   npm, Python 3 with PyYAML, and the pinned OKF validator. Follow the
+>   [validator setup](./.claude/skills/living-project-documentation/references/validators.md#prepare-the-installed-skill)
+>   with `skill_dir=.claude/skills/living-project-documentation`. Keep that
+>   Python environment active when running `./init.sh check`. The check uses
+>   `$VIRTUAL_ENV/validate-okf-v0.3.py` by default or the path you set in
+>   `OKF_VALIDATOR`.
 
 ---
 
@@ -74,11 +74,15 @@ silently loses real project guidance.
 Before copying the template over an existing tree, check for collisions and
 merge rather than clobber:
 
+- **Existing project documentation** — locate its entry points, tools, and
+  exported files before copying `docs/`. Preserve its working layout unless
+  the project adopts a migration. For an adopted migration, inventory the
+  paths, section links, and evidence that need to survive the move.
 - **Existing `AGENTS.md`** — do **not** overwrite. Copy the template's
   `AGENTS.md` in as `AGENTS.template.md`, then fold any project-specific rules
   the existing file already contains (framework gotchas, "read these docs first"
-  notes, house style) into the template's **Project Overview** (Step 2) or a
-  project-specific skill (Step 5). Replace `AGENTS.md` only once its content is
+  notes, house style) into the template's **Project Overview** (Step 2) or the relevant
+  project document (Step 5). Replace `AGENTS.md` only once its content is
   preserved. Concrete example: `create-next-app` generates an `AGENTS.md` whose
   one rule is load-bearing — Next.js 16 has breaking changes and ships its own
   docs in `node_modules/next/dist/docs/`; fold that into the Project Overview
@@ -88,7 +92,7 @@ merge rather than clobber:
   repository facts to `AGENTS.md` or `docs/`, where every host reads them, and
   keep only what is specific to Claude Code and to this project, appended to the
   template's file under a project heading of its own. Its link to the deviation
-  register targets `docs/operations/agent-skills.md`; keep that document, or
+  register targets `docs/operations/skill-departures.md`; keep that document, or
   repoint the link at wherever the project records that deviation.
 - **Existing `.gitignore`** — keep the project's file; merge in the template's
   `settings.local.json` / `.env.local` entries (Step 6) instead of overwriting.
@@ -181,8 +185,8 @@ dribbling them out over many rounds. The interview is strict:
 ### 1c — Architecture & structure
 
 These answers fill no `{{TOKEN}}`; they live in the Stack Decision Record and
-are consumed by Step 2 (Project Overview) and Step 5 (the structure /
-component / UI-design skills). Ask each area that applies:
+are consumed by Step 2 (Project Overview) and Step 5 (the project's architecture
+and conventions). Ask each area that applies:
 
 5. **Directory structure** (worth deciding early, especially for smaller
    apps):
@@ -278,8 +282,8 @@ component / UI-design skills). Ask each area that applies:
 
 Collect every 1a–1e answer into one table — the Stack Decision Record — and
 keep it for the rest of the INIT run: Step 2 (Project Overview), Step 3 (token
-fill), Step 4 (optional-capability resolution), and Step 5 (project-specific
-skills) all consume it. `Source` is one of `answered`, `delegated
+fill), Step 4 (optional-capability resolution), and Step 5 (project documentation and
+capability setup) all consume it. `Source` is one of `answered`, `delegated
 (assumption)`, or `not applicable`:
 
 | Area | Decision | Source |
@@ -305,7 +309,7 @@ are the exception — they are fixed and never dropped; see the
 In `AGENTS.md`, replace the `## Project Overview` placeholder block with a short,
 durable description built from the Stack Decision Record (Step 1). Keep it to a
 few bullets; deep layout detail — and the 1c architecture decisions — belongs
-in a project-specific structure skill (Step 5), not here. Remove the
+in the governing project document (Step 5). Remove the
 top-of-file "Template note" blockquote.
 
 ---
@@ -462,9 +466,11 @@ Three rules about the CLI, each of which fails quietly rather than loudly:
 Then confirm the host actually loaded them, which is not observable from inside
 the session that changed the tree: start a **fresh** session and run `/context`.
 
-[docs/operations/agent-skills.md](./docs/operations/agent-skills.md) holds the
-refresh command and the deviation register — read it, and keep it accurate if
-this project's install story differs from the template's.
+Use the [skill installation procedure](./docs/operations/agent-skills.md)
+for refreshes. Review the [departures register](./docs/operations/skill-departures.md#the-register)
+when an installed rule conflicts with the adopted working agreement. If an entry
+does not apply after adaptation, remove it and the corresponding compatibility
+link in the skill installation procedure. Update any other readers of that entry.
 
 ### 4b — Resolve the remaining optional sections
 
@@ -501,7 +507,7 @@ Then configure the two fixed pieces:
   comment-triggered workflow matches it **anywhere** in a comment body, so the
   literal phrase belongs only in the places the header comment of
   `claude-review.yaml` lists.
-  Everywhere else — including `docs/operations/development-workflow.md` — refer
+  Everywhere else — including `docs/operations/pull-request-review.md` — refer
   to it as "the review trigger phrase". A project that disables this workflow's
   triggers also deletes the `AGENTS.md` override block (key
   `POST_PUSH_OVERRIDE`), after which the fallback reviewer subagent is the
@@ -522,111 +528,48 @@ Then configure the two fixed pieces:
 
 ## Step 5 — Write `docs/`
 
-This is where the project's own knowledge goes: its conventions, its
-operational procedures, what its product does, and the decisions that constrain
-it. **Not into skills.** A hand-written project skill duplicates what an
-installed one already says, and drifts from it silently. This repository's own
-reasoning is in `docs/decisions/2026-08-11-install-skills-from-a-shared-library-rather-than-authoring-them.md`,
-named rather than linked because Step 7 deletes that log — nothing outside
-`docs/decisions/` may depend on a record still being there.
-
-The `living-project-documentation` skill owns the shape, the document format,
-and the validators. **Load it and follow it** — this step states only what INIT
-adds on top.
-
 ### What ships, and what you add
 
-The template ships `docs/index.md`, three `operations/` documents, one
-`conventions/` document, and two decision records. It ships **no** `specs/`
-and no `glossary.md`, because it has no source tree and no product of its own
-— and an empty document is worse than a missing one: it is indistinguishable
-from a subject nobody has considered, and it makes the index claim coverage
-`docs/` does not have.
-
-The one `conventions/` document is the exception:
-[`conventions/documentation.md`](./docs/conventions/documentation.md) states
-what is true of every repository created from this template — how its own
-`docs/` is kept true — and nothing else under `conventions/` can make that
-claim, because everything else there is specific to a source tree the
-template does not have.
-
-Copy the shape from the worked example the skill ships — seven files across two
-domains, demonstrating every relational rule — rather than starting from a
-blank template:
-
-```
-.claude/skills/living-project-documentation/assets/docs-example/
-```
+Start at [the documentation index](./docs/index.md). Read the installed
+[Living Project Documentation skill](./.claude/skills/living-project-documentation/SKILL.md)
+and the project's [documentation convention](./docs/conventions/documentation.md#choose-a-subject)
+before adding or moving pages. The template documents how contributors use
+the harness. Add a product specification once the project has observable
+behavior for a caller to rely on.
 
 ### The write order
 
-Do not scaffold the tree and fill it in later. Write in this order, and add a
-line to `index.md` for each document as you write it:
-
-1. **`docs/conventions/directory-structure.md`** — where a file goes, what it
-   is called, which module may import which. This is the first thing a session
-   needs and the thing it is most likely to get wrong by inference. It records
-   the Stack Decision Record's directory-structure and business-logic-structure
-   decisions (§1c).
-2. **A `conventions/` document per surface the project distinguishes** — as
-   `code-style.md`, `testing.md`, `styling.md`, `security.md`, and so on
-   actually acquire content. State only this project's own answer and defer the
-   general practice to the installed skill that owns it by name; that is what
-   keeps `conventions/testing.md` from growing into a second, divergent copy of
-   a testing capability.
-
-   **One exception, where the installed skill is silent rather than general.**
-   A project with authentication must state its own lockout thresholds and its
-   session-cookie ownership rule in `conventions/security.md`, because
-   `application-security` covers neither — the gap and its reasoning are
-   recorded in
-   [docs/operations/agent-skills.md](./docs/operations/agent-skills.md). This is
-   not the usual "state only your own answer" case: there is no general practice
-   to defer to.
-3. **`docs/specs/<domain>.md` for one domain** — the one whose behaviour is
-   most often asked about, or most often got wrong. State the domain's boundary
-   and what it deliberately does not do, alongside what it does.
-4. **`docs/glossary.md`** — seeded from that spec's own vocabulary and from the
-   code's, not invented. Link it from `index.md`'s opening prose, never under a
-   heading of its own. Once the tree holds `conventions/` or `operations/` too,
-   it splits at the `#` level into `# Product vocabulary` and
-   `# Development vocabulary`.
-5. **`docs/decisions/`** — from the next decision made, never backfilled.
-   Reconstructed rationale is a guess presented as history.
+Use the Step 1 interview and the repository to identify a question a
+contributor or caller needs answered. Find the subject that owns the answer.
+Update its page in place, keeping a constraint beside its reason. Add a page
+when readers need to make an independent decision.
 
 ### Placing a document: `conventions/` or `operations/`?
 
-Decide by **where a violation would appear**, not by a "code versus process"
-label:
-
-- A **convention**'s violation stays in the tree — the wrong thing is sitting
-  in a file and a reviewer can point at the line. Where a file goes is a
-  convention.
-- An **operation**'s violation exists only in an act — a step skipped, run out
-  of order, or run with the wrong flag, leaving no diff to cite. A deployment
-  procedure is an operation.
+For the directory choice in §1c, put the agreed module placement in a
+Convention. Put the steps for running a deployment with its Procedure.
+An architectural boundary may need its own page when a reader needs to know
+which component owns a responsibility. For a project with a login, put its
+lockout thresholds and session-cookie ownership rule in
+`docs/conventions/security.md` while the
+[authentication gap](./docs/operations/skill-departures.md#gap--application-security-is-silent-on-authentication-lockout-and-session-cookie-ownership) applies.
 
 ### The document format
 
-A document under `conventions/` or `operations/` is **not** shaped like a
-`SKILL.md`. It is read whole, so a trailing `**Guidelines:**` block restating
-the prose above it produces two statements of one rule with nothing holding
-them together. State each rule once, next to the reasoning that justifies it,
-and let the heading be the citable anchor. Make each rule's strength readable
-from its own sentence, and declare the vocabulary once in `index.md`.
-
-Name a document for the field it already uses — `directory-structure.md`, not
-`repository-map.md`; `testing.md`, not `quality-gates.md`. A coined internal
-name is a name nobody searches for.
+Give each concept one primary `type`, a title, and a discovery description.
+Distinguish adopted targets from implemented behavior. Add a glossary when
+readers need a route from the terms they know to the governing concepts.
+The [worked bundle](./.claude/skills/living-project-documentation/assets/docs-example/index.md)
+shows how these pages fit together.
 
 ### Then update the routing table
 
-Every document you add earns a row in `AGENTS.md`'s
-**Routing a Change** table, naming the kind of change it governs. This matters
-more here than it looks: a document fires on nothing — skill discovery will
-never surface it — so a kind of change the table does not name has nothing
-pointing a session at it. Link only; never copy a document's content into
-`AGENTS.md`.
+Link each new page from the root or its subject index. Update the **Routing a
+Change** table in `AGENTS.md` and the contributor guide where they direct a
+reader to the page. Trace a typical case and an exception from those entry
+points, then run the checkout documentation gate. For a standalone
+distribution, verify the exported bundle outside the checkout following the
+skill's export checks.
 
 ### Scaffolding capabilities chosen as "add" in Step 1
 
@@ -675,10 +618,10 @@ to it.
 
 `AGENTS.md`, `.claude/skills/**`, and `docs/` are the portable substance. This
 template targets **Claude Code** (fixed — Step 1e), which reads them through
-the `.claude/` binding. Most of it needs only the token fill;
-[docs/operations/agent-sessions.md](./docs/operations/agent-sessions.md) is the
-document that describes it, and it stays accurate as long as you do not change
-the shape below.
+the `.claude/` binding. When changing the binding, update its
+[session startup](./docs/operations/session-startup.md),
+[quality hooks](./docs/operations/quality-hooks.md), or
+[subagent guidance](./docs/operations/subagents.md) as appropriate.
 
 - `.claude/settings.json` wires the `SessionStart` hook, sets the default
   reasoning effort (`effortLevel`; ships as `xhigh`), and stamps
@@ -721,8 +664,8 @@ specific to Claude Code.
 
 ## Step 6b — Fill in or delete the standing delivery grant
 
-[`docs/operations/development-workflow.md`](./docs/operations/development-workflow.md)
-ends with a **Standing Delivery Grant** skeleton. In the template it grants
+The [delivery authorization policy](./docs/operations/delivery-authorization.md)
+contains the **Standing Delivery Grant** skeleton. In the template it grants
 nothing: it is inert until the maintainer merges a change that fills it in. Ask
 the maintainer whether runs in this project should perform the delivery effects
 it lists — the tracking issue, append-only pushes of the working branch, the
@@ -734,8 +677,10 @@ human authorization, and an agent never grants it to itself.
   adjust the targets, effects, and exclusions to the project, and delete its
   `<!-- INIT: ... -->` comment and the inert-until-merged paragraph. The grant
   takes effect only when the maintainer merges the pull request that carries it.
-- **No** — delete the section, and remove "and the delivery grant" from the
-  GitHub routing bullet in `AGENTS.md`.
+- **No** — replace the skeleton and its placeholders with the project's
+  answer: each run must obtain specific authorization for its delivery effects.
+  Keep the policy page and its incoming links so a reader starting from the
+  review procedure can still find out who may authorize delivery.
 
 ---
 
@@ -766,13 +711,12 @@ human authorization, and an agent never grants it to itself.
   tooling — they ship inside installed skills and stay. Before deleting
   `template-checks.yaml`, copy whichever of its two jobs the project wants as
   an ongoing gate into `merge-checks.yaml`: the relative-link check, and the
-  `docs/` validators. Both need a Node setup step, which is a real cost for a
-  project whose stack is not Node — decide it deliberately rather than dropping
-  the checks by default.
-- Delete every file under `docs/decisions/` — the project's own decision log
-  starts at its own first decision, never backfilled to explain a constraint
-  inherited from the template — and reword `docs/index.md`'s Decisions entry so
-  it no longer links a directory that is now gone.
+  whole-root documentation check. Preserve the prerequisites of each check
+  you keep, including npm dependencies, Python with PyYAML, and the pinned
+  OKF validator for the documentation check.
+- An adopter with no readers of the template's two historical skill decisions
+  may remove their compatibility pages in `docs/decisions/` and their index
+  entries. Keep any route that the adopted project still supports.
 - Remove the "Template note" blockquote at the top of `AGENTS.md`, every
   `<!-- INIT:OPTIONAL ... -->` marker and `<!-- INIT: ... -->` fill-in comment,
   every "TEMPLATE NOTE" / "_delete during INIT_" line for sections you decided
@@ -793,9 +737,9 @@ human authorization, and an agent never grants it to itself.
       `.github/` (e.g. `merge-checks.yaml`'s run commands) are caught.
 - [ ] No `<!-- INIT… -->` markers remain — neither `INIT:OPTIONAL` capability
       markers nor `INIT:` fill-in comments: `grep -rn '<!-- INIT' .`
-- [ ] No dangling relative links, and `docs/` passes its five validators:
-      `./init.sh check` runs both. The link checker covers the `.claude/` tree
-      a `glob('**/*.md')` sweep would skip.
+- [ ] Run the repository-wide relative-link check. Run the skill's whole-root
+      check on `docs/` with `--source-root .` and its pinned validator. Each
+      living page has an appropriate type and is reachable from the root.
 - [ ] `.claude/skills/` and `skills-lock.json` list exactly the same skills,
       and both are committed. A skill present in one and not the other is what
       makes drift undetectable.
@@ -803,7 +747,7 @@ human authorization, and an agent never grants it to itself.
       confirmed from the session that installed them — skills load at session
       start.
 - [ ] `AGENTS.md`'s **Routing a Change** table has a row for every document
-      under `docs/conventions/` and `docs/specs/`, and every row resolves.
+      that governs a distinct change, and every row resolves to its owner.
       Nothing surfaces those documents automatically, so an unrouted one is
       unreachable in practice.
 - [ ] `docs/` holds no empty or heading-only document. A subject with nothing
@@ -840,14 +784,11 @@ human authorization, and an agent never grants it to itself.
       related links (or that section was deliberately dropped). The template's
       own README — the one titled "Claude Loop Engineering Template" — no
       longer exists.
-- [ ] `docs/decisions/` holds only records this project made: the template's
-      own decision records are deleted, and `docs/index.md`'s Decisions entry
-      no longer links a directory that is gone.
 - [ ] No kept workflow's comments still describe the un-adapted template —
       including `.github/workflows/merge-checks.yaml`'s header, once its guard
       steps have armed for good.
 - [ ] The standing delivery grant skeleton in
-      `docs/operations/development-workflow.md` is resolved: either filled in
+      `docs/operations/delivery-authorization.md` is resolved: either filled in
       (no `<maintainer>` or `<adopting pull request>` placeholder left,
-      awaiting the maintainer's merge) or deleted, together with the
-      "delivery grant" mention in `AGENTS.md`'s GitHub routing bullet.
+      awaiting the maintainer's merge) or replaced with the project's explicit
+      per-run authorization requirement. Incoming authorization links resolve.
