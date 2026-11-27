@@ -31,9 +31,10 @@ manager is unavailable the hook exits without running the formatter.
 When adapting the file patterns in the edit hook, include files accepted by
 either the formatter or the optional lint autofix. For an autofix match under
 the project root, the hook passes the project-relative path to the linter so
-its ignore rules apply. Prefix **each** autofix alternative with
-`"$PROJECT_DIR"/` in the shell `case` pattern. The prefix applies to only one
-alternative at a time. The formatter then runs on the whole project, including
+its ignore rules apply. When filling in `LINT_FIX_FILE_GLOB`, leave the first
+pattern bare because `format.sh` already supplies its project-root prefix.
+Prefix each later pattern yourself, as in `*.md | "$PROJECT_DIR"/*.mdx`.
+The formatter then runs on the whole project, including
 when only the autofix pattern matched. Its own pattern has no project-root
 prefix because its command takes no path.
 
