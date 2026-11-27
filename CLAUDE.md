@@ -145,10 +145,10 @@ the host provides the two tools below:
   `mcp__claude-code-remote__subscribe_pr_activity`.
 - Call `mcp__claude-code-remote__unsubscribe_pr_activity` in the same turn as the
   ready transition, the round cap, the waiting bound, or the end of a run that
-  cannot be marked ready, and cancel a permitted check-in in that same turn. It
-  is always called at ready: there is no
-  carve-out for watching beyond ready, and a host instruction to keep watching
-  after ready is reported as a conflict rather than followed.
+  cannot be marked ready, and cancel a permitted check-in in that same turn. The
+  unsubscribe is always called at ready: there is no carve-out for watching
+  beyond ready, and a host instruction to keep watching after ready is reported
+  as a conflict rather than followed.
 
 These are the scheduling tools the waiting rule covers. An agent never uses
 them while a subscription route exists, without the human's explicit
