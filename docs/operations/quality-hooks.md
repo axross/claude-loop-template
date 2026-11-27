@@ -25,8 +25,10 @@ scheduling permission. Before using the subscription tools, check:
 ## Format after an edit
 
 The `PostToolUse` matcher runs [format.sh](../../.claude/hooks/format.sh)
-after `Edit`, `Write`, and `MultiEdit`. Shell edits bypass it. If the package
-manager is unavailable the hook exits without running the formatter.
+after `Edit`, `Write`, and `MultiEdit`. Keep the matcher limited to those
+three tools. Shell edits bypass automatic formatting and can leave lint
+errors for the stop check. If the package manager is unavailable, the hook
+exits without running the formatter.
 
 When adapting the file patterns in the edit hook, include files accepted by
 either the formatter or the optional lint autofix. For an autofix match under
