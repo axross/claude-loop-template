@@ -29,18 +29,20 @@ setup, database or services to start — from the project's actual needs (see
 ## Development workflow
 
 Development in this repository is agent-assisted via
-[Claude Code](https://claude.com/claude-code). The working agreement lives in
-[`AGENTS.md`](./AGENTS.md) (loaded through `CLAUDE.md`), which routes to the
-installed skills under [`.claude/skills/`](./.claude/skills) and to this
-project's own documents under [`docs/`](./docs/index.md). Human and agent
+[Claude Code](https://claude.com/claude-code). [`CLAUDE.md`](./CLAUDE.md) is its
+entry file: it loads the working agreement in [`AGENTS.md`](./AGENTS.md), which
+routes to the installed skills under [`.claude/skills/`](./.claude/skills) and to
+this project's own documents under [`docs/`](./docs/index.md). Human and agent
 contributors follow the same loop.
 
-<!-- INIT:OPTIONAL key=INDEPENDENT_REVIEW — Fixed: the change loop and the independent-review channel are fixed infrastructure (INIT.md Step 4), so KEEP the subsections below; just delete this marker and adapt the copy to the project's stack. -->
+<!-- INIT:OPTIONAL key=POST_PUSH_REVIEW — Fixed: the change loop and the post-push review channel are fixed infrastructure (INIT.md Step 4), so KEEP the subsections below; just delete this marker and adapt the copy to the project's stack. -->
 ### The change loop
 
 Every change — code or document, one line or one feature — goes through the
-`loop-engineering` skill: **plan → approve → code → verify → independent review
-→ address → ready**.
+`loop-engineering` skill: **plan → approve → code → verify → push and open a
+draft pull request → address → ready**, with a review at three points: plan
+review before approval, pre-push review before the first push, and post-push
+review of the opened pull request.
 
 There is no command to type. The skill is model-invoked, so naming the work is
 what starts it: *"deliver issue #42"*, *"pick up PR 57"*, or a description of a
@@ -56,13 +58,14 @@ session and tell it to.
    blocks you), runs the checks the changed surface requires, and self-reviews
    the diff. Implementation runs in the `implementer` subagent where the
    harness allows one.
-3. **Independent review** — opens a draft pull request and requests the CI
-   reviewer, a separate session under a separate identity, so the code's author
-   never certifies its own work.
+3. **Pre-push and post-push review** — a fresh reviewer reads the finished
+   implementation before the first push. The run then opens a draft pull request
+   and requests the post-push review, from the CI reviewer, a separate session
+   under a separate identity, so the code's author never certifies its own work.
 4. **Address** — fixes review findings and CI failures, tying each resolved
    thread to the resolving commit, for a capped number of rounds.
-5. **Ready** — flips the pull request to ready once CI is green and the review
-   is clean. Merging always stays a human decision.
+5. **Ready** — flips the pull request to ready once CI is green and the
+   post-push review is clean. Merging always stays a human decision.
 
 [docs/operations/development-workflow.md](./docs/operations/development-workflow.md)
 holds this project's own part: the branch prefix, what audits the loop from
