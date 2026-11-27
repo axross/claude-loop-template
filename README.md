@@ -128,15 +128,10 @@ it rather than cloning it.
    stack-specific skills your stack needs, and writes `docs/`.
 3. When adaptation is complete, INIT finalizes `README.template.md` into your
    project's `README.md`, replacing this one, and deletes the INIT tooling.
-4. **Enable the CI reviewer.** The post-push review channel's GitHub Actions
-   reviewer needs a one-time operator setup before it runs: install the
-   [Claude GitHub App](https://github.com/apps/claude) and add a
-   `CLAUDE_CODE_OAUTH_TOKEN` repository secret — generate it locally with
-   `claude setup-token` — under **Settings → Secrets and variables → Actions**,
-   or set an `ANTHROPIC_API_KEY` secret instead for pay-as-you-go API billing.
-   Until one of them is in place the workflow no-ops, and **its silence looks
-   exactly like a clean review**. The workflow file's header comment documents
-   the exact steps.
+4. **Enable the CI reviewer.** Follow the [reviewer setup](./docs/operations/review-automation.md#configure-the-reviewer)
+   to install the GitHub App, configure authentication for your billing
+   method and activate the workflow on the default branch. Confirm the
+   reviewer posts a result on the pull request.
 
 Placeholders use the `{{TOKEN}}` convention so they are easy to find and
 replace; the full token list lives in [`tokens.json`](./tokens.json) and

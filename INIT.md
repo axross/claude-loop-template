@@ -536,9 +536,9 @@ Use the existing documentation as the starting point for the adopted project’s
 Start at [the documentation index](./docs/index.md). Read the installed
 [Living Project Documentation skill](./.claude/skills/living-project-documentation/SKILL.md)
 and the project's [documentation convention](./docs/contributing/documentation.md#choose-a-subject)
-before adding or moving pages. Replace the template name, description and
-setup wording in `docs/index.md` with the project's name and scope. Walk the
-three entry points with their intended readers:
+before adding or moving pages. In `docs/index.md`, describe the project's
+own scope and replace the link to this adaptation guide with a permanent
+setup guide. Walk the three subject indexes with their intended readers:
 
 - [Contributing](./docs/contributing/index.md) helps someone configure an
   agent, change the project or check their work. Adapt those procedures to
