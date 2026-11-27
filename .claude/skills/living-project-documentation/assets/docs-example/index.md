@@ -1,41 +1,29 @@
-<!-- Example. Part of the example docs tree shipped with living-project-documentation. -->
+---
+okf_version: "0.3"
+title: Scheduler engineering
+description: Job execution, notification delivery and operating procedures for Scheduler.
+---
 
 # Documentation
 
-Everything Scheduler knows about itself. Which body answers your question:
-
-- **What does the product do?** → `specs/` — how it behaves today.
-- **How is the code written?** → `conventions/` — the rules a change has to satisfy.
-- **How is it built and run?** → `operations/` — the procedures someone executes.
-
-`decisions/` sits beside all three and holds why a constraint exists, for the
-constraints whose reasoning cannot be recovered from the code. The vocabulary all
-four bodies use is in [glossary.md](./glossary.md).
-
-Documents under `conventions/` and `operations/` use MUST, MUST NOT, SHOULD, SHOULD
-NOT, and MAY as [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119.html) describes.
-Documents under `specs/` describe rather than instruct, and use none of them.
+- [Scheduling](./scheduling/index.md) — follow a job from its template to its final attempt, or find how workers claim it.
+- [Notifications](./notifications.md) — decide which outcomes send a message and where it goes.
+- [Operating a release](./operating/deployment.md) — deploy, verify worker health or decide whether rollback is safe.
+- [Contributing code](./contributing/directory-structure.md) — place a module and check which packages can import it.
+- [Contributing documentation](./contributing/documentation.md#choose-a-subject) — choose the owner for a new or changed claim.
+- [Glossary](./glossary.md) — find a job by its dashboard or operator terminology.
 
 ## Specifications
 
-- [specs/scheduling.md](./specs/scheduling.md) — how work is defined and gets run:
-  templates and their schedules, the jobs they produce, attempts and retries, and
-  what survives a job's own record.
-- [specs/notifications.md](./specs/notifications.md) — how someone finds out what
-  happened: the rules that fire, the channels they reach, and what a digest collapses.
+For a job's observable behavior, choose a [scheduling question](./scheduling/index.md).
+For message delivery, see [notification rules](./notifications.md#rules).
 
 ## Conventions
 
-- [conventions/directory-structure.md](./conventions/directory-structure.md) — where
-  a file goes, what it is called, and which package may import which.
+See [module placement](./contributing/directory-structure.md#tiers) or
+[where a documentation change belongs](./contributing/documentation.md#choose-a-subject).
 
 ## Operations
 
-- [operations/deployment.md](./operations/deployment.md) — releasing to production,
-  the order migrations run in, and rolling back.
-
-## Decisions
-
-- [decisions/](./decisions/) — why a constraint exists, and what was traded away.
-  Each record is named for the decision it holds and dated the day it was made; a
-  decision is replaced by a new record rather than by editing the old one.
+Use the [release procedure](./operating/deployment.md#releasing) or go directly
+to the [rollback decision](./operating/deployment.md#rolling-back).

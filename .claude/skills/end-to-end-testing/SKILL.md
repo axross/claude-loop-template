@@ -18,6 +18,8 @@ Code examples use one concrete runner (usually Playwright) as the shape. Transla
 
 This skill owns the E2E level: whole-system checks against a real build. A check that mocks its dependencies to isolate one unit belongs at the unit level instead — if the project ships a unit-testing skill, defer to it for those conventions.
 
+An agent's own exploratory run against a running build is verification evidence under the project's verification practices, not an e2e suite, so these suite conventions do not apply to it.
+
 The level is not the runner. Where an e2e suite runs on a runner the project ships a capability for, that capability owns the runner's own surface — its config file, projects, pools, reporters, and browser-mode wiring — while the journeys, the locator fallback hierarchy, server lifecycle, and scenario coverage stay here.
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119.html).
@@ -30,10 +32,6 @@ See [commands.md](./references/commands.md) for:
 - Updating snapshots only for intentional visual changes
 - Targeting dev, a local production build, or a deployed environment through a base-URL environment variable
 
-**Guidelines:**
-
-- MUST read [commands.md](./references/commands.md) before invoking the e2e suite, before regenerating a snapshot, and before pointing a run at a production build or a deployed environment.
-
 ## Test Suite Structure
 
 See [structure.md](./references/structure.md) for:
@@ -41,10 +39,6 @@ See [structure.md](./references/structure.md) for:
 - Keeping e2e tests in their own directory with their own runner glob, separate from unit tests
 - The route-tree directory layout (default) and the purpose-based layout for single-route or journey-centric apps (smoke / happy-path / regressions / feature-area)
 - Test-file naming, test-case naming, and step granularity (multi-phase scenarios use steps; short atomic tests omit them)
-
-**Guidelines:**
-
-- MUST read [structure.md](./references/structure.md) before adding an e2e test file, choosing where it sits in the suite, or naming a file, a test case, or a step inside one.
 
 ## Test Authoring Conventions
 
@@ -55,10 +49,6 @@ See [conventions.md](./references/conventions.md) for:
 - Polling / wait-for-condition helpers instead of fixed sleeps, and why fixed sleeps are banned
 - Case-independent setup and cleanup hooks
 
-**Guidelines:**
-
-- MUST read [conventions.md](./references/conventions.md) before writing a locator, an assertion, a wait, or a setup or cleanup hook inside an e2e test.
-
 ## Test Environment and Fixtures
 
 See [test-environment.md](./references/test-environment.md) for:
@@ -68,18 +58,10 @@ See [test-environment.md](./references/test-environment.md) for:
 - The deterministic-by-default rule: no live external network, with a manual escape hatch for genuinely network-dependent journeys
 - Reusing one authenticated session across tests, and centralizing data/API helpers that return validated data
 
-**Guidelines:**
-
-- MUST read [test-environment.md](./references/test-environment.md) before starting or stopping the system under test from the suite, before letting a test reach an external network, and before adding an authentication, fixture, or data-setup helper the suite shares.
-
 ## Scenario Coverage
 
 See [scenario-coverage.md](./references/scenario-coverage.md) for:
 
 - The scenario-coverage metric (user journeys asserted, **not** e2e line coverage) and why line coverage was rejected
-- The human-authored journey catalog and the scenario join tag plus area/priority/smoke facet tags
+- Adding or retiring a journey in the human-authored catalog, and tagging a test with the scenario join tag or area/priority/smoke facet tags
 - The phased gate (`must`-priority journeys at 100% first), the catalog-to-tag join a project's own CI implements against a normalized `{ title, tags, status }` result shape, and an example catalog ([assets/scenarios.example.md](./assets/scenarios.example.md))
-
-**Guidelines:**
-
-- MUST read [scenario-coverage.md](./references/scenario-coverage.md) before adding or retiring a journey in the catalog, before tagging a test with a scenario or facet tag, and before reporting or gating on how much of the suite's journey coverage is met.

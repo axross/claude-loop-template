@@ -1,12 +1,12 @@
 ---
 name: agent-skill-authoring
-description: Creating, refining, splitting, consolidating, renaming, or auditing an agent skill — the authoring rules for the agentskills.io format, and the validators that enforce them. Triggers on drafting a `SKILL.md`, editing frontmatter, tightening a `description`, deciding where a new rule belongs, "add a skill", "split this skill", "audit skills", "recast this skill as a capability", and any change to a `SKILL.md` or its `references/`. Covers capability framing, discovery metadata that survives a host's listing truncation, section anatomy, progressive disclosure, cross-references, and three bundled validators, one per kind of edit.
+description: Creating, refining, splitting, consolidating, renaming, auditing, or designing adoption evaluations for agent skills — portable content boundaries and agentskills.io authoring. Triggers on `SKILL.md`, frontmatter, `description`, "where does this rule belong", "split this skill", "recast this skill as a capability", "audit skill portability", and "compare skill revisions". Skill management owns installation and active loading; project policy and host guidance own gates and execution; QA practices judge evidence sufficiency only within their scope. Covers capability framing, judgment versus mechanism, conditional references, structural validators, and task/treatment/scorer/opportunity contracts.
 user-invocable: false
 ---
 
 # Agent Skill Authoring
 
-Use this capability whenever you create, refine, split, consolidate, rename, or audit an agent skill under the host project's skill root. It is what turns a durable convention into a well-formed, discoverable skill and keeps the skill tree coherent as it grows.
+Use this capability whenever you create, refine, split, consolidate, rename, or audit an agent skill, or design an evaluation of its adoption. It turns a durable convention into a well-formed, discoverable skill and gives authors comparison contracts for evaluating rule revisions without confusing evidence of different behaviors.
 
 Skills authored here follow the agentskills.io format. For the host project's active skill inventory and topic-to-skill routing, defer to each skill's own `description` discovery metadata and the directory listing under the skill root; where a host also maintains a written index (e.g. `AGENTS.md`), keep it in sync too.
 
@@ -24,6 +24,8 @@ See [scoping-and-mece.md](./references/scoping-and-mece.md) for:
 
 - choosing a coherent skill boundary, skill name, split, consolidation, or source-of-truth location
 - checking overlap with neighboring skills before adding new guidance
+- separating portable judgment and workflow meaning from project policy, host execution, and skill distribution
+- classifying mixed paragraphs and references before migrating their detailed rules
 - classifying every section as mechanism or judgment when a vendor- or runner-specific skill sits beneath a tool-agnostic owner
 - using section length and topic growth as signals for restructuring
 
@@ -41,9 +43,9 @@ See [capability-framing.md](./references/capability-framing.md) for:
 See [frontmatter-and-naming.md](./references/frontmatter-and-naming.md) for:
 
 - creating or editing discovery-critical `SKILL.md` frontmatter
-- setting the invocation-control fields (`argument-hint`, `arguments`, `user-invocable`, `disable-model-invocation`) by skill archetype — guideline skill vs workflow entry point
+- distinguishing standard required and optional metadata from host-specific invocation controls
 - choosing the skill directory name and keeping it aligned with the `name` field
-- porting or preserving host-project harness fields
+- assessing host-project harness fields against the selected host and distribution path
 
 ## Description Writing
 
@@ -67,15 +69,16 @@ See [body-content-style.md](./references/body-content-style.md) for:
 
 ## Progressive Disclosure
 
-A `SKILL.md` carries exactly three things: what capability this is, the rules that apply unconditionally within it, and the routing that says which reference to read when. Every other normative statement — the detail behind a MUST or SHOULD, procedures, tables, examples — goes in a reference. The test for keeping a rule in the body is whether the reader needs it **before the routing decision**, not whether the rule is important: `loop-engineering`'s Execution Model, which lets the mandatory plan-approval gate outrank a harness instruction telling the run to just implement and push, is worthless unless it applies before the run decides what to read, so it correctly stays in the body. This contract is itself needed before the routing decision it governs, which is why it is stated here rather than left behind the pointer below — the same reason the load-bearing test just after it is stated directly rather than deferred.
+A `SKILL.md` carries exactly three things: what capability this is, the rules that apply unconditionally within it, and the routing that says which reference to read when. Every other normative statement — the detail behind a MUST or SHOULD, procedures, tables, examples — goes in a reference. The test for keeping a rule in the body is whether the reader needs it **before the routing decision**, not whether the rule is important: a change-loop capability's distinction between read-only work and a change must be available before the reader chooses an implementation reference. This contract is itself needed before the routing decision it governs, which is why it is stated here rather than left behind the pointer below — the same reason the load-bearing test just after it is stated directly rather than deferred.
 
-A rule is **load-bearing** when an agent that loads `SKILL.md` and opens no reference would produce wrong output for want of it — held before the work starts, not looked up once the reader already knows the question exists. That test still sorts a skill's material, but its consequence is a conditional read obligation rather than a relocation: a load-bearing rule's own statement stays in its reference, and `SKILL.md` carries an RFC-2119 obligation to read that reference before the work its rule governs. A reference nobody is told to read never gets read; a `SKILL.md` that states every rule directly cannot be tree-shaken by the sessions that will never touch most of them. This test is itself load-bearing for a skill's author, so it is stated here as a rule rather than left behind the pointer below.
+A rule is **load-bearing** when an agent that loads `SKILL.md` and opens no reference would produce wrong output for want of it. Its statement stays in the owning reference; the parent routing names the situations in which that reference applies. Repeating those situations as a separate MUST-read bullet adds no selection information. Routing therefore consists only of a `See ... for:` or `See ... when` link and descriptive situation bullets, without a `**Guidelines:**` block.
 
 **Guidelines:**
 
 - MUST treat a rule as load-bearing when an agent that loads `SKILL.md` alone would produce wrong output for want of it — a fixed order, a closed set, or a constraint whose violation is not self-evident from the output — and as elaboration otherwise.
 - MUST place a load-bearing rule's own statement, its RFC-2119 bullets, and everything that elaborates it in the reference file that governs it, not in `SKILL.md`.
-- MUST give `SKILL.md` a `**Guidelines:**` block, placed after a reference's routing list, carrying one RFC-2119 bullet per reference that names the reference and states the condition — narrow enough to be skippable — under which it MUST be read.
+- MUST limit reference routing to a `See ... for:` or `See ... when` link followed by descriptive bullets naming situations, use cases, or conditions for consulting that reference.
+- MUST NOT attach a `**Guidelines:**` block to reference routing, even for an empty block or one containing only read obligations; express reference-selection conditions in the descriptive bullets instead.
 - MUST NOT restate a load-bearing rule's statement or its RFC-2119 bullets in `SKILL.md` once its reference states them, except under the carve-out below.
 - MUST keep a rule's own statement in `SKILL.md`, never moved to a reference, when the rule's triggering condition is unconditional within its own skill's scope — a pointer that would fire on every turn costs a read and shakes nothing.
 
@@ -83,17 +86,13 @@ See [progressive-disclosure.md](./references/progressive-disclosure.md) for:
 
 - deciding when a skill should stay single-file or split into `references/`
 - the three-part role contract and the "needed before the routing decision" test in full, and how the load-bearing test and the unconditional-scope carve-out relate to it
-- the load-bearing test's full sorting table, and how it decides whether a reference earns a conditional read obligation
+- the load-bearing test's full sorting table and the selection conditions a reference's routing names
 - the size thresholds that signal a skill or reference file has grown too large
-- using the parent routing-section format: `## Topic`, `See [file.md](./references/file.md) for:`, descriptive situation bullets, then a `**Guidelines:**` block carrying the read obligation
-- wording a read obligation's triggering condition narrowly enough to be skippable
+- using the descriptive-only parent routing-section format when splitting a skill or restructuring its reference layout
+- naming the decision that needs a reference, including a missing required element, and a task that can skip it
 - stating the fact a routing bullet points at — the flag, limit, or rule by name — instead of announcing that one exists
 - keeping parent routing bullets free of RFC-2119-style requirement keywords so they remain routing cues, not duplicated rules
-- the two placements a body-resident rule may take relative to a routing list, and when each applies
-
-**Guidelines:**
-
-- MUST read [progressive-disclosure.md](./references/progressive-disclosure.md) before splitting a skill into `references/`, restructuring its reference layout, or deciding where a body-resident rule belongs relative to a routing list.
+- deciding where a body-resident rule belongs relative to a routing list
 
 ## Cross-Referencing and Discovery
 
@@ -102,6 +101,7 @@ See [cross-referencing.md](./references/cross-referencing.md) for:
 - adding, renaming, moving, deleting, or linking skills and reference files
 - choosing one source of truth instead of copying detailed rules across skills
 - using topic-based cross-skill references, verifying intra-skill relative links, and keeping skill discovery current (plus any written index a host maintains)
+- routing only to applicable owners and hosts, including when an optional owner or project host document is absent
 
 ## Project Skill Archetypes
 
@@ -111,6 +111,15 @@ See [project-skill-archetypes.md](./references/project-skill-archetypes.md) for:
 - the three-way ownership triangle and each archetype's skeleton, topics checklist, or table patterns
 - growing archetype skeletons with worked examples and mechanical boundary checks
 
+## Skill-Adoption Evaluation Design
+
+See [skill-adoption-evaluation.md](./references/skill-adoption-evaluation.md) for:
+
+- designing a skill-adoption evaluation or comparing intentional rule revisions before execution
+- freezing task, treatment, scorer, opportunity, and claim-scope contracts while keeping scorer answers out of actor material
+- comparing unnecessary reads and missed rules by actor and checkpoint, with natural tasks, boundary controls and incomplete or zero-applicable populations kept distinct
+- distinguishing synthetic report checks from live qualification, routing evidence sufficiency only to scope-covering QA practices, and retaining the review limitation otherwise
+
 ## Auditing and Validation
 
 See [audit-checklist.md](./references/audit-checklist.md) for:
@@ -119,4 +128,15 @@ See [audit-checklist.md](./references/audit-checklist.md) for:
 - running the three bundled structure validators — `check-skill-frontmatter.mjs`, `check-skill-body.mjs`, and `check-skill-references.mjs` — and which kind of edit each one answers for
 - running the bundled link-freshness audit (`scripts/link-freshness/check.mjs`) on a schedule to catch a cited vendor URL that has gone 404, why only a confirmed-dead link fails it, and why a `pull_request` trigger on it is a request-forgery primitive
 - checking inventory, skill discovery, section anatomy, RFC-2119 bullets, topic-based cross-skill references, and relative links
-- identifying overlap, stale assumptions, orphan references, and missing source-of-truth links
+- auditing a changed route against a needed and a skippable case, its observed site and revision, and checking for overlap, stale assumptions or orphan references
+- applying the ownership and portability checklist without expanding a bounded change into a library-wide migration
+
+## Protected Markdownlint Execution
+
+See [markdownlint-execution.md](./references/markdownlint-execution.md) for:
+
+- installing the bundled native-ESM package in a consumer project without author-checkout imports
+- declaring skill/collection roots, raw-source snapshots and focused partial checks
+- running AS001 actual YAML and AS010 explicit fence closure without inline, configuration or ignore suppression
+- distinguishing genuine advisories from loading/runtime failures and effective coverage gaps
+- extending shared rule/context execution while retaining the existing structure and network audits

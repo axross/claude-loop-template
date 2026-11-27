@@ -1,105 +1,63 @@
 # Consulting and Upkeep
 
-Apply this reference when planning a change to a documented area, and when
-correcting `docs/` in the change that invalidated it.
+## Consult before planning
 
-## Consulting Before a Plan
-
-Reading `docs/` is cheap when it is done through the index and expensive when
-it is done by opening everything. The index exists to make the second
-unnecessary.
+A change to retry timing can invalidate both the scheduler's contract and an
+operator's procedure for recognizing a stuck job. The index identifies the
+initial owners. Their preconditions and authority links reveal other readers.
 
 **Guidelines:**
 
-- MUST read `index.md` first, and open only the documents whose one-line
-  descriptions match the area the change touches.
-- MUST follow a spec's dependency and decision links when the change alters
-  behaviour that spec describes. A decision the change would violate is the
-  single most expensive thing to discover after implementation.
-- MUST stop after the index when nothing matches, and say so. A `docs/` tree
-  that covers none of the change is a fact worth stating in the plan, not a
-  reason to read it all.
-- MUST NOT load `docs/` wholesale into context "for background". Almost all of
-  it is irrelevant to any one change, and the cost is paid on every turn.
+- MUST consult the index to locate unfamiliar subjects before planning a change. Follow precise caller links directly and trace the dependencies whose claims the change would invalidate.
+- SHOULD stop reading when the routes establish that the change affects no documented claim. Revisit that conclusion if implementation reveals a dependency.
 
-## Naming the Damage in the Plan
+## Find the affected claim
 
-A plan for a change to a documented area names the documents that change will
-invalidate. The list is cheap to write and it is what makes the upkeep visible
-at the point a human reviews scope — rather than at the end, where it is the
-first thing dropped under time pressure.
+| Change                                            | Consult                                                                      |
+| ------------------------------------------------- | ---------------------------------------------------------------------------- |
+| A metric changes eligibility, units or weighting  | Its Definition and the Specifications that consume it                        |
+| A mode returns a different result or error        | Its result Specification and readers that present the value                  |
+| Responsibility moves between components           | The Architecture, diagrams and operational diagnostics that use the boundary |
+| A team changes an implementation practice         | Its Convention, counterexamples and enforcement                              |
+| A release permission changes                      | The Policy and each entry point that relies on it                            |
+| A command, prerequisite or success signal changes | Its Procedure and the caller's route to recovery                             |
+| A term, file or heading moves                     | Glossary conventions, indexes, inbound links and external anchors            |
 
 **Guidelines:**
 
-- MUST name, in the plan, every document under `docs/` the change will
-  invalidate, or state that it invalidates none.
-- MUST treat that list as provisional. Implementation reveals invalidations the
-  plan could not see; the list is a scope signal, not a contract.
-- SHOULD name a decision the change would overturn as a decision to supersede,
-  which is a scope question a human should answer before implementation, not
-  after.
+- MUST correct an invalidated claim in the same change and update the routes that depend on it.
+- SHOULD leave a page alone when the change preserves its claims and reading routes.
 
-## What a Change Invalidates
+## Record what became true
 
-| The change…                                               | Puts in question                                         |
-| --------------------------------------------------------- | -------------------------------------------------------- |
-| Alters an observable behaviour, rule, or state transition | That domain's `specs/<domain>.md`                        |
-| Adds, renames, or retires a domain concept                | `glossary.md`, and the spec that owns it                 |
-| Adds a whole area of behaviour                            | A new spec, its glossary heading, and an `index.md` line |
-| Changes what the product is for, or its boundary          | The spec that bounds it, and the README                  |
-| Overturns a constraint a record established               | A new decision record, and the old one's status          |
-| Adds a dependency between domains                         | The depending spec's cross-reference                     |
-| Renames or moves a document                               | Every inbound reference, and `index.md`                  |
-
-This table stops at `specs/` and `decisions/`. A change that alters a
-convention or a procedure invalidates its document under `conventions/` or
-`operations/` the same way, once a project has adopted
-[this shape](./conventions-and-operations.md#upkeep-for-a-co-located-body),
-which states that obligation in full.
+An adopted target architecture and a deployed component can answer different
+questions about the same service. A later contributor also needs to know why
+an apparently workable alternative violates a settled constraint. When a retry
+limit changes, replace the value and the reason for it on the governing page.
+The commit shows the previous limit. The pull request holds the benchmark and
+review discussion that led to the change.
 
 **Guidelines:**
 
-- MUST correct what the change invalidated **in the same change**. Correcting
-  it separately leaves `docs/` wrong for the interval between them, and the
-  interval has a way of not ending.
-- MUST leave a document alone when the change did not alter what it claims. An
-  edit that only restyles prose costs review attention and adds no truth.
-- SHOULD delete a spec whose behaviour was removed, along with its index line
-  and glossary heading, rather than leaving it to describe something absent.
+- MUST describe observable behavior in the present tense, identifying targets and illustrative examples explicitly.
+- MUST put a settled constraint and its current rationale on the page that governs it. Include a rejected alternative when readers are likely to try it. Keep deliberation and run results with the commit or pull request that settled the change. Link that source when a current claim depends on it.
+- MUST update the governing page in place. Do not append dated updates or create a page, registry or concept type for each verification run, rollout or decision.
+- MUST retire obsolete guidance when a feature disappears and [settle support for affected routes](./cross-references.md#preserve-the-reading-route).
+- SHOULD read each changed page on its own and exercise a boundary case from a consumer's or operator's entry point. Run the [documentation checks](./validators.md).
 
-## Absorbing a Merged Plan
+## Verify a reader's route
 
-A plan and a spec describe the same product in different tenses. Absorbing one
-into the other is a rewrite, never a copy.
-
-**Guidelines:**
-
-- MUST restate what is now true in the **present tense**, and drop the plan's
-  motivation, alternatives, and acceptance criteria — the plan keeps those.
-- MUST drop anything the change did not actually land. A plan is a statement of
-  intent, and intent that did not survive implementation is not a fact about the
-  product.
-- MUST NOT link `docs/` back to the plan, the issue, or the change that
-  produced it. Those are the history of how the product got here; `docs/` is
-  what it is now, and the two decay on different schedules.
-- SHOULD write a decision record for a trade-off the plan resolved whose
-  rationale would otherwise be lost, applying the existence condition rather
-  than recording every choice the plan made.
-
-## After a Change to docs/
-
-Two of the corrections above leave nothing visibly wrong behind: a renamed
-document breaks references in files nobody opened, and a supersede leaves links
-that still resolve. Both are caught mechanically. The two qualities that are not
-checkable are checked by re-reading.
+An on-call runbook links “Can I roll back?” to a release overview. The
+overview links to “Rolling back,” where the operator learns to redeploy the
+previous revision only while the data survives. After a destructive contract
+migration, the operator must stop and use the restore procedure. Point the
+runbook straight at “Rolling back.” Start again at the runbook: the operator
+can skip the overview and stop at the same decision, with its exception.
+Linking to a valid “Releasing” heading instead would lose that answer.
 
 **Guidelines:**
 
-- MUST run the bundled validators over `docs/` and fix what they report
-  before calling the change done.
-- MUST repoint every reference a rename or supersede left stale, in the same
-  change; a resolving link to superseded rationale is invisible to everything
-  except the check written for it.
-- SHOULD re-read the changed document once as a reader who does not know the
-  change, since the self-sufficiency of a glossary entry and the present tense of
-  a spec are the two things nothing mechanical can check.
+- SHOULD sample real tasks before and after a substantial move. Record the question, starting path and fragment, pages and sections opened, owning answer, limiting condition and stopping point for each route.
+- MUST exercise the root, the relevant subject index and representative callers such as a README, runbook or dependent concept. Follow the routes the export actually ships. A shortcut at the root can hide a missing choice at a subject index.
+- MUST compare the link's promise to the actual passage, including exceptions. Repair a misleading label or heading, a missing local route or a detour through unrelated material. Keep a longer route when the reader genuinely needs both owners.
+- MAY compare hops, distinct files or bytes opened to diagnose a detour. Count a file once per question and starting point when measuring whole-file exposure. Use the decision and its limits to judge the change.

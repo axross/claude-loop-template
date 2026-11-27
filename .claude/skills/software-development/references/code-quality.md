@@ -92,6 +92,25 @@ Two comment forms fail this test regardless of what they say, because neither ca
 - MUST NOT add an author line or a change-history block to a file header.
 - MUST NOT add a banner or section-divider comment.
 
+### Comment Subject
+
+A comment can be about two different things: the code beside it, or the work that produced that code. Only the first belongs in the comment; the second is a work record — a decision's deliberation, an alternative considered and discarded, a bug's investigation, a verification log, an approval, a comparison against a prior implementation — and belongs to one of the destinations in Outside the Code below, never to the comment itself. The test is which of the two the comment is about, not what tense it is written in: a work record rewritten into the present tense is still about the work, because re-conjugating its verbs does not change its subject.
+
+"per-keystroke writes measure 40ms on low-end android, so writes are batched" states a measurement that characterizes the code's current behavior, and stays. "we benchmarked it and found 40ms", "confirmed on device", "approved by the maintainer", and "a bug report found this" each name a completed act — measuring, confirming, approving, discovering — rather than the code's behavior, and fail this test regardless of tense.
+
+A work verb demoted into a noun phrase can keep the grammatical subject on the code while the content stays a work record — "the retry count is 3, a maintainer-approved value tuned after benchmarking" reads as a present fact but still reports an approval and a benchmarking session. Closing that path takes a deliberate rewrite of what the sentence says, not a mechanical check, so it stays a known residual rather than a case this test closes by itself.
+
+This test does not always decide as cleanly as the pair above: whether "this workaround is needed until upstream bug #1234 is fixed" names a present upstream state or a past discovery can depend on what the reader already knows, though the tracker-reference ban below already catches the sharper form of the same sentence and narrows how often this test alone has to carry that call.
+
+**Guidelines:**
+
+- MUST write a comment about what the code does and why it is shaped that way now, including a measurement that characterizes its current behavior.
+- MUST NOT write a comment about the work that produced the code — investigating, deciding, discarding an alternative, reviewing, verifying, approving, or comparing against a prior implementation — whatever tense or grammatical form carries it.
+- MUST apply this test to a doc-comment exactly as to an explanatory comment; the exemption from the line-comment form and length budget that Doc-Comments below gives a doc-comment exempts it from neither this test nor from reading as a present contract rather than a narrative.
+- MUST apply this test to a comment the file-local-rationale carve-out in Outside the Code below would otherwise leave in place over budget; that carve-out is for a "why" the code cannot recover any other way, not for a work record that already has one of that section's destinations.
+- MUST treat this test as a diagnostic aid to Outside the Code's destination check below, not a rule that bypasses it: check a comment that fails this test against the three destinations there before concluding none of them accepts it, exactly as a comment over budget is checked, and leave in place any comment the file-local-rationale carve-out already admits.
+- MUST read the ban on an author line or change-history block above (Admissibility) as this test's own most literal case, not a second, independent rule.
+
 ### Doc-Comments
 
 Doc-comments carry the API-level documentation, written in the project's doc-comment standard. A public surface without one forces every consumer to read the implementation to learn what it does. A comment at the top of a module or file that states what it holds and why is a doc-comment like any other, whatever syntax the language uses to carry it — a leading `//` block in a language with no dedicated module-doc form documents the unit the same way `/** */`, `///`, or a docstring does elsewhere, so it follows the doc-comment standard's own form and length rather than the Explanatory Comments rules below.
@@ -144,7 +163,7 @@ A comment kept out by the rules above still has to go somewhere, or the discipli
 
 - MUST move a specification fact or a domain-vocabulary definition evicted from a comment into a specification or glossary entry, and a piece of rationale evicted from a comment into a decision record, where the project ships a living-documentation capability — consult that capability for when a record is owed and how it is written, rather than any summary of that gating here.
 - MUST route the reasoning behind a specific change to the commit message that made it, per the project's Conventional Commits practices, rather than leaving it in a comment beside the diff.
-- MUST check a comment over the budget against the three destinations above before leaving it beside the code: a comment any one of them accepts belongs there, not in place.
+- MUST check a comment that exceeds the budget above or fails the Comment Subject test against the three destinations above before leaving it beside the code: a comment any one of them accepts belongs there, not in place.
 - MUST leave a comment in place and over the budget when none of the three destinations accepts it because it is file-local implementation rationale, and shortening it into the budget would drop a step the reader needs.
 
 ## Import Hygiene

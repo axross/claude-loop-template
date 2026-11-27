@@ -34,12 +34,15 @@ A UI design section describes hierarchy, layout intent, and content priority in 
 
 ## Interaction States
 
-Real interfaces spend most of their life outside the default state. Design systems converge on a shared minimum taxonomy — Shopify Polaris ties each state to a "signifier" that sets expectations before an action happens, and requires that whatever happens on hover also happens on focus; Material Design defines hover, focus, pressed, and disabled as combinable primitives, with disabled explicitly excluded from hover/focus response. NN/g's research grounds two of these in evidence: users tolerate waits far better with visible feedback, so any action that can plausibly exceed about a second needs a specified loading state, and a well-designed empty state explains the absence and offers a next action rather than rendering nothing. Error-state content needs to be visible, precise, and constructive without blaming the user.
+Real interfaces spend most of their life outside the default state. Design systems converge on a shared minimum taxonomy — Shopify Polaris ties each state to a "signifier" that sets expectations before an action happens, and requires that whatever happens on hover also happens on focus; Material Design defines hover, focus, pressed, and disabled treatments, with disabled excluded from hover/focus response in that component model. NN/g's research grounds two of these in evidence: users tolerate waits far better with visible feedback, so any action that can plausibly exceed about a second needs a specified loading state, and a well-designed empty state explains the absence and offers a next action rather than rendering nothing. Error-state content needs to be visible, precise, and constructive without blaming the user.
+
+Disabled activation and keyboard focusability are separate. Native disabled semantics can remove keyboard focus, while some composite widgets intentionally keep disabled items focusable ([WAI-ARIA keyboard-interface practice](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols)). Both block activation; any actual retained focus stays visible. For detailed interaction and visible-focus design, consult the applicable design capability when available; otherwise the spec-level outcomes below remain sufficient.
 
 **Guidelines:**
 
 - MUST enumerate, for any new or changed interactive element, its default, disabled (if applicable), loading (if it triggers an async action), error (if it can fail), and empty (if it can be data-less) states.
-- MUST specify that whatever behavior is stated for hover also applies to keyboard focus, and describe disabled elements as non-focusable/non-interactive, not merely visually muted.
+- MUST specify that applicable hover behavior also applies to keyboard focus.
+- MUST describe disabled activation and focusability separately, not merely visually muted states: activation stays blocked; focusability follows native semantics or the widget's keyboard model, with any actual retained focus visibly indicated.
 - MUST state what the user sees and what action resolves an error or empty state, not just that the condition exists.
 - SHOULD state an expected feedback threshold for loading states (e.g., "show a loading indicator if the action can take longer than ~1s").
 

@@ -27,8 +27,8 @@ This is not the rule that governs a plan or an issue body, which are written fro
 - MUST write the description for the developer about to read this diff: what a reviewer needs before opening the Files tab, and nothing beyond it.
 - MUST NOT restate in prose what the diff already shows. Apply the test above to a specific passage: content the reviewer would have recovered by reading the diff is the redundancy; why the change was made, where to begin reading, and what to watch for are not recoverable from the diff and stay.
 - MUST NOT read that prohibition as barring a file, module, or symbol name: naming one as a destination to start reading at is [Reviewer Guidance](#reviewer-guidance)'s recommendation, and stays owned there; narrating what that file now does is the second telling.
-- MUST NOT read the redundancy prohibition as licence to omit or shorten what [Verification Evidence](#verification-evidence), [Risk Disclosure](#risk-disclosure), and [Settled Decisions](#settled-decisions) require — those sections are not the redundancy being targeted here.
-- SHOULD keep the description's prose — the motivation, the orientation, and the risk notes — to about 200 words, roughly three short paragraphs. Links, verification-evidence transcripts, and per-criterion status lists are not prose and are not counted against that ceiling; they run at whatever length the reviewer needs.
+- MUST NOT read the redundancy prohibition as licence to omit or shorten what [Acceptance Criteria and Residual Risk](#acceptance-criteria-and-residual-risk), [Risk Disclosure](#risk-disclosure), and [Settled Decisions](#settled-decisions) require — those sections are not the redundancy being targeted here.
+- SHOULD keep the description's prose — the motivation, the orientation, and the risk notes — to about 200 words, roughly three short paragraphs. Links, per-criterion status lists, and quoted acceptance criteria are not prose and are not counted against that ceiling; they run at whatever length the reviewer needs.
 - MUST NOT apply the beneficiary-viewpoint rule that governs a plan or an issue body here: those keep file and symbol names out because they are written for the change's beneficiary; a pull request description is written for a developer, who needs them.
 
 ## Why Over What
@@ -58,12 +58,15 @@ The diff already shows _what_ changed; the description carries the _why_ — the
 
 The repository ships a pull request template (`.github/pull_request_template.md` on the default branch). GitHub pre-fills it only for pull requests opened through the web UI, and only from the copy on the default branch — a body authored programmatically (as an agent's API call does) starts empty, so the structure must be reproduced deliberately.
 
+The template owns the body's skeleton; the rules here own what has to reach the body. Where the two meet, the template decides placement — a required item goes in whichever of its sections already covers that subject. Where the template has no section covering a required item, the body gains one rather than dropping the item.
+
 **Guidelines:**
 
 - MUST structure every pull request body from the template's sections, reproducing them manually when the body is authored programmatically.
+- MUST add a section for a required item the template has no home for, rather than omitting the item; the template's shape yields to what a reviewer needs, and only in that direction.
 - MUST fill each kept section with real content or delete the section; MUST NOT leave an empty heading, placeholder text, or an unchecked prompt in the submitted body.
 - SHOULD delete the template's instructional HTML comments once their section is filled; they never render, but they clutter the raw body that agents and API consumers read.
-- MUST keep the Related issues section even when no issue exists, stating that explicitly instead of deleting it — reviewers otherwise cannot tell "no issue" from "forgot to link".
+- MUST keep the Related issues and acceptance-criteria sections even when neither an issue nor a diff-verifiable criterion exists, stating that explicitly instead of deleting them — reviewers otherwise cannot tell "no issue" from "forgot to link", or "no criterion a diff can settle" from a projection nobody wrote.
 
 ## Issue Linking
 
@@ -75,18 +78,26 @@ A closing keyword ties the pull request to the work it delivers: merging auto-cl
 - MUST NOT put closing keywords or `@`-mentions in commit messages — every copy, cherry-pick, and fork push of the commit re-fires the automation and re-pings the people.
 - SHOULD link related non-tracking context (prior pull requests, discussions, design docs) as plain references without closing keywords.
 
-## Verification Evidence
+## Acceptance Criteria and Residual Risk
 
-A reviewer weighs claims they can check; "tests pass" is an assertion, not evidence. Evidence states what was run and what was observed, so the reviewer can audit it instead of re-deriving it.
+A review is checked against what the change was supposed to achieve, and for a long time the only copy of that lived in the plan. That works until the reviewer cannot open the plan — a CI reviewer holding no credential for the project's tracker, or a colleague without a seat on it — and then the one thing the review is measured by is the one thing missing. The body is where the criteria have to be, because the body is what every reviewer can read.
+
+Carrying them there is a projection, not a second original. The plan stays canonical and stays where criteria are argued and revised; the body carries criteria a diff can settle and approved criteria designated for out-of-tree verification, quoted rather than paraphrased so that a reader with nothing to compare against is still reading the approved wording. Code review assesses the former; the contributor remains accountable for verification and publication of the latter.
+
+For necessary out-of-tree verification, follow the project's change-loop planning and projection practices where present. Otherwise, agree the verification method and evidence destination in the approved plan, retain its designation verbatim in the body with a published evidence link before claiming readiness, and seek renewed plan approval before changing the designation. Missing required evidence is a delivery gap even when the reviewer reports no finding.
+
+What does **not** belong in the body is the transcript of commands and their results. "Tests pass" was never evidence, but neither is the author's own account of what they ran: the project's checks report against the change independently, and a transcript beside them is a second, staler copy that the author wrote. The reporting obligation is real and is owed to the human in the session. What survives on the body is what those checks cannot produce — a required check that was skipped, and the manual or visual evidence a criterion needs.
 
 The skipped-check rule below reads much like one a code-review capability states for a review's own evidence section. That overlap is deliberate rather than a duplication to resolve: the two govern **different artifacts** — the pull request body an author writes, and the report a reviewer posts — and a code-review capability is authored to reference no other skill, so neither can defer to the other.
 
 **Guidelines:**
 
-- MUST report the verification commands run and their observed results, per [verification.md](./verification.md).
-- MUST name every required check that was skipped and why; a skipped check is residual risk, not silence.
-- MUST state the status of each acceptance criterion when the linked issue lists them — the posted review verifies the diff against those criteria.
-- SHOULD include before/after screenshots or a recording for any user-visible change.
+- MUST carry the change's acceptance criteria in the body: every criterion a reviewer can confirm or refute from the diff and every criterion the approved plan designates for out-of-tree verification, quoted verbatim including the designation, each with its status; plus the number of criteria not carried, a locator for the plan that holds them, and the plan revision they were copied from, so a later reader can tell a current projection from one the plan has moved past. Include a published evidence link beside each designated criterion before claiming readiness, not merely an issue or pull-request number; follow the project's projection sequencing where present.
+- MUST NOT make that obligation conditional on the reviewer being able to reach the plan. A reviewer holding no credential for the project's tracker is the case the body exists to serve.
+- MUST place the criteria under whichever template section covers acceptance or verification, and under an `## Acceptance criteria` heading where the template covers neither.
+- MUST name every required check that was skipped and why, under the template's risk section, per [verification.md](./verification.md); a skipped check is residual risk, not silence.
+- SHOULD include before/after screenshots or a recording for any user-visible change, beside the criteria they bear on.
+- MUST NOT put a transcript of verification commands and their observed results in the body. Reporting what ran and what it produced is owed to the human in the session, under whatever reporting practices the project holds you to, and on the body it restates what the project's own checks already report against the change.
 
 ## Risk Disclosure
 

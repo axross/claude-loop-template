@@ -13,7 +13,8 @@ Code** project. It ships:
   confirmation, waiting on a pull request, and the settings and hooks notes.
 - `.claude/skills/**` — **the core set of skills installed from
   [axross/skills](https://github.com/axross/skills)**, recorded in
-  `skills-lock.json`, with no upstream version fixed. They are generated artifacts,
+  `skills-lock.json` with the upstream commit the last refresh installed; the
+  template never chooses a revision of its own. They are generated artifacts,
   not template content: a hand-edit is discarded by the next install. Step 4
   adds the stack-specific ones.
 - `.claude/agents/` — the `implementer`, `reviewer`, and `investigator`
@@ -772,8 +773,6 @@ human authorization, and an agent never grants it to itself.
   starts at its own first decision, never backfilled to explain a constraint
   inherited from the template — and reword `docs/index.md`'s Decisions entry so
   it no longer links a directory that is now gone.
-- Search the tree for `TRANSITIONAL` blocks and remove each one whose condition
-  is met (see the completion checklist).
 - Remove the "Template note" blockquote at the top of `AGENTS.md`, every
   `<!-- INIT:OPTIONAL ... -->` marker and `<!-- INIT: ... -->` fill-in comment,
   every "TEMPLATE NOTE" / "_delete during INIT_" line for sections you decided
@@ -847,13 +846,6 @@ human authorization, and an agent never grants it to itself.
 - [ ] No kept workflow's comments still describe the un-adapted template —
       including `.github/workflows/merge-checks.yaml`'s header, once its guard
       steps have armed for good.
-- [ ] `grep -rn 'TRANSITIONAL' . --exclude-dir=.git --exclude-dir=skills
-      --exclude=INIT.md` finds no block whose condition is met: each
-      `<!-- TRANSITIONAL: remove once the installed skills no longer conflict
-      with this block -->` … `<!-- /TRANSITIONAL -->` pair is removed, with its
-      contents, once the project's installed skills are refreshed past the
-      upstream change that ends the conflict. A pair whose condition still holds
-      stays.
 - [ ] The standing delivery grant skeleton in
       `docs/operations/development-workflow.md` is resolved: either filled in
       (no `<maintainer>` or `<adopting pull request>` placeholder left,

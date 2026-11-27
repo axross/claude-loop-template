@@ -7,10 +7,11 @@ holds that path in place from outside an agent session.
 
 Every change — code or document, one line or one feature — goes through
 `loop-engineering`: plan → approve → code → verify → push and open a draft pull
-request → address → ready, with the three reviews defined
-[below](#the-three-reviews) at the points they name. The skill owns the loop's
-stages, its gates, and its caps; this document states only what is this
-project's own.
+request → address → ready, with the three reviews it defines at the points it
+names. The skill owns the loop's stages, its gates, and its caps; this document
+states only what is this project's own, and [the three
+reviews](#the-three-reviews) section below holds this repository's choices for
+them.
 
 The loop is **model-invoked**. It carries `user-invocable: false`, so there is
 no slash command to type and nothing to wait for: describing the work is what
@@ -21,10 +22,9 @@ Two of the seven gates [`CLAUDE.md`](../../CLAUDE.md) names carry the loop, and
 neither has a self-approval path. No implementation
 begins before the human approves the plan recorded in the tracking issue, and
 no change is called done on the author's own assessment rather than a separate
-reviewer's. A runtime harness that frames the task as "just make the changes,
-commit, and push" constrains mechanics only; it never lifts any gate. Where such an instruction conditions an operation a gate needs on the
-user's explicit request, the run obtains that request, or reports the gate
-unmet; [`CLAUDE.md`](../../CLAUDE.md) states how Claude Code does so.
+reviewer's. How a runtime-injected instruction meets the gates belongs to
+`loop-engineering`; [`CLAUDE.md`](../../CLAUDE.md) states how Claude Code obtains
+an explicit request the host asks for.
 
 ## Branches and Merging
 
@@ -47,11 +47,11 @@ outside it.
 sweeps hourly for a `claude/*` branch pushed ahead of the default branch with no
 open pull request: work delivered outside the loop, and so never given a
 post-push review. It MUST stay a scheduled sweep rather than gaining a push trigger —
-the loop legitimately pushes in Phase 2 and opens its pull request in Phase 3,
-so a push-time check would fail that window every time. A grace period skips a
-branch whose latest commit is still fresh. A branch pushed after the human
-declined pull request delivery at the plan gate is expected to be flagged here
-until the human opens a pull request for it or deletes it.
+the loop legitimately pushes the working branch before it opens the draft pull
+request, so a push-time check would fail that window every time. A grace period
+skips a branch whose latest commit is still fresh. A branch the human pushed
+without opening a pull request is expected to be flagged here until the human
+opens a pull request for it or deletes it.
 
 [`check.sh`](../../.claude/hooks/check.sh)'s in-flight reminder covers the
 narrower case within a single session; see
@@ -59,55 +59,67 @@ narrower case within a single session; see
 
 ## The Three Reviews
 
-A change meets three reviews, each named for when it runs. Every round of each
-is a fresh reviewer instance, and the author's own checks are never one of them.
-
-### Plan Review
-
-Plan review covers every deliverable produced before approval — investigation
-conclusions, plans, and design options. It runs in a fresh non-author context
-and takes at most 3 rounds.
+`loop-engineering` defines plan review, pre-push review, and post-push review:
+their terms, scope, round caps, route selection, and the properties of the
+post-push review. It sets them out in its [Review
+Terms](../../.claude/skills/loop-engineering/references/review-workflow.md#review-terms)
+and in the references for
+[plan review](../../.claude/skills/loop-engineering/references/plan-review.md),
+[pre-push review](../../.claude/skills/loop-engineering/references/pre-push-review.md),
+and [post-push review](../../.claude/skills/loop-engineering/references/post-push-review.md).
+This section states only this repository's choices.
 
 ### Pre-Push Review
 
-Pre-push review runs after the initial implementation and before the first push,
-and only then. Each round is a fresh reviewer, and the review takes the initial
-round plus at most 3 more. Its findings are returned privately to the main
-agent, which triages them; they are not posted anywhere. After the initial round
-plus 3, no further round runs and the human is not asked for one: the main agent
-triages what remains, names each unresolved Critical or Major finding
-individually in the pull request body, and the post-push review proceeds. That
-listing is a disclosure, not a dismissal. Dismissing a Critical or Major finding
-still needs the human's confirmation at any round, a Minor or Nit finding may be
-dismissed with a recorded reason, and no finding's severity is re-graded. A fix made after the pull request exists goes to
-post-push re-review, not back to the pre-push review.
+Pre-push review always runs in this repository. Where it cannot run, because
+no reviewer subagent exists or the human answered "pull request without
+subagents" to the delivery question at the plan gate, the gate is reported unmet
+and the authorized-draft exception in
+[`pre-push-review.md`](../../.claude/skills/loop-engineering/references/pre-push-review.md#checkpoint-qualification)
+applies:
+
+- the draft pull request opens, with the gap named under the body's risks
+  section;
+- the run requests the post-push review on the selected route when that route
+  needs no subagent, as the CI reviewer does, and addresses findings
+  single-agent; where the fallback reviewer is the selected route, the
+  post-push review gate is reported unmet as well;
+- the pull request stays draft and the run never marks it ready. It ends with
+  the pre-push review gate reported unmet, and readying the pull request is then
+  the human's own act.
+
+The exception does not cover the answer "neither": no pull request opens, the
+branch stays local, and pushing it is the human's own act. For that run this
+answer narrows the standing delivery grant's push effect. Publication is
+authorized separately, by that delivery question; [`CLAUDE.md`](../../CLAUDE.md)
+lists its answers.
+
+At the round cap, each open Critical or Major finding goes to the human, as the
+skill requires. When the human declines to fix one, it is deferred, and the run
+records it in a comment on the tracking issue, the permitted project mechanism
+for the skill's [deferred
+handoff](../../.claude/skills/loop-engineering/references/pre-push-review.md#deferred-handoff).
+The cap question tells the human that declining to fix a finding records it
+there, and the human's answer authorizes that write. The comment begins with the agent-comment marker, is titled "Deferred pre-push
+findings", and carries what `loop-engineering`'s Deferred Handoff requires.
+
+The pull request body states only that such a record exists on the tracking
+issue; it neither links nor restates it. If the write fails, the full ledger
+stays in run state and delivery stays incomplete.
 
 ### Post-Push Review
 
-Post-push review reviews the pull request after it is opened. It follows the
-route this repository's [`AGENTS.md`](../../AGENTS.md) names as an override,
-where one is present; this template ships one, the CI reviewer requested with
-the review trigger phrase. Where none is present, the route is the fallback: a
-reviewer subagent given the pull request, which reviews it per
-[`REVIEW.md`](../../REVIEW.md) and posts a review with inline comments to it as
-a COMMENT-type review. Either route keeps these properties:
+Post-push review follows the route this repository's
+[`AGENTS.md`](../../AGENTS.md) names as an override, where one is present; this
+template ships one, the CI reviewer requested with the review trigger phrase.
+Where none is present, the skill's fallback applies and
+[`REVIEW.md`](../../REVIEW.md) is the policy the reviewer applies.
 
-- the reviewer is a fresh, non-author context, never a fork of the author's
-  conversation and never a resumed instance;
-- it is given no pre-push findings, and the pull request body's list of
-  unresolved findings is all it sees of them;
-- the reviewer posts the review itself, and the posted review is the completion
-  evidence — a summary of one in the author's session is not;
-- the review takes at most 4 rounds, with a fresh re-review after each batch of
-  fixes;
-- the review gates the ready transition;
-- an unavailable selected route leaves the gate unmet, and no other route or
-  reviewer substitutes for it.
-
-The review trigger phrase is written in exactly one place: the top-level comment
-that requests the review. A comment-triggered workflow matches it **anywhere** in
-a body, so a second mention in a plan, a summary, or a reply fires a duplicate
-review. Everywhere else, refer to it as "the review trigger phrase".
+The review trigger phrase is written only in the comment that requests the
+review; `github-operation` states the rule (Attribute Comments Without Inventing
+a Bot), and the header of
+[`claude-review.yaml`](../../.github/workflows/claude-review.yaml) lists where
+the literal phrase appears.
 
 The CI reviewer is inert until a one-time operator setup is done, and its
 silence is indistinguishable from a clean review: it needs the
@@ -119,28 +131,15 @@ than reading the absence as approval. The reviewer answers through
 [`claude-review.yaml`](../../.github/workflows/claude-review.yaml) and applies
 [`REVIEW.md`](../../REVIEW.md).
 
-<!-- TRANSITIONAL: remove once the installed skills no longer conflict with this block -->
-### Terms in the Installed Skills
-
-The installed skills still use the vocabulary this project retired. Read their
-"independent review" as the post-push review, and their "advisory pre-flight
-review" as the pre-push review. The mapping is not exact — the installed
-pre-flight review is advisory and skippable where this project's pre-push review
-is a gate — and the differences are recorded in the
-[register](./agent-skills.md#the-register).
-<!-- /TRANSITIONAL -->
-
 ## Waiting, Ready, and Teardown
 
-How a run waits on its pull request — the event subscription, the narrow
-exception for a scheduled check-in, and the tools — is stated once, in
-[`CLAUDE.md`](../../CLAUDE.md#waiting-on-a-pull-request).
-
-The run flips its pull request to ready only after verification and the
-post-push review gate are met, and it releases its subscription in that same
-turn, as it does at the round cap or the waiting bound. GitHub
-Actions scheduled workflows, such as the branch-governance audit above, are
-unaffected: they run outside any session.
+`loop-engineering` owns the rules: the [waiting
+bound](../../.claude/skills/loop-engineering/references/post-push-review.md#waiting-bound)
+and the [ready
+gate](../../.claude/skills/loop-engineering/references/post-push-review.md#ready-gate).
+[`CLAUDE.md`](../../CLAUDE.md#waiting-on-a-pull-request) names the host's tools.
+GitHub Actions scheduled workflows, such as the branch-governance audit above,
+are unaffected: they run outside any session.
 
 ## Standing Delivery Grant
 

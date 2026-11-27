@@ -4,7 +4,7 @@ Apply this reference when authoring or editing a `SKILL.md` frontmatter block or
 
 ## Required Fields
 
-The required frontmatter fields are the discovery contract. The runtime reads `name` and `description` before loading the body, so mistakes here can make a correct skill invisible.
+The [Agent Skills specification](https://agentskills.io/specification) requires `name` and `description`. They form the portable discovery contract; an individual host accepting their omission does not relax that contract. The specification limits `description` to 1,024 characters; this skill's validator enforces the stricter 1,024-byte limit for compatibility, so non-ASCII text can reach that limit sooner.
 
 **Example:**
 
@@ -45,42 +45,36 @@ Inside a double-quoted value only YAML's own escapes are legal: `\0`, `\a`, `\b`
 
 ## Invocation-Control and Discovery Fields
 
-Claude Code merged custom slash commands into skills: a skill at its skill root (`.claude/skills/<name>/SKILL.md`) is invocable as `/<name>` by the human, and the model can also load it when its discovery metadata matches the task. A set of Claude-Code-defined frontmatter fields controls both directions. They are not part of the portable agentskills.io spec — treat them as harness fields (see [Host-Project Harness Fields](#host-project-harness-fields)) — so manage them deliberately on every skill in a project that targets Claude Code, and substitute the equivalents on a host that defines its own.
+Two archetypes describe how a skill is used: a **guideline skill** supplies reference rules consulted during work; a **workflow entry-point skill** supplies a runnable workflow a human launches. These terms describe purpose, not required metadata.
 
-| Field                      | Meaning                                                                                                                                                                                       | Default |
-| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| `when_to_use`              | Trigger context appended to `description` in Claude Code's skill listing. Redundant where `description` already front-loads the trigger, and invisible on every other host — prefer one field | —       |
-| `argument-hint`            | Hint shown in the `/` autocomplete telling the human what arguments the skill expects                                                                                                         | —       |
-| `arguments`                | Named positional arguments substituted as `$name`; values are shell-quoted, so a multi-word value lands in one argument only when the invoker quotes it                                       | —       |
-| `user-invocable`           | `false` hides the skill from the `/` menu; the model can still load it                                                                                                                        | `true`  |
-| `disable-model-invocation` | `true` keeps the skill and its discovery metadata out of the model's reach; only a human can invoke it                                                                                        | `false` |
+The [Claude Code skill reference](https://code.claude.com/docs/en/skills#frontmatter-reference) documents optional controls such as `user-invocable`, `disable-model-invocation`, `argument-hint`, `arguments`, and `when_to_use`. These are host extensions, not portable Agent Skills requirements. A guideline skill can remain model-discoverable without declaring a slash-command policy.
 
-Two skill archetypes take these fields differently: a **guideline skill** is reference rules the agent consults while working (usually the bulk of a skill root); a **workflow entry-point skill** is a runnable workflow a human launches as `/<name>`, such as a change-loop driver or a session-handoff wrapper.
+When a project selects Claude Code invocation controls, `user-invocable: false` hides a skill from its slash menu and prevents direct slash invocation. `disable-model-invocation: true` prevents automatic loading instead. These controls affect different callers; neither follows merely from calling a skill a guideline or a workflow. Consult the host reference for defaults and argument substitution rather than applying these controls to another host by analogy.
 
 **Guidelines:**
 
-- MUST state a skill's trigger in `description`, front-loaded, per the [description-writing](./description-writing.md) reference — never only in a host extension such as `when_to_use`, which every host that does not define it ignores.
-- MUST set `user-invocable: false` on guideline skills — they are reference material the model routes to, not workflows a human launches from the `/` menu.
-- MUST give every workflow entry-point skill an explicit `user-invocable: true` (the default, written out for contrast with its siblings) and an `argument-hint`, and state in `description` both when to invoke the skill and when not to.
-- MUST declare `arguments` only when the skill's invocation takes discrete single-token parameters; a free-form or multi-word target MUST keep `$ARGUMENTS` instead, because shell-style quoting would otherwise split it across positional arguments.
-- SHOULD reserve `disable-model-invocation: true` for skills that must never run without an explicit human invocation; an entry point that should stay model-invocable instead draws the boundary with a do-not-invoke clause in `description`.
+- MUST state a skill's trigger in `description`, front-loaded, per [description-writing.md](./description-writing.md), rather than relying on a host extension to carry it.
+- MUST treat invocation controls as optional host configuration, required only when an applicable project policy selects them, not by skill archetype alone.
+- SHOULD use `user-invocable: false` when a Claude Code project explicitly wants model-only invocation, and an `argument-hint` when a human-invoked skill accepts arguments.
+- MUST verify argument substitution against the selected host before using `arguments` or `$ARGUMENTS`; neither syntax is a portable execution contract.
+- SHOULD reserve `disable-model-invocation: true` for a Claude Code skill whose intended invocation policy excludes automatic loading.
 - MUST re-verify that discovery still routes to the skill after changing `name`, `description`, or an invocation-control field, since those fields — not the body — are what a runtime reads to decide whether to load it at all.
 
 ## Other Optional Fields
 
-Optional spec fields are useful only when they carry real runtime or distribution meaning. Most project-local skills need none of them.
+The [Agent Skills specification](https://agentskills.io/specification) defines optional `license`, `compatibility`, `metadata`, and experimental `allowed-tools`. Being in the standard does not guarantee uniform runtime behavior: `allowed-tools` is a space-separated string in the specification, but its enforcement depends on the host.
 
 **Guidelines:**
 
 - MAY include `license` when the skill is licensed differently from the surrounding project.
 - MAY include `compatibility` when the skill has concrete environment requirements.
 - MAY include `metadata` as a string-to-string map for client-specific extensions.
-- MAY include `allowed-tools` to pre-approve tools; its semantics are host-defined — some hosts (e.g., Claude Code) enforce it after a workspace-trust prompt, others ignore it.
+- MAY include `allowed-tools` where the selected host documents its effect; a declaration does not establish tool availability or permission beyond that host's contract.
 - SHOULD omit optional fields that do not change how the skill is discovered, distributed, or executed.
 
 ## Host-Project Harness Fields
 
-Host runtimes define non-spec fields their harness enforces — the invocation-control fields above are Claude Code's. Treat these as runtime configuration, not clutter, and mind them when porting a skill between hosts.
+Host extensions are runtime configuration, not clutter to remove blindly. Support depends on the receiving host and distribution path, not just the authoring host: [Claude Code's documentation](https://code.claude.com/docs/en/skills#using-skill-frontmatter-outside-claude-code) describes upload and packaging paths that reject fields its local skill loader accepts. Unknown fields are not guaranteed to be ignored.
 
 **Example:**
 
@@ -94,11 +88,12 @@ user-invocable: false
 
 **Guidelines:**
 
-- MUST preserve existing harness fields when refining a skill.
-- MUST NOT add a new harness field to only one skill unless the host project explicitly uses per-skill variation.
-- SHOULD apply new harness fields project-wide when they represent runtime policy, the way a Claude Code project applies `user-invocable`.
+- MUST preserve existing supported harness fields during unrelated refinements; change them only as part of an explicit metadata or invocation-policy change.
+- MUST check the receiving host's authoritative documentation and distribution requirements before claiming an extension is supported; one parser accepting it proves neither portability nor execution behavior.
+- MUST NOT add host extensions across a library by default or require them for portable compliance; apply only the scope selected by project policy.
 - MUST fold an orphaned host discovery field back into `description` when porting to a host that does not read it, so the trigger survives the port rather than going silently unread.
-- MUST document harness-field substitutions where the receiving project records its skills — its discovery metadata, or a written index where the host maintains one — when porting.
+- MUST record any extension removal or substitution and its compatibility consequence where the receiving project records skill configuration; do not invent an equivalent field.
+- MUST route installation, reload, and active source/content confirmation to the project's skill-management practices when validating a port; a structure check alone cannot prove loading.
 
 ## Naming Rules
 

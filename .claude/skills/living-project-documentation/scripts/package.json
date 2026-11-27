@@ -1,0 +1,11 @@
+{
+  "name": "living-project-documentation-checks",
+  "private": true,
+  "dependencies": {
+    "markdown-it": "15.0.1",
+    "markdown-it-footnote": "4.0.0",
+    "parse5": "8.0.0",
+    "spdx-expression-parse": "4.0.0",
+    "yaml": "2.8.2"
+  }
+}

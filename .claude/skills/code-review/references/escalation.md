@@ -32,14 +32,14 @@ A defect class that recurs with no rule to cite will keep reappearing in future 
 
 ## Escalate High-Risk Changes
 
-A single-agent self-review cannot substitute for independent review on changes where a missed defect could expose private data, break production, or destroy content. Such a change may still be implemented, but the report must not call it merge-ready on self-review alone.
+A single-agent self-review cannot substitute for review by someone other than the author on changes where a missed defect could expose private data, break production, or destroy content. Such a change may still be implemented, but the report must not call it merge-ready on self-review alone.
 
 **Guidelines:**
 
-- MUST mark a high-risk self-reviewed change as needing an external gate — user review, CI/PR review, or explicit user acceptance — before merge-readiness.
+- MUST mark a high-risk self-reviewed change as needing an external gate — user review, post-push review (review of the opened pull request by someone other than the author), or explicit user acceptance — before merge-readiness.
 - MUST treat as high-risk: authentication and access control, secrets and environment-variable exposure, rendering of untrusted input, SSRF/outbound fetching, irreversible data or schema migrations, public interface contracts, production configuration, analytics/privacy capture, and broad cross-cutting refactors.
 - MUST list the required external gate under Recommended Actions when the change is high-risk.
-- SHOULD attach the strongest local verification evidence available before escalating, so the external reviewer checks a narrowed risk rather than the whole change.
+- SHOULD attach the strongest local verification evidence available before escalating, so the other reviewer checks a narrowed risk rather than the whole change.
 
 ## Defer Decisions to the Caller
 

@@ -31,6 +31,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 See [audience-and-document-types.md](./references/audience-and-document-types.md) for:
 
+- Starting a new document or reorganizing an existing one
 - Identifying the primary reader and their prior knowledge before drafting
 - Treating the document as self-contained — no references to local files, in-progress artifacts, or restricted-access resources
 - Stating scope, prerequisites, and explicit out-of-scope items up front
@@ -38,30 +39,24 @@ See [audience-and-document-types.md](./references/audience-and-document-types.md
 - Mapping common software-engineering doc forms (RFC, ADR, runbook, README, API reference) to the four types
 - The "if it isn't documented, it doesn't exist" rule and what it implies for completeness
 
-**Guidelines:**
-
-- MUST read [audience-and-document-types.md](./references/audience-and-document-types.md) before starting a new document or reorganizing an existing one — naming its reader, stating its scope and prerequisites, and settling which of the four document types it is.
-
 ## Structure and Flow
 
 See [structure-and-flow.md](./references/structure-and-flow.md) for:
 
+- Ordering sections, writing or renaming a heading, opening an answer-first section, or adding a link the reader is expected to follow
 - Leading with the answer / TL;DR / decision before the supporting detail
 - Motivating change in strategy and direction docs — answering "why now", naming stakes, framing proposals as candidates
-- Task-based, sentence-case headings that use the reader's vocabulary
+- Discoverable headings in the reader's vocabulary, with forms suited to section purpose
 - Heading hierarchy rules — no skipped levels, no stacked headings without intro text
 - Skimmability — descriptive headings, key concept first in the paragraph, short paragraphs
 - Progressive disclosure within a document — concept near instruction, simple before complex
 - Descriptive link text and stable anchors for addressability
 
-**Guidelines:**
-
-- MUST read [structure-and-flow.md](./references/structure-and-flow.md) before ordering a document's sections, writing or renaming a heading, opening a section that must lead with its answer, or adding a link the reader is expected to follow.
-
 ## Sentence and Word Craft
 
 See [sentence-and-word-craft.md](./references/sentence-and-word-craft.md) for:
 
+- Editing a document at the sentence level
 - Active voice, second person ("you"), present tense as the default
 - One idea per sentence and how to break long sentences
 - Replacing weak verbs (`be`, `have`, `make`) and cutting filler phrases
@@ -69,10 +64,6 @@ See [sentence-and-word-craft.md](./references/sentence-and-word-craft.md) for:
 - Defining new terms once and using the same term consistently — no synonym variation
 - Acronym discipline (spell out on first use; only abbreviate when significantly shorter and reused)
 - Eliminating ambiguous pronouns (`it`, `this`, `that`, `they`) by repeating the noun or placing it near the referent
-
-**Guidelines:**
-
-- MUST read [sentence-and-word-craft.md](./references/sentence-and-word-craft.md) before editing a document at the sentence level — its voice and tense, its verbs, a term it introduces, an acronym, or a pronoun whose referent is not adjacent.
 
 ## Lists, Tables, and Code Examples
 
@@ -86,10 +77,6 @@ See [lists-tables-and-code.md](./references/lists-tables-and-code.md) for:
 - Inline code formatting, UI-element formatting, and figure / table captions
 - Authoring diagrams in [Mermaid](https://mermaid.ai/open-source/intro/) — picking the right diagram type, embedding in ` ```mermaid ` fenced blocks, and pairing with captions and prose summaries
 
-**Guidelines:**
-
-- MUST read [lists-tables-and-code.md](./references/lists-tables-and-code.md) before turning a passage into a list, a table, a code example, or a Mermaid diagram, and before writing the lead-in sentence or caption that introduces one.
-
 ## Voice, Tone, and Maintenance
 
 See [voice-tone-and-maintenance.md](./references/voice-tone-and-maintenance.md) for:
@@ -101,7 +88,3 @@ See [voice-tone-and-maintenance.md](./references/voice-tone-and-maintenance.md) 
 - Accessibility — alt text, descriptive link text, not relying on color alone
 - Maintenance — currency over completeness, ARID (accept some repetition), single source of truth
 - Self-editing — multiple drafts, read aloud, take a break before review, cut on the second pass
-
-**Guidelines:**
-
-- MUST read [voice-tone-and-maintenance.md](./references/voice-tone-and-maintenance.md) before judging a draft's vocabulary level, its alt text, or its inclusive and non-idiomatic phrasing, and before revising a document whose content has fallen out of date.

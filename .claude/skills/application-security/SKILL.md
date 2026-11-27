@@ -73,5 +73,6 @@ See [privacy-and-exposure.md](./references/privacy-and-exposure.md) for:
 See [supply-chain.md](./references/supply-chain.md) for:
 
 - admitting a dependency deliberately: justified, maintained, platform-agnostic, lockfile-pinned, and installed without unvetted lifecycle scripts
+- choosing trusted-publisher version tags or immutable CI action SHAs while assessing job credentials, writable outputs and downstream fetches separately
 - preferring a standard-library or platform API over a thin new dependency
 - reviewing a manifest or lockfile change for an unjustified, heavyweight, or risky addition

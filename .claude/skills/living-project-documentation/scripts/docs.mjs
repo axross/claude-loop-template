@@ -1,162 +1,37 @@
-// shared docs reading for the specification validators beside this file.
-//
-// deliberately carries no shebang: this is a module, not a command. a tool that
-// identifies a CLI by its shebang would otherwise count it as a sixth validator.
-//
-// everything here is standard-library Node. the validators ship inside a skill
-// that installs into arbitrary projects, so they take no dependencies and assume
-// no build step.
-
-import { readdir, readFile, stat } from "node:fs/promises";
-import { basename, dirname, join, relative, resolve, sep } from "node:path";
-
-/** the conventional docs directory, used when a caller names none. */
-export const DEFAULT_DOCS_DIR = "docs";
-
-/** every validator in this set, for the sibling list each one prints in --help. */
-export const VALIDATORS = [
-  ["check-index.mjs", "every document is listed in the index"],
-  ["check-references.mjs", "every relative link resolves"],
-  ["check-glossary.mjs", "every spec has a vocabulary entry"],
-  ["check-decision-naming.mjs", "every decision filename sorts and stays stable"],
-  ["check-decision-supersede.mjs", "the supersede chain is sound and nothing cites stale rationale"],
+/** shared CLI and document inventory for the documentation checks. */
+import { readdir, readFile, realpath, stat } from "node:fs/promises";
+import {
+  basename,
+  dirname,
+  isAbsolute,
+  join,
+  relative,
+  resolve,
+  sep,
+} from "node:path";
+const validators = [
+  ["check-docs.mjs", "whole-root OKF and engineering validation"],
+  ["check-index.mjs", "document reachability and OKF concept kinds"],
+  ["check-references.mjs", "relative links and Markdown fragments"],
+  ["check-glossary.mjs", "legacy spec/glossary pairing"],
 ];
 
-/**
- * print the shared trailer every validator's --help ends with, so finding one
- * command leads to the rest without a run-all script existing to bundle them.
- *
- * @param {string} self file name of the calling validator
- */
+/** list the other checks available from the same standalone installation. */
 export function siblingHelp(self) {
-  const others = VALIDATORS.filter(([name]) => name !== self);
-  return [
-    "",
-    "Each validator here answers one question about one kind of change.",
-    "The others:",
-    ...others.map(([name, what]) => `  ${name.padEnd(30)} ${what}`),
-  ].join("\n");
+  return (
+    "\nRelated checks:\n" +
+    validators
+      .filter(([name]) => name !== self)
+      .map(([name, what]) => `  ${name.padEnd(30)} ${what}`)
+      .join("\n")
+  );
 }
 
-/**
- * resolve the single optional positional argument shared by every validator.
- *
- * @param {string[]} argv raw arguments, excluding node and the script path
- * @param {string} usage full --help text
- * @returns {{ dir: string } | { exit: number, message: string }}
- */
-export function parseArgs(argv, usage) {
-  if (argv.includes("--help") || argv.includes("-h")) {
-    return { exit: 0, message: usage };
-  }
-  const flags = argv.filter((arg) => arg.startsWith("-"));
-  if (flags.length > 0) {
-    return { exit: 2, message: `Unknown option: ${flags[0]}\n\n${usage}` };
-  }
-  if (argv.length > 1) {
-    return { exit: 2, message: `Expected at most one directory.\n\n${usage}` };
-  }
-  return { dir: argv[0] ?? DEFAULT_DOCS_DIR };
+export function selfName(url) {
+  return basename(new URL(url).pathname);
 }
 
-async function isDirectory(path) {
-  try {
-    return (await stat(path)).isDirectory();
-  } catch {
-    return false;
-  }
-}
-
-async function isFile(path) {
-  try {
-    return (await stat(path)).isFile();
-  } catch {
-    return false;
-  }
-}
-
-/**
- * strip fenced code blocks and inline code spans, replacing each removed line
- * with an empty one so every surviving line keeps its original number. a link
- * or heading inside a fence is an example, not a reference.
- *
- * @param {string} text
- * @returns {string[]} one entry per source line
- */
-function scannableLines(text) {
-  const lines = text.split("\n");
-  const out = [];
-  let fence = null;
-
-  for (const line of lines) {
-    const opener = line.match(/^\s*(`{3,}|~{3,})/);
-    if (fence) {
-      out.push("");
-      if (opener && opener[1][0] === fence[0] && opener[1].length >= fence.length) {
-        fence = null;
-      }
-      continue;
-    }
-    if (opener) {
-      fence = opener[1];
-      out.push("");
-      continue;
-    }
-    out.push(line.replace(/`[^`]*`/g, ""));
-  }
-  return out;
-}
-
-const LINK_RE = /\[[^\]]*\]\(\s*([^)\s]+)(?:\s+"[^"]*")?\s*\)/g;
-const EXTERNAL_RE = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
-
-/**
- * every relative Markdown link in a document, with the fragment stripped and
- * the source line recorded. external schemes are skipped: whether a published
- * URL still resolves is a different question, answered by a different tool.
- *
- * @param {string} text
- * @returns {{ target: string, line: number }[]}
- */
-export function extractLinks(text) {
-  const found = [];
-  scannableLines(text).forEach((line, index) => {
-    for (const match of line.matchAll(LINK_RE)) {
-      const raw = match[1];
-      if (EXTERNAL_RE.test(raw)) continue;
-      const target = raw.split("#")[0];
-      if (target === "") continue; // A bare fragment addresses this file.
-      found.push({ target, line: index + 1 });
-    }
-  });
-  return found;
-}
-
-/**
- * every ATX heading at one level.
- *
- * @param {string} text
- * @param {number} level
- * @returns {{ text: string, line: number }[]}
- */
-export function extractHeadings(text, level) {
-  const pattern = new RegExp(`^#{${level}}\\s+(.+?)\\s*#*\\s*$`);
-  const found = [];
-  scannableLines(text).forEach((line, index) => {
-    const match = line.match(pattern);
-    if (match) found.push({ text: match[1].trim(), line: index + 1 });
-  });
-  return found;
-}
-
-/**
- * lowercase a heading or file stem to the shared comparison form, so a
- * `## Job Templates` heading and a `job-templates.md` file are recognised as
- * naming the same domain.
- *
- * @param {string} value
- * @returns {string}
- */
+/** normalize a legacy domain heading for comparison with its spec filename. */
 export function slug(value) {
   return value
     .toLowerCase()
@@ -164,176 +39,360 @@ export function slug(value) {
     .replace(/^-+|-+$/g, "");
 }
 
-/**
- * parse a leading YAML frontmatter block into flat string values. only the flat
- * `key: value` shape is supported, which is all a decision record uses; a
- * document with no frontmatter yields an empty object.
- *
- * @param {string} text
- * @returns {{ data: Record<string, string>, present: boolean }}
- */
-export function parseFrontmatter(text) {
-  if (!text.startsWith("---\n")) return { data: {}, present: false };
-  const end = text.indexOf("\n---", 3);
-  if (end === -1) return { data: {}, present: false };
-
-  const data = {};
-  for (const line of text.slice(4, end).split("\n")) {
-    const match = line.match(/^([A-Za-z_][\w-]*)\s*:\s*(.*)$/);
-    if (!match) continue;
-    let value = match[2].trim();
-    value = value.replace(/\s+#.*$/, "").trim();
-    value = value.replace(/^["'](.*)["']$/, "$1");
-    data[match[1]] = value;
-  }
-  return { data, present: true };
-}
-
-async function collectMarkdown(dir, root, out) {
-  for (const entry of await readdir(dir, { withFileTypes: true })) {
-    const full = join(dir, entry.name);
-    if (entry.isDirectory()) {
-      await collectMarkdown(full, root, out);
-    } else if (entry.isFile() && entry.name.endsWith(".md")) {
-      out.push(full);
+/** extract inline destinations and ATX level-two headings without parser dependencies. */
+function readLegacy(text) {
+  const headings = [],
+    links = [];
+  let fence;
+  for (const [i, line] of text.split("\n").entries()) {
+    const marker = line.match(/^\s*(`{3,}|~{3,})/)?.[1];
+    if (fence) {
+      if (marker?.startsWith(fence)) fence = undefined;
+      continue;
+    }
+    if (marker) {
+      fence = marker;
+      continue;
+    }
+    const prose = line.replace(/`[^`]*`/g, "");
+    const heading = prose.match(/^##\s+(.+?)\s*#*\s*$/);
+    if (heading) headings.push({ level: 2, text: heading[1].trim() });
+    for (const match of prose.matchAll(
+      /(!?)\[[^\]]*\]\(\s*([^)\s]+)(?:\s+"[^"]*")?\s*\)/g,
+    )) {
+      if (!/^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(match[2]))
+        links.push({ target: match[2], line: i + 1, image: !!match[1] });
     }
   }
-  return out;
+  return { headings, links };
 }
 
 /**
- * read the docs tree, or report that the project has none.
- *
- * `index.md` is the single adoption marker. its absence means the project has
- * not opted in — an unrelated `docs/` directory must never turn red just
- * because these validators are installed — so every caller treats a null return
- * as "nothing to check" and exits 0.
- *
- * @param {string} dir
- * @returns {Promise<null | {
- *   root: string,
- *   documents: { path: string, relative: string, text: string }[],
- *   hasSpecs: boolean,
- *   hasDecisions: boolean,
- * }>}
+ * collect Markdown files, optionally deferring hidden entries until the format is known.
+ * @throws if a directory cannot be read.
  */
-export async function loadDocs(dir) {
-  const root = resolve(dir);
-  if (!(await isDirectory(root))) return null;
-  if (!(await isFile(join(root, "index.md")))) return null;
+async function listDocuments(dir, inventory) {
+  const files = [];
+  let entries;
+  try {
+    entries = await readdir(dir, { withFileTypes: true });
+  } catch (error) {
+    if (!inventory?.readErrors) throw error;
+    inventory.readErrors.add(error.message);
+    return files;
+  }
+  for (const entry of entries) {
+    const path = join(dir, entry.name);
+    if (inventory && entry.name.startsWith(".")) {
+      if (entry.isDirectory()) inventory.hiddenDirectories.push(path);
+      else if (entry.isFile() && path.endsWith(".md"))
+        inventory.hiddenFiles.push(path);
+      continue;
+    }
+    if (entry.isDirectory())
+      files.push(...(await listDocuments(path, inventory)));
+    else if (entry.isFile()) {
+      if (inventory) inventory.populated = true;
+      if (path.endsWith(".md")) files.push(path);
+    } else if (
+      inventory?.root &&
+      entry.isSymbolicLink() &&
+      path.endsWith(".md")
+    ) {
+      try {
+        const actual = await realpath(path);
+        if (
+          !bundlePathError(inventory.root, actual) &&
+          (await stat(actual)).isFile()
+        ) {
+          inventory.aliases.set(path, actual);
+          files.push(path);
+        }
+      } catch (error) {
+        inventory.readErrors.add(error.message);
+      }
+    }
+  }
+  return files;
+}
 
-  const paths = (await collectMarkdown(root, root, [])).sort();
-  const documents = await Promise.all(
-    paths.map(async (path) => ({
-      path,
-      relative: relative(root, path).split(sep).join("/"),
-      text: await readFile(path, "utf8"),
-    })),
+/** recognize top-level OKF keys when header parsing fails or YAML is unavailable. */
+function hasOkfMarker({ text, markerKey: key }) {
+  if (!key || !/^---[ \t]*\r?\n/.test(text)) return false;
+  const header = text.split(/^---[ \t]*\r?$/m, 3)[1] ?? "";
+  const content = header.replace(/^\s*#[^\n]*$/gm, "");
+  const first = content.match(/^([ ]*)(\S.*)$/m);
+  if (!first) return false;
+  const marker = new RegExp(`^(?:\\?\\s+)?(?:"${key}"|'${key}'|${key})\\s*:`);
+  const explicitKey = new RegExp(
+    `^\\?[ \\t]+(?:"${key}"|'${key}'|${key})[ \\t]*$`,
   );
+  if (!first[2].startsWith("{"))
+    return content
+      .split("\n")
+      .some(
+        (line) =>
+          line.startsWith(first[1]) &&
+          (marker.test(line.slice(first[1].length)) ||
+            explicitKey.test(line.slice(first[1].length))),
+      );
 
+  // at depth one, only the text after the opening brace or a comma can be
+  // the next root key. skip quoted scalars and comments as whole tokens.
+  let depth = 0;
+  for (const token of content.matchAll(
+    /"(?:\\[\s\S]|[^"\\])*"|'(?:''|[^'])*'|(?:^|\s)#[^\n]*|[{},\[\]]/gm,
+  )) {
+    const part = token[0];
+    if (part === "{" || part === "[") depth++;
+    if (depth === 1 && (part === "{" || part === ",")) {
+      const tail = content
+        .slice(token.index + 1)
+        .replace(/^(?:\s|#[^\n]*\n)*/, "");
+      if (marker.test(tail)) return true;
+    }
+    if (part === "}" || part === "]") depth--;
+  }
+  return false;
+}
+
+/**
+ * inventory the whole root as OKF, or autodetect the format for a focused check.
+ * @throws if the bundle is outside the supplied source root, its files cannot be read,
+ * the index is outside the inventory or a recognized OKF bundle cannot load its parsers.
+ */
+export async function loadDocs(dir, sourceRoot, { wholeRoot = false } = {}) {
+  const hasIndex = (
+    await stat(join(dir, "index.md")).catch(() => null)
+  )?.isFile();
+  if (!wholeRoot && !hasIndex) return null;
+  const root = await realpath(dir);
+  if (sourceRoot && outside(sourceRoot, root))
+    throw new Error("--source-root must contain the documentation directory");
+  const indexPath = join(root, "index.md");
+  const inventory = {
+    root: wholeRoot ? root : undefined,
+    aliases: new Map(),
+    hiddenDirectories: [],
+    hiddenFiles: [],
+    populated: Boolean(hasIndex),
+    readErrors: wholeRoot ? new Set() : undefined,
+  };
+  /**
+   * read pages in stable order with bundle-relative names for diagnostics.
+   * @throws if an inventoried file cannot be read.
+   */
+  async function readDocuments(paths) {
+    const pages = [];
+    for (const path of paths.sort()) {
+      const name = relative(root, path).split(sep).join("/");
+      try {
+        const canonical = inventory.aliases.get(path) ?? path;
+        const text = (await readFile(canonical, "utf8")).replace(/^\uFEFF/, "");
+        pages.push({ path, canonical, relative: name, text });
+      } catch (error) {
+        if (!wholeRoot) throw error;
+        inventory.readErrors.add(`${name}: ${error.message}`);
+      }
+    }
+    return pages;
+  }
+  const documents = await readDocuments(await listDocuments(root, inventory));
+  const byPath = new Map(documents.map((doc) => [doc.path, doc]));
+  const index =
+    byPath.get(indexPath) ??
+    (!wholeRoot && hasIndex
+      ? byPath.get(await realpath(indexPath))
+      : undefined);
+  if (hasIndex && !index && !wholeRoot)
+    throw new Error(
+      "index.md does not resolve to a visible Markdown document in the bundle",
+    );
+  for (const doc of documents) {
+    if (doc === index) doc.markerKey = "okf_version";
+    else if (!["index.md", "log.md"].includes(basename(doc.path)))
+      doc.markerKey = "type";
+  }
+  let readMarkdown;
+  if (wholeRoot || documents.some((doc) => /^---[ \t]*\r?\n/.test(doc.text))) {
+    try {
+      ({ readMarkdown } = await import("./okf.mjs"));
+    } catch (error) {
+      if (error.code !== "ERR_MODULE_NOT_FOUND") throw error;
+      if (wholeRoot || documents.some(hasOkfMarker))
+        throw new Error(
+          "OKF checks require dependencies. Run npm ci --ignore-scripts in the skill's scripts directory.",
+        );
+    }
+  }
+  if (readMarkdown) {
+    for (const doc of documents)
+      Object.assign(doc, readMarkdown(doc.text, doc.markerKey, { wholeRoot }));
+  }
+  const hasMarker = documents.some(
+    (doc) =>
+      doc.meta?.has(doc.markerKey) || (doc.metadataError && hasOkfMarker(doc)),
+  );
+  const okf = wholeRoot || hasMarker;
+  if (!okf) {
+    // legacy inventory includes hidden Markdown. OKF excludes hidden entries
+    // entirely, so only descend into the deferred directories in legacy mode.
+    for (const dir of inventory.hiddenDirectories)
+      inventory.hiddenFiles.push(...(await listDocuments(dir)));
+    for (const doc of await readDocuments(inventory.hiddenFiles)) {
+      documents.push(doc);
+      byPath.set(doc.path, doc);
+    }
+    for (const doc of documents) Object.assign(doc, readLegacy(doc.text));
+  }
   return {
     root,
     documents,
-    hasSpecs: await isDirectory(join(root, "specs")),
-    hasDecisions: await isDirectory(join(root, "decisions")),
+    byPath,
+    index,
+    okf,
+    hasMarker,
+    readErrors: inventory.readErrors,
+    populated: inventory.populated,
   };
 }
 
 /**
- * every decision record under docs/, sorted by filename — which, given the
- * naming rule, is chronological.
- *
- * @param {{ documents: { relative: string }[] }} docs
+ * resolve a local destination against its page. an optional checkout root admits file-relative
+ * source links beyond the visible OKF bundle.
+ * return an error for broken destinations and include the document for Markdown targets.
+ * @throws on unexpected filesystem errors such as permission failures.
  */
-export function decisionRecords(docs) {
-  return docs.documents.filter((doc) => doc.relative.startsWith("decisions/"));
+export async function resolveLink(docs, doc, target, sourceRoot) {
+  const hash = target.indexOf("#");
+  const rawPath = (hash < 0 ? target : target.slice(0, hash)).split("?")[0];
+  let decoded, fragment;
+  try {
+    decoded = decodeURIComponent(rawPath);
+    fragment =
+      docs.okf && hash >= 0 ? decodeURIComponent(target.slice(hash + 1)) : "";
+  } catch {
+    return { error: "has invalid URI encoding" };
+  }
+  let path = doc.path;
+  if (decoded.startsWith("/") && docs.okf)
+    path = resolve(docs.root, "." + decoded);
+  else if (decoded) path = resolve(dirname(doc.path), decoded);
+  // only an explicitly outward, file-relative link can name a checkout source.
+  // a link inside the bundle must remain usable when the bundle travels alone.
+  const sourceLink =
+    sourceRoot && outside(docs.root, path) && !decoded.startsWith("/");
+  if (sourceRoot && outside(sourceRoot, path))
+    return { error: "leaves the source root" };
+  if (docs.okf && !sourceLink) {
+    const error = bundlePathError(docs.root, path);
+    if (error) return { error };
+    if (decoded.split("/").some(hiddenEntry))
+      return { error: "addresses a hidden bundle entry" };
+  }
+  let page;
+  try {
+    const actual = await realpath(path);
+    if (sourceRoot && outside(sourceRoot, actual))
+      return { error: "leaves the source root" };
+    if (docs.okf) {
+      if (!sourceLink || !outside(docs.root, actual)) {
+        const error = bundlePathError(docs.root, actual);
+        if (error) return { error };
+      }
+      page = docs.byPath.get(path);
+      if (!page && actual !== path && path.endsWith(".md")) {
+        // a directory symlink can lead to a published Markdown alias below it.
+        const visiblePath = join(await realpath(dirname(path)), basename(path));
+        page = docs.byPath.get(visiblePath);
+      }
+      path = actual;
+    }
+  } catch (error) {
+    if (!["ENOENT", "ENOTDIR", "ELOOP"].includes(error.code)) throw error;
+    return { error: "does not resolve" };
+  }
+  page ??=
+    docs.byPath.get(path) ??
+    (docs.okf ? docs.byPath.get(join(path, "index.md")) : undefined);
+  return { path, page, fragment, sourceLink };
 }
 
-/** every document that is not a decision record. */
-export function nonDecisionDocuments(docs) {
-  return docs.documents.filter((doc) => !doc.relative.startsWith("decisions/"));
+function hiddenEntry(part) {
+  return part.startsWith(".") && part !== "." && part !== "..";
 }
 
-/**
- * resolve a link target against the document that contains it.
- *
- * @param {string} documentPath absolute path of the linking document
- * @param {string} target relative link target
- * @returns {string} absolute path the link addresses
- */
-export function resolveLink(documentPath, target) {
-  return resolve(dirname(documentPath), target);
+function outside(root, path) {
+  const diff = relative(root, path);
+  return diff === ".." || diff.startsWith(".." + sep) || isAbsolute(diff);
 }
 
-/**
- * print findings in the shared house format and return the process exit code.
- *
- * @param {string} subject what was checked, for the PASS/FAIL line
- * @param {{ category: string, message: string }[]} findings
- * @param {string} passSummary printed under a clean run
- * @returns {number}
- */
-export function report(subject, findings, passSummary) {
-  if (findings.length === 0) {
-    console.log(`PASS  ${subject}\n`);
-    console.log(passSummary);
+/** return a diagnostic for paths outside the visible bundle, including resolved aliases. */
+export function bundlePathError(root, path) {
+  if (outside(root, path)) return "leaves the bundle; use a source URL";
+  if (relative(root, path).split(sep).some(hiddenEntry))
+    return "addresses a hidden bundle entry";
+}
+
+/** run one documentation check and return its CLI status for success, findings or failure. */
+export async function main({
+  usage,
+  allowEvidence,
+  allowSourceRoot,
+  run,
+  pass,
+}) {
+  const argv = process.argv.slice(2);
+  if (argv.includes("--help") || argv.includes("-h")) {
+    console.log(usage);
     return 0;
   }
-  console.log(`FAIL  ${subject}`);
-  for (const { category, message } of findings) {
-    console.log(`        - ${category}: ${message}`);
+  const evidence = new Set();
+  let dir, sourceRoot;
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (
+      allowEvidence &&
+      arg === "--evidence" &&
+      argv[i + 1] &&
+      !argv[i + 1].startsWith("-")
+    ) {
+      evidence.add(argv[++i]);
+    } else if (
+      allowSourceRoot &&
+      sourceRoot === undefined &&
+      arg === "--source-root" &&
+      argv[i + 1] &&
+      !argv[i + 1].startsWith("-")
+    ) {
+      sourceRoot = argv[++i];
+    } else if (arg.startsWith("-") || dir !== undefined) {
+      console.error(usage);
+      return 2;
+    } else dir = arg;
   }
-  console.log(
-    `\n${subject} has ${findings.length} finding${findings.length === 1 ? "" : "s"}.`,
-  );
-  return 1;
-}
-
-/**
- * run a validator's body with the shared argument handling, no-docs exit, and
- * error reporting, so each command file states only what it checks.
- *
- * @param {{
- *   usage: string,
- *   argv: string[],
- *   needs?: "specs" | "decisions",
- *   absent: string,
- *   run: (docs: object) => { category: string, message: string }[] | Promise<{ category: string, message: string }[]>,
- *   pass: (docs: object) => string,
- * }} spec
- */
-export async function main({ usage, argv, needs, absent, run, pass }) {
-  const parsed = parseArgs(argv, usage);
-  if ("exit" in parsed) {
-    (parsed.exit === 0 ? console.log : console.error)(parsed.message);
-    return parsed.exit;
-  }
-
-  let docs;
+  dir ??= "docs";
   try {
-    docs = await loadDocs(parsed.dir);
+    if (sourceRoot !== undefined) sourceRoot = await realpath(sourceRoot);
+    const docs = await loadDocs(dir, sourceRoot);
+    if (!docs) {
+      console.log(`No docs at ${dir} (no index.md). Nothing to check.`);
+      return 0;
+    }
+    const findings = await run(docs, evidence, sourceRoot);
+    if (!findings.length) {
+      console.log(`PASS  ${dir}\n\n${pass(docs)}`);
+      return 0;
+    }
+    console.log(`FAIL  ${dir}`);
+    for (const { category, message } of findings)
+      console.log(`        - ${category}: ${message}`);
+    console.log(
+      `\n${dir} has ${findings.length} finding${findings.length === 1 ? "" : "s"}.`,
+    );
+    return 1;
   } catch (error) {
-    console.error(`Could not read ${parsed.dir}: ${error.message}`);
+    console.error(`Could not check ${dir}: ${error.message}`);
     return 2;
   }
-
-  if (docs === null) {
-    console.log(`No docs at ${parsed.dir} (no index.md). Nothing to check.`);
-    return 0;
-  }
-  if (needs === "specs" && !docs.hasSpecs) {
-    console.log(`No specs/ under ${parsed.dir}. ${absent}`);
-    return 0;
-  }
-  if (needs === "decisions" && !docs.hasDecisions) {
-    console.log(`No decisions/ under ${parsed.dir}. ${absent}`);
-    return 0;
-  }
-
-  return report(parsed.dir, await run(docs), pass(docs));
-}
-
-/** the file name of the running script, for its sibling list. */
-export function selfName(url) {
-  return basename(new URL(url).pathname);
 }

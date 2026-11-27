@@ -14,144 +14,83 @@ the review
 the two differ about what a posted review reports, this file wins (see that
 skill's [Posted and CI Reviews](.claude/skills/code-review/SKILL.md#posted-and-ci-reviews)).
 
-This is a **strict** review: run every mandatory check below, verify the linked
-issue's acceptance criteria, and report every finding — do not wave anything
-through.
-
-## Severity Vocabulary for Posted Reviews
-
-A posted review uses exactly two labels. The internal Critical/Major/Minor/Nit
-triage and the Approve / Request-Changes verdict vocabulary stay out of posted
-output — they exist for self-review, not for the pull-request thread.
-
-- **Important** — MUST be addressed before merge: a finding that breaks
-  behavior, corrupts persisted state, leaks data, regresses accessibility,
-  violates a MUST rule of a matching skill (discovered by its `description`),
-  or leaves an acceptance criterion unmet or unverifiable from the diff.
-- **Nit** — safe to defer: style, naming, and refactoring suggestions.
+This is a **strict** review: run every mandatory check below, verify the
+acceptance criteria the pull request body carries, and report every finding — do
+not wave anything through.
 
 **Guidelines:**
 
-- MUST label every posted finding exactly **Important** or **Nit** — no other
-  labels appear in a posted review.
-- MUST label as Important every violated MUST rule of a matching
-  skill, every acceptance criterion that is unmet or cannot
-  be confirmed from the diff, and every mandatory-check miss that breaks a hard
-  requirement.
-- MUST label style, naming, and refactoring suggestions Nit at most.
+- MUST read [Code Review](.claude/skills/code-review/SKILL.md)'s `SKILL.md` and
+  the references it routes to before reviewing. They own the methodology this
+  file does not restate: scoping, reading beyond the diff, what counts as
+  evidence, severity, and the shape of a posted review.
+
+## Severity Vocabulary for Posted Reviews
+
+A posted review uses the two labels, **Important** and **Nit**, that
+[Code Review](.claude/skills/code-review/SKILL.md)'s
+[posted-review policy](.claude/skills/code-review/references/posted-review-policy.md#two-label-severity)
+defines, and none of the internal triage vocabulary.
+
+This repository adds one floor to that definition.
+
+**Guidelines:**
+
+- MUST label as Important every violated MUST rule of a matching skill, in
+  addition to what the posted-review policy makes Important.
 
 ## Mandatory Checks
 
-Run both checks on every review and raise a finding for each miss — they are
-not skippable. Grade each miss by its real impact: a miss that breaks a hard
-requirement is **Important**, a gap that does not is a **Nit**. Cite the owning
-skill in the finding.
+Run every mandatory check on every review and raise a finding for each miss —
+they are not skippable. Grade each miss by its real impact: a miss that breaks a
+hard requirement is **Important**, a gap that does not is a **Nit**. Cite the
+owning skill in the finding. [Code Review](.claude/skills/code-review/SKILL.md)
+owns the finding format.
 
 - **Skill conformance** — verify the change conforms to **every** skill whose
   discovery condition (`description`) matches the changed files, and flag any
   deviation from a skill's stated rule, citing the skill and the rule. A
-  violated skill **MUST** rule is Important.
-- **Acceptance criteria** — verify the diff against **every** acceptance
-  criterion in the linked issue (the pull request body's `Closes #<n>`), when
-  the pull request links one. Each criterion that is unmet, or that cannot be
-  confirmed from the diff, is an **Important** finding — anchored inline where
-  it attaches to a diff line, and carried by the summary's no-line entry
-  otherwise. If the pull request links no issue, say so in the summary.
+  violated skill **MUST** rule is Important. A departure the register in
+  [Agent Skills](docs/operations/agent-skills.md#the-register) records, with an
+  adoption locator and within its scope, is not a finding.
 
-**Guidelines:**
-
-- MUST run both mandatory checks on every review and raise a finding for each
-  miss.
-- MUST give each finding a severity label, `file:line` evidence, and a concrete
-  fix, per
-  [Code Review](.claude/skills/code-review/SKILL.md).
-
-## Reading Beyond the Diff
-
-A change makes claims about its own boundaries — the module, document, or
-capability it names as owning a rule it defers to rather than restates. Those
-claims are checkable only against what it names, which by construction is not in
-the diff. A review confined to the changed files can confirm that a deferral was
-written; it cannot confirm the deferral is true, and it cannot see the places
-that should have carried one and do not.
-
-**Guidelines:**
-
-- MUST open whatever the change names as the owner of a rule it defers to, and
-  compare the change against what that owner actually states.
-- MUST additionally open anything whose declared scope overlaps the change's
-  topic, whether or not the change names it; a change that duplicates without
-  deferring names no owner to follow, and is the case this check most needs to
-  reach.
-- MUST treat a file being outside the diff as no exemption from reading it;
-  opening a neighbour is the cost of checking a boundary claim, not extra scope.
-- MUST NOT generalize from one compliant instance to the whole change — a single
-  correct deferral is evidence about that section and no other.
-
-## What Is Not Evidence
-
-The author's own account of a change cannot corroborate it. A verification
-table, a criteria checklist, and a disclosed figure are all products of the
-same loop that produced the diff, so agreement between them and the change is
-self-consistency, not correctness. A review that re-runs the author's checks
-and confirms the author's numbers has audited the arithmetic, not the change.
-
-Self-authored acceptance criteria carry a specific blind spot worth naming.
-Criteria asserting that something is **present** are monotone in content:
-adding text or code can satisfy them but never violate them. A change can
-therefore meet every criterion and still be substantially duplication and
-bloat.
-
-**Guidelines:**
-
-- MUST NOT treat the pull request body's verification table as evidence of
-  correctness; that the diff matches the numbers in the description is a
-  consistency check the author already ran.
-- MUST NOT treat "all acceptance criteria met" as sufficient when the criteria
-  were authored in the same loop as the change; search separately for what
-  presence-only criteria cannot detect — duplication, bloat, and content that
-  should have been cut.
-- MUST compare the actual against any expected numeric band stated in a linked
-  issue or plan, and raise a finding when it falls outside; the author having
-  disclosed the miss does not discharge it.
-- SHOULD re-derive a figure the review relies on rather than quoting the
-  author's, and say so in the summary when it could not be re-derived.
-- MUST treat a fired tripwire as a finding wherever the expectation was recorded
-  — a band that lived only in issue prose still binds the review.
+The acceptance-criteria check runs as
+[Code Review](.claude/skills/code-review/SKILL.md)'s posted-review policy
+defines it, against the criteria the pull request body carries.
 
 ## Do Not Report
 
-Findings the project's CI already enforces mechanically are noise in a posted
-review — CI blocks the merge regardless, so restating them costs the author's
-attention without adding a gate. This exclusion governs **posted** reviews
-only; internal self-review triage still flags these findings.
-
-The list is **enumerated, not generalized**, and deliberately so. A blanket
-"anything CI enforces" silently widens every time a check joins the merge-checks
-workflow, removing categories from this reviewer's scope without anyone
-deciding to. Each entry names a check that is **coextensive** with the finding
-it excludes — the mechanical check and the finding are the same thing. A check
-that is only a narrow proxy for a broader prose rule does **not** silence the
-reviewer on that rule.
+[Code Review](.claude/skills/code-review/SKILL.md)'s
+[posted-review policy](.claude/skills/code-review/references/posted-review-policy.md#do-not-report)
+owns the rule: a posted review omits a finding that a named CI check enforces
+coextensively, from an enumerated list. This repository's list holds these
+entries and no others:
 
 <!-- INIT: replace the bullets below with one entry per check this project's CI actually enforces (the jobs in .github/workflows/merge-checks.yaml). Name the check, not the category — and add an entry only when the check and the finding it would silence are the same thing. -->
 
 - The lint check run by the project's merge-checks workflow.
 - The unit-test run by the project's merge-checks workflow — a test that fails
   there, not a test that is missing.
-- Lockfiles and generated files, including any installed skill directory under
-  `.claude/skills/`, which is generated from `skills-lock.json`.
+- Style findings on lockfiles and generated files, installed skill copies under
+  `.claude/skills/` included.
 
-**Guidelines:**
+## Adopted Review Arrangements
 
-- MUST NOT report, in a posted review, any finding on the do-not-report list
-  above.
-- MUST keep reporting a finding whose CI check is only a narrow proxy for a
-  broader rule; a partial mechanical check never removes a prose rule from this
-  reviewer's scope.
-- MUST add an entry to the list above only when a new CI check is coextensive
-  with the category it would silence, and MUST NOT restore a blanket "anything
-  CI enforces" clause in its place.
+This repository explicitly adopts the following under
+[Code Review](.claude/skills/code-review/SKILL.md)'s Project-Adopted Review
+Arrangements, split by reviewer. Everything else stays at Code Review's
+defaults: the two labels, the mandatory checks and the summary scope. The one
+addition is that the fallback reviewer's summary also carries the round and the
+reviewed commit.
+
+- **The CI reviewer.** Only the container is adopted: diff-anchored inline
+  comments plus one summary comment, with no formal review submission. The
+  reviewer is identified by its bot login, and no marker, round, or commit is
+  required of it.
+- **The fallback reviewer subagent.** One COMMENT-type review. Its summary opens
+  with the agent-comment marker line, then the tally, and, when the review is
+  assigned as a round's post-push review, carries the round and the reviewed
+  commit.
 
 ## Reporting
 
@@ -159,11 +98,12 @@ reviewer on that rule.
 [Posted and CI Reviews](.claude/skills/code-review/SKILL.md#posted-and-ci-reviews)
 section owns the reporting shape: inline comments anchored to the diff, one
 summary comment opening with a tally, and a summary closed to that tally, what
-could not be checked, and a finding with no diff line to anchor to.
+could not be checked, and a finding with no diff line to anchor to. The
+arrangements above say where this repository differs.
 
 **Guidelines:**
 
-- MUST post any pull-request review as a **COMMENT**-type review — never
+- MUST post the fallback reviewer's review as a **COMMENT**-type review — never
   APPROVE or REQUEST_CHANGES — per
   [GitHub Operation](.claude/skills/github-operation/SKILL.md); this reviewer
   is advisory and does not gate merges.

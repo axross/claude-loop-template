@@ -115,41 +115,30 @@ carries is the one `AGENTS.md` declares. `AGENTS.md` carries the standing
 request that agents delegate to them; `CLAUDE.md` secures the explicit request
 the host asks for.
 
-### What the Main Agent Keeps
+### Roles
 
-The main agent keeps intake, plan authorship, questions to the human,
-approvals, triage of findings, push and pull request operations, the
-integration check of the diff, and reporting. Everything below is delegated
-around those.
+`loop-engineering` owns which work the main agent keeps and which a reader, a
+writer, or a reviewer takes, and how a brief and a hand-back are bounded (the
+Delegation Matrix). What is this repository's own is which definition serves
+which role:
 
-### The Investigator
+- **Reader: `investigator.md`.** It denies editing and spawning, and sends an
+  unresolved judgment call back to whoever asked.
+- **Writer: `implementer.md`.** It states its delivery boundary, commits stay
+  local and pushing and publishing belong to whoever asked, in its own prose
+  rather than by withdrawing a tool.
+- **Reviewer: `reviewer.md`**, described next.
 
-`investigator.md` takes any large input to a small conclusion: a wide search
-across files, a long log — including the diagnosis of a CI failure — a long pull
-request thread reduced to a finding list, or history. It does not take an exact
-single lookup, which the main agent does itself. It returns a conclusion and a
-locator precise enough to go back to the source, never the payload, which is
-what keeps the read cheap on the caller's side. It denies editing and spawning;
-it decides nothing the material does not itself settle, sending an unresolved
-judgment call back to whoever asked.
-
-### The Implementer
-
-`implementer.md` takes the implementation after the plan is approved, except an
-edit whose brief would be longer than the diff, which the main agent makes
-itself. It runs the checks, self-reviews, and commits locally; the main agent
-then re-runs the checks on the integrated diff. It pins a lower-cost model,
-because a worker inheriting the session's model runs at the main actor's cost
-and defeats the point of delegating. It states its delivery boundary — commits
-stay local, pushing and publishing belong to whoever asked — in its own prose
-rather than by withdrawing a tool.
+Each definition sets its own model, so a worker does not inherit the session's
+model at the main actor's cost. The investigator and the implementer run at high
+effort and the reviewer at xhigh.
 
 ### The Reviewer
 
-`reviewer.md` is the reader for all three reviews that
-[Development Workflow](./development-workflow.md#the-three-reviews) defines, and
-every round of every review is a fresh instance. Used for plan review or
-pre-push review it returns its report to the main agent and posts nothing. Only
+`reviewer.md` serves all three reviews that `loop-engineering` defines;
+[Development Workflow](./development-workflow.md#the-three-reviews) states this
+repository's choices for them. Used for plan review or pre-push review it
+returns its report to the main agent and posts nothing. Only
 when its prompt assigns it as a round's post-push review of a named pull
 request — naming the pull request, the round, the head commit, and the author's
 checkout path — does it post, as exactly one COMMENT-type review; a prompt that
@@ -160,13 +149,6 @@ and not only what was written, which reaches the issue, the plan's artifacts,
 and the documentation behind a factual claim. A reviewer that cannot reach one
 of those does not fail to start — it returns a report short by exactly those
 checks, and an under-equipped review reads exactly like a clean one.
-
-### Briefs and Hand-backs
-
-A brief and a hand-back are bounded by their shape, never by a token count. An
-investigator's hand-back is a conclusion with locators; an implementer's is a
-result record; a reviewer's is a located, severity-labelled finding list. A
-brief that cannot say what shape it wants back is not ready to send.
 
 ### When a Definition Is Missing
 

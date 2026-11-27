@@ -2,6 +2,8 @@
 
 Apply this reference when drafting or reviewing the **Verification strategy** section of a spec — the ordered list describing how to confirm the work is done. It follows Acceptance criteria: the criteria say _what_ done means; the strategy says _how_ a person or pipeline checks it. Sourced from test-planning and bug-reporting practice: the [ISTQB glossary on test strategy](https://glossary.istqb.org/en_US/term/test-strategy) and [test plan](https://glossary.istqb.org/en_US/term/test-plan), the [Kubernetes KEP template's test plan](https://github.com/kubernetes/enhancements/blob/master/keps/NNNN-kep-template/README.md), and [Mozilla's bug-writing guidelines](https://bugzilla.mozilla.org/page.cgi?id=bug-writing.html).
 
+Where a project's change-loop practices require a criterion to carry an external-verification designation and evidence destination, that annotation is traceability metadata, not a replacement for its observable outcome or verification steps. Follow those practices for the annotation's representation; the Verification strategy still maps the designated criterion to its agreed method and evidence destination.
+
 ## Ordered, Executable Steps
 
 A verification strategy is a numbered sequence a reviewer can follow without improvising: each step names a command to run or an observable check to make, in the order that catches failures earliest. "Run the e2e suite" is a step; "make sure it works" is not. The ordered form is what separates this section from the acceptance criteria it verifies — criteria are judged, steps are executed.
