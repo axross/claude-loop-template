@@ -2,7 +2,9 @@
 
 How a Claude Code session starts in this project, the hooks that run during
 one, the subagents it can spawn, and the one setting that cannot be verified
-from inside a session at all.
+from inside a session at all. [`CLAUDE.md`](../../CLAUDE.md) is the Claude Code
+entry: it loads `AGENTS.md` and adds how this host meets the project's gates,
+which this document does not restate.
 
 ## The Session-Start Hook
 
@@ -28,10 +30,12 @@ which also sets the session's default reasoning effort — `effortLevel`, shippe
 as `xhigh`. Both are read at session start, so a change to either reaches only
 the next session.
 
-The reminder it echoes names `AGENTS.md` rather than `CLAUDE.md` on purpose.
-`CLAUDE.md` is an `@AGENTS.md` import, which is a Claude Code mechanism; a host
-that does not resolve imports would read the literal import line instead of the
-working agreement.
+The reminder is a neutral pointer: it tells the session to read `AGENTS.md`,
+follow its Response Approach, and load its prerequisites before planning,
+delegating, or editing. It deliberately says nothing about how those rules
+relate to the instructions a runtime injects — that rule belongs to
+`loop-engineering`, and `CLAUDE.md` states how Claude Code meets it — so the
+startup echo never has to be edited when that wording moves.
 
 ## The Opt-In Quality Hooks
 
@@ -41,10 +45,13 @@ which the session-start hook copies to the gitignored `settings.local.json` in a
 cloud session; Claude Code hot-reloads them for that session. A local session
 skips the hook entirely, so opting in there stays a manual copy.
 
-That example file also pre-approves `send_later` and `delete_trigger`. Those are
-not a convenience: `loop-engineering` schedules its own wake with them while
-waiting on CI and the independent review, and without the grant every wait
-raises a permission prompt that an unattended session cannot answer.
+That example file also pre-approves exactly two tools: the pull request
+activity subscription and its release, `subscribe_pr_activity` and
+`unsubscribe_pr_activity` of the Remote MCP server. They are not a convenience:
+the run waits for CI and review results through that subscription, and without
+the grant each call raises a permission prompt that an unattended session cannot
+answer. The example grants nothing that schedules a wake; `CLAUDE.md` lists the
+tools an agent never uses and states how the run waits.
 
 Format-on-edit fires only for a file changed through `Edit`, `Write`, or
 `MultiEdit` — the `PostToolUse` matcher's scope, deliberately not widened — so
@@ -101,39 +108,75 @@ reminds rather than blocks.
 
 [`.claude/agents/`](../../.claude/agents/) holds three definitions, and it is
 the only home for any of them: an agent definition is not a skill, so the
-skills CLI never carries it, and it never appears in `skills-lock.json`.
+skills CLI never carries it, and it never appears in `skills-lock.json`. The
+three are shared definitions, written to be copied verbatim into any repository
+that adopts them: none names a repository, and the marker a posted review
+carries is the one `AGENTS.md` declares. `AGENTS.md` carries the standing
+request that agents delegate to them; `CLAUDE.md` secures the explicit request
+the host asks for.
 
-`implementer.md` is the worker `loop-engineering` delegates Code and Verify to.
-It pins a lower-cost model, because a worker inheriting the session's model runs
-at the main actor's cost and defeats the point of delegating. It states its
-delivery boundary — commits stay local, pushing and publishing belong to
-whoever asked — in its own prose rather than by withdrawing a tool.
+### What the Main Agent Keeps
 
-`reviewer.md` is the reader for the advisory pre-flight review. It denies
-exactly two things, editing and spawning, and nothing else. Widening that
-deny-list is the tempting mistake and MUST be resisted: judging a change means
-confirming what was asked and not only what was written, which reaches the
-issue, the plan's artifacts, and the documentation behind a factual claim. A
-reviewer that cannot reach one of those does not fail to start — it returns a
-report short by exactly those checks, and an under-equipped review reads exactly
-like a clean one.
+The main agent keeps intake, plan authorship, questions to the human,
+approvals, triage of findings, push and pull request operations, the
+integration check of the diff, and reporting. Everything below is delegated
+around those.
 
-`investigator.md` is the reader for a payload the main actor needs only one
-conclusion from — a log, a long thread, a wide search across files or history,
-a file tree — so that payload never enters the main actor's own context. It
-returns a conclusion and a locator precise enough to go back to the source,
-never the payload itself, which is what keeps the read cheap on the caller's
-side. Like the reviewer, it denies editing and spawning; it decides nothing the
-material does not itself settle, sending an unresolved judgment call back to
-whoever asked.
+### The Investigator
+
+`investigator.md` takes any large input to a small conclusion: a wide search
+across files, a long log — including the diagnosis of a CI failure — a long pull
+request thread reduced to a finding list, or history. It does not take an exact
+single lookup, which the main agent does itself. It returns a conclusion and a
+locator precise enough to go back to the source, never the payload, which is
+what keeps the read cheap on the caller's side. It denies editing and spawning;
+it decides nothing the material does not itself settle, sending an unresolved
+judgment call back to whoever asked.
+
+### The Implementer
+
+`implementer.md` takes the implementation after the plan is approved, except an
+edit whose brief would be longer than the diff, which the main agent makes
+itself. It runs the checks, self-reviews, and commits locally; the main agent
+then re-runs the checks on the integrated diff. It pins a lower-cost model,
+because a worker inheriting the session's model runs at the main actor's cost
+and defeats the point of delegating. It states its delivery boundary — commits
+stay local, pushing and publishing belong to whoever asked — in its own prose
+rather than by withdrawing a tool.
+
+### The Reviewer
+
+`reviewer.md` is the reader for all three reviews that
+[Development Workflow](./development-workflow.md#the-three-reviews) defines, and
+every round of every review is a fresh instance. Used for plan review or
+pre-push review it returns its report to the main agent and posts nothing. Only
+when its prompt assigns it as a round's post-push review of a named pull
+request — naming the pull request, the round, the head commit, and the author's
+checkout path — does it post, as exactly one COMMENT-type review; a prompt that
+does not assign it that way permits no posting. It denies exactly two things,
+editing and spawning, and nothing else. Widening that deny-list is the tempting
+mistake and MUST be resisted: judging a change means confirming what was asked
+and not only what was written, which reaches the issue, the plan's artifacts,
+and the documentation behind a factual claim. A reviewer that cannot reach one
+of those does not fail to start — it returns a report short by exactly those
+checks, and an under-equipped review reads exactly like a clean one.
+
+### Briefs and Hand-backs
+
+A brief and a hand-back are bounded by their shape, never by a token count. An
+investigator's hand-back is a conclusion with locators; an implementer's is a
+result record; a reviewer's is a located, severity-labelled finding list. A
+brief that cannot say what shape it wants back is not ready to send.
+
+### When a Definition Is Missing
 
 Deleting any of the three files degrades gracefully rather than breaking the
 loop. Without the implementer, the loop delegates to a generic agent or runs
-single-agent; without the reviewer, the pre-flight stage is skipped rather than
-performed by the main actor, which is what keeps it from collapsing into
-self-review; without the investigator, the main actor reads the payload itself,
-per read, paying in its own context what delegating the read would otherwise
-have saved.
+single-agent; without the reviewer, the pre-push review gate is reported unmet
+rather than performed by the main actor, which is what keeps it from collapsing
+into self-review; without the investigator, the main actor reads the payload
+itself, per read, paying in its own context what delegating the read would
+otherwise have saved.
 
 ## Telemetry Tagging
 
