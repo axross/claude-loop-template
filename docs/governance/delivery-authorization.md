@@ -7,8 +7,7 @@ description: Who can authorize delivery and which targets, effects and limits an
 # Standing delivery grant
 
 Read the policy on the default branch to determine who may authorize delivery
-and which actions the grant covers. The [review procedure](./pull-request-review.md)
-governs how to use an authorized review route.
+and which actions the grant covers. To use an authorized effect, follow the [change delivery procedure](../contributing/change-delivery.md).
 
 <!-- INIT: if the maintainer adopts the grant, fill both placeholders and remove this comment and the inert-template notice. If the maintainer declines, replace the grant text with the requirement to obtain explicit authorization for each delivery effect. Keep the page so delivery procedures still point to the authority. -->
 

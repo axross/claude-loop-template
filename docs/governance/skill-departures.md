@@ -16,6 +16,9 @@ finding.
 owns verification against the installed text and the process for proposing an
 upstream correction. Publishing a proposal requires the human's go-ahead.
 
+For the installed revisions and the steps to refresh them, see the
+[skill installation procedure](../contributing/agents/install-skills.md).
+
 ## The Register
 
 An entry records a decision the human accepted, with its reason. A hypothetical

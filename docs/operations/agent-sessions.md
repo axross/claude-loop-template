@@ -10,28 +10,30 @@ These entries lead from the original session guide to setup, delegation and veri
 
 ## The Session-Start Hook
 
-[Bootstrap a cloud session](./session-startup.md#bootstrap-a-cloud-session).
+[Bootstrap a cloud session](../contributing/agents/session-startup.md#bootstrap-a-cloud-session).
 
 ## The Opt-In Quality Hooks
 
-[Enable the hooks and diagnose a stop check](./quality-hooks.md).
+[Enable the local hooks](../contributing/agents/session-startup.md#enable-the-quality-hooks),
+[adapt formatting after edits](../contributing/agents/edit-hook.md), or
+[diagnose a stop check or delivery reminder](../contributing/agents/stop-hook.md).
 
 ## Subagents
 
-[Choose the definition for an assignment](./subagents.md).
+[Choose the definition for an assignment](../contributing/agents/subagents.md).
 
 ### Roles
 
-[Find the limits of each role](./subagents.md#role-boundaries).
+[Find the limits of each role](../contributing/agents/subagents.md#role-boundaries).
 
 ### The Reviewer
 
-[Assign the reviewer](./subagents.md#assigning-the-reviewer).
+[Assign the reviewer](../contributing/agents/subagents.md#assigning-the-reviewer).
 
 ### When a Definition Is Missing
 
-[Find the fallback for the missing role](./subagents.md#role-boundaries).
+[Find the fallback for the missing role](../contributing/agents/subagents.md#role-boundaries).
 
 ## Telemetry Tagging
 
-[Verify the tags in exported metrics](./session-startup.md#verify-telemetry-after-startup).
+[Verify the tags in exported metrics](../contributing/agents/session-startup.md#verify-telemetry-after-startup).

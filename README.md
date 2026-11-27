@@ -44,8 +44,8 @@ the recorded commit is a separate command, and nothing runs either
 automatically; the template never chooses a revision of its own. They are
 generated artifacts: a hand-edit is silently discarded by the next install, so a
 change goes upstream as an issue or pull request there.
-Use the [installation procedure](./docs/operations/agent-skills.md) for
-refreshes and the [departures register](./docs/operations/skill-departures.md#the-register)
+Use the [installation procedure](./docs/contributing/agents/install-skills.md) for
+refreshes and the [departures register](./docs/governance/skill-departures.md#the-register)
 for a rule that conflicts with the project or leaves a concern uncovered.
 
 The template installs the core set that applies to any project whatever its
@@ -58,7 +58,7 @@ runner layers — is chosen during adaptation, in INIT Step 4.
 Reading the installed skills works from a fresh checkout. Installing or
 refreshing them with `npx skills` requires Node and network access. The documentation
 check needs a one-time setup on each runner and can then run offline. See
-[Checking a Documentation Change](./docs/conventions/documentation.md#checking-a-documentation-change)
+[Verify a documentation change](./docs/contributing/verify-documentation.md)
 for the setup and verification commands.
 
 ### This template is the canonical source for Claude Code guidance
@@ -97,11 +97,14 @@ Three things keep it from collapsing into self-approval:
 
 ### Project knowledge goes in `docs/`, not in skills
 
-Start with the [documentation index](./docs/index.md) for questions about the
-change loop, the Claude Code harness, and skill maintenance. When adapting the
-template, follow the [documentation convention](./docs/conventions/documentation.md#choose-a-subject)
-to place a project-specific rule or procedure and make it reachable from the
-contributor and agent entry points.
+The [documentation index](./docs/index.md) routes readers by the work they are
+doing. To configure a session or deliver a change, start with
+[Contributing](./docs/contributing/index.md). For a flagged branch or a
+missing review, use the [Operations runbooks](./docs/operations/index.md).
+[Governance](./docs/governance/index.md) explains who may authorize delivery
+and when a skill exception applies. When adapting the template, use the
+[placement convention](./docs/contributing/documentation.md#choose-a-subject)
+to give a project decision a home readers can find.
 
 ## Getting started
 

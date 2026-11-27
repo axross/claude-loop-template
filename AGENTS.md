@@ -17,14 +17,14 @@
 - [README.md](./README.md) is the authoritative record of this project's
   run-script commands. It is not a skill, so skill discovery never surfaces it
   on its own.
-- This project's conventions and operating procedures live under [docs/](./docs/index.md) — see
+- The project's contributor guides, governance rules and operating procedures live under [docs/](./docs/index.md) — see
   [Routing a Change](#routing-a-change). Skill discovery never surfaces those
   either.
 - **Every skill under `.claude/skills/` is installed, not written here.** They
   come from a shared skills library and are copied in with the skills CLI;
   [`skills-lock.json`](./skills-lock.json) records what is installed. A
   hand-edit to one is discarded by the next install; see
-  [docs/operations/agent-skills.md](./docs/operations/agent-skills.md) for the
+  [docs/contributing/agents/install-skills.md](./docs/contributing/agents/install-skills.md) for the
   library, how the skills are refreshed, and how a wrong or missing rule is
   routed.
 - This project's fixed agent-comment marker is `<!-- ai-agent -->`. The marker
@@ -50,15 +50,18 @@ distinguishes, so a session does not have to open the index for one of these.
 | Kind of change | Document |
 | -------------- | -------- |
 | A project run-script command | [README.md](./README.md) |
-| Documentation placement and checks | [docs/conventions/documentation.md](./docs/conventions/documentation.md) |
-| Cloud session startup or telemetry | [docs/operations/session-startup.md](./docs/operations/session-startup.md) |
-| Format-on-edit or stop checks | [docs/operations/quality-hooks.md](./docs/operations/quality-hooks.md) |
-| Subagent responsibilities | [docs/operations/subagents.md](./docs/operations/subagents.md) |
-| Installing, restoring or renaming a skill | [docs/operations/agent-skills.md](./docs/operations/agent-skills.md) |
-| An accepted skill departure or gap | [docs/operations/skill-departures.md](./docs/operations/skill-departures.md) |
-| Working branches and the scheduled audit | [docs/operations/branch-governance.md](./docs/operations/branch-governance.md) |
-| Pull request review or a deferred finding | [docs/operations/pull-request-review.md](./docs/operations/pull-request-review.md) |
-| Permission to publish or monitor a change | [docs/operations/delivery-authorization.md](./docs/operations/delivery-authorization.md) |
+| Placing or moving a documented decision | [Documentation conventions](./docs/contributing/documentation.md) |
+| Validating the checkout or an exported bundle | [Documentation checks](./docs/contributing/verify-documentation.md) |
+| Cloud session startup or telemetry | [docs/contributing/agents/session-startup.md](./docs/contributing/agents/session-startup.md) |
+| Formatting or autofix after an edit | [Edit hook](./docs/contributing/agents/edit-hook.md) |
+| Blocking stop checks or a delivery reminder | [Stop hook](./docs/contributing/agents/stop-hook.md) |
+| Subagent responsibilities | [docs/contributing/agents/subagents.md](./docs/contributing/agents/subagents.md) |
+| Installing, restoring or renaming a skill | [docs/contributing/agents/install-skills.md](./docs/contributing/agents/install-skills.md) |
+| An accepted skill departure or gap | [docs/governance/skill-departures.md](./docs/governance/skill-departures.md) |
+| Working branches and review gates | [Change delivery](./docs/contributing/change-delivery.md) |
+| A branch flagged by GitHub | [Branch audit](./docs/operations/branch-audit.md) |
+| CI reviewer setup or a missing response | [Review automation](./docs/operations/review-automation.md) |
+| Permission to publish or monitor a change | [docs/governance/delivery-authorization.md](./docs/governance/delivery-authorization.md) |
 
 ## Response Approach
 
@@ -81,10 +84,10 @@ Choose guidance from the actual session and the changed surface:
 
 - **Claude Code:** [CLAUDE.md](./CLAUDE.md) is the entry file for how this host
   meets the project's gates, and
-  [Session startup](./docs/operations/session-startup.md) covers bootstrap and telemetry.
+  [Session startup](./docs/contributing/agents/session-startup.md) covers bootstrap and telemetry.
 - **GitHub:** load [GitHub Operation](./.claude/skills/github-operation/SKILL.md)
   for every read and write, and
-  [delivery authorization](./docs/operations/delivery-authorization.md) before publishing.
+  [delivery authorization](./docs/governance/delivery-authorization.md) before publishing.
 
 <!-- INIT:OPTIONAL key=POST_PUSH_OVERRIDE — Keep the bullet below while the project's CI reviewer (.github/workflows/claude-review.yaml) stays enabled, then delete this comment. To disable that reviewer's triggers, delete this comment and the bullet: the fallback reviewer subagent then becomes the post-push review route. -->
 - **Post-push review override, Claude Code sessions:** use the review trigger
@@ -98,7 +101,7 @@ MUST read and apply [REVIEW.md](./REVIEW.md) as this repository's review policy,
 and load [Code Review](./.claude/skills/code-review/SKILL.md) for the review
 methodology. [Loop Engineering](./.claude/skills/loop-engineering/SKILL.md)
 defines plan review, pre-push review, and post-push review;
-[Pull request review](./docs/operations/pull-request-review.md)
+[Pull request review](./docs/contributing/change-delivery.md)
 states this repository's choices for them.
 
 Changes to the review or CI infrastructure, secret handling, the dependency or
@@ -110,7 +113,7 @@ review, not a lighter path.
 
 [Agent Skill Management](./.claude/skills/agent-skill-management/SKILL.md) owns
 the rule against hand-editing an installed skill and the routing of a rule that
-is wrong, outdated, or missing; [skill departures](./docs/operations/skill-departures.md)
+is wrong, outdated, or missing; [skill departures](./docs/governance/skill-departures.md)
 holds this repository's register of departures. At completion, MUST report
 whether skill maintenance was performed, skipped, or blocked; this three-way
 report is this project's own convention.

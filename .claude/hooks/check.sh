@@ -9,7 +9,7 @@
 # anything itself, by design rather than oversight: a repair applied here can
 # land in the working tree after the agent has already committed and pushed,
 # so the pushed commit would keep the violation while the hook reported
-# success. See docs/operations/quality-hooks.md for the full
+# success. See docs/contributing/agents/stop-hook.md for the full
 # blocking/non-blocking classification. Failures here block completion and are
 # reported back on stderr so the agent addresses them before finishing.
 #

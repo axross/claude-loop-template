@@ -1,18 +1,18 @@
 ---
 type: Procedure
 title: Session startup
-description: How to bootstrap a remote Claude Code session and verify its telemetry settings.
+description: How to bootstrap a cloud session, enable local hooks and verify telemetry settings.
 ---
 
 # Session startup
 
 Use a fresh Claude Code session to verify bootstrap and telemetry settings.
 For the change and review gates that apply once the session is running, see
-[the host instructions](../../CLAUDE.md#project-gates-within-claude-code).
+[the host instructions](../../../CLAUDE.md#project-gates-within-claude-code).
 
-Claude Code reads [the shared settings](../../.claude/settings.json) at startup.
+Claude Code reads [the shared settings](../../../.claude/settings.json) at startup.
 They set the default reasoning effort to `xhigh` and register the
-[session-start hook](../../.claude/hooks/session-start.sh). Start a fresh
+[session-start hook](../../../.claude/hooks/session-start.sh). Start a fresh
 session to exercise a change to either setting.
 
 ## Bootstrap a cloud session
@@ -30,8 +30,26 @@ cloud setup locally. The hook performs the following steps:
    `.claude/settings.local.json`. This file is gitignored and Claude Code
    reloads it during the session.
 4. Run the project's dependency installation command.
-5. Print a pointer to [the working agreement](../../AGENTS.md). The pointer
+5. Print a pointer to [the working agreement](../../../AGENTS.md). The pointer
    lets the agreement change without duplicating its instructions in the hook.
+
+## Enable the quality hooks
+
+For a local session, copy the [settings example](../../../.claude/settings.local-example.json)
+to `.claude/settings.local.json`. Claude Code reloads this file during the
+session. In a cloud session the [startup hook](#bootstrap-a-cloud-session)
+copies the example for you. With the project's package manager available,
+you can [format after an edit](./edit-hook.md) and
+[diagnose a stop check](./stop-hook.md).
+
+The example also pre-approves the Remote MCP server's `subscribe_pr_activity`
+and `unsubscribe_pr_activity` tools so an unattended run can wait for CI and
+review without a permission prompt. The example grants no scheduling
+permission. Before subscribing, check the run's
+[delivery authorization](../../governance/delivery-authorization.md) and
+the operator's [watching choice](../../../CLAUDE.md#confirming-delivery-at-the-plan-gate).
+The [host's waiting rules](../../../CLAUDE.md#waiting-on-a-pull-request)
+cover subscription release and scheduled check-ins.
 
 ## Verify telemetry after startup
 
