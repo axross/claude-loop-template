@@ -22,9 +22,14 @@ pull request is ready.
 ## Resolving an audit finding
 
 The [branch governance audit](../../.github/workflows/branch-governance-audit.yaml)
-runs hourly from the default branch. It fails for a `claude/*` branch with
-commits ahead of the default branch, no open pull request, and a head commit
-at least 30 minutes old. It checks human pushes to those branches as well.
+runs hourly from the default branch. The audit flags a `claude/*` branch
+when all three conditions hold:
+
+- The branch has commits ahead of the default branch.
+- The branch has no open pull request.
+- The head commit is at least 30 minutes old.
+
+The audit also checks branches pushed by a human.
 For work intended for delivery, check the [delivery authorization](./delivery-authorization.md)
 before opening the draft and [requesting review](./pull-request-review.md#request-the-post-push-review).
 A failed audit grants no permission to publish or delete a branch. If the

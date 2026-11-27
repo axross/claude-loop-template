@@ -10,8 +10,10 @@ These entries lead from the original workflow guide to the rules for each stage 
 
 ## The Change Loop
 
-[Follow the change loop from intake to ready](../../.claude/skills/loop-engineering/SKILL.md)
-and consult the [project’s review procedure](./pull-request-review.md) at its review gates.
+For the template's entry and approval rules, see
+[how a Claude Code session enters the loop and who approves its plan](./branch-governance.md#working-on-a-branch).
+[Loop Engineering](../../.claude/skills/loop-engineering/SKILL.md) describes the stages
+from intake to ready. The [review procedure](./pull-request-review.md) covers the project's review choices.
 
 ## Branches and Merging
 
