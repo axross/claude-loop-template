@@ -230,24 +230,27 @@ go stale the moment it did. An agent-authored comment is not adoption evidence.
 - **Counterexample:** the installed rule has the run retain each review child's
   checkable identity and close the child after its result is verified, with a
   concrete host-specific handoff when it cannot. Three cases leave the run no way
-  to do either. A finished reviewer in a local session can only have its row
-  cleared from the task list, and it stays resumable. For any reviewer in a cloud
-  session the host documents no step that ends it, and archiving the session or
-  letting its environment expire does not end it. A plan-review or pre-push
+  to do either. A finished reviewer in a local session only has its row cleared
+  from the task list, and the documentation does not say that makes it
+  non-resumable. For a reviewer in a cloud session the documentation describes no
+  step that ends it: archiving only removes the session from the list, and a
+  reopened expired environment can resume its subagents. A plan-review or pre-push
   reviewer posts nothing, so its identity is a label, and the host marks the
   agent id that could stand for it as not for user-facing text.
 - **What this project does instead:** the run never messages or resumes a
-  reviewer instance, and records each one by role, round, reviewed commit and end
-  and, for a fallback post-push reviewer, the locator of its posted review. It
-  reports each instance it cannot close as unclosed, naming it by that record, and
-  still completes and may mark the pull request ready.
-- **Why:** the host documents no step that closes a finished reviewer, so a
-  handoff with a concrete step cannot be written, and the agent id is not for
-  user-facing text, so it cannot serve as the identity the run records and
-  reports.
+  reviewer instance, and records each one by role, round, reviewed commit, end and
+  closure status and, for a fallback post-push reviewer, the locator of its
+  posted review. It reports each instance it cannot close as unclosed, naming it
+  by that record, and still completes and may mark the pull request ready.
+- **Why:** the documentation describes no step that closes a finished reviewer,
+  so a handoff with a concrete step cannot be written. The agent id is marked as
+  not for user-facing text, so it cannot serve as the identity the run records
+  and reports; that marking is observed in the cloud host's Agent tool results,
+  and the Claude Code documentation does not state it.
 - **Scope:** reviewer subagents on Claude Code. The section's other limbs still
-  apply: the run verifies the posted result, records the round and the locator,
-  and asks for cleanup permission where a permission boundary prevents closure.
+  apply: the run verifies the posted result, records the round, the locator and
+  the closure status, and asks for cleanup permission where a permission boundary
+  prevents closure.
 - **Adopted by:** the maintainer's merge of the pull request that closes #83.
 - **Reassess when:** the host documents a step that closes a reviewer instance or
   a checkable identity for one, or the installed section changes.
