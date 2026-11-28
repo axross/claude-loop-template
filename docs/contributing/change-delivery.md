@@ -30,7 +30,7 @@ a pushed change that has no open pull request.
 Pre-push review is required. If the reviewer is unavailable or the operator
 selects “pull request without subagents”, use the
 [authorized-draft exception](../../.claude/skills/loop-engineering/references/pre-push-review.md#checkpoint-qualification)
-only if the operator authorized publication at the plan gate.
+only if the operator authorized publication at the plan gate. When the exception applies, follow these steps:
 
 1. Record the unmet pre-push gate under risks in the draft pull request.
 2. Request the selected post-push review if its route is available. The CI

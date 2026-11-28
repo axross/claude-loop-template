@@ -28,6 +28,8 @@ any session's rules about waiting for review.
 
 ## Respond to a flagged branch
 
+Use the audit report to choose the next action the maintainer has authorized:
+
 1. Read the audit job's failure to identify the branch. Check whether the
    change is intended for delivery.
 2. If it is, check the [delivery authorization](../governance/delivery-authorization.md).

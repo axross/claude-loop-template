@@ -26,8 +26,7 @@ guides follow [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119.html).
 
 ## Decisions
 
-These published records explain two choices made when adopting the shared skill library.
-Each links to the original decision and the procedure that governs the work today.
+Use these records to find the original skill-library decision and the procedure that applies today:
 
 - [Why are installed skills committed?](./decisions/2026-08-11-install-skills-from-a-shared-library-rather-than-authoring-them.md)
 - [Why follow an upstream skill rename?](./decisions/2026-08-20-follow-upstream-skill-renames-rather-than-pinning-or-forking.md)

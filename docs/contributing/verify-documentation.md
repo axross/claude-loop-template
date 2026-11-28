@@ -31,6 +31,8 @@ structural pass, inspect the warnings and the list of declared page types.
 
 ## Follow the changed answer
 
+Trace a reader’s route from the entry point through the condition that changes the answer:
+
 1. For each typed page under review, identify the question it answers, the
    claim it maintains and why its declared type fits. Use the
    [editorial type review](../../.claude/skills/living-project-documentation/references/documentation-structure.md#review-the-declared-type)

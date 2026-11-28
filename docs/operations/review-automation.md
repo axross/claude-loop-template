@@ -15,6 +15,8 @@ defines how the reviewer posts its findings and summary.
 
 ## Configure the reviewer
 
+Before requesting the first review, prepare the GitHub App, its credential and the workflow:
+
 1. Install the [Claude GitHub App](https://github.com/apps/claude) on the
    repository.
 2. For a subscription, generate the token with `claude setup-token` and

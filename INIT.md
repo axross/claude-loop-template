@@ -580,7 +580,9 @@ helps a contributor decide where to put code, so it can live in
 operator to the [branch audit runbook](./docs/operations/branch-audit.md#respond-to-a-flagged-branch).
 For a project with a login, the [authentication gap](./docs/governance/skill-departures.md#gap--application-security-is-silent-on-authentication-lockout-and-session-cookie-ownership)
 explains why its own `docs/conventions/security.md` must cover lockout
-thresholds and session-cookie ownership.
+thresholds and session-cookie ownership. When adding that page, introduce
+the project’s Conventions subject in the root index and link the security
+page there so contributors can find it.
 
 ### The document format
 

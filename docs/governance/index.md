@@ -1,7 +1,6 @@
 # Governance
 
-Use these pages when you need to establish who authorized an action or why
-an exception applies to this project.
+Choose the decision you need before acting under a grant or applying an exception:
 
 - [Which delivery effects may this agent run perform?](./delivery-authorization.md)
   Check the adopted grant, its targets, exclusions and limits.
