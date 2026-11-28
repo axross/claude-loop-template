@@ -18,9 +18,8 @@ interview — what the project is, who it serves, and its current goal. -->
 1. Install dependencies: `{{INSTALL_CMD}}`
 2. Copy the agent settings once:
    `[ -e .claude/settings.json ] || cp .claude/settings.example.json .claude/settings.json`.
-   The copy is gitignored;
-   [Agent Sessions](./docs/operations/agent-sessions.md#the-settings-file) says
-   what it wires.
+   This gitignored copy activates the [session settings](./docs/contributing/agents/session-settings.md)
+   in the current checkout.
 3. Start developing: `{{DEV_CMD}}`
    <!-- INIT: for a project without a dev server (CLI, library), reword this
    step to the project's run/watch equivalent. -->
@@ -38,7 +37,9 @@ Development in this repository is agent-assisted via
 entry file: it loads the working agreement in [`AGENTS.md`](./AGENTS.md), which
 routes to the installed skills under [`.claude/skills/`](./.claude/skills) and to
 this project's own documents under [`docs/`](./docs/index.md). Human and agent
-contributors follow the same loop.
+contributors follow the same loop. When a change affects project documentation,
+use the [documentation convention](./docs/contributing/documentation.md#choose-a-subject) to find
+the owning page and update its reader routes.
 
 <!-- INIT:OPTIONAL key=POST_PUSH_REVIEW — Fixed: the change loop and the post-push review channel are fixed infrastructure (INIT.md Step 4), so KEEP the subsections below; just delete this marker and adapt the copy to the project's stack. -->
 ### The change loop
@@ -72,9 +73,11 @@ session and tell it to.
 5. **Ready** — flips the pull request to ready once CI is green and the
    post-push review is clean. Merging always stays a human decision.
 
-[docs/operations/development-workflow.md](./docs/operations/development-workflow.md)
-holds this project's own part: the branch prefix, what audits the loop from
-outside a session, and how the review is requested.
+Follow the [branch requirements](./docs/contributing/change-delivery.md#start-a-change)
+when starting a change and the [review request procedure](./docs/contributing/change-delivery.md#request-post-push-review)
+after opening the pull request. If the branch audit flags your branch,
+[follow the audit response procedure](./docs/operations/branch-audit.md#respond-to-a-flagged-branch).
+If the reviewer stays silent, [diagnose the missing review](./docs/operations/review-automation.md#diagnose-a-missing-review).
 
 ### `@claude review` — get findings on any PR
 <!-- INIT: replace the trigger phrase above and below with this project's own, matching claude-review.yaml. -->

@@ -174,19 +174,18 @@ PY
       echo "  SKIPPED — node not found. Relative links were NOT checked."
     fi
     echo
-    echo "== docs/ validators =="
-    # Five single-purpose validators, one per kind of change; there is no
-    # run-all script by design. All five exit 0 while docs/index.md is absent,
-    # so this section is inert until the project adopts docs/ (INIT Step 5).
-    if command -v node >/dev/null 2>&1; then
-      docs_failed=0
-      for check in "$ROOT"/.claude/skills/living-project-documentation/scripts/check-*.mjs; do
-        node "$check" || docs_failed=1
-      done
-      # same reason as above: report, do not abort the run.
-      [ "$docs_failed" -eq 0 ] || echo "  ^ fix the findings above."
-    else
+    echo "== Documentation bundle =="
+    validator="${OKF_VALIDATOR:-${VIRTUAL_ENV:+$VIRTUAL_ENV/validate-okf-v0.3.py}}"
+    if [ ! -d docs ]; then
+      echo "  No docs/ bundle to check."
+    elif ! command -v node >/dev/null 2>&1; then
       echo "  SKIPPED — node not found. docs/ was NOT checked."
+    elif [ ! -f "$validator" ]; then
+      echo "  SKIPPED — set OKF_VALIDATOR to the pinned validate.py, or activate the prepared virtualenv."
+      echo "  See .claude/skills/living-project-documentation/references/validators.md. docs/ was NOT checked."
+    else
+      node .claude/skills/living-project-documentation/scripts/check-docs.mjs \
+        --validator "$validator" --source-root . docs || echo "  ^ resolve the documentation check diagnostics above."
     fi
     ;;
 

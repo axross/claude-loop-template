@@ -1,18 +1,9 @@
 name: Template Checks
 
-# The TEMPLATE REPOSITORY's own CI — not part of any adapted project's CI.
-# Keeps the template's cross-linked tree honest: relative links across the
-# skills and docs, plus the five docs/ validators.
-#
-# The checkers themselves ship inside installed skills and survive adaptation;
-# THIS WORKFLOW FILE does not — adapted projects delete it in INIT Step 7
-# together with INIT.md, init.sh, and tokens.json, after wiring whichever of
-# these checks they want into their own merge-checks.yaml.
-#
-# Both jobs need Node, because both checkers are .mjs shipped inside a skill.
-# That is a cost this template's own CI pays; a non-Node project deciding
-# whether to pay it for its own merge gate has the trade-off recorded in
-# docs/operations/agent-skills.md.
+# GitHub Actions runs these checks for the template repository.
+# INIT.md removes this workflow in step 7, but the installed skills keep the
+# checkers. CI in an adopted project can reuse each job together with its
+# setup steps.
 
 on:
   pull_request:
@@ -50,17 +41,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      # The five validators are deliberately separate commands — each answers
-      # for one kind of change, so an author who touched one document reads only
-      # its findings. There is no run-all script by design; looping is the
-      # documented form. All five exit 0 when docs/index.md is absent, so this
-      # job is inert until a project adopts docs/.
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare documentation validators
+        run: |
+          npm ci --ignore-scripts --prefix .claude/skills/living-project-documentation/scripts
+          python3 -m pip install PyYAML==6.0.3
+          curl -fsSL https://raw.githubusercontent.com/open-knowledge-format/open-knowledge-format/527e81aff55992be21507e97004286789126f88c/skills/okf-generate/scripts/validate.py -o "$RUNNER_TEMP/validate-okf.py"
       - name: Check docs/
         run: |
-          failed=0
-          for check in .claude/skills/living-project-documentation/scripts/check-*.mjs; do
-            echo "::group::$(basename "$check")"
-            node "$check" || failed=1
-            echo "::endgroup::"
-          done
-          exit "$failed"
+          node .claude/skills/living-project-documentation/scripts/check-docs.mjs \
+            --validator "$RUNNER_TEMP/validate-okf.py" --source-root . docs

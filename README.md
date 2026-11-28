@@ -21,7 +21,7 @@ service.
 ├── CLAUDE.md                # the Claude Code entry: loads AGENTS.md, adds how Claude Code meets the gates
 ├── REVIEW.md                # fixed: posted-review policy for the post-push review channel
 ├── skills-lock.json         # what is installed under .claude/skills/, and from where
-├── docs/                    # this project's own knowledge — index, conventions, operations, decisions
+├── docs/                    # engineering guidance in Open Knowledge Format (OKF) v0.3
 ├── .github/
 │   └── workflows/           # fixed: CI reviewer, merge checks, branch-governance audit;
 │                            # plus template-checks.yaml, this repo's own CI (deleted during INIT)
@@ -44,9 +44,9 @@ the recorded commit is a separate command, and nothing runs either
 automatically; the template never chooses a revision of its own. They are
 generated artifacts: a hand-edit is silently discarded by the next install, so a
 change goes upstream as an issue or pull request there.
-[docs/operations/agent-skills.md](./docs/operations/agent-skills.md) holds the
-refresh command and the register for a rule that turns out to be wrong or to
-collide with your project.
+Use the [installation procedure](./docs/contributing/agents/install-skills.md) for
+refreshes and the [departures register](./docs/governance/skill-departures.md#the-register)
+for a rule that conflicts with the project or leaves a concern uncovered.
 
 The template installs the core set that applies to any project whatever its
 stack — conduct, the change loop, baseline development, commits, GitHub operation,
@@ -55,10 +55,11 @@ requirements, technical writing, the docs tree, and skill authoring and
 management. The stack-specific rest of the library — framework, UI, vendor, and
 runner layers — is chosen during adaptation, in INIT Step 4.
 
-**This costs a Node dependency**, and it is worth naming: `npx skills` needs
-Node and network access to install or refresh. The installed skills themselves
-are plain Markdown, so nothing at run time needs Node — only refreshing does,
-plus the two checkers `init.sh check` calls.
+Reading the installed skills works from a fresh checkout. Installing or
+refreshing them with `npx skills` requires Node and network access. The documentation
+check needs a one-time setup on each runner and can then run offline. See
+[Verify a documentation change](./docs/contributing/verify-documentation.md)
+for the setup and verification commands.
 
 ### This template is the canonical source for Claude Code guidance
 
@@ -96,22 +97,14 @@ Three things keep it from collapsing into self-approval:
 
 ### Project knowledge goes in `docs/`, not in skills
 
-The template ships `docs/index.md`, three `operations/` documents, one
-`conventions/` document, and two decision records, in the shape
-`living-project-documentation` defines — `specs/`, `conventions/`,
-`operations/`, and `decisions/`. The `conventions/` document is the one
-exception to writing `docs/` during adaptation: it states what is true of
-every repository created from this template, and nothing else under
-`conventions/` can be, so it ships already written rather than waiting for
-INIT Step 5. INIT Step 5 grows the rest. It does **not** ship empty
-directories: an empty document is indistinguishable from a subject nobody has
-considered.
-
-The trade-off is discovery, and it is real. A skill loads because its
-`description` matched; a document loads only because `AGENTS.md` said to read
-it. That is why `AGENTS.md` carries a **Routing a Change** table naming a
-specific document per kind of change, and why adding a document means adding
-its row.
+The [documentation index](./docs/index.md) routes readers by the work they are
+doing. To configure a session or deliver a change, start with
+[Contributing](./docs/contributing/index.md). For a flagged branch or a
+missing review, use the [Operations runbooks](./docs/operations/index.md).
+[Governance](./docs/governance/index.md) explains who may authorize delivery
+and when a skill exception applies. When adapting the template, use the
+[placement convention](./docs/contributing/documentation.md#choose-a-subject)
+to give a project decision a home readers can find.
 
 ## Getting started
 
@@ -135,15 +128,10 @@ it rather than cloning it.
    stack-specific skills your stack needs, and writes `docs/`.
 3. When adaptation is complete, INIT finalizes `README.template.md` into your
    project's `README.md`, replacing this one, and deletes the INIT tooling.
-4. **Enable the CI reviewer.** The post-push review channel's GitHub Actions
-   reviewer needs a one-time operator setup before it runs: install the
-   [Claude GitHub App](https://github.com/apps/claude) and add a
-   `CLAUDE_CODE_OAUTH_TOKEN` repository secret — generate it locally with
-   `claude setup-token` — under **Settings → Secrets and variables → Actions**,
-   or set an `ANTHROPIC_API_KEY` secret instead for pay-as-you-go API billing.
-   Until one of them is in place the workflow no-ops, and **its silence looks
-   exactly like a clean review**. The workflow file's header comment documents
-   the exact steps.
+4. **Enable the CI reviewer.** Follow the [reviewer setup](./docs/operations/review-automation.md#configure-the-reviewer)
+   to install the GitHub App, configure authentication for your billing
+   method and activate the workflow on the default branch. Confirm the
+   reviewer posts a result on the pull request.
 
 Placeholders use the `{{TOKEN}}` convention so they are easy to find and
 replace; the full token list lives in [`tokens.json`](./tokens.json) and
