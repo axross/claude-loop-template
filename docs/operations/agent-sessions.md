@@ -49,8 +49,19 @@ session that has exactly one repository, outside a project's threads. In an
 Anthropic-hosted environment, a multi-repository cloud session reads only its
 plugin keys, and a project thread applies none of the repository's permission
 rules, hooks, or `env`. There, the settings file has no effect in a
-multi-repository session or a project thread, and `.claude/settings.local.json`
-is never read in a cloud session.
+multi-repository session or a project thread.
+
+A different file, `.claude/settings.local.json`, is listed as not read in a
+cloud session by
+[Claude Code's documentation](https://code.claude.com/docs/en/settings#settings-in-cloud-sessions),
+because it is not in the clone, so a cloud session starts without one. One
+consumer reported a single-repository cloud session running a `Stop` hook that
+was defined only in a `.claude/settings.local.json` that the consumer's own
+`SessionStart` hook had created there; this was not reproduced here. The
+documentation describes loading a settings file created mid-session only for
+Claude Code on a local machine, and does not say whether a cloud session does
+the same, so do not rely on that behavior. The setup-script copy targets
+`.claude/settings.json`; [Caveats](#caveats) says what is unverified about it.
 
 Without the copy, a session runs on Claude Code's defaults: no `SessionStart`
 hook, no default effort, no telemetry tagging, no pre-approved subscription
