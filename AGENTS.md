@@ -58,7 +58,7 @@ distinguishes, so a session does not have to open the index for one of these.
 | Subagent responsibilities | [docs/contributing/agents/subagents.md](./docs/contributing/agents/subagents.md) |
 | Installing, restoring or renaming a skill | [docs/contributing/agents/install-skills.md](./docs/contributing/agents/install-skills.md) |
 | An accepted skill departure or gap | [docs/governance/skill-departures.md](./docs/governance/skill-departures.md) |
-| Working branches and review gates | [Change delivery](./docs/contributing/change-delivery.md) |
+| Working branches and review gates | [Deliver a change](./docs/contributing/change-delivery.md) |
 | A branch flagged by GitHub | [Branch audit](./docs/operations/branch-audit.md) |
 | CI reviewer setup or a missing response | [Review automation](./docs/operations/review-automation.md) |
 | Permission to publish or monitor a change | [docs/governance/delivery-authorization.md](./docs/governance/delivery-authorization.md) |
@@ -86,8 +86,9 @@ Choose guidance from the actual session and the changed surface:
   meets the project's gates, and
   [Session startup](./docs/contributing/agents/session-startup.md) covers bootstrap and telemetry.
 - **GitHub:** load [GitHub Operation](./.claude/skills/github-operation/SKILL.md)
-  for every read and write, and
-  [delivery authorization](./docs/governance/delivery-authorization.md) before publishing.
+  for every read and write. Follow
+  [Deliver a change](./docs/contributing/change-delivery.md) for the branch and
+  review procedure. Check [delivery authorization](./docs/governance/delivery-authorization.md) before publishing.
 
 <!-- INIT:OPTIONAL key=POST_PUSH_OVERRIDE — Keep the bullet below while the project's CI reviewer (.github/workflows/claude-review.yaml) stays enabled, then delete this comment. To disable that reviewer's triggers, delete this comment and the bullet: the fallback reviewer subagent then becomes the post-push review route. -->
 - **Post-push review override, Claude Code sessions:** use the review trigger
@@ -100,9 +101,9 @@ Choose guidance from the actual session and the changed surface:
 MUST read and apply [REVIEW.md](./REVIEW.md) as this repository's review policy,
 and load [Code Review](./.claude/skills/code-review/SKILL.md) for the review
 methodology. [Loop Engineering](./.claude/skills/loop-engineering/SKILL.md)
-defines plan review, pre-push review, and post-push review;
-[Pull request review](./docs/contributing/change-delivery.md)
-states this repository's choices for them.
+defines plan review, pre-push review, and post-push review.
+In *Deliver a change*, see [when pre-push review cannot run](./docs/contributing/change-delivery.md#when-pre-push-review-cannot-run)
+and [how to request post-push review](./docs/contributing/change-delivery.md#request-post-push-review).
 
 Changes to the review or CI infrastructure, secret handling, the dependency or
 supply-chain surface, public route or API contracts, the data layer, and large

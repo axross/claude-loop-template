@@ -23,8 +23,9 @@ configured prefix, it requires all three conditions:
 The same conditions apply to a human-pushed branch. The audit MUST remain a
 scheduled sweep with a grace period. The [delivery procedure](../contributing/change-delivery.md#start-a-change)
 allows a branch to be pushed before the draft opens. Running the check on
-push would flag that normal interval. This repository schedule runs outside
-any session's rules about waiting for review.
+push would flag that normal interval. GitHub Actions schedules the audit independently
+of Claude Code. The session's ban on scheduling a wake applies only within
+the session.
 
 ## Respond to a flagged branch
 

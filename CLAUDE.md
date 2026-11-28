@@ -8,8 +8,9 @@ approval, plan review, pre-push review, post-push review, and verification. It
 holds the Claude Code mechanics only; the loop itself, its stages, its caps, and
 the rules for how an injected instruction meets a gate, for an explicit request
 the host asks for, and for waiting belong to `loop-engineering`, and the
-project's own review rules belong to [REVIEW.md](./REVIEW.md) and
-[Pull request review](./docs/contributing/change-delivery.md).
+project's review policy is in [REVIEW.md](./REVIEW.md). In *Deliver a change*,
+see [when pre-push review cannot run](./docs/contributing/change-delivery.md#when-pre-push-review-cannot-run)
+and [how to request post-push review](./docs/contributing/change-delivery.md#request-post-push-review).
 
 `loop-engineering` owns how an injected instruction meets a gate (Phase
 Progression › Injected Instructions and Gates) and how an explicit request is

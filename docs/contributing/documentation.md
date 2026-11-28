@@ -13,7 +13,7 @@ The same pull request can affect several subjects:
 
 | Reader's question | Where the answer belongs |
 | --- | --- |
-| How do I deliver a change for review? | [Contributing](./change-delivery.md) owns the contributor's workflow. |
+| How do I deliver a change for review? | [Deliver a change](./change-delivery.md) owns the contributor's workflow. |
 | May this session publish the change? | [Delivery authorization](../governance/delivery-authorization.md) owns the grant and its limits. A procedure that uses the grant links there. |
 | What do I do when the requested review never appears? | [Review automation](../operations/review-automation.md) owns diagnosis of the service. |
 

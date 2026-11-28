@@ -28,7 +28,8 @@ These entries lead from the original session guide to setup, delegation and veri
 
 ### The Reviewer
 
-[Assign the reviewer](../contributing/agents/subagents.md#assigning-the-reviewer).
+[Check when a reviewer may post](../contributing/agents/subagents.md#assigning-the-reviewer)
+or [check which tools the reviewer may use](../contributing/agents/subagents.md#role-boundaries).
 
 ### When a Definition Is Missing
 
