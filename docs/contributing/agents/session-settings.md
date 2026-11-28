@@ -47,8 +47,18 @@ A local session can load the repository settings. In an Anthropic-hosted
 cloud environment, the template's settings apply to a single-repository
 session outside a project's threads. A multi-repository cloud session reads
 only plugin keys, which the example does not set. A project thread does not
-apply the repository's hooks, permissions or environment variables. Cloud
-sessions do not read `.claude/settings.local.json`.
+apply the repository's hooks, permissions or environment variables.
+
+[Claude Code's documentation](https://code.claude.com/docs/en/settings#settings-in-cloud-sessions)
+lists `.claude/settings.local.json` as not read in a cloud session because the
+file is not in the clone, so a cloud session starts without one. One consumer
+reported a single-repository cloud session running a `Stop` hook defined only
+in a `.claude/settings.local.json` that the consumer's own `SessionStart` hook
+had created there; this was not reproduced here. The documentation describes
+loading a settings file created mid-session only for Claude Code on a local
+machine, so do not rely on that behavior in cloud. The setup-script copy
+targets `.claude/settings.json`; [Caveats](#caveats) says what is unverified
+about it.
 
 ## Check and repair a copy
 
