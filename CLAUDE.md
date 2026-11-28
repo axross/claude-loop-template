@@ -117,21 +117,33 @@ recorded as a permanent deviation in
 ### Reviewer Instances
 
 `loop-engineering` requires each review child to be closed after its round
-(Review Session and Thread Cleanup). On this host:
+(Review Session and Thread Cleanup). The run follows the skill's section as far
+as this host allows, and the departure it leaves is recorded in
+[the register](./docs/operations/agent-skills.md#deviation--reviewer-instances-that-cannot-be-closed-or-checked).
+On this host:
 
-- The run never messages or resumes a reviewer instance.
-- The agent id is the durable identity of an instance; a task id is transient.
-  Run state records, for each reviewer instance, its agent id, role, round and
-  end and, for a fallback post-push reviewer, the locator of its posted review.
-- Before stopping a reviewer that is still running at a stop, the run inspects
-  the pull request for a result it may already have posted, then stops it with
-  the host's task-stop tool. That leaves the instance resumable, so it is not
-  closure.
-- For closure the run follows the skill's section. The host-specific step is to
-  tell the human the agent id and ask them to stop the instance from `/tasks`
-  while it is still listed there; once it has left the list, the run reports the
-  instance unclosed with its agent id, and a failed close does not invalidate
-  the verified review.
+- The run never messages or resumes a reviewer instance. This is the control the
+  run has over an instance.
+- The agent id is a host handle that this host marks as not for user-facing
+  text, and a task id is transient. The run records neither in run state and
+  quotes neither to the human.
+- Run state records, for each reviewer instance, its role, round, reviewed
+  commit, end and closure status (closed, or unclosed with the reason) and, for
+  a fallback post-push reviewer, the locator of its posted review. The spawn
+  description names the role and round, so an instance is identified by those.
+- At a stop, for an instance that is still running, the run inspects the pull
+  request for a result it may already have posted, then stops the instance with
+  `TaskStop`. That leaves the instance resumable, so it is not closure. The run
+  does not wait on the human for this step, in any session type.
+- No documented step is known to end a finished instance, or one stopped with
+  `TaskStop`. In a local session a finished reviewer's row only clears from the
+  task list. In a cloud session archiving only removes the session from the list,
+  and a reopened expired environment can resume the subagents it reports as
+  resumable. The run names the
+  instance by its run-state identity, says that no documented step is known, and
+  reports the instance unclosed.
+- A failed or unavailable close does not invalidate the verified review; the run
+  may complete and mark the pull request ready.
 
 ## Waiting on a Pull Request
 
@@ -161,13 +173,21 @@ outside the session.
 
 ## Settings and Hooks
 
-- `.claude/settings.json` is shared by every session: the startup hook wiring,
-  the default reasoning effort, and telemetry tagging.
-- `.claude/settings.local-example.json` is an opt-in example. It grants only the
-  two pull request activity subscription tools named above and enables the
-  quality hooks, format on edit and checks before stop.
-- The startup hook only bootstraps the environment and prints a pointer to
-  `AGENTS.md`.
+- `.claude/settings.example.json` is the one committed settings file. It holds
+  the startup hook wiring, the default reasoning effort, telemetry tagging, the
+  two pull request activity subscription grants named above, and the quality
+  hooks, format on edit and checks before stop. The startup hook only
+  bootstraps the environment and prints a pointer to `AGENTS.md`.
+- A session reads it as the gitignored `.claude/settings.json`. A cloud
+  environment's setup script copies the example into place; a local session
+  copies it by hand.
+- It takes effect only where `.claude/settings.json` exists and is read: a local
+  session, or, in an Anthropic-hosted environment, a single-repository cloud
+  session outside a project's threads.
+- Without the copy, a session has no startup hook, default effort, telemetry
+  tagging, subscription grants, or quality hooks.
+  [Agent Sessions](./docs/operations/agent-sessions.md#the-settings-file) says how
+  to check for the copy and how to make it.
 
 [Agent Sessions](./docs/operations/agent-sessions.md) describes the hooks, the
 settings, and the three subagents in full.

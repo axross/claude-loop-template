@@ -15,7 +15,7 @@
 #
 # TEMPLATE NOTE: this is an example Claude Code harness binding. During INIT,
 # replace the `{{...}}` tokens below with the project's real values, or delete this
-# hook (and its entry in .claude/settings.local-example.json) if the project
+# hook (and its entry in .claude/settings.example.json) if the project
 # has no automated checks.
 set -uo pipefail
 

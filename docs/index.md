@@ -36,8 +36,9 @@ none of them.
 - [operations/agent-skills.md](./operations/agent-skills.md) — installing and
   refreshing the agent skills, and the register of deviations and gaps.
 - [operations/agent-sessions.md](./operations/agent-sessions.md) — how a
-  session starts, the hooks that run during one, the subagents it can spawn,
-  and its telemetry tagging.
+  session starts, the settings file that wires it and how each checkout gets
+  its copy, the hooks that run during one, the subagents it can spawn, and its
+  telemetry tagging.
 
 ## Decisions
 

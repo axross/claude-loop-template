@@ -5,7 +5,7 @@
 #
 # TEMPLATE NOTE: this is an example Claude Code harness binding. During INIT,
 # replace the `{{...}}` tokens below with the project's real values, or delete this
-# hook (and its entry in .claude/settings.local-example.json) if the project
+# hook (and its entry in .claude/settings.example.json) if the project
 # has no formatter. CODE_FILE_GLOB, PACKAGE_MANAGER, and FORMAT_CMD are
 # required; LINT_FIX_CMD and LINT_FIX_FILE_GLOB are optional — see INIT.md
 # for what dropping both involves.

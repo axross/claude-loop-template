@@ -55,7 +55,7 @@ opens a pull request for it or deletes it.
 
 [`check.sh`](../../.claude/hooks/check.sh)'s in-flight reminder covers the
 narrower case within a single session; see
-[agent-sessions.md](./agent-sessions.md#the-opt-in-quality-hooks).
+[agent-sessions.md](./agent-sessions.md#the-quality-hooks).
 
 ## The Three Reviews
 

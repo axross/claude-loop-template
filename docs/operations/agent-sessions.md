@@ -1,18 +1,95 @@
 # Agent Sessions
 
-How a Claude Code session starts in this project, the hooks that run during
-one, the subagents it can spawn, and the one setting that cannot be verified
-from inside a session at all. [`CLAUDE.md`](../../CLAUDE.md) is the Claude Code
-entry: it loads `AGENTS.md` and adds how this host meets the project's gates,
-which this document does not restate.
+How a Claude Code session starts in this project, the settings file that wires
+it, the hooks that run during one, the subagents it can spawn, and the one
+setting that cannot be verified from inside a session at all.
+[`CLAUDE.md`](../../CLAUDE.md) is the Claude Code entry: it loads `AGENTS.md` and
+adds how this host meets the project's gates, which this document does not
+restate.
+
+## The Settings File
+
+[`.claude/settings.example.json`](../../.claude/settings.example.json) is the one
+settings file this repository commits. It wires the `SessionStart` hook and the
+two quality hooks, sets the session's default reasoning effort, tags telemetry,
+and pre-approves the two pull request activity subscription tools. A session
+reads it as `.claude/settings.json`, which is gitignored, so every checkout
+holds its own copy and something has to make that copy:
+
+- **A local session.** Copy it once by hand,
+  `[ -e .claude/settings.json ] || cp .claude/settings.example.json .claude/settings.json`.
+- **A cloud session.** The cloud environment's setup script copies it. Add the
+  snippet below to the setup script of every environment that runs this
+  repository. It copies each repository's `.claude/settings.example.json` to
+  `.claude/settings.json` when the target is missing, skips a repository that
+  has no example, and exits 0 whatever it finds, because a non-zero exit fails
+  the session start. A setup script normally runs after the repositories are
+  cloned and starts from the directory that holds the checkouts (the cloud
+  environment tool's description says so; the public Claude Code documentation
+  does not), and the loop also handles a start inside a repository.
+
+```bash
+for ex in .claude/settings.example.json */.claude/settings.example.json; do
+  [ -f "$ex" ] || continue
+  target="${ex%settings.example.json}settings.json"
+  [ -e "$target" ] || cp "$ex" "$target" || echo "could not create $target" >&2
+done
+```
+
+The loop activates every repository's example in that environment. An
+environment shared with repositories you do not control should list the
+repository directories explicitly instead of the glob. The template cannot
+change a consumer's cloud environment, so each maintainer adds the snippet to
+their own.
+
+### Where the Copy Takes Effect
+
+Claude Code reads `.claude/settings.json` in a local session and in a cloud
+session that has exactly one repository, outside a project's threads. In an
+Anthropic-hosted environment, a multi-repository cloud session reads only its
+plugin keys, and a project thread applies none of the repository's permission
+rules, hooks, or `env`. There, the settings file has no effect in a
+multi-repository session or a project thread, and `.claude/settings.local.json`
+is never read in a cloud session.
+
+Without the copy, a session runs on Claude Code's defaults: no `SessionStart`
+hook, no default effort, no telemetry tagging, no pre-approved subscription
+tools, and no quality hooks.
+
+To check in a cloud session, run `ls .claude/settings.json`. In a local
+terminal, open `/status` and read its setting sources. To fix a missing copy, run
+the `cp` command in a local session. In a cloud session, add the snippet to the
+environment's setup script and start a new session.
+
+### Caveats
+
+- **A cached environment.**
+  [Claude Code's documentation](https://code.claude.com/docs/en/cloud-environments#environment-caching)
+  says the setup script is skipped when a cached environment snapshot exists.
+  Whether a copy made while the cache was built survives into later sessions'
+  fresh clones, and whether Claude Code reads an untracked `settings.json` that a setup script placed, are
+  unverified. After you add the snippet, confirm both with two consecutive
+  sessions: check the copy in each.
+- **A git worktree.** A session started with `claude --worktree` lacks the
+  ignored copy unless a `.worktreeinclude` file
+  lists `.claude/settings.json`. A subagent that runs in a worktree still runs the
+  session's hooks.
+- **Drift.** A copy does not follow later changes to the example.
+  `cmp .claude/settings.example.json .claude/settings.json` shows the difference.
+- **An existing clone.** A clone that still tracks `.claude/settings.json` loses
+  an unmodified copy when it pulls the change that stops tracking it, and the
+  pull stops on an edited one. Copy it aside first, then copy the example again.
+- **User settings.** `~/.claude/settings.json` is a different file and is
+  unaffected.
 
 ## The Session-Start Hook
 
 In a cloud session, [`.claude/hooks/session-start.sh`](../../.claude/hooks/session-start.sh)
 provisions the toolchain, copies `.env.example` to `.env.local` if one does not
-exist, materializes the opt-in quality hooks, installs dependencies, and echoes
-a pointer to [`AGENTS.md`](../../AGENTS.md) so every session carries the working
-agreement into its context.
+exist, installs dependencies, and echoes a pointer to
+[`AGENTS.md`](../../AGENTS.md) so every session carries the working agreement
+into its context. It runs only where the copy of the settings file exists,
+because that file wires it; the hook cannot create the copy it depends on.
 
 It exits immediately unless `CLAUDE_CODE_REMOTE=true`, because a local session
 manages its own toolchain and should not have one installed under it. Set that
@@ -25,10 +102,10 @@ a transient network failure into a failed session start — a failure that
 surfaces as every later command missing its tools rather than as an install
 error.
 
-The hook is wired in [`.claude/settings.json`](../../.claude/settings.json),
+The hook is wired in [`.claude/settings.example.json`](../../.claude/settings.example.json),
 which also sets the session's default reasoning effort — `effortLevel`, shipped
 as `xhigh`. Both are read at session start, so a change to either reaches only
-the next session.
+the next session, and only where the copy is made again.
 
 The reminder is a neutral pointer: it tells the session to read `AGENTS.md`,
 follow its Response Approach, and load its prerequisites before planning,
@@ -37,21 +114,25 @@ relate to the instructions a runtime injects — that rule belongs to
 `loop-engineering`, and `CLAUDE.md` states how Claude Code meets it — so the
 startup echo never has to be edited when that wording moves.
 
-## The Opt-In Quality Hooks
+## The Quality Hooks
 
-Format-on-edit and check-before-stop are **opt-in**. They live in
-[`.claude/settings.local-example.json`](../../.claude/settings.local-example.json),
-which the session-start hook copies to the gitignored `settings.local.json` in a
-cloud session; Claude Code hot-reloads them for that session. A local session
-skips the hook entirely, so opting in there stays a manual copy.
+Format-on-edit and check-before-stop live in
+[`.claude/settings.example.json`](../../.claude/settings.example.json), beside
+the `SessionStart` wiring, so they apply wherever the copy of that file exists,
+unattended cloud sessions included. There, `check.sh` blocks the main agent's
+stop on a failing lint or unit test run, and the agent has to fix it before it
+can finish. It does not run at a subagent's stop. A project that does not want
+the hooks removes their two entries from the example.
 
 That example file also pre-approves exactly two tools: the pull request
 activity subscription and its release, `subscribe_pr_activity` and
 `unsubscribe_pr_activity` of the Remote MCP server. They are not a convenience:
 the run waits for CI and review results through that subscription, and without
 the grant each call raises a permission prompt that an unattended session cannot
-answer. The example grants nothing that schedules a wake; `CLAUDE.md` lists the
-scheduling tools its waiting rule covers and states how the run waits.
+answer. The grants apply only where the copy is read, so a session without one
+meets that prompt. The example grants nothing that schedules a wake; `CLAUDE.md`
+lists the scheduling tools its waiting rule covers and states how the run
+waits.
 
 Format-on-edit fires only for a file changed through `Edit`, `Write`, or
 `MultiEdit` — the `PostToolUse` matcher's scope, deliberately not widened — so
@@ -163,11 +244,12 @@ otherwise have saved.
 
 ## Telemetry Tagging
 
-[`.claude/settings.json`](../../.claude/settings.json) carries an `env` block
-stamping the repository name and the session's launch surface onto the
-OpenTelemetry resource attributes Claude Code exports, so this project's usage
-separates from every other repository sharing an account or a cloud
-environment. It configures nothing else — no endpoint, no credential, no
+[`.claude/settings.example.json`](../../.claude/settings.example.json) carries an
+`env` block stamping the repository name and the session's launch surface onto
+the OpenTelemetry resource attributes Claude Code exports, so this project's
+usage separates from every other repository sharing an account or a cloud
+environment. The tagging applies only where the copy of the file exists. The
+block configures nothing else — no endpoint, no credential, no
 `CLAUDE_CODE_ENABLE_TELEMETRY` — so a contributor who has never set telemetry
 up sees no behavior change from it.
 
