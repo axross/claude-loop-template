@@ -251,7 +251,7 @@ go stale the moment it did. An agent-authored comment is not adoption evidence.
   apply: the run verifies the posted result, records the round, the locator and
   the closure status, and asks for cleanup permission where a permission boundary
   prevents closure.
-- **Adopted by:** the maintainer's merge of the pull request that closes #83.
+- **Adopted by:** the maintainer's merge of #84, which closes #83.
 - **Reassess when:** the host documents a step that closes a reviewer instance or
   a checkable identity for one, or the installed section changes.
 
