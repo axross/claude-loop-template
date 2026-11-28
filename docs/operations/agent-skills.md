@@ -234,8 +234,8 @@ go stale the moment it did. An agent-authored comment is not adoption evidence.
   from the task list, and the documentation does not say that makes it
   non-resumable. For a reviewer in a cloud session the documentation describes no
   step that ends it: archiving only removes the session from the list, and a
-  reopened expired environment can resume its subagents. A plan-review or pre-push
-  reviewer posts nothing, so its identity is a label, and the host marks the
+  reopened expired environment can resume the subagents it reports as
+  resumable. A plan-review or pre-push reviewer posts nothing, so its identity is a label, and the host marks the
   agent id that could stand for it as not for user-facing text.
 - **What this project does instead:** the run never messages or resumes a
   reviewer instance, and records each one by role, round, reviewed commit, end and

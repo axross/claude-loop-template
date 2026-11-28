@@ -23,10 +23,10 @@ holds its own copy and something has to make that copy:
   repository. It copies each repository's `.claude/settings.example.json` to
   `.claude/settings.json` when the target is missing, skips a repository that
   has no example, and exits 0 whatever it finds, because a non-zero exit fails
-  the session start. A setup script normally starts from the directory that
-  holds the checkouts (this host's environment tool says so; the Claude Code
-  documentation does not state it), and the loop also handles a start inside a
-  repository.
+  the session start. A setup script normally runs after the repositories are
+  cloned and starts from the directory that holds the checkouts (the cloud
+  environment tool's description says so; the public Claude Code documentation
+  does not), and the loop also handles a start inside a repository.
 
 ```bash
 for ex in .claude/settings.example.json */.claude/settings.example.json; do
@@ -48,9 +48,9 @@ Claude Code reads `.claude/settings.json` in a local session and in a cloud
 session that has exactly one repository, outside a project's threads. In an
 Anthropic-hosted environment, a multi-repository cloud session reads only its
 plugin keys, and a project thread applies none of the repository's permission
-rules, hooks, or `env`. The settings file has no effect in a multi-repository
-session or a project thread, and `.claude/settings.local.json` is never read in
-a cloud session.
+rules, hooks, or `env`. There, the settings file has no effect in a
+multi-repository session or a project thread, and `.claude/settings.local.json`
+is never read in a cloud session.
 
 Without the copy, a session runs on Claude Code's defaults: no `SessionStart`
 hook, no default effort, no telemetry tagging, no pre-approved subscription
@@ -63,10 +63,11 @@ environment's setup script and start a new session.
 
 ### Caveats
 
-- **A cached environment.** [Claude Code's documentation](https://code.claude.com/docs/en/cloud-environments#environment-caching)
-  says the setup script is skipped when a cached environment snapshot exists. Whether a copy made while
-  the cache was built survives into later sessions' fresh clones, and whether
-  Claude Code reads an untracked `settings.json` that a setup script placed, are
+- **A cached environment.**
+  [Claude Code's documentation](https://code.claude.com/docs/en/cloud-environments#environment-caching)
+  says the setup script is skipped when a cached environment snapshot exists.
+  Whether a copy made while the cache was built survives into later sessions'
+  fresh clones, and whether Claude Code reads an untracked `settings.json` that a setup script placed, are
   unverified. After you add the snippet, confirm both with two consecutive
   sessions: check the copy in each.
 - **A git worktree.** A session started with `claude --worktree` lacks the

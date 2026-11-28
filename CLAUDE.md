@@ -128,9 +128,9 @@ On this host:
   text, and a task id is transient. The run records neither in run state and
   quotes neither to the human.
 - Run state records, for each reviewer instance, its role, round, reviewed
-  commit, end and closure status (closed, or unclosed with the reason) and, for a
-  fallback post-push reviewer, the locator of its posted review. The spawn description names the role and round, so an instance
-  is identified by those.
+  commit, end and closure status (closed, or unclosed with the reason) and, for
+  a fallback post-push reviewer, the locator of its posted review. The spawn
+  description names the role and round, so an instance is identified by those.
 - At a stop, for an instance that is still running, the run inspects the pull
   request for a result it may already have posted, then stops the instance with
   `TaskStop`. That leaves the instance resumable, so it is not closure. The run
@@ -138,7 +138,8 @@ On this host:
 - No documented step is known to end a finished instance, or one stopped with
   `TaskStop`. In a local session a finished reviewer's row only clears from the
   task list. In a cloud session archiving only removes the session from the list,
-  and a reopened expired environment can resume its subagents. The run names the
+  and a reopened expired environment can resume the subagents it reports as
+  resumable. The run names the
   instance by its run-state identity, says that no documented step is known, and
   reports the instance unclosed.
 - A failed or unavailable close does not invalidate the verified review; the run
@@ -181,7 +182,8 @@ outside the session.
   environment's setup script copies the example into place; a local session
   copies it by hand.
 - It takes effect only where `.claude/settings.json` exists and is read: a local
-  session, or a single-repository cloud session outside a project's threads.
+  session, or, in an Anthropic-hosted environment, a single-repository cloud
+  session outside a project's threads.
 - Without the copy, a session has no startup hook, default effort, telemetry
   tagging, subscription grants, or quality hooks.
   [Agent Sessions](./docs/operations/agent-sessions.md#the-settings-file) says how
