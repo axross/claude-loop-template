@@ -33,4 +33,5 @@ The following bookmarks lead to individual entries:
 - <a id="deviation--combined-plan-gate-confirmation"></a>[Combined plan-gate confirmation](../governance/skill-departures.md#deviation--combined-plan-gate-confirmation)
 - <a id="deviation--the-explicit-request-is-asked-again-not-carried-forward"></a>[Renewing the explicit request](../governance/skill-departures.md#deviation--the-explicit-request-is-asked-again-not-carried-forward)
 - <a id="deviation--watching-conditioned-on-the-humans-confirmation"></a>[Watching a pull request](../governance/skill-departures.md#deviation--watching-conditioned-on-the-humans-confirmation)
+- <a id="deviation--reviewer-instances-that-cannot-be-closed-or-checked"></a>[Reviewer identity and closure](../governance/skill-departures.md#deviation--reviewer-instances-that-cannot-be-closed-or-checked)
 - <a id="gap--application-security-is-silent-on-authentication-lockout-and-session-cookie-ownership"></a>[Authentication lockout and session-cookie ownership](../governance/skill-departures.md#gap--application-security-is-silent-on-authentication-lockout-and-session-cookie-ownership)

@@ -50,4 +50,6 @@ without a post. Otherwise the reviewer works in its own checkout and submits
 exactly one COMMENT-type review on the named pull request.
 
 The [reviewer definition](../../../.claude/agents/reviewer.md) specifies what
-the reviewer returns to the main session.
+the reviewer returns to the main session. After verifying the result, follow
+[Claude Code's reviewer instance procedure](../../../CLAUDE.md#reviewer-instances)
+to record the round and distinguish stopping an instance from closing it.

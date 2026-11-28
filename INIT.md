@@ -94,13 +94,25 @@ merge rather than clobber:
   template's file under a project heading of its own. Its link to the deviation
   register targets `docs/governance/skill-departures.md`; keep that document, or
   repoint the link at wherever the project records that deviation.
-- **Existing `.gitignore`** — keep the project's file; merge in the template's
-  `settings.local.json` / `.env.local` entries (Step 6) and both directories created for documentation checks,
-  `/.venv-okf/` and `/.claude/skills/living-project-documentation/scripts/node_modules/`.
+- **Existing `.gitignore`** — keep the project's entries. Add the local
+  settings and environment files from Step 6 (`/.claude/settings.json`,
+  `/.claude/settings.local.json` and `.env.local`), plus the directories
+  created for the documentation checks (`/.venv-okf/` and
+  `/.claude/skills/living-project-documentation/scripts/node_modules/`).
   Watch for a blanket `.env*` entry (`create-next-app` ships one): it also
   ignores the `.env.example` that `session-start.sh` copies from — replace it
   with the template's `.env.local` / `.env.*.local` entries so the example
   file stays committable.
+- **Existing `.claude/settings.json`** — the template commits
+  `.claude/settings.example.json` instead and ignores `.claude/settings.json`.
+  Merge the project's shared settings into the example and keep personal
+  overrides in the ignored `.claude/settings.local.json`. If the active
+  `.claude/settings.json` is tracked, run `git rm --cached .claude/settings.json`
+  and add the ignore entry (Step 6). Follow the
+  [settings activation procedure](./docs/contributing/agents/session-settings.md#activate-the-settings)
+  to configure the cloud environment and new local checkouts. The guarded copy
+  keeps an existing file. [Compare and update that copy](./docs/contributing/agents/session-settings.md#check-and-repair-a-copy)
+  to pick up changes from the merged example.
 - **Existing `README.md`** (a real project README, not this template's own) —
   do **not** let Step 7's finalize clobber it: fold `README.template.md`'s
   sections (summary, getting started, development workflow, testing, tech
@@ -649,28 +661,34 @@ to it.
 `AGENTS.md`, `.claude/skills/**`, and `docs/` are the portable substance. This
 template targets **Claude Code** (fixed — Step 1e), which reads them through
 the `.claude/` binding. When changing the binding, update its
+[session settings](./docs/contributing/agents/session-settings.md),
 [session startup](./docs/contributing/agents/session-startup.md),
 [edit hook](./docs/contributing/agents/edit-hook.md),
 [stop hook](./docs/contributing/agents/stop-hook.md), or
 [subagent guidance](./docs/contributing/agents/subagents.md) as appropriate.
 
-- `.claude/settings.json` wires the `SessionStart` hook, sets the default
-  reasoning effort (`effortLevel`; ships as `xhigh`), and stamps
-  `{{PROJECT_NAME}}` onto the OpenTelemetry resource attributes. It configures
-  no endpoint and no credential, so telemetry stays off until the project sets
-  it up; delete the `env` block if the project wants no tagging at all.
-- `.claude/settings.local-example.json` is the opt-in quality binding
+- `.claude/settings.example.json` is the one committed settings file. It wires
+  the `SessionStart` hook, sets the default reasoning effort (`effortLevel`;
+  ships as `xhigh`), and stamps `{{PROJECT_NAME}}` onto the OpenTelemetry
+  resource attributes. It configures no endpoint and no credential, so telemetry
+  stays off until the project sets it up; delete the `env` block if the project
+  wants no tagging at all. It also wires the quality hooks
   (format-on-edit + lint/test-before-stop) and pre-approves the two pull request
   activity subscription tools a run waits through while CI and review run. It
-  grants no tool that schedules a wake. The session-start hook copies it to
-  `settings.local.json` in cloud sessions.
+  grants no tool that schedules a wake.
+- Each checkout reads its own gitignored `.claude/settings.json`. Follow
+  [Activate the settings](./docs/contributing/agents/session-settings.md#activate-the-settings)
+  to prepare a local copy. Ask the maintainer to install the same guide's
+  setup-script snippet in the project's cloud environment. Check
+  [where the copy takes effect](./docs/contributing/agents/session-settings.md#where-the-copy-takes-effect)
+  when the session opens another checkout.
 - `.claude/hooks/*.sh` need the token fill — `{{CODE_FILE_GLOB}}`,
   `{{CODE_FILE_REGEX}}`, `{{INSTALL_CMD}}`, and the command tokens, plus the
   optional `{{LINT_FIX_CMD}}` and `{{LINT_FIX_FILE_GLOB}}` if the project keeps
   `format.sh`'s per-file lint-autofix step — plus an adapted toolchain block in
   `session-start.sh` for the project's runtime (the example activates `mise`
   when it is already present). Delete any hook the project does not want, and
-  its entry in the settings file above.
+  its entry in the settings example above.
 - `.claude/agents/` holds `implementer.md`, `reviewer.md`, and
   `investigator.md`. They are shared definitions that carry no project-specific
   text — the reviewer takes its marker from `AGENTS.md` and its report format
@@ -678,11 +696,13 @@ the `.claude/` binding. When changing the binding, update its
   CLI, so refreshing skills never updates them — copy a newer version by hand
   if the template changes one. Deleting any of them degrades the loop
   gracefully rather than breaking it.
-- The session-start hook materializes `settings.local.json` and `.env.local`.
-  The template ships a `.gitignore` that excludes both (the
-  `application-security` skill assumes they are gitignored) — keep those entries
-  and merge the rest of the project's ignores into it. If the project keeps its
-  own `.gitignore` elsewhere, move these entries there instead.
+- The template ships a `.gitignore` that excludes `.claude/settings.json` and
+  `.claude/settings.local.json` (a per-checkout copy of the example and a
+  contributor's own overrides) and `.env.local`, which the session-start hook
+  creates (the `application-security` skill assumes the `.env` files are
+  gitignored) — keep those entries and merge the rest of the project's ignores
+  into it. If the project keeps its own `.gitignore` elsewhere, move these
+  entries there instead.
 
 The Claude Code binding is the only one to set up — there is no per-agent choice
 to make. A project that later wants to drive the same `AGENTS.md`, skills, and
@@ -812,8 +832,9 @@ human authorization, and an agent never grants it to itself.
       `AGENTS.md` names. A mismatch makes the audit pass silently while
       checking nothing.
 - [ ] The Claude Code harness binding is filled in and runnable.
-- [ ] A `.gitignore` excludes `settings.local.json` and `.env.local` (or the
-      project's equivalent local-state/secret files).
+- [ ] A `.gitignore` excludes `.claude/settings.json`, `settings.local.json`,
+      and `.env.local` (or the project's equivalent local-state/secret files),
+      and `.claude/settings.json` is not tracked.
 - [ ] `INIT.md` and template scaffolding notes/tooling are deleted — including
       `init.sh`, `tokens.json`, `init.values.json`, and
       `.github/workflows/template-checks.yaml`.

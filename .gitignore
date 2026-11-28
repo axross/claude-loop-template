@@ -1,8 +1,13 @@
-# Local agent harness state materialized by .claude/hooks/session-start.sh.
-# These hold machine-local settings and secrets and MUST stay out of version
-# control. The application-security skill assumes these entries exist; keep them
-# (and extend this file with the project's own ignores) during INIT.
+# Local agent harness state. .claude/settings.json is a per-checkout copy of the
+# committed .claude/settings.example.json (see docs/contributing/agents/session-settings.md);
+# .claude/settings.local.json holds a contributor's own overrides. Both MUST stay
+# out of version control. Keep them, and extend this file with the project's own
+# ignores, during INIT.
+/.claude/settings.json
 /.claude/settings.local.json
+
+# Machine-local environment files. The application-security skill assumes these
+# entries exist; keep them during INIT.
 .env.local
 .env.*.local
 

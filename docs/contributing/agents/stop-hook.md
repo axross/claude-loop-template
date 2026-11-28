@@ -8,8 +8,9 @@ description: Decide whether a stop message requires fixing a failed check or che
 
 With the [quality hooks enabled](./session-startup.md#enable-the-quality-hooks),
 Claude Code runs [check.sh](../../../.claude/hooks/check.sh) before the
-session finishes. The hook exits immediately if the project's package
-manager is unavailable.
+main agent finishes, including in an unattended cloud session. A subagent’s
+stop does not invoke this hook. The hook exits immediately if the project's
+package manager is unavailable.
 
 ## Blocking failure
 

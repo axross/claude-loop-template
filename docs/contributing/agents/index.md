@@ -7,8 +7,9 @@ tools and roles available during a session.
 
 Choose the setup you need:
 
+- [Activate and verify the checkout settings for your session](./session-settings.md).
 - [Bootstrap a cloud session](./session-startup.md#bootstrap-a-cloud-session).
-- [Enable edit and stop hooks in a local checkout](./session-startup.md#enable-the-quality-hooks).
+- [Enable edit and stop hooks in a supported session](./session-startup.md#enable-the-quality-hooks).
 - [Verify telemetry after startup](./session-startup.md#verify-telemetry-after-startup).
 
 ## Adapt or diagnose a hook

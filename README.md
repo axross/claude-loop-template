@@ -16,7 +16,7 @@ service.
 ├── init.sh                  # metacharacter-safe {{TOKEN}} substitution + gates
 ├── tokens.json              # machine-readable manifest of every {{TOKEN}}
 ├── README.template.md       # seed for the initialized project's README (finalized in INIT Step 7)
-├── .gitignore               # ignores settings.local.json + .env.local (see INIT Step 6)
+├── .gitignore               # ignores .claude/settings.json, settings.local.json + .env.local (see INIT Step 6)
 ├── AGENTS.md                # host-neutral routing skeleton + the Routing a Change table
 ├── CLAUDE.md                # the Claude Code entry: loads AGENTS.md, adds how Claude Code meets the gates
 ├── REVIEW.md                # fixed: posted-review policy for the post-push review channel
@@ -28,9 +28,9 @@ service.
 └── .claude/
     ├── skills/              # skills INSTALLED from axross/skills — generated, never hand-edited
     ├── agents/              # implementer + reviewer + investigator, shared subagent definitions
-    ├── hooks/               # session-start (always on), format + check (opt-in)
-    ├── settings.json        # SessionStart hook, default effort level, telemetry tagging
-    └── settings.local-example.json  # opt-in: quality hooks + the two PR-subscription tools, copied to settings.local.json by session-start
+    ├── hooks/               # session-start, format + check (wired by the settings example)
+    ├── settings.example.json  # the one committed settings file: hooks, effort level, telemetry tagging, the two PR-subscription tools
+    └── settings.json        # gitignored copy of the example, made by the cloud environment's setup script or by hand
 ```
 
 ### The skills are installed, not authored here

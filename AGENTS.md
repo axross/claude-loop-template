@@ -52,6 +52,7 @@ distinguishes, so a session does not have to open the index for one of these.
 | A project run-script command | [README.md](./README.md) |
 | Placing or moving a documented decision | [Documentation conventions](./docs/contributing/documentation.md) |
 | Validating the checkout or an exported bundle | [Documentation checks](./docs/contributing/verify-documentation.md) |
+| Activating the settings for a checkout | [Session settings](./docs/contributing/agents/session-settings.md#activate-the-settings) |
 | Cloud session startup or telemetry | [docs/contributing/agents/session-startup.md](./docs/contributing/agents/session-startup.md) |
 | Formatting or autofix after an edit | [Edit hook](./docs/contributing/agents/edit-hook.md) |
 | Blocking stop checks or a delivery reminder | [Stop hook](./docs/contributing/agents/stop-hook.md) |

@@ -1,9 +1,11 @@
 #!/bin/bash
 
 # sessionstart hook for cloud / web agent sessions.
-# provisions the toolchain, prepares a local env file, materializes the opt-in
-# quality hooks, and installs dependencies so linters and tests are runnable as
-# soon as the session starts.
+# provisions the toolchain, prepares a local env file, and installs dependencies
+# so linters and tests are runnable as soon as the session starts. it runs only
+# where .claude/settings.json exists, because that file wires it; it cannot
+# create that file. see docs/contributing/agents/session-settings.md for how the committed
+# .claude/settings.example.json is copied into place.
 #
 # TEMPLATE NOTE: this is an example Claude Code harness binding. During INIT,
 # replace the `{{...}}` tokens below and adapt the toolchain-provisioning block to the
@@ -44,14 +46,6 @@ fi
 # provide a local env file for development if one does not exist yet.
 if [ -f .env.example ] && [ ! -f .env.local ]; then
   cp .env.example .env.local
-fi
-
-# enable the opt-in quality hooks (format on edit, lint + unit tests before
-# completion) for cloud sessions by materializing the gitignored local settings
-# from the committed example. the harness hot-reloads the new hooks for this
-# session. local sessions skip this hook, so opting in stays manual.
-if [ -f .claude/settings.local-example.json ]; then
-  cp -f .claude/settings.local-example.json .claude/settings.local.json
 fi
 
 # install dependencies (a plain install, not a clean/frozen install, so a cached

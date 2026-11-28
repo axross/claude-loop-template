@@ -20,6 +20,7 @@ Choose the question you need to answer:
 - [Governance](./governance/index.md) — Find who may authorize a delivery action and which exceptions to installed rules the project has adopted.
 - [Operations](./operations/index.md) — Investigate a branch flagged by GitHub or a requested CI review that never appeared.
 
+For a new checkout, [activate the Claude Code settings](./contributing/agents/session-settings.md#activate-the-settings).
 For a change to the documentation itself, see [where the answer belongs](./contributing/documentation.md#choose-a-subject)
 and [how to verify it](./contributing/verify-documentation.md). Requirement keywords in the engineering
 guides follow [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119.html).
