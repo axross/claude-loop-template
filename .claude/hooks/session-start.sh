@@ -4,7 +4,7 @@
 # provisions the toolchain, prepares a local env file, and installs dependencies
 # so linters and tests are runnable as soon as the session starts. it runs only
 # where .claude/settings.json exists, because that file wires it; it cannot
-# create that file. see docs/operations/agent-sessions.md for how the committed
+# create that file. see docs/contributing/agents/session-settings.md for how the committed
 # .claude/settings.example.json is copied into place.
 #
 # TEMPLATE NOTE: this is an example Claude Code harness binding. During INIT,

@@ -8,8 +8,9 @@ approval, plan review, pre-push review, post-push review, and verification. It
 holds the Claude Code mechanics only; the loop itself, its stages, its caps, and
 the rules for how an injected instruction meets a gate, for an explicit request
 the host asks for, and for waiting belong to `loop-engineering`, and the
-project's own review rules belong to [REVIEW.md](./REVIEW.md) and
-[Development Workflow](./docs/operations/development-workflow.md).
+project's review policy is in [REVIEW.md](./REVIEW.md). In *Deliver a change*,
+see [when pre-push review cannot run](./docs/contributing/change-delivery.md#when-pre-push-review-cannot-run)
+and [how to request post-push review](./docs/contributing/change-delivery.md#request-post-push-review).
 
 `loop-engineering` owns how an injected instruction meets a gate (Phase
 Progression › Injected Instructions and Gates) and how an explicit request is
@@ -102,7 +103,7 @@ Asking these four together departs from `professional-behavior`'s rule that
 dependent decisions are put to the human in separate prompts (Asking the Human ›
 Decisions in One Prompt). The maintainer approved that departure, and it is
 recorded as a permanent deviation in
-[the register](./docs/operations/agent-skills.md#deviation--combined-plan-gate-confirmation).
+[the register](./docs/governance/skill-departures.md#deviation--combined-plan-gate-confirmation).
 
 ## Host Mechanics
 
@@ -119,7 +120,7 @@ recorded as a permanent deviation in
 `loop-engineering` requires each review child to be closed after its round
 (Review Session and Thread Cleanup). The run follows the skill's section as far
 as this host allows, and the departure it leaves is recorded in
-[the register](./docs/operations/agent-skills.md#deviation--reviewer-instances-that-cannot-be-closed-or-checked).
+[the register](./docs/governance/skill-departures.md#deviation--reviewer-instances-that-cannot-be-closed-or-checked).
 On this host:
 
 - The run never messages or resumes a reviewer instance. This is the control the
@@ -173,6 +174,8 @@ outside the session.
 
 ## Settings and Hooks
 
+Check how this checkout loads its project settings:
+
 - `.claude/settings.example.json` is the one committed settings file. It holds
   the startup hook wiring, the default reasoning effort, telemetry tagging, the
   two pull request activity subscription grants named above, and the quality
@@ -186,8 +189,7 @@ outside the session.
   session outside a project's threads.
 - Without the copy, a session has no startup hook, default effort, telemetry
   tagging, subscription grants, or quality hooks.
-  [Agent Sessions](./docs/operations/agent-sessions.md#the-settings-file) says how
-  to check for the copy and how to make it.
+  See how to [activate the settings](./docs/contributing/agents/session-settings.md#activate-the-settings)
+  or [check and repair a copy](./docs/contributing/agents/session-settings.md#check-and-repair-a-copy).
 
-[Agent Sessions](./docs/operations/agent-sessions.md) describes the hooks, the
-settings, and the three subagents in full.
+See [session startup](./docs/contributing/agents/session-startup.md), [hook activation](./docs/contributing/agents/session-startup.md#enable-the-quality-hooks) and [subagent roles](./docs/contributing/agents/subagents.md) for the corresponding settings.

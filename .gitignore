@@ -1,5 +1,5 @@
 # Local agent harness state. .claude/settings.json is a per-checkout copy of the
-# committed .claude/settings.example.json (see docs/operations/agent-sessions.md);
+# committed .claude/settings.example.json (see docs/contributing/agents/session-settings.md);
 # .claude/settings.local.json holds a contributor's own overrides. Both MUST stay
 # out of version control. Keep them, and extend this file with the project's own
 # ignores, during INIT.
@@ -10,3 +10,6 @@
 # entries exist; keep them during INIT.
 .env.local
 .env.*.local
+
+/.venv-okf/
+/.claude/skills/living-project-documentation/scripts/node_modules/
